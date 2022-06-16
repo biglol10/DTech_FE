@@ -1,7 +1,6 @@
 import { ChangeEvent, forwardRef, useEffect, useState } from 'react';
-import { Input, Label } from 'semantic-ui-react';
+import { Input, Label, Header } from 'semantic-ui-react';
 import { IInputDefault } from '@utils/types/componentTypes';
-import Style from './Input.module.scss';
 
 const InputDefault = forwardRef<any, IInputDefault>(
 	(
@@ -58,8 +57,8 @@ const InputDefault = forwardRef<any, IInputDefault>(
 		return (
 			<>
 				{showInputLabel && (
-					<label htmlFor={id} className={Style['inputDefaultLabel']}>
-						{inputLabel}
+					<label htmlFor={id}>
+						<Header as={inputLabelSize}>{inputLabel}</Header>
 					</label>
 				)}
 

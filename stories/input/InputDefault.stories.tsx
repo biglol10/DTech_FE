@@ -56,4 +56,5 @@ Default.args = {
 		console.log(result);
 	},
 	regex: /^\d+$/,
+	id: 'inputDefaultId',
 };
