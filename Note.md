@@ -25,3 +25,5 @@
 <p>npm i @mdx-js/react@^1.6.22 -D --legacy-peer-deps // storybook error => https://github.com/storybookjs/storybook/issues/18094</p>
 <br/>
 <p>https://stackoverflow.com/questions/67364073/typescript-show-error-for-mdx-extension-file-in-nextjs</p>
+
+git test
