@@ -3,3 +3,7 @@
 
 # production
 /.next
+
+/.vscode
+
+package-lock.json
