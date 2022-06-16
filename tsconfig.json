@@ -1,0 +1,58 @@
+{
+	"extends": "./tsconfig.paths.json",
+	"compilerOptions": {
+		"baseUrl": ".",
+		"module": "esnext",
+		"target": "es6",
+		"jsx": "preserve",
+		"lib": ["dom", "dom.iterable", "esnext"],
+		"allowJs": true,
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"strict": true,
+		"forceConsistentCasingInFileNames": true,
+		"noFallthroughCasesInSwitch": true,
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"noEmit": true,
+		"incremental": true
+	},
+	"exclude": ["node_modules"],
+	"include": ["**/*.ts", "**/*.tsx", "**/*.d.ts"]
+}
+// {
+//   "compilerOptions": {
+//     "esModuleInterop": true, // import * as React from 'react' 대신 import React from 'react' 해줌
+//     "sourceMap": true, // 에러났을 때 찾아가기 편하게
+//     "lib": ["ES2020", "DOM"], // 최신 문법으로
+//     "jsx": "preserve", // jsx가 react에서만 쓰는게 아니라 다른 곳에서도 쓰이기 때문에 react로 명시
+//     "module": "esnext", // 최신 모듈 쓴다는 것 (import export). 이거 안쓰면 commonjs처럼 node의 모듈 시스템 (과거 모듈)
+//     "moduleResolution": "Node", // 다만 import export도 Node가 해석하게끔 해야겠다
+//     "target": "es5", // es5로 변환하겠다
+//     "strict": true, // 타입체크를 엄격하게
+//     "resolveJsonModule": true, // import jsonfile이라는 것을 허락하겠다
+//     // next.config.js 에 하고 여기에도 해야함 (안해도 되는듯...)
+//     "baseUrl": ".",
+//     "paths": {
+//       // import A from ../../ 이런거 방지
+//       "@hooks/*": ["hooks/*"],
+//       "@components/*": ["components/*"],
+//       "@layouts/*": ["layouts/*"],
+//       "@pages/*": ["pages/*"],
+//       "@utils/*": ["utils/*"],
+//       "@typings/*": ["typings/*"],
+//       "@store/*": ["store/*"],
+//       "@styles/*": ["styles/*"],
+//     },
+//     "allowJs": true,
+//     "skipLibCheck": true,
+//     "forceConsistentCasingInFileNames": true,
+//     "noEmit": true,
+//     "incremental": true,
+//     "isolatedModules": true
+//   },
+//   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next.config.js"],
+//   "exclude": ["node_modules"]
+// }

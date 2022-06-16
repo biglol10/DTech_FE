@@ -1,0 +1,5 @@
+@import '@styles/_mixinCollection.scss';
+
+.inputDefaultLabel {
+	@include label16(16px);
+}

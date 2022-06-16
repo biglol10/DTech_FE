@@ -1,0 +1,5 @@
+@mixin label16($fontSize) {
+	font-size: $fontSize;
+	line-height: 32px;
+	@content;
+}

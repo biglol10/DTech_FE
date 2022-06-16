@@ -1,0 +1,19 @@
+{
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			// import A from ../../ 이런거 방지
+			// "@*": ["./*"],
+			"@hooks/*": ["hooks/*"],
+			"@components/*": ["components/*"],
+			"@layouts/*": ["layouts/*"],
+			"@pages/*": ["pages/*"],
+			"@utils/*": ["utils/*"],
+			"@typings/*": ["typings/*"],
+			"@store/*": ["store/*"],
+			"@styles/*": ["styles/*"],
+			"@testApi/*": ["testApi/*"],
+			"@saga/*": ["saga/*"]
+		}
+	}
+}
