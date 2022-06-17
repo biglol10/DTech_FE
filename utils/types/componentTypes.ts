@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 export interface IInputDefault {
 	id: string;
 	placeholder?: string;
@@ -16,6 +18,15 @@ export interface IInputDefault {
 	inputLabel?: string;
 	inputLabelSize?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 	showInputLabel?: boolean;
+	ref?: any;
+}
+
+export interface IInputSearch extends IInputDefault {
+	onSearchIconClick?: Function;
+}
+
+export interface IInputWithIcon extends IInputDefault {
+	inputIcon?: ReactNode;
 }
 
 export interface ICheckboxDefault {

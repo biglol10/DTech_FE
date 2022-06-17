@@ -1,18 +1,18 @@
 import { ComponentMeta } from '@storybook/react';
-import { InputDefault } from '@components/index';
-import { IInputDefault } from '@utils/types/componentTypes';
+import { InputSearch } from '@components/index';
+import { IInputSearch } from '@utils/types/componentTypes';
 
-import { Doc } from './InputDefault.stories.mdx';
+import { Doc } from './InputSearch.stories.mdx';
 
 export default {
 	title: 'Example/Input',
 	parameters: {
-		componentSubtitle: 'Input Component',
+		componentSubtitle: 'Input Search Component',
 		docs: {
 			page: Doc,
 		},
 	},
-	component: InputDefault,
+	component: InputSearch,
 	argTypes: {
 		size: {
 			defaultValue: 'small',
@@ -47,14 +47,19 @@ export default {
 			table: { defaultValue: { summary: 'bottom' } },
 		},
 	},
-} as ComponentMeta<typeof InputDefault>;
+} as ComponentMeta<typeof InputSearch>;
 
-export const Default = (args: IInputDefault) => <InputDefault {...args} />;
-Default.args = {
+export const Search = (args: IInputSearch) => {
+	const onSearchIconClick = () => {
+		console.log('search icon clicked');
+	};
+
+	return <InputSearch {...args} onSearchIconClick={onSearchIconClick}></InputSearch>;
+};
+Search.args = {
 	placeholder: '값을 입력해주세요',
 	onChange: (result: object) => {
 		console.log(result);
 	},
-	regex: /^\d+$/,
-	id: 'inputDefaultId',
+	id: 'inputSearchId',
 };

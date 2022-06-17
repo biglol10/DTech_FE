@@ -1,18 +1,19 @@
 import { ComponentMeta } from '@storybook/react';
-import { InputDefault } from '@components/index';
-import { IInputDefault } from '@utils/types/componentTypes';
+import { InputWithIcon } from '@components/index';
+import { IInputWithIcon } from '@utils/types/componentTypes';
 
-import { Doc } from './InputDefault.stories.mdx';
+import { Icon } from 'semantic-ui-react';
+import { Doc } from './InputWithIcon.stories.mdx';
 
 export default {
 	title: 'Example/Input',
 	parameters: {
-		componentSubtitle: 'Input Component',
+		componentSubtitle: 'Input With Icon Component',
 		docs: {
 			page: Doc,
 		},
 	},
-	component: InputDefault,
+	component: InputWithIcon,
 	argTypes: {
 		size: {
 			defaultValue: 'small',
@@ -47,14 +48,15 @@ export default {
 			table: { defaultValue: { summary: 'bottom' } },
 		},
 	},
-} as ComponentMeta<typeof InputDefault>;
+} as ComponentMeta<typeof InputWithIcon>;
 
-export const Default = (args: IInputDefault) => <InputDefault {...args} />;
-Default.args = {
+export const WithIcon = (args: IInputWithIcon) => (
+	<InputWithIcon {...args} inputIcon={<Icon name="users" />} />
+);
+WithIcon.args = {
 	placeholder: '값을 입력해주세요',
 	onChange: (result: object) => {
 		console.log(result);
 	},
-	regex: /^\d+$/,
-	id: 'inputDefaultId',
+	id: 'inputWithIconId',
 };
