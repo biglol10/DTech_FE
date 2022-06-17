@@ -13,7 +13,8 @@ export default function Document() {
 					href="https://fonts.googleapis.com/icon?family=Material+Icons"
 					rel="stylesheet"
 				/>
-				<link rel="shortcut icon" href="/favicon.ico" />
+				{/* This is for main index page */}
+				<link rel="icon" href="react/favicon.ico" type="image/x-icon" />
 			</Head>
 			<body>
 				<Main />
