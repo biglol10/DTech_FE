@@ -1,5 +1,9 @@
 @import '@styles/_mixinCollection.scss';
 
 .inputDefaultLabel {
-	@include label16(16px);
+	// @include label16(16px);
+}
+
+.inputLabelHeader {
+	margin-bottom: 15px !important;
 }

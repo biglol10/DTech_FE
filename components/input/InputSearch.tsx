@@ -1,9 +1,9 @@
 import { ChangeEvent, forwardRef, useEffect, useState } from 'react';
-import { Input, Label, Header } from 'semantic-ui-react';
-import { IInputDefault } from '@utils/types/componentTypes';
+import { Input, Label, Header, Icon } from 'semantic-ui-react';
+import { IInputSearch } from '@utils/types/componentTypes';
 import Style from './Input.module.scss';
 
-const InputDefault = forwardRef<any, IInputDefault>(
+const InputSearch = forwardRef<any, IInputSearch>(
 	(
 		{
 			id = '',
@@ -23,6 +23,7 @@ const InputDefault = forwardRef<any, IInputDefault>(
 			disabled = false,
 			maxLength = undefined,
 			errorLabelPosition = 'bottom',
+			onSearchIconClick = null,
 		},
 		ref,
 	) => {
@@ -78,6 +79,14 @@ const InputDefault = forwardRef<any, IInputDefault>(
 					readOnly={readOnly}
 					disabled={disabled}
 					maxLength={maxLength}
+					icon={
+						<Icon
+							name="search"
+							circular
+							link
+							onClick={onSearchIconClick && onSearchIconClick}
+						/>
+					}
 				/>
 
 				{errorLabelPosition === 'bottom' && <br />}
@@ -95,6 +104,6 @@ const InputDefault = forwardRef<any, IInputDefault>(
 	},
 );
 
-InputDefault.displayName = 'InputDefault';
+InputSearch.displayName = 'InputSearch';
 
-export default InputDefault;
+export default InputSearch;

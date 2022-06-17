@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Testcomponent from '@components/Testcomponent';
 import { useSelector, useDispatch } from 'react-redux';
 import { increment } from '@store/counterSlice';
@@ -27,6 +27,8 @@ const Index = () => {
 		// alert(typeof inputValue); // number
 		dispatch({ type: 'ADDBYAMOUNT', data: inputValue });
 	};
+
+	const inputRef = useRef();
 
 	return (
 		<div>
@@ -77,7 +79,13 @@ const Index = () => {
 			<br />
 			<br />
 
-			<InputDefault id="inputDefault1" inputLabel="sdf" showInputLabel={true} />
+			<InputDefault
+				id="inputDefault1"
+				inputLabel="sdf"
+				showInputLabel={true}
+				ref={inputRef}
+				onChange={() => console.log(inputRef.current)}
+			/>
 
 			<Testcomponent />
 		</div>

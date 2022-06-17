@@ -6,6 +6,17 @@ module.exports = {
 	reactStrictMode: false, // react strict mode가 설정되어 있을 때, React가 side effects를 찾아내기 위해 의도적으로 hook을 이중 호출할 수 있는데 그걸 끔
 	distDir: '.next',
 	basePath: '/react', // Url/react 이렇게 붙여주는 것
+	async redirects() {
+		// Url/react 이렇게 붙여주는 것
+		return [
+			{
+				source: '/',
+				destination: '/react',
+				basePath: false,
+				permanent: true, // true 일 경우 uses the 308 status code which instructs the browser to cache the redirect
+			},
+		];
+	},
 	webpack(config) {
 		// console.log(config);
 		const prod = process.env.MODE_ENV === 'production';
