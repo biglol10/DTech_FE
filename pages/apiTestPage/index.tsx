@@ -77,7 +77,10 @@ const ApiTestPage: React.FC<IServerProps> = (props) => {
 	);
 };
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (context: any) => {
+	// console.log(context);
+	// console.log(context.req.cookies);
+
 	const axiosData = await axios.get('http://localhost:3066/api/testApi').then((response) => {
 		if (response) {
 			return response.data;
