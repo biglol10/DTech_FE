@@ -16,14 +16,10 @@ const LayoutComp = ({ children }: LayoutProps) => {
 			<Head>
 				<title>DCX skill manager</title>
 				<meta name="description" content="DCX Skill manager" />
-				<link rel="icon" href="/favicon.ico" />
-				{/* <link
-					rel="icon"
-					href="https://media.geeksforgeeks.org/wp-content/cdn-uploads/gfg_200X200.png"
-					type="image/x-icon"
-				/> */}
-				<link rel="icon" href="/favicon.ico" type="image/x-icon" />
-				<link rel="shortcut icon" href="/favicon.ico" />
+				{/* <link rel="icon" href="./favicon.ico" /> */}
+				<link rel="icon" href="favicon.ico" type="image/x-icon" />
+				{/* <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+				<link rel="shortcut icon" href="/favicon.ico" /> */}
 			</Head>
 			{children}
 			<ModalPopup />

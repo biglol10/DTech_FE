@@ -2,6 +2,7 @@ import { ComponentMeta } from '@storybook/react';
 import { InputWithIcon } from '@components/index';
 import { IInputWithIcon } from '@utils/types/componentTypes';
 
+import { Icon } from 'semantic-ui-react';
 import { Doc } from './InputWithIcon.stories.mdx';
 
 export default {
@@ -49,7 +50,9 @@ export default {
 	},
 } as ComponentMeta<typeof InputWithIcon>;
 
-export const WithIcon = (args: IInputWithIcon) => <InputWithIcon {...args} />;
+export const WithIcon = (args: IInputWithIcon) => (
+	<InputWithIcon {...args} inputIcon={<Icon name="users" />} />
+);
 WithIcon.args = {
 	placeholder: '값을 입력해주세요',
 	onChange: (result: object) => {

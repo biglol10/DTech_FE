@@ -13,7 +13,7 @@ module.exports = {
 				source: '/',
 				destination: '/react',
 				basePath: false,
-				permanent: true, // true 일 경우 uses the 308 status code which instructs the browser to cache the redirect
+				permanent: false, // true 일 경우 uses the 308 status code which instructs the browser to cache the redirect
 			},
 		];
 	},
