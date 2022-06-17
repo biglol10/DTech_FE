@@ -17,3 +17,13 @@ export interface IInputDefault {
 	inputLabelSize?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 	showInputLabel?: boolean;
 }
+
+export interface ICheckboxDefault {
+	id: string;
+	disabled?: boolean;
+	checked?: boolean;
+	onChange?: Function;
+	size?: 'small' | 'medium' | 'large';
+	label?: string;
+	labelPosition?: 'top' | 'right' | undefined;
+}
