@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { ButtonProps } from 'semantic-ui-react';
 
 export interface IInputDefault {
 	id: string;
@@ -27,6 +28,16 @@ export interface IInputSearch extends IInputDefault {
 
 export interface IInputWithIcon extends IInputDefault {
 	inputIcon?: ReactNode;
+}
+
+export interface IButton {
+	buttonType?: 'primary' | 'secondary' | 'none';
+	content?: string;
+	basic?: boolean;
+	color?: ButtonProps['color'];
+	size?: IInputDefault['size'];
+	loading?: boolean;
+	onClick?: any;
 }
 
 export interface ICheckboxDefault {

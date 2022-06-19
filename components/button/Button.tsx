@@ -1,15 +1,5 @@
-import { Button as SemanticButton, ButtonProps } from 'semantic-ui-react';
-import { IInputDefault } from '@utils/types/componentTypes';
-
-interface IButton {
-	buttonType?: 'primary' | 'secondary' | 'none';
-	content?: string;
-	basic?: boolean;
-	color?: ButtonProps['color'];
-	size?: IInputDefault['size'];
-	loading?: boolean;
-	onClick?: any;
-}
+import { Button as SemanticButton } from 'semantic-ui-react';
+import { IButton } from '@utils/types/componentTypes';
 
 const Button = ({
 	buttonType = 'primary',
