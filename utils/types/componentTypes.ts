@@ -28,3 +28,14 @@ export interface IInputSearch extends IInputDefault {
 export interface IInputWithIcon extends IInputDefault {
 	inputIcon?: ReactNode;
 }
+
+export interface ICheckboxDefault {
+	id: string;
+	disabled?: boolean;
+	checked?: boolean;
+	size?: 'mini' | 'small' | 'large' | 'big' | 'huge' | 'massive';
+	label?: string;
+	labelPosition?: 'top' | 'right' | undefined;
+	help?: string;
+	ref?: any;
+}
