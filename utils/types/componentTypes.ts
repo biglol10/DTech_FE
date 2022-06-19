@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { ButtonProps } from 'semantic-ui-react';
+import { ButtonProps, StrictLabelProps } from 'semantic-ui-react';
 
 export interface IInputDefault {
 	id: string;
@@ -49,4 +49,15 @@ export interface ICheckboxDefault {
 	labelPosition?: 'top' | 'right' | undefined;
 	help?: string;
 	ref?: any;
+}
+
+export interface ILabel {
+	basic?: boolean;
+	content?: string;
+	iconOrImage?: 'icon' | 'image' | 'none';
+	icon?: ReactNode;
+	imageSrc?: string;
+	color?: StrictLabelProps['color'];
+	borderNone?: boolean;
+	size?: StrictLabelProps['size'];
 }
