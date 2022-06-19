@@ -35,8 +35,5 @@ export default {
 export const Default = (args: ICheckboxDefault) => <CheckboxDefault {...args} />;
 
 Default.args = {
-	onChange: (result: object) => {
-		console.log('TempBo');
-		console.log(result);
-	},
+	id: 'checkboxDefaultId',
 };

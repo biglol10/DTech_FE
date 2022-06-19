@@ -33,8 +33,9 @@ export interface ICheckboxDefault {
 	id: string;
 	disabled?: boolean;
 	checked?: boolean;
-	onChange?: Function;
-	size?: 'small' | 'medium' | 'large';
+	size?: 'mini' | 'small' | 'large' | 'big' | 'huge' | 'massive';
 	label?: string;
 	labelPosition?: 'top' | 'right' | undefined;
+	help?: string;
+	ref?: any;
 }

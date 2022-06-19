@@ -3,7 +3,7 @@ import Testcomponent from '@components/Testcomponent';
 import { useSelector, useDispatch } from 'react-redux';
 import { increment } from '@store/counterSlice';
 import Link from 'next/link';
-import { InputDefault } from '@components/index';
+import { InputDefault, CheckboxDefault } from '@components/index';
 
 const Index = () => {
 	const [inputValue, setInputValue] = useState(2);
@@ -88,6 +88,8 @@ const Index = () => {
 			/>
 
 			<Testcomponent />
+
+			<CheckboxDefault id="testCheckbox" label="testLabel" />
 		</div>
 	);
 };
