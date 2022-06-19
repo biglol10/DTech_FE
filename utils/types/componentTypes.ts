@@ -39,3 +39,14 @@ export interface IButton {
 	loading?: boolean;
 	onClick?: any;
 }
+
+export interface ICheckboxDefault {
+	id: string;
+	disabled?: boolean;
+	checked?: boolean;
+	size?: 'mini' | 'small' | 'large' | 'big' | 'huge' | 'massive';
+	label?: string;
+	labelPosition?: 'top' | 'right' | undefined;
+	help?: string;
+	ref?: any;
+}

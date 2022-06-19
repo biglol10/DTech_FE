@@ -7,6 +7,10 @@ Button Component
 ```jsx
 import { Button } from '@components/index';
 
+{
+	/* Button 여러 개 생성 시 inline으로 생성됨 */
+}
+
 return (
 	<Button
 		buttonType="none"

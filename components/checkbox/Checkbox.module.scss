@@ -1,0 +1,54 @@
+@import '@styles/_mixinCollection.scss';
+
+.checkBoxLabelTop {
+	display: flex;
+	flex-direction: column;
+	width: max-content;
+	align-items: center;
+	padding: 5px;
+	.checkBoxLabel {
+		background-color: transparent;
+	}
+	.checkBoxHelpLabel {
+		height: fit-content;
+		position: absolute;
+	}
+}
+
+.checkBoxLabelRight {
+	// background-color: red;
+	display: flex;
+	align-items: center;
+	width: max-content;
+	padding: 5px;
+	width: max-content;
+	.checkBox {
+		// height: 20px;
+		// display: flex;
+		align-items: center;
+	}
+	.checkBoxLabel {
+		background-color: transparent;
+		// height: 20px;
+		display: flex;
+		align-items: center;
+	}
+	.checkBoxHelpIcon {
+		margin-left: 10px;
+		height: fit-content;
+		display: flex;
+		align-items: center;
+	}
+	.checkBoxHelpLabel {
+		height: fit-content;
+		position: absolute;
+	}
+}
+
+.checkBoxHelpLabel {
+	height: fit-content;
+	position: absolute;
+}
+
+// .checkBox {
+// }

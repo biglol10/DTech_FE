@@ -20,7 +20,6 @@ export const ButtonSample = (args: IButton) => {
 	return (
 		<>
 			<Button {...args} />
-			<Button {...args} />
 		</>
 	);
 };
