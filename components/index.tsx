@@ -3,5 +3,6 @@ import InputDefault from './input/InputDefault';
 import CheckboxDefault from './checkbox/CheckboxDefault';
 import InputSearch from './input/InputSearch';
 import InputWithIcon from './input/InputWithIcon';
+import Button from './button/Button';
 
-export { InputDefault, InputSearch, InputWithIcon, ModalPopup, CheckboxDefault };
+export { Button, InputDefault, InputSearch, InputWithIcon, ModalPopup, CheckboxDefault };

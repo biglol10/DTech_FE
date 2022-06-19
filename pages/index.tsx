@@ -3,7 +3,8 @@ import Testcomponent from '@components/Testcomponent';
 import { useSelector, useDispatch } from 'react-redux';
 import { increment } from '@store/counterSlice';
 import Link from 'next/link';
-import { InputDefault, CheckboxDefault } from '@components/index';
+
+import { Button, InputDefault, CheckboxDefault } from '@components/index';
 
 const Index = () => {
 	const [inputValue, setInputValue] = useState(2);
@@ -73,6 +74,15 @@ const Index = () => {
 
 			<br />
 			<br />
+
+			<Button
+				loading={false}
+				basic={false}
+				size="big"
+				buttonType="none"
+				content="ButtonClick"
+				color="brown"
+			/>
 
 			{loading ? <h1>Loading...</h1> : <h1>Done</h1>}
 
