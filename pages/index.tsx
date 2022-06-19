@@ -3,6 +3,7 @@ import Testcomponent from '@components/Testcomponent';
 import { useSelector, useDispatch } from 'react-redux';
 import { increment } from '@store/counterSlice';
 import Link from 'next/link';
+import SimpleAccordion from '@components/accordion/Accordion';
 
 import { Button, InputDefault, CheckboxDefault } from '@components/index';
 
@@ -88,6 +89,8 @@ const Index = () => {
 
 			<br />
 			<br />
+
+			<SimpleAccordion />
 
 			<InputDefault
 				id="inputDefault1"
