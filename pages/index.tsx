@@ -3,8 +3,9 @@ import Testcomponent from '@components/Testcomponent';
 import { useSelector, useDispatch } from 'react-redux';
 import { increment } from '@store/counterSlice';
 import Link from 'next/link';
+import { Message, Image } from 'semantic-ui-react';
 
-import { Button, InputDefault, CheckboxDefault } from '@components/index';
+import { Accordion, Button, InputDefault, CheckboxDefault } from '@components/index';
 
 const Index = () => {
 	const [inputValue, setInputValue] = useState(2);
@@ -30,6 +31,35 @@ const Index = () => {
 	};
 
 	const inputRef = useRef();
+
+	const items = [
+		{
+			title: 'Accordion 1',
+			expanded: true,
+			content: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+ 						malesuada lacus ex, sit amet blandit leo lobortis eget.`,
+		},
+		{
+			title: 'Accordion 2',
+			expanded: false,
+			content: (
+				<>
+					<Message>
+						<Message.Header>Changes in Service</Message.Header>
+						<p>
+							We updated our privacy policy here to better service our customers. We
+							recommend reviewing the changes.
+						</p>
+					</Message>
+					<Image
+						src="https://media.istockphoto.com/photos/porcelain-stoneware-tiles-in-store-picture-id1312700805"
+						size="small"
+						wrapped
+					/>
+				</>
+			),
+		},
+	];
 
 	return (
 		<div>
@@ -88,6 +118,8 @@ const Index = () => {
 
 			<br />
 			<br />
+
+			<Accordion id="accordionId" items={items} />
 
 			<InputDefault
 				id="inputDefault1"

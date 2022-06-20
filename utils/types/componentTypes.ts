@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import { ButtonProps } from 'semantic-ui-react';
+import { ReactNode, JSXElementConstructor as JSX } from 'react';
+import { ButtonProps, StrictLabelProps } from 'semantic-ui-react';
 
 export interface IInputDefault {
 	id: string;
@@ -49,4 +49,28 @@ export interface ICheckboxDefault {
 	labelPosition?: 'top' | 'right' | undefined;
 	onChange?: any;
 	items?: Array<{ id: string; label: string; checked: boolean }>;
+}
+
+export interface ILabel {
+	basic?: boolean;
+	content?: string;
+	iconOrImage?: 'icon' | 'image' | 'none';
+	icon?: ReactNode;
+	imageSrc?: string;
+	color?: StrictLabelProps['color'];
+	borderNone?: boolean;
+	size?: StrictLabelProps['size'];
+}
+
+export interface IAccordionItems {
+	title: string;
+	expanded: boolean;
+	content: string | JSX.Element;
+}
+
+export interface IAccordion {
+	id: string;
+	backgroundColor?: string;
+	fontColor?: string;
+	items: IAccordionItems[];
 }
