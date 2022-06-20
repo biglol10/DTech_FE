@@ -1,110 +1,92 @@
 import { ICheckboxDefault } from '@utils/types/componentTypes';
-import { forwardRef, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Checkbox, Icon, Label } from 'semantic-ui-react';
 
 import Style from './Checkbox.module.scss';
 
-const CheckboxDefault = forwardRef<any, ICheckboxDefault>(
-	(
-		{
-			id = '',
-			disabled = false,
-			checked = false,
-			size = 'small',
-			label = 'test',
-			labelPosition = 'right',
-			help = 'checkbox for the test',
-		},
-		ref,
-	) => {
-		const [isChecked, setIsChecked] = useState(checked);
-		const [showIcon, setShowIcon] = useState(false);
-		const onChangeFn = () => {
-			setIsChecked((prevChecked) => !prevChecked);
-		};
+const CheckboxDefault = ({
+	id = '',
+	disabled = false,
+	checked = false,
+	size = 'small',
+	label = 'test',
+	labelPosition = 'right',
+	onChange = null,
+	items = [
+		{ id: 'hi', label: 'item label', checked: false },
+		{ id: 'he', label: 'item label2', checked: false },
+	],
+}: ICheckboxDefault) => {
+	const [isChecked, setIsChecked] = useState(checked);
+	const [itemList, setItemList] = useState(items);
+	const onChangeFn = () => {
+		setIsChecked((prevChecked) => !prevChecked);
+	};
 
-		useEffect(() => {
-			setIsChecked(checked);
-		}, [checked]);
+	useEffect(() => {
+		if (items.length > 0) {
+			console.log(items);
+		}
+	});
 
-		return (
-			<>
-				{labelPosition === 'top' && (
-					<div className={Style['checkBoxLabelTop']}>
-						<div>
-							<Label className={Style['checkBoxLabel']} size={size}>
-								{label}
-							</Label>
-							<Icon
-								className={Style['checkBoxHelpIcon']}
-								name="question circle"
-								onMouseOver={() => {
-									setShowIcon(true);
-								}}
-								onMouseOut={() => {
-									setShowIcon(false);
-								}}
-								size="small"
-							></Icon>
-							{showIcon && (
-								<Label
-									className={Style['checkBoxHelpLabel']}
-									pointing="left"
-									label={label}
-								>
-									{help}
-								</Label>
-							)}
-						</div>
-						<Checkbox
-							className={Style['checkBox']}
-							id={id}
-							onChange={onChangeFn}
-							disabled={disabled}
-							checked={isChecked}
-							help={help}
-						/>
-					</div>
-				)}
-				{labelPosition !== 'top' && (
-					<div className={Style['checkBoxLabelRight']}>
-						<Checkbox
-							className={Style['checkBox']}
-							id={id}
-							onChange={onChangeFn}
-							disabled={disabled}
-							checked={isChecked}
-							help={help}
-						/>
+	useEffect(() => {
+		setIsChecked(checked);
+	}, [checked]);
+
+	useEffect(() => {
+		onChange &&
+			onChange({
+				itemList,
+			});
+	}, [itemList]);
+
+	return (
+		<>
+			{labelPosition === 'top' && (
+				<div className={Style['checkBoxLabelTop']}>
+					<div>
 						<Label className={Style['checkBoxLabel']} size={size}>
 							{label}
 						</Label>
-						<Icon
-							className={Style['checkBoxHelpIcon']}
-							name="question circle"
-							onMouseOver={() => {
-								setShowIcon(true);
-							}}
-							onMouseOut={() => {
-								setShowIcon(false);
-							}}
-							size="small"
-						></Icon>
-						{showIcon && (
-							<Label
-								className={Style['checkBoxHelpLabel']}
-								pointing="left"
-								label={label}
-							>
-								{help}
-							</Label>
-						)}
 					</div>
-				)}
-			</>
-		);
-	},
-);
+					<Checkbox
+						className={Style['checkBox']}
+						id={id}
+						onChange={onChangeFn}
+						disabled={disabled}
+						checked={isChecked}
+					/>
+				</div>
+			)}
+			{labelPosition !== 'top' && (
+				// <div className={Style['checkBoxLabelRight']}>
+				// 	<Checkbox
+				// 		className={Style['checkBox']}
+				// 		id={id}
+				// 		onChange={onChangeFn}
+				// 		disabled={disabled}
+				// 		checked={isChecked}
+				// 	/>
+				// 	<Label className={Style['checkBoxLabel']} size={size}>
+				// 		{label}
+				// 	</Label>
+				// </div>
+				<div className={Style['checkBoxLabelRight']}>
+					<Checkbox
+						className={Style['checkBox']}
+						id={id}
+						onChange={onChangeFn}
+						disabled={disabled}
+						checked={isChecked}
+					/>
+					<Label className={Style['checkBoxLabel']} size={size}>
+						{label}
+					</Label>
+				</div>
+			)}
+		</>
+	);
+};
 
 CheckboxDefault.displayName = 'CheckboxDefault';
 

@@ -47,6 +47,6 @@ export interface ICheckboxDefault {
 	size?: 'mini' | 'small' | 'large' | 'big' | 'huge' | 'massive';
 	label?: string;
 	labelPosition?: 'top' | 'right' | undefined;
-	help?: string;
-	ref?: any;
+	onChange?: any;
+	items?: Array<{ id: string; label: string; checked: boolean }>;
 }
