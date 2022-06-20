@@ -131,7 +131,11 @@ const Index = () => {
 
 			<Testcomponent />
 
-			<CheckboxDefault id="testCheckbox" label="testLabel" />
+			<CheckboxDefault
+				id="testCheckbox"
+				label="testLabel"
+				onChange={(arg: any) => console.log(arg)}
+			/>
 		</div>
 	);
 };

@@ -12,33 +12,30 @@ const CheckboxDefault = ({
 	label = 'test',
 	labelPosition = 'right',
 	onChange = null,
-	items = [
-		{ id: 'hi', label: 'item label', checked: false },
-		{ id: 'he', label: 'item label2', checked: false },
-	],
 }: ICheckboxDefault) => {
 	const [isChecked, setIsChecked] = useState(checked);
-	const [itemList, setItemList] = useState(items);
 	const onChangeFn = () => {
 		setIsChecked((prevChecked) => !prevChecked);
 	};
 
-	useEffect(() => {
-		if (items.length > 0) {
-			console.log(items);
-		}
-	});
+	// useEffect(() => {
+	// 	if (items.length > 0) {
+	// 		console.log(items);
+	// 	}
+	// });
 
 	useEffect(() => {
 		setIsChecked(checked);
 	}, [checked]);
 
 	useEffect(() => {
-		onChange &&
-			onChange({
-				itemList,
-			});
-	}, [itemList]);
+		if (isChecked) {
+			onChange &&
+				onChange({
+					id,
+				});
+		}
+	}, [isChecked, onChange]);
 
 	return (
 		<>
@@ -58,19 +55,7 @@ const CheckboxDefault = ({
 					/>
 				</div>
 			)}
-			{labelPosition !== 'top' && (
-				// <div className={Style['checkBoxLabelRight']}>
-				// 	<Checkbox
-				// 		className={Style['checkBox']}
-				// 		id={id}
-				// 		onChange={onChangeFn}
-				// 		disabled={disabled}
-				// 		checked={isChecked}
-				// 	/>
-				// 	<Label className={Style['checkBoxLabel']} size={size}>
-				// 		{label}
-				// 	</Label>
-				// </div>
+			{(labelPosition === 'right' || labelPosition === undefined) && (
 				<div className={Style['checkBoxLabelRight']}>
 					<Checkbox
 						className={Style['checkBox']}
@@ -91,3 +76,16 @@ const CheckboxDefault = ({
 CheckboxDefault.displayName = 'CheckboxDefault';
 
 export default CheckboxDefault;
+
+// <div className={Style['checkBoxLabelRight']}>
+// 	<Checkbox
+// 		className={Style['checkBox']}
+// 		id={id}
+// 		onChange={onChangeFn}
+// 		disabled={disabled}
+// 		checked={isChecked}
+// 	/>
+// 	<Label className={Style['checkBoxLabel']} size={size}>
+// 		{label}
+// 	</Label>
+// </div>

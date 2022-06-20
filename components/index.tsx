@@ -6,6 +6,7 @@ import InputWithIcon from './input/InputWithIcon';
 import Button from './button/Button';
 import Label from './label/Label';
 import Accordion from './accordion/Accordion';
+import CheckboxListDefault from './checkbox/CheckboxListDefault';
 
 export {
 	Accordion,
@@ -16,4 +17,5 @@ export {
 	Label,
 	ModalPopup,
 	CheckboxDefault,
+	CheckboxListDefault,
 };

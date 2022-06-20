@@ -48,7 +48,14 @@ export interface ICheckboxDefault {
 	label?: string;
 	labelPosition?: 'top' | 'right' | undefined;
 	onChange?: any;
-	items?: Array<{ id: string; label: string; checked: boolean }>;
+}
+export interface ICheckboxListDefault {
+	id?: string;
+	size?: 'mini' | 'small' | 'large' | 'big' | 'huge' | 'massive';
+	labelPosition?: 'top' | 'right' | undefined;
+	onChange?: any;
+	direction?: 'horizontal' | 'vertical' | undefined;
+	items: Array<{ id: string; disabled?: boolean; checked?: boolean; label?: string }>;
 }
 
 export interface ILabel {
