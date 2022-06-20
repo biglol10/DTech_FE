@@ -7,6 +7,7 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { IAccordion, IAccordionItems } from '@utils/types/componentTypes';
+import Style from './Accordion.module.scss';
 
 interface IJsObj {
 	[name: string]: boolean;
@@ -48,7 +49,9 @@ const Accordion = ({
 							aria-controls={id}
 							id={id}
 						>
-							<Typography>{item.title}</Typography>
+							<Typography className={Style['accordionItemTitle']}>
+								{item.title}
+							</Typography>
 						</AccordionSummary>
 						<AccordionDetails>
 							{typeof item.content === 'string' ? (

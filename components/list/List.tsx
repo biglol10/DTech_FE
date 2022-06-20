@@ -1,5 +1,6 @@
 import { JSXElementConstructor as JSX } from 'react';
 import { List as SemanticList } from 'semantic-ui-react';
+import Style from './List.module.scss';
 
 interface IListItem {
 	content: string | JSX.Element;
@@ -22,7 +23,7 @@ const List = ({ id = '', items, listType = 'none', verticalAlign = 'middle' }: I
 		>
 			{items.map((item: any, idx: number) => {
 				return (
-					<SemanticList.Item key={`${id}_listItem_${idx}`}>
+					<SemanticList.Item key={`${id}_listItem_${idx}`} className={Style['listItem']}>
 						{item.content}
 					</SemanticList.Item>
 				);
