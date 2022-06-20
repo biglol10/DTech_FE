@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, JSXElementConstructor as JSX } from 'react';
 import { ButtonProps, StrictLabelProps } from 'semantic-ui-react';
 
 export interface IInputDefault {
@@ -60,4 +60,17 @@ export interface ILabel {
 	color?: StrictLabelProps['color'];
 	borderNone?: boolean;
 	size?: StrictLabelProps['size'];
+}
+
+export interface IAccordionItems {
+	title: string;
+	expanded: boolean;
+	content: string | JSX.Element;
+}
+
+export interface IAccordion {
+	id: string;
+	backgroundColor?: string;
+	fontColor?: string;
+	items: IAccordionItems[];
 }

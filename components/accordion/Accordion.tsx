@@ -6,59 +6,62 @@ import {
 	Typography,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { IAccordion, IAccordionItems } from '@utils/types/componentTypes';
 
-const Accordion = ({ id = '', items }: { id: any; items: any }) => {
-	const [expandedAccordions, setExpandedAccordions] = useState(() => {
-		const arr = items.map((item: any) => item.expanded);
+interface IJsObj {
+	[name: string]: boolean;
+}
 
-		return arr;
+const Accordion = ({
+	id = '',
+	items,
+	backgroundColor = 'white',
+	fontColor = 'black',
+}: IAccordion) => {
+	const jsObj: IJsObj = {};
+
+	items.map((item: IAccordionItems, idx: number) => {
+		const uId = `${id}_${idx}`;
+
+		jsObj[uId] = item.expanded;
+		return null;
 	});
 
-	return <></>;
+	const [expandedAccordions, setExpandedAccordions] = useState(jsObj);
+
+	const handleAccordionChange = (idValue: string) => {
+		setExpandedAccordions({ ...expandedAccordions, [idValue]: !expandedAccordions[idValue] });
+	};
+
+	return (
+		<>
+			{items.map((item: IAccordionItems, idx: number) => {
+				return (
+					<MUIAccordion
+						key={`${id}_${idx}`}
+						expanded={expandedAccordions[`${id}_${idx}`]}
+						onChange={() => handleAccordionChange(`${id}_${idx}`)}
+						style={{ backgroundColor, color: fontColor }}
+					>
+						<AccordionSummary
+							expandIcon={<ExpandMoreIcon />}
+							aria-controls={id}
+							id={id}
+						>
+							<Typography>{item.title}</Typography>
+						</AccordionSummary>
+						<AccordionDetails>
+							{typeof item.content === 'string' ? (
+								<Typography>{item.content}</Typography>
+							) : (
+								item.content
+							)}
+						</AccordionDetails>
+					</MUIAccordion>
+				);
+			})}
+		</>
+	);
 };
 
-export default function SimpleAccordion() {
-	return (
-		<div>
-			<MUIAccordion expanded={true}>
-				<AccordionSummary
-					expandIcon={<ExpandMoreIcon />}
-					aria-controls="panel1a-content"
-					id="panel1a-header"
-				>
-					<Typography>Accordion 1</Typography>
-				</AccordionSummary>
-				<AccordionDetails>
-					<Typography>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-						malesuada lacus ex, sit amet blandit leo lobortis eget.
-					</Typography>
-				</AccordionDetails>
-			</MUIAccordion>
-			<MUIAccordion>
-				<AccordionSummary
-					expandIcon={<ExpandMoreIcon />}
-					aria-controls="panel2a-content"
-					id="panel2a-header"
-				>
-					<Typography>Accordion 2</Typography>
-				</AccordionSummary>
-				<AccordionDetails>
-					<Typography>
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-						malesuada lacus ex, sit amet blandit leo lobortis eget.
-					</Typography>
-				</AccordionDetails>
-			</MUIAccordion>
-			<MUIAccordion disabled>
-				<AccordionSummary
-					expandIcon={<ExpandMoreIcon />}
-					aria-controls="panel3a-content"
-					id="panel3a-header"
-				>
-					<Typography>Disabled Accordion</Typography>
-				</AccordionSummary>
-			</MUIAccordion>
-		</div>
-	);
-}
+export default Accordion;
