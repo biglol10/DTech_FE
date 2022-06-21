@@ -1,5 +1,5 @@
 import { ICheckboxListDefault, ICheckboxDefault } from '@utils/types/componentTypes';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { CheckboxDefault } from '@components/index';
 
 import Style from './CheckboxList.module.scss';
@@ -23,17 +23,16 @@ const CheckboxListDefault = ({
 		onChange && onChange({ itemList });
 	}, [onChange, itemList]);
 
-	const onChangeFn = (e: any) => {
-		// setItemList((prevList) =>
-		// 	prevList.map((item) => {
-		// 		if (item.id === e.id) {
-		// 			item.checked = e.isChecked;
-		// 		}
-		// 		return item;
-		// 	}),
-		// );
-		// console.log(itemList);
-	};
+	const onChangeFn = useCallback((e: any) => {
+		setItemList((prevList) =>
+			prevList.map((item) => {
+				if (item.id === e.id) {
+					item.checked = e.isChecked;
+				}
+				return item;
+			}),
+		);
+	}, []);
 
 	const checkboxList = itemList.map((item) => (
 		<CheckboxDefault
