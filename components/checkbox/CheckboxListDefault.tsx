@@ -11,10 +11,10 @@ const CheckboxListDefault = ({
 	direction = 'horizontal',
 	onChange = null,
 	items = [
-		{ id: '1', disabled: false, checked: false, label: 'hello1' },
-		{ id: '2', disabled: false, checked: false, label: 'hello2' },
-		{ id: '3', disabled: false, checked: false, label: 'hello3' },
-		{ id: '4', disabled: false, checked: false, label: 'hello4' },
+		{ id: '1', disabled: false, checked: false, label: 'test1' },
+		{ id: '2', disabled: false, checked: false, label: 'test2' },
+		{ id: '3', disabled: false, checked: false, label: 'test3' },
+		{ id: '4', disabled: false, checked: false, label: 'test4' },
 	],
 }: ICheckboxListDefault) => {
 	const [itemList, setItemList] = useState(items);
