@@ -21,10 +21,18 @@ const CheckboxListDefault = ({
 
 	useEffect(() => {
 		onChange && onChange({ itemList });
-	}, [itemList, onChange]);
+	}, [onChange, itemList]);
 
-	const onChangeFn = (e: ChangeEvent<HTMLImageElement>) => {
-		console.log(e);
+	const onChangeFn = (e: any) => {
+		// setItemList((prevList) =>
+		// 	prevList.map((item) => {
+		// 		if (item.id === e.id) {
+		// 			item.checked = e.isChecked;
+		// 		}
+		// 		return item;
+		// 	}),
+		// );
+		// console.log(itemList);
 	};
 
 	const checkboxList = itemList.map((item) => (
@@ -35,7 +43,7 @@ const CheckboxListDefault = ({
 			labelPosition={labelPosition}
 			label={item.label}
 			checked={item.checked}
-			onChange={(e: any) => onChangeFn(e)}
+			onClick={onChangeFn}
 		/>
 	));
 

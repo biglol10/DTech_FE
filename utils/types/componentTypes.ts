@@ -47,7 +47,7 @@ export interface ICheckboxDefault {
 	size?: 'mini' | 'small' | 'large' | 'big' | 'huge' | 'massive';
 	label?: string;
 	labelPosition?: 'top' | 'right' | undefined;
-	onChange?: any;
+	onClick?: any;
 }
 export interface ICheckboxListDefault {
 	id?: string;

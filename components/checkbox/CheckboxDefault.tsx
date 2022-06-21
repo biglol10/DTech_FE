@@ -1,6 +1,7 @@
 import { ICheckboxDefault } from '@utils/types/componentTypes';
 import { useEffect, useState } from 'react';
-import { Checkbox, Icon, Label } from 'semantic-ui-react';
+import { Checkbox, Icon } from 'semantic-ui-react';
+import { Label } from '@components/index';
 
 import Style from './Checkbox.module.scss';
 
@@ -11,40 +12,31 @@ const CheckboxDefault = ({
 	size = 'small',
 	label = 'test',
 	labelPosition = 'right',
-	onChange = null,
+	onClick = null,
 }: ICheckboxDefault) => {
 	const [isChecked, setIsChecked] = useState(checked);
 	const onChangeFn = () => {
 		setIsChecked((prevChecked) => !prevChecked);
 	};
 
-	// useEffect(() => {
-	// 	if (items.length > 0) {
-	// 		console.log(items);
-	// 	}
-	// });
-
 	useEffect(() => {
 		setIsChecked(checked);
 	}, [checked]);
 
 	useEffect(() => {
-		if (isChecked) {
-			onChange &&
-				onChange({
-					id,
-				});
-		}
-	}, [isChecked, onChange]);
+		onClick &&
+			onClick({
+				id,
+				isChecked,
+			});
+	}, [isChecked, onClick]);
 
 	return (
 		<>
 			{labelPosition === 'top' && (
 				<div className={Style['checkBoxLabelTop']}>
 					<div>
-						<Label className={Style['checkBoxLabel']} size={size}>
-							{label}
-						</Label>
+						<Label content={label} />
 					</div>
 					<Checkbox
 						className={Style['checkBox']}
@@ -64,9 +56,7 @@ const CheckboxDefault = ({
 						disabled={disabled}
 						checked={isChecked}
 					/>
-					<Label className={Style['checkBoxLabel']} size={size}>
-						{label}
-					</Label>
+					<Label content={label} />
 				</div>
 			)}
 		</>
