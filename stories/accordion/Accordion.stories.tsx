@@ -1,7 +1,7 @@
 import { Accordion } from '@components/index';
 import { Message, Image } from 'semantic-ui-react';
 
-import { Doc } from '../button/Button.stories.mdx';
+import { Doc } from './Accordion.stories.mdx';
 
 export default {
 	title: 'Example/Accordion',
