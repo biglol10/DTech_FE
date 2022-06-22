@@ -8,6 +8,7 @@ import Label from './label/Label';
 import Accordion from './accordion/Accordion';
 import List from './list/List';
 import Box from './box/Box';
+import Toggle from './toggle/Toggle';
 
 export {
 	Accordion,
@@ -20,4 +21,5 @@ export {
 	List,
 	ModalPopup,
 	CheckboxDefault,
+	Toggle,
 };

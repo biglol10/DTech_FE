@@ -5,7 +5,7 @@ import { increment } from '@store/counterSlice';
 import Link from 'next/link';
 import { Message, Image } from 'semantic-ui-react';
 
-import { Accordion, Box, Button, InputDefault, CheckboxDefault } from '@components/index';
+import { Accordion, Box, Button, InputDefault, CheckboxDefault, Toggle } from '@components/index';
 
 const Index = () => {
 	const [inputValue, setInputValue] = useState(2);
@@ -139,6 +139,13 @@ const Index = () => {
 			<Testcomponent />
 
 			<CheckboxDefault id="testCheckbox" label="testLabel" />
+
+			<Toggle
+				id="testToggle"
+				onClick={(arg: any) => {
+					console.log(arg);
+				}}
+			/>
 		</div>
 	);
 };
