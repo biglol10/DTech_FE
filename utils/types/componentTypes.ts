@@ -88,3 +88,10 @@ export interface IBox {
 	spacing?: number;
 	onClick?: any;
 }
+
+export interface IToggle {
+	id: string;
+	onClick?: any;
+	on?: boolean;
+	spacing?: number;
+}
