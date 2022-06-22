@@ -5,7 +5,7 @@ import { increment } from '@store/counterSlice';
 import Link from 'next/link';
 import { Message, Image } from 'semantic-ui-react';
 
-import { Accordion, Button, InputDefault, CheckboxDefault } from '@components/index';
+import { Accordion, Box, Button, InputDefault, CheckboxDefault } from '@components/index';
 
 const Index = () => {
 	const [inputValue, setInputValue] = useState(2);
@@ -101,6 +101,13 @@ const Index = () => {
 			<br />
 
 			<button onClick={() => randomComputation()}>do some computation</button>
+
+			<br />
+			<br />
+
+			<Box id="sampleBoxId" spacing={32} boxType="error">
+				alskdfalskfjqwpoieuqwer
+			</Box>
 
 			<br />
 			<br />

@@ -7,9 +7,11 @@ import Button from './button/Button';
 import Label from './label/Label';
 import Accordion from './accordion/Accordion';
 import List from './list/List';
+import Box from './box/Box';
 
 export {
 	Accordion,
+	Box,
 	Button,
 	InputDefault,
 	InputSearch,

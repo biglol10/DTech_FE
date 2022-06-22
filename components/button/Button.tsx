@@ -1,5 +1,6 @@
 import { Button as SemanticButton } from 'semantic-ui-react';
 import { IButton } from '@utils/types/componentTypes';
+import Style from './Button.module.scss';
 
 const Button = ({
 	buttonType = 'primary',
@@ -9,9 +10,11 @@ const Button = ({
 	size = 'mini',
 	loading = false,
 	onClick = null,
+	spacing = 0,
 }: IButton) => {
 	return (
 		<SemanticButton
+			className={Style['semanticButton']}
 			primary={buttonType === 'primary'}
 			secondary={buttonType === 'secondary'}
 			content={content}
@@ -20,6 +23,7 @@ const Button = ({
 			size={size}
 			loading={loading}
 			onClick={onClick && onClick}
+			style={{ '--spacing': `${spacing}px` }}
 		/>
 	);
 };
