@@ -1,5 +1,10 @@
 @mixin label16($fontSize) {
 	font-size: $fontSize;
 	line-height: 32px;
+}
+
+@mixin textBox($fontSize) {
+	font-size: $fontSize;
+	font-weight: 300;
 	@content;
 }

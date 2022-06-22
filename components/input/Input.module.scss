@@ -1,5 +1,9 @@
 @import '@styles/_mixinCollection.scss';
 
+.emptyDivMarginTop {
+	margin-top: var(--spacing);
+}
+
 .inputDefaultLabel {
 	// @include label16(16px);
 }

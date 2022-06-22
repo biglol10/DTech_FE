@@ -7,6 +7,7 @@ import { Message, Image } from 'semantic-ui-react';
 
 import {
 	Accordion,
+	Box,
 	Button,
 	InputDefault,
 	CheckboxDefault,
@@ -98,6 +99,14 @@ const Index = () => {
 			<button onClick={() => randomComputation()}>do some computation</button>
 			<br />
 			<br />
+
+			<Box id="sampleBoxId" spacing={32} boxType="error">
+				alskdfalskfjqwpoieuqwer
+			</Box>
+
+			<br />
+			<br />
+
 			<Button
 				loading={false}
 				basic={false}

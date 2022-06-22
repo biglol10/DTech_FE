@@ -8,9 +8,11 @@ import Label from './label/Label';
 import Accordion from './accordion/Accordion';
 import CheckboxListDefault from './checkbox/CheckboxListDefault';
 import List from './list/List';
+import Box from './box/Box';
 
 export {
 	Accordion,
+	Box,
 	Button,
 	InputDefault,
 	InputSearch,
