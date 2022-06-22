@@ -50,6 +50,8 @@ export interface ICheckboxDefault {
 	label?: string;
 	labelPosition?: 'top' | 'right' | undefined;
 	onClick?: any;
+	fontColor?: StrictLabelProps['color'];
+	spacing?: number;
 }
 export interface ICheckboxListDefault {
 	id?: string;
@@ -58,6 +60,7 @@ export interface ICheckboxListDefault {
 	onChange?: any;
 	direction?: 'horizontal' | 'vertical' | undefined;
 	items: Array<{ id: string; disabled?: boolean; checked?: boolean; label?: string }>;
+	fontColor?: StrictLabelProps['color'];
 }
 
 export interface ILabel {

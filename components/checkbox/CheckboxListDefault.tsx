@@ -1,4 +1,4 @@
-import { ICheckboxListDefault, ICheckboxDefault } from '@utils/types/componentTypes';
+import { ICheckboxListDefault } from '@utils/types/componentTypes';
 import { useCallback, useEffect, useState } from 'react';
 import { CheckboxDefault } from '@components/index';
 
@@ -16,6 +16,7 @@ const CheckboxListDefault = ({
 		{ id: '3', disabled: false, checked: false, label: 'test3' },
 		{ id: '4', disabled: false, checked: false, label: 'test4' },
 	],
+	fontColor = 'black',
 }: ICheckboxListDefault) => {
 	const [itemList, setItemList] = useState(items);
 
@@ -43,6 +44,7 @@ const CheckboxListDefault = ({
 			label={item.label}
 			checked={item.checked}
 			onClick={onChangeFn}
+			fontColor={fontColor}
 		/>
 	));
 

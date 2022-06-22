@@ -13,6 +13,8 @@ const CheckboxDefault = ({
 	label = 'test',
 	labelPosition = 'right',
 	onClick = null,
+	spacing = 0,
+	fontColor = 'black',
 }: ICheckboxDefault) => {
 	const [isChecked, setIsChecked] = useState(checked);
 	const onChangeFn = () => {
@@ -36,7 +38,7 @@ const CheckboxDefault = ({
 			{labelPosition === 'top' && (
 				<div className={Style['checkBoxLabelTop']}>
 					<div>
-						<Label content={label} />
+						<Label content={label} color={fontColor} />
 					</div>
 					<Checkbox
 						className={Style['checkBox']}
@@ -44,6 +46,8 @@ const CheckboxDefault = ({
 						onChange={onChangeFn}
 						disabled={disabled}
 						checked={isChecked}
+						style={{ '--spacing': `${spacing}px` }}
+						size={size}
 					/>
 				</div>
 			)}
@@ -55,8 +59,10 @@ const CheckboxDefault = ({
 						onChange={onChangeFn}
 						disabled={disabled}
 						checked={isChecked}
+						style={{ '--spacing': `${spacing}px` }}
+						size={size}
 					/>
-					<Label content={label} />
+					<Label content={label} color={fontColor} />
 				</div>
 			)}
 		</>
