@@ -1,6 +1,7 @@
 import { ChangeEvent, forwardRef, useEffect, useState } from 'react';
 import { Input, Label, Header, Icon } from 'semantic-ui-react';
 import { IInputSearch } from '@utils/types/componentTypes';
+import { elCommStyle } from '@utils/styleRelated/stylehelper';
 import Style from './Input.module.scss';
 
 const InputSearch = forwardRef<any, IInputSearch>(
@@ -24,6 +25,7 @@ const InputSearch = forwardRef<any, IInputSearch>(
 			maxLength = undefined,
 			errorLabelPosition = 'bottom',
 			onSearchIconClick = null,
+			spacing = 0,
 		},
 		ref,
 	) => {
@@ -58,6 +60,7 @@ const InputSearch = forwardRef<any, IInputSearch>(
 
 		return (
 			<>
+				<div style={elCommStyle(spacing)} className={Style['emptyDivMarginTop']} />
 				{showInputLabel && (
 					<label htmlFor={id}>
 						<Header className={Style['inputLabelHeader']} as={inputLabelSize}>

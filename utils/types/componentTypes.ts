@@ -20,6 +20,7 @@ export interface IInputDefault {
 	inputLabelSize?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 	showInputLabel?: boolean;
 	ref?: any;
+	spacing?: number;
 }
 
 export interface IInputSearch extends IInputDefault {
