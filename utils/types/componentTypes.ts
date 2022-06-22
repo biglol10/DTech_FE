@@ -38,6 +38,7 @@ export interface IButton {
 	size?: IInputDefault['size'];
 	loading?: boolean;
 	onClick?: any;
+	spacing?: number;
 }
 
 export interface ICheckboxDefault {
@@ -60,6 +61,7 @@ export interface ILabel {
 	color?: StrictLabelProps['color'];
 	borderNone?: boolean;
 	size?: StrictLabelProps['size'];
+	spacing?: number;
 }
 
 export interface IAccordionItems {
@@ -73,4 +75,15 @@ export interface IAccordion {
 	backgroundColor?: string;
 	fontColor?: string;
 	items: IAccordionItems[];
+	spacing?: number;
+}
+
+export interface IBox {
+	id: string;
+	children: string | JSX.Element | ReactNode;
+	boxType?: 'basic' | 'primary' | 'error';
+	textAlign?: 'left' | 'center' | 'right';
+	className?: string;
+	spacing?: number;
+	onClick?: any;
 }
