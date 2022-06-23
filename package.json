@@ -37,7 +37,6 @@
 		"@storybook/addon-links": "^6.5.9",
 		"@storybook/builder-webpack5": "^6.5.9",
 		"@storybook/manager-webpack5": "^6.5.9",
-		"@storybook/preset-scss": "^1.0.3",
 		"@storybook/react": "^6.5.9",
 		"@storybook/testing-library": "^0.0.13",
 		"@types/node": "^18.0.0",

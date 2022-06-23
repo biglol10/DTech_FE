@@ -6,14 +6,13 @@ module.exports = {
 		'@storybook/addon-links',
 		'@storybook/addon-essentials',
 		'@storybook/addon-interactions',
-		'@storybook/preset-scss',
 	],
 	framework: '@storybook/react',
 	core: {
 		builder: '@storybook/builder-webpack5',
 	},
 	webpackFinal: async (config) => {
-		config.resolve.modules = [path.resolve(__dirname, '..'), 'node_modules', 'styles'];
+		config.resolve.modules = [path.resolve(__dirname, '..'), 'node_modules'];
 		config.resolve.alias = {
 			...config.resolve.alias,
 			'@components': path.resolve(__dirname, '../components'),
@@ -21,6 +20,25 @@ module.exports = {
 			'@utils': path.resolve(__dirname, '../utils'),
 			'@styles': path.resolve(__dirname, '../styles'),
 		};
+		// '@storybook/preset-scss' 제거하고 sass-loader 직접 사용토록 수정
+		// 그 이유는 index_testButton__z9CpQ 처럼 [path]_[uniqueId]로 표시하고 싶은데 @storybook/preset-scss 쓰면 [uniqueId]만 표시됨
+		config.module.rules.push({
+			test: /\.s(a|c)ss$/,
+			include: path.resolve(__dirname, '../'),
+			use: [
+				'style-loader',
+				{
+					loader: 'css-loader',
+					options: {
+						modules: {
+							auto: true,
+							localIdentName: '[name]__[local]--[hash:base64:5]',
+						},
+					},
+				},
+				'sass-loader',
+			],
+		});
 		return config;
 	},
 };
