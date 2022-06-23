@@ -49,8 +49,18 @@ export interface ICheckboxDefault {
 	size?: 'mini' | 'small' | 'large' | 'big' | 'huge' | 'massive';
 	label?: string;
 	labelPosition?: 'top' | 'right' | undefined;
-	help?: string;
-	ref?: any;
+	onClick?: any;
+	fontColor?: StrictLabelProps['color'];
+	spacing?: number;
+}
+export interface ICheckboxListDefault {
+	id?: string;
+	size?: 'mini' | 'small' | 'large' | 'big' | 'huge' | 'massive';
+	labelPosition?: 'top' | 'right' | undefined;
+	onChange?: any;
+	direction?: 'horizontal' | 'vertical' | undefined;
+	items: Array<{ id: string; disabled?: boolean; checked?: boolean; label?: string }>;
+	fontColor?: StrictLabelProps['color'];
 }
 
 export interface ILabel {
