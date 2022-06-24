@@ -10,6 +10,7 @@ import CheckboxListDefault from './checkbox/CheckboxListDefault';
 import List from './list/List';
 import Box from './box/Box';
 import Toggle from './toggle/Toggle';
+import Radio from './radio/Radio';
 
 export {
 	Accordion,
@@ -24,4 +25,5 @@ export {
 	CheckboxDefault,
 	Toggle,
 	CheckboxListDefault,
+	Radio,
 };

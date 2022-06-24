@@ -46,8 +46,8 @@ const CheckboxDefault = ({
 						onChange={onChangeFn}
 						disabled={disabled}
 						checked={isChecked}
-						style={{ '--spacing': `${spacing}px` }}
 						size={size}
+						style={{ '--spacing': `${spacing}px` }}
 					/>
 				</div>
 			)}
@@ -59,7 +59,6 @@ const CheckboxDefault = ({
 						onChange={onChangeFn}
 						disabled={disabled}
 						checked={isChecked}
-						style={{ '--spacing': `${spacing}px` }}
 						size={size}
 					/>
 					<Label content={label} color={fontColor} />

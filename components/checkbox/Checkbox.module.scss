@@ -6,12 +6,12 @@
 	width: max-content;
 	align-items: center;
 	padding: 5px;
+	margin-top: var(--spacing) !important;
+	.checkBox {
+		align-items: center;
+	}
 	.checkBoxLabel {
 		background-color: transparent;
-	}
-	.checkBoxHelpLabel {
-		height: fit-content;
-		position: absolute;
 	}
 }
 
@@ -22,9 +22,8 @@
 	width: max-content;
 	padding: 5px;
 	width: max-content;
+	margin-top: var(--spacing) !important;
 	.checkBox {
-		// height: 20px;
-		// display: flex;
 		align-items: center;
 	}
 	.checkBoxLabel {
@@ -33,22 +32,4 @@
 		display: flex;
 		align-items: center;
 	}
-	.checkBoxHelpIcon {
-		margin-left: 10px;
-		height: fit-content;
-		display: flex;
-		align-items: center;
-	}
-	.checkBoxHelpLabel {
-		height: fit-content;
-		position: absolute;
-	}
 }
-
-.checkBoxHelpLabel {
-	height: fit-content;
-	position: absolute;
-}
-
-// .checkBox {
-// }

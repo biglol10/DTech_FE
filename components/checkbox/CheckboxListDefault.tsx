@@ -17,6 +17,7 @@ const CheckboxListDefault = ({
 		{ id: '4', disabled: false, checked: false, label: 'test4' },
 	],
 	fontColor = 'black',
+	spacing = 0,
 }: ICheckboxListDefault) => {
 	const [itemList, setItemList] = useState(items);
 

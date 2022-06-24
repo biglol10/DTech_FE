@@ -13,6 +13,7 @@ import {
 	CheckboxDefault,
 	CheckboxListDefault,
 	Toggle,
+	Radio,
 } from '@components/index';
 
 const Index = () => {
@@ -128,15 +129,19 @@ const Index = () => {
 				onChange={() => console.log(inputRef.current)}
 			/>
 			<Testcomponent />
+			<br />
+			<h2>Checkbox</h2>
 			<CheckboxDefault
 				id="testCheckbox"
 				label="testLabel"
 				onClick={(arg: any) => console.log(arg)}
 			/>
+			<br />
+			<h2>CheckboxList</h2>
 			<CheckboxListDefault
 				id="testCheckboxList"
 				labelPosition="right"
-				direction="horizontal"
+				direction="vertical"
 				items={[
 					{ id: '1', disabled: false, checked: false, label: 'checkbox1' },
 					{ id: '2', disabled: false, checked: false, label: 'checkbox2' },
@@ -145,13 +150,28 @@ const Index = () => {
 				]}
 				onChange={(args: any) => console.log(args)}
 			/>
-
+			<br />
+			<h2>Toggle</h2>
 			<Toggle
 				id="testToggle"
 				onClick={(arg: any) => {
 					console.log(arg);
 				}}
 			/>
+			<br />
+			<h2>Radio</h2>
+			<Radio
+				id="testRadio"
+				labelPosition="right"
+				items={[
+					{ value: 'radioId1', label: 'radio1' },
+					{ value: 'radioId2', label: 'radio2' },
+					{ value: 'radioId3', label: 'radio3' },
+					{ value: 'radioId4', label: 'radio4' },
+				]}
+				onChange={(args: any) => console.log(args)}
+			/>
+			<br />
 		</div>
 	);
 };
