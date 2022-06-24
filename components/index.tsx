@@ -6,6 +6,7 @@ import InputWithIcon from './input/InputWithIcon';
 import Button from './button/Button';
 import Label from './label/Label';
 import Accordion from './accordion/Accordion';
+import CheckboxListDefault from './checkbox/CheckboxListDefault';
 import List from './list/List';
 import Box from './box/Box';
 import Toggle from './toggle/Toggle';
@@ -22,4 +23,5 @@ export {
 	ModalPopup,
 	CheckboxDefault,
 	Toggle,
+	CheckboxListDefault,
 };

@@ -1,11 +1,19 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Testcomponent from '@components/Testcomponent';
 import { useSelector, useDispatch } from 'react-redux';
 import { increment } from '@store/counterSlice';
 import Link from 'next/link';
 import { Message, Image } from 'semantic-ui-react';
 
-import { Accordion, Box, Button, InputDefault, CheckboxDefault, Toggle } from '@components/index';
+import {
+	Accordion,
+	Box,
+	Button,
+	InputDefault,
+	CheckboxDefault,
+	CheckboxListDefault,
+	Toggle,
+} from '@components/index';
 
 const Index = () => {
 	const [inputValue, setInputValue] = useState(2);
@@ -68,40 +76,28 @@ const Index = () => {
 				Counter: <span>{counter}</span>
 			</h1>
 			<button onClick={() => dispatch(increment())}>Add To Count</button>
-
 			<br />
 			<Link href="/anotherPage">
 				<a>GoToAnotherPage</a>
 			</Link>
-
 			<br />
 			<br />
-
 			<Link href="/apiTestPage">
 				<a>GoToApiTestPage</a>
 			</Link>
-
 			<br />
 			<br />
-
 			<button onClick={() => addOneNumber()}>add one number</button>
-
 			<br />
 			<br />
-
 			<button onClick={() => subtractOneNumber()}>subtract one number</button>
-
 			<br />
 			<br />
-
 			<input value={inputValue} onChange={(e: any) => setInputValue(e.target.value)} />
 			<button onClick={() => addByAmount()}>add one number</button>
-
 			<br />
 			<br />
-
 			<button onClick={() => randomComputation()}>do some computation</button>
-
 			<br />
 			<br />
 
@@ -120,14 +116,10 @@ const Index = () => {
 				content="ButtonClick"
 				color="brown"
 			/>
-
 			{loading ? <h1>Loading...</h1> : <h1>Done</h1>}
-
 			<br />
 			<br />
-
 			<Accordion id="accordionId" items={items} />
-
 			<InputDefault
 				id="inputDefault1"
 				inputLabel="sdf"
@@ -135,10 +127,24 @@ const Index = () => {
 				ref={inputRef}
 				onChange={() => console.log(inputRef.current)}
 			/>
-
 			<Testcomponent />
-
-			<CheckboxDefault id="testCheckbox" label="testLabel" />
+			<CheckboxDefault
+				id="testCheckbox"
+				label="testLabel"
+				onClick={(arg: any) => console.log(arg)}
+			/>
+			<CheckboxListDefault
+				id="testCheckboxList"
+				labelPosition="right"
+				direction="horizontal"
+				items={[
+					{ id: '1', disabled: false, checked: false, label: 'checkbox1' },
+					{ id: '2', disabled: false, checked: false, label: 'checkbox2' },
+					{ id: '3', disabled: false, checked: false, label: 'checkbox3' },
+					{ id: '4', disabled: false, checked: false, label: 'checkbox4' },
+				]}
+				onChange={(args: any) => console.log(args)}
+			/>
 
 			<Toggle
 				id="testToggle"
