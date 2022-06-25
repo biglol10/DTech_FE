@@ -116,3 +116,16 @@ export interface IRadio {
 	items: Array<{ value: string; label?: string }>;
 	spacing?: number;
 }
+
+export interface IThumbnail {
+	id?: string;
+	spacing?: number;
+	name?: string;
+	href?: string;
+}
+
+export interface ISNSkillFlow {
+	id?: string;
+	spacing?: number;
+	items?: Array<{ id?: string; name?: string; href?: string }>;
+}

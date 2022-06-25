@@ -11,6 +11,8 @@ import List from './list/List';
 import Box from './box/Box';
 import Toggle from './toggle/Toggle';
 import Radio from './radio/Radio';
+import TNSkill from './thumbnail/TNSkill';
+import TNSkillFlow from './thumbnail/TNSkillFlow';
 
 export {
 	Accordion,
@@ -26,4 +28,6 @@ export {
 	Toggle,
 	CheckboxListDefault,
 	Radio,
+	TNSkill,
+	TNSkillFlow,
 };

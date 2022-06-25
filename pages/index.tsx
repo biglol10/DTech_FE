@@ -14,6 +14,8 @@ import {
 	CheckboxListDefault,
 	Toggle,
 	Radio,
+	TNSkill,
+	TNSkillFlow,
 } from '@components/index';
 
 const Index = () => {
@@ -172,6 +174,21 @@ const Index = () => {
 				onChange={(args: any) => console.log(args)}
 			/>
 			<br />
+			<h2>TNSkill</h2>
+			<TNSkill id="testTNSkill" name="nextjs" href="/anotherPage" />
+			<br />
+			<TNSkillFlow
+				items={[
+					{ name: 'react' },
+					{ name: 'nextjs' },
+					{ name: 'vuejs' },
+					{ name: 'nodejs' },
+					{ name: 'react' },
+					{ name: 'nextjs' },
+					{ name: 'vuejs' },
+					{ name: 'nodejs' },
+				]}
+			/>
 		</div>
 	);
 };
