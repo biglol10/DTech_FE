@@ -1,0 +1,29 @@
+.radio_horizontal {
+	display: flex;
+	align-items: center;
+	background-color: white;
+	width: max-content;
+	padding: 10px;
+	margin-top: var(--spacing);
+}
+
+.radio_vertical {
+	// display: flex;
+	align-items: center;
+	background-color: white;
+	width: max-content;
+	padding: 5px;
+	margin-top: var(--spacing);
+}
+
+.label_top {
+	// background-color: red;
+	display: flex;
+	flex-direction: column-reverse;
+	align-items: center;
+}
+
+.label_right {
+	display: flex;
+	align-items: center;
+}

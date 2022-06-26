@@ -2,6 +2,7 @@ import { ICheckboxListDefault } from '@utils/types/componentTypes';
 import { useCallback, useEffect, useState } from 'react';
 import { CheckboxDefault } from '@components/index';
 
+import { elCommStyle } from '@utils/styleRelated/stylehelper';
 import Style from './CheckboxList.module.scss';
 
 const CheckboxListDefault = ({
@@ -17,6 +18,7 @@ const CheckboxListDefault = ({
 		{ id: '4', disabled: false, checked: false, label: 'test4' },
 	],
 	fontColor = 'black',
+	spacing = 0,
 }: ICheckboxListDefault) => {
 	const [itemList, setItemList] = useState(items);
 
@@ -50,12 +52,14 @@ const CheckboxListDefault = ({
 
 	return (
 		<>
-			{direction === 'horizontal' && (
-				<div className={Style['horizontalList']}>{checkboxList}</div>
-			)}
-			{direction === 'vertical' && (
-				<div className={Style['verticalList']}>{checkboxList}</div>
-			)}
+			<div className={Style['horizontalList']} style={elCommStyle(spacing)}>
+				{direction === 'horizontal' && (
+					<div className={Style['horizontalList']}>{checkboxList}</div>
+				)}
+				{direction === 'vertical' && (
+					<div className={Style['verticalList']}>{checkboxList}</div>
+				)}
+			</div>
 		</>
 	);
 };
