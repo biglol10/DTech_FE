@@ -1,0 +1,25 @@
+@import '@styles/_mixinCollection.scss';
+@import '@styles/_variables.scss';
+
+.box-wrap {
+	display: block;
+	padding: 15px;
+	margin-top: var(--spacing);
+	background: $whitescale3;
+	border-radius: 10px;
+
+	@include textBox(16px) {
+		text-align: var(--align);
+	}
+
+	&.primary {
+		border: 1px solid $bluescale3;
+		background: $bluescale1;
+	}
+
+	&.error {
+		border: 1px solid rgba(235, 61, 79, 0.1);
+		background: rgba($redscale5, 0.1);
+		color: $redscale6;
+	}
+}

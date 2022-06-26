@@ -1,6 +1,7 @@
 import { ChangeEvent, forwardRef, useEffect, useState } from 'react';
 import { Icon, Input, Label, Header } from 'semantic-ui-react';
 import { IInputWithIcon } from '@utils/types/componentTypes';
+import { elCommStyle } from '@utils/styleRelated/stylehelper';
 import Style from './Input.module.scss';
 
 const InputWithIcon = forwardRef<any, IInputWithIcon>(
@@ -24,6 +25,7 @@ const InputWithIcon = forwardRef<any, IInputWithIcon>(
 			maxLength = undefined,
 			errorLabelPosition = 'bottom',
 			inputIcon = <Icon name="at" />,
+			spacing = 0,
 		},
 		ref,
 	) => {
@@ -58,6 +60,7 @@ const InputWithIcon = forwardRef<any, IInputWithIcon>(
 
 		return (
 			<>
+				<div style={elCommStyle(spacing)} className={Style['emptyDivMarginTop']} />
 				{showInputLabel && (
 					<label htmlFor={id}>
 						<Header className={Style['inputLabelHeader']} as={inputLabelSize}>
