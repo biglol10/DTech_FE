@@ -61,6 +61,7 @@ export interface ICheckboxListDefault {
 	direction?: 'horizontal' | 'vertical' | undefined;
 	items: Array<{ id: string; disabled?: boolean; checked?: boolean; label?: string }>;
 	fontColor?: StrictLabelProps['color'];
+	spacing?: number;
 }
 
 export interface ILabel {
@@ -97,4 +98,34 @@ export interface IBox {
 	className?: string;
 	spacing?: number;
 	onClick?: any;
+}
+
+export interface IToggle {
+	id: string;
+	onClick?: any;
+	on?: boolean;
+	spacing?: number;
+}
+
+export interface IRadio {
+	id?: string;
+	name?: string;
+	onChange?: any;
+	direction?: 'horizontal' | 'vertical' | undefined;
+	labelPosition?: 'top' | 'right' | undefined;
+	items: Array<{ value: string; label?: string }>;
+	spacing?: number;
+}
+
+export interface IThumbnail {
+	id?: string;
+	spacing?: number;
+	name?: string;
+	href?: string;
+}
+
+export interface ISNSkillFlow {
+	id?: string;
+	spacing?: number;
+	items?: Array<{ id?: string; name?: string; href?: string }>;
 }

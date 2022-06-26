@@ -1,5 +1,8 @@
 @import '@styles/_mixinCollection.scss';
 
+.checkboxListFrame {
+	margin-top: var(--spacing);
+}
 .horizontalList {
 	background-color: white;
 	display: flex;
