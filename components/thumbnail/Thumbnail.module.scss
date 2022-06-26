@@ -1,0 +1,59 @@
+.skillImage {
+	border-radius: 30px;
+	margin: 5px 5px 5px 5px !important;
+	height: 40px;
+	background-color: white;
+	// margin-top: var(--spacing);
+}
+
+.skillFlowFrame {
+	width: 400px;
+	background-color: rgb(204, 204, 204);
+	// border: 1px solid black;
+	// position: absolute;
+	overflow: hidden;
+	border-radius: 20px;
+	// display: flex;
+	// margin-top: var(--spacing);
+}
+
+.skillFlow {
+	display: flex;
+	animation: text-scroll 30s linear infinite;
+}
+// .skillFlow2 {
+// 	display: flex;
+// 	animation: text-scroll2 5s linear infinite;
+// }
+
+// .skillFlow {
+// 	display: flex;
+// 	animation: 10s linear 0s infinite normal forwards running text-scroll;
+// 	position: relative;
+// }
+// .skillFlow2 {
+// 	display: flex;
+// 	animation: 10s linear 0s infinite normal none running text-scroll2;
+// 	position: relative;
+// }
+
+@keyframes text-scroll {
+	0% {
+		transform: translateX(0);
+	}
+	50% {
+		transform: translateX(-200%);
+	}
+	100% {
+		transform: translateX(0);
+	}
+}
+
+// @keyframes text-scroll2 {
+// 	0% {
+// 		transform: translateX(0);
+// 	}
+// 	100% {
+// 		transform: translateX(-200%);
+// 	}
+// }
