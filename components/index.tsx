@@ -9,6 +9,7 @@ import Accordion from './accordion/Accordion';
 import CheckboxListDefault from './checkbox/CheckboxListDefault';
 import List from './list/List';
 import Box from './box/Box';
+import { Tabs, TabHeader, Tab, TabPanels, TabPanel } from './tab/Tab';
 
 export {
 	Accordion,
@@ -22,4 +23,9 @@ export {
 	ModalPopup,
 	CheckboxDefault,
 	CheckboxListDefault,
+	Tabs,
+	TabHeader,
+	Tab,
+	TabPanels,
+	TabPanel,
 };
