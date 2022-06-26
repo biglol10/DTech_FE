@@ -11,23 +11,19 @@ export default {
 	argTypes: {},
 } as ComponentMeta<typeof TNSkillFlow>;
 
-export const Default = (args: ISNSkillFlow) => (
-	<TNSkillFlow
-		items={[
-			{ name: 'react' },
-			{ name: 'nextjs' },
-			{ name: 'vuejs' },
-			{ name: 'nodejs' },
-			{ name: 'react' },
-			{ name: 'nextjs' },
-			{ name: 'vuejs' },
-			{ name: 'nodejs' },
-		]}
-		{...args}
-	/>
-);
+export const Default = (args: ISNSkillFlow) => <TNSkillFlow {...args} />;
 
 Default.args = {
 	id: 'TNSkillFlowId',
 	spacing: 12,
+	items: [
+		{ name: 'react' },
+		{ name: 'nextjs' },
+		{ name: 'vuejs' },
+		{ name: 'nodejs' },
+		{ name: 'react' },
+		{ name: 'nextjs' },
+		{ name: 'vuejs' },
+		{ name: 'nodejs' },
+	],
 };

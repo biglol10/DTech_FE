@@ -15,4 +15,7 @@ export const Default = (args: IThumbnail) => <TNSkill {...args} />;
 
 Default.args = {
 	id: 'TNSkillId',
+	spacing: 0,
+	href: '/anotherPage',
+	name: 'react',
 };

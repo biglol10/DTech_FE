@@ -36,7 +36,7 @@ const CheckboxDefault = ({
 	return (
 		<>
 			{labelPosition === 'top' && (
-				<div className={Style['checkBoxLabelTop']} style={elCommStyle}>
+				<div className={Style['checkBoxLabelTop']} style={elCommStyle(spacing)}>
 					<div>
 						<Label content={label} color={fontColor} />
 					</div>
@@ -52,7 +52,7 @@ const CheckboxDefault = ({
 				</div>
 			)}
 			{(labelPosition === 'right' || labelPosition === undefined) && (
-				<div className={Style['checkBoxLabelRight']} style={elCommStyle}>
+				<div className={Style['checkBoxLabelRight']} style={elCommStyle(spacing)}>
 					<Checkbox
 						className={Style['checkBox']}
 						id={id}

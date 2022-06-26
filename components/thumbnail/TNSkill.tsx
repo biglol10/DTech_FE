@@ -5,14 +5,9 @@ import Link from 'next/link';
 
 import Style from './Thumbnail.module.scss';
 
-const TNSkill = ({
-	id = '',
-	name = 'react',
-	spacing = 0,
-	href = 'https://ko.reactjs.org/tutorial/tutorial.html',
-}: IThumbnail) => {
+const TNSkill = ({ id = '', name = 'react', spacing = 0, href = '/anotherPage' }: IThumbnail) => {
 	const imageUrlS3 = `https://dcx-skillmanager.s3.ap-northeast-2.amazonaws.com/images/skill/${name}.png`;
-	const imageUrlTemp = '/react/images/SkillThumbnail/react.jpeg';
+	const imageUrlTemp = 'react/images/SkillThumbnail/react.jpeg';
 
 	return (
 		<>

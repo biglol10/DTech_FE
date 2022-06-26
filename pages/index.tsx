@@ -138,6 +138,7 @@ const Index = () => {
 				label="testLabel"
 				onClick={(arg: any) => console.log(arg)}
 			/>
+
 			<br />
 			<h2>CheckboxList</h2>
 			<CheckboxListDefault
