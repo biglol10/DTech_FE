@@ -6,7 +6,6 @@
 }
 
 .skillFlowFrame {
-	margin: 5px;
 	width: 400px;
 	background-color: rgb(204, 204, 204);
 	// border: 1px solid black;
@@ -14,6 +13,7 @@
 	overflow: hidden;
 	border-radius: 20px;
 	// display: flex;
+	margin-top: var(--spacing);
 }
 
 .skillFlow {

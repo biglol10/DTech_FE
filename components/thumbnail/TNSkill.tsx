@@ -12,8 +12,7 @@ const TNSkill = ({
 	href = 'https://ko.reactjs.org/tutorial/tutorial.html',
 }: IThumbnail) => {
 	const imageUrlS3 = `https://dcx-skillmanager.s3.ap-northeast-2.amazonaws.com/images/skill/${name}.png`;
-
-	console.log(imageUrlS3);
+	const imageUrlTemp = '/react/images/SkillThumbnail/react.jpeg';
 
 	return (
 		<>

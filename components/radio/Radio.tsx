@@ -3,6 +3,7 @@ import { IRadio } from '@utils/types/componentTypes';
 import { Radio as SemanticRadio } from 'semantic-ui-react';
 import { Label } from '@components/index';
 
+import { elCommStyle } from '@utils/styleRelated/stylehelper';
 import Style from './Radio.module.scss';
 
 const Radio = ({
@@ -62,7 +63,9 @@ const Radio = ({
 
 	return (
 		<>
-			<div className={Style[`radio_${direction}`]}>{radioList}</div>
+			<div className={Style[`radio_${direction}`]} style={elCommStyle(spacing)}>
+				{radioList}
+			</div>
 		</>
 	);
 };
