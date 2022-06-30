@@ -5,3 +5,9 @@
 /.next
 
 /.vscode
+
+Dockerfile
+
+/.dockerignore
+
+/.vscode/settings.json

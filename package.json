@@ -5,8 +5,9 @@
 	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"dev": "env-cmd -f .env.local next dev",
+		"dev": "env-cmd -f .env.local next dev -p 3065",
 		"build": "env-cmd -f .env.production next build",
+		"start": "env-cmd -f .env.production next start",
 		"storybook": "start-storybook -p 6006",
 		"build-storybook": "build-storybook"
 	},

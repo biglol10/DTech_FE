@@ -1,9 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Testcomponent from '@components/Testcomponent';
 import { useSelector, useDispatch } from 'react-redux';
 import { increment } from '@store/counterSlice';
 import Link from 'next/link';
 import { Message, Image } from 'semantic-ui-react';
+import NextImage from 'next/image';
+import pic from '@public/images/react.jpeg';
 
 import {
 	Accordion,
@@ -190,6 +192,11 @@ const Index = () => {
 					{ name: 'nodejs' },
 				]}
 			/>
+
+			<br />
+			<br />
+
+			<NextImage src={pic} width={500} height={500} />
 		</div>
 	);
 };
