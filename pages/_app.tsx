@@ -16,8 +16,6 @@ const LayoutComp = ({ children }: LayoutProps) => {
 			<Head>
 				<title>DCX skill manager</title>
 				<meta name="description" content="DCX Skill manager" />
-				{/* This is for pages other than main index */}
-				<link rel="icon" href="favicon.ico" type="image/x-icon" />
 			</Head>
 			{children}
 			<ModalPopup />
