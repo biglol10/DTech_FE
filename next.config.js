@@ -5,17 +5,22 @@ const path = require('path');
 module.exports = {
 	reactStrictMode: false, // react strict mode가 설정되어 있을 때, React가 side effects를 찾아내기 위해 의도적으로 hook을 이중 호출할 수 있는데 그걸 끔
 	distDir: '.next',
-	basePath: '/react', // Url/react 이렇게 붙여주는 것
+	basePath: process.env.MODE_ENV === 'production' ? '/dtech' : '',
+	assetPrefix: process.env.MODE_ENV === 'production' ? '/dtech' : '',
 	async redirects() {
-		// Url/react 이렇게 붙여주는 것
-		return [
-			{
-				source: '/',
-				destination: '/react',
-				basePath: false,
-				permanent: false, // true 일 경우 uses the 308 status code which instructs the browser to cache the redirect (즉 캐싱으로 계속 남아있어서 이거 해제해도 /react로 날라감)
-			},
-		];
+		// Url/react 이렇게 붙여서 load해주는 것
+		if (process.env.MODE_ENV === 'production') {
+			return [
+				{
+					source: '/',
+					destination: '/dtech',
+					basePath: false,
+					permanent: false, // true 일 경우 uses the 308 status code which instructs the browser to cache the redirect (즉 캐싱으로 계속 남아있어서 이거 해제해도 /react로 날라감)
+				},
+			];
+		} else {
+			return [];
+		}
 	},
 	webpack(config) {
 		// console.log(config);
