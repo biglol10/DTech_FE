@@ -15,6 +15,8 @@ export default function Document() {
 				/>
 				{/* This is for main index page */}
 				<link rel="icon" href="react/favicon.ico" type="image/x-icon" />
+				{/* This is for pages other than main index */}
+				<link rel="icon" href="favicon.ico" type="image/x-icon" />
 			</Head>
 			<body>
 				<Main />
