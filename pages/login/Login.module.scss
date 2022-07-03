@@ -1,0 +1,45 @@
+$backgroundUrl: url('../../public/background/cool-background.png');
+$backgroundUrlLeft: url('../../public/background//loginLeft.png');
+
+.loginDiv {
+	background-image: $backgroundUrl;
+	background-size: cover;
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+}
+
+.loginMain {
+	width: 80%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.loginMainLeft {
+	width: 35%;
+	height: 80%;
+	// background: $backgroundUrlLeft no-repeat;
+	border-radius: 50px 0px 0px 50px;
+	background-size: 100% 100%;
+	position: relative;
+	display: flex;
+	justify-content: center;
+	-webkit-transition: background-image 0.2s ease-in-out;
+	transition: background-image 0.5s ease-in-out;
+
+	.loginBottomAside {
+		width: 150px;
+		position: absolute;
+		top: 80%;
+		display: flex;
+		justify-content: space-between;
+
+		.loginBottomAside_icon {
+			color: var(--iconColor);
+			cursor: pointer;
+			transition: all 0.5s ease-in-out;
+		}
+	}
+}
