@@ -1,5 +1,9 @@
-$backgroundUrl: url('../../public/background/cool-background.png');
-$backgroundUrlLeft: url('../../public/background//loginLeft.png');
+@import 'https://fonts.googleapis.com/css2?family=Trispace&display=swap';
+
+// $backgroundUrl: url('../../public/background/cool-background.png');
+$backgroundUrl: url(~@public/background/cool-background.png);
+$backgroundUrlLeft: url(~@public/background/loginLeft.png);
+$DLogo: url(~@public/images/DLogo.png);
 
 .loginDiv {
 	background-image: $backgroundUrl;
@@ -18,7 +22,7 @@ $backgroundUrlLeft: url('../../public/background//loginLeft.png');
 }
 
 .loginMainLeft {
-	width: 35%;
+	width: 25%;
 	height: 80%;
 	// background: $backgroundUrlLeft no-repeat;
 	border-radius: 50px 0px 0px 50px;
@@ -28,6 +32,55 @@ $backgroundUrlLeft: url('../../public/background//loginLeft.png');
 	justify-content: center;
 	-webkit-transition: background-image 0.2s ease-in-out;
 	transition: background-image 0.5s ease-in-out;
+
+	.loginCenterArticle_0 {
+		width: 100%;
+		height: 200px;
+		top: 50%;
+		padding: 0 30px;
+		position: absolute;
+		font-family: 'Trispace', sans-serif;
+		color: white;
+		font-size: 24px;
+		user-select: none;
+
+		p:first-child {
+			display: flex;
+			align-items: center;
+		}
+	}
+
+	.loginCenterArticle_1 {
+		width: 100%;
+		padding: 0 30px;
+		position: absolute;
+		font-family: 'Trispace', sans-serif;
+		color: black;
+		font-size: 24px;
+		user-select: none;
+		top: 60%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		p {
+			line-height: 15px;
+		}
+	}
+
+	.loginCenterArticle_2 {
+		width: 100%;
+		padding: 0 30px;
+		position: absolute;
+		font-family: 'Trispace', sans-serif;
+		color: black;
+		font-size: 24px;
+		user-select: none;
+		top: 70%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
 
 	.loginBottomAside {
 		width: 150px;
