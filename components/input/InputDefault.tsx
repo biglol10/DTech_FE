@@ -25,6 +25,7 @@ const InputDefault = forwardRef<any, IInputDefault>(
 			maxLength = undefined,
 			errorLabelPosition = 'bottom',
 			spacing = 0,
+			stretch = false,
 		},
 		ref,
 	) => {
@@ -60,39 +61,46 @@ const InputDefault = forwardRef<any, IInputDefault>(
 		return (
 			<>
 				<div style={elCommStyle(spacing)} className={Style['emptyDivMarginTop']} />
-				{showInputLabel && (
-					<label htmlFor={id}>
-						<Header className={Style['inputLabelHeader']} as={inputLabelSize}>
-							{inputLabel}
-						</Header>
-					</label>
-				)}
+				<div style={stretch ? { width: '100%' } : {}}>
+					{showInputLabel && (
+						<label htmlFor={id}>
+							<Header
+								className={Style['inputLabelHeader']}
+								as={inputLabelSize}
+								style={{ position: 'relative', left: '0%' }}
+							>
+								{inputLabel}
+							</Header>
+						</label>
+					)}
 
-				<Input
-					id={id}
-					loading={loading}
-					placeholder={placeholder}
-					ref={ref}
-					value={inputValue}
-					onChange={onChangeFn}
-					size={size}
-					error={error}
-					type={`${type === 'default' ? '' : type}`}
-					readOnly={readOnly}
-					disabled={disabled}
-					maxLength={maxLength}
-				/>
+					<Input
+						id={id}
+						loading={loading}
+						placeholder={placeholder}
+						ref={ref}
+						value={inputValue}
+						onChange={onChangeFn}
+						size={size}
+						error={error}
+						type={`${type === 'default' ? '' : type}`}
+						readOnly={readOnly}
+						disabled={disabled}
+						maxLength={maxLength}
+						style={stretch ? { width: '100%' } : {}}
+					/>
 
-				{errorLabelPosition === 'bottom' && <br />}
-				{errorState && (
-					<Label
-						basic
-						color="red"
-						pointing={errorLabelPosition === 'right' ? 'left' : 'above'}
-					>
-						{errorMsg}
-					</Label>
-				)}
+					{errorLabelPosition === 'bottom' && <br />}
+					{errorState && (
+						<Label
+							basic
+							color="red"
+							pointing={errorLabelPosition === 'right' ? 'left' : 'above'}
+						>
+							{errorMsg}
+						</Label>
+					)}
+				</div>
 			</>
 		);
 	},

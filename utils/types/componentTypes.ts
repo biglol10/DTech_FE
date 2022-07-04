@@ -21,6 +21,7 @@ export interface IInputDefault {
 	showInputLabel?: boolean;
 	ref?: any;
 	spacing?: number;
+	stretch?: true;
 }
 
 export interface IInputSearch extends IInputDefault {
