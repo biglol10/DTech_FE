@@ -4,6 +4,7 @@
 $backgroundUrl: url(~@public/background/cool-background.png);
 $backgroundUrlLeft: url(~@public/background/loginLeft.png);
 $DLogo: url(~@public/images/DLogo.png);
+$transitionTime: 0.4s;
 
 .loginDiv {
 	background-image: $backgroundUrl;
@@ -31,55 +32,46 @@ $DLogo: url(~@public/images/DLogo.png);
 	display: flex;
 	justify-content: center;
 	-webkit-transition: background-image 0.2s ease-in-out;
-	transition: background-image 0.5s ease-in-out;
+	transition: background-image $transitionTime ease-in-out;
 
-	.loginCenterArticle_0 {
+	.loginCenterArticle {
 		width: 100%;
-		height: 200px;
-		top: 50%;
 		padding: 0 30px;
 		position: absolute;
 		font-family: 'Trispace', sans-serif;
-		color: white;
 		font-size: 24px;
 		user-select: none;
 
-		p:first-child {
+		&.article1 {
+			top: 50%;
+			height: 200px;
+			color: white;
+
+			p:first-child {
+				display: flex;
+				align-items: center;
+			}
+		}
+
+		&.article2 {
+			color: black;
+			top: 60%;
 			display: flex;
+			flex-direction: column;
+			align-items: center;
+
+			p {
+				line-height: 15px;
+			}
+		}
+
+		&.article3 {
+			color: black;
+			top: 70%;
+			display: flex;
+			flex-direction: column;
 			align-items: center;
 		}
-	}
-
-	.loginCenterArticle_1 {
-		width: 100%;
-		padding: 0 30px;
-		position: absolute;
-		font-family: 'Trispace', sans-serif;
-		color: black;
-		font-size: 24px;
-		user-select: none;
-		top: 60%;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-
-		p {
-			line-height: 15px;
-		}
-	}
-
-	.loginCenterArticle_2 {
-		width: 100%;
-		padding: 0 30px;
-		position: absolute;
-		font-family: 'Trispace', sans-serif;
-		color: black;
-		font-size: 24px;
-		user-select: none;
-		top: 70%;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
 	}
 
 	.loginBottomAside {
@@ -92,7 +84,7 @@ $DLogo: url(~@public/images/DLogo.png);
 		.loginBottomAside_icon {
 			color: var(--iconColor);
 			cursor: pointer;
-			transition: all 0.5s ease-in-out;
+			transition: all $transitionTime ease-in-out;
 		}
 	}
 }

@@ -23,7 +23,7 @@ const Login = () => {
 					style={{ backgroundImage: `url(${leftBackground[leftBackgroundIndex].src})` }}
 				>
 					{leftBackgroundIndex === 0 && (
-						<article className={cx('loginCenterArticle_0')}>
+						<article className={cx('loginCenterArticle', 'article1')}>
 							<p>
 								<Image src={DLogo} width={48} height={48} /> Dtech App
 							</p>
@@ -33,7 +33,7 @@ const Login = () => {
 					)}
 
 					{leftBackgroundIndex === 1 && (
-						<article className={cx('loginCenterArticle_1')}>
+						<article className={cx('loginCenterArticle', 'article2')}>
 							<p>Whom to ask?</p>
 							<p>Who has what skill?</p>
 							<p>Find it here!</p>
@@ -41,7 +41,7 @@ const Login = () => {
 					)}
 
 					{leftBackgroundIndex === 2 && (
-						<article className={cx('loginCenterArticle_2')}>
+						<article className={cx('loginCenterArticle', 'article3')}>
 							<p>Explore the app now!</p>
 						</article>
 					)}
