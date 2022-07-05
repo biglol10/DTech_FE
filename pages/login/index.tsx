@@ -1,7 +1,7 @@
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Icon } from 'semantic-ui-react';
-import { InputLayout, InputDefault } from '@components/index';
+import { InputLayout, InputDefault, InputWithIcon } from '@components/index';
 import classNames from 'classnames/bind';
 
 import LeftBackground1 from '@public/background/loginLeft.png';
@@ -22,6 +22,14 @@ const Login = () => {
 
 	const [idInputValue, setIdInputValue] = useState('');
 	const [idInputError, setIdInputError] = useState(false);
+	const [pwInputValue, setPwInputValue] = useState('');
+	const [pwInputError, setPwInputError] = useState(false);
+
+	const userIdRef = useRef<any>();
+
+	useEffect(() => {
+		userIdRef.current && userIdRef.current.focus();
+	}, []);
 
 	return (
 		<div className={cx('loginDiv')}>
@@ -101,8 +109,9 @@ const Login = () => {
 						showInputLabel={true}
 						autoFitErrorLabel={true}
 					>
-						<InputDefault
+						<InputWithIcon
 							id="inputId"
+							ref={userIdRef}
 							placeholder="아이디를 입력해주세요 (이메일)"
 							value={idInputValue}
 							size="large"
@@ -112,6 +121,28 @@ const Login = () => {
 									setIdInputError(!regEmail.test(obj.value));
 							}}
 							className={Style['inputIdField']}
+							inputIcon={<Icon name="user" />}
+						/>
+					</InputLayout>
+
+					<InputLayout
+						stretch={true}
+						inputLabel="비밀번호"
+						inputLabelSize="h2"
+						showInputLabel={true}
+						spacing={7}
+					>
+						<InputWithIcon
+							id="inputPw"
+							placeholder="비밀번호를 입력해주세요"
+							value={pwInputValue}
+							size="large"
+							onChange={(obj: { value: string }) => {
+								setPwInputValue(obj.value);
+								obj.value.length === 0 && setPwInputError(true);
+							}}
+							className={Style['inputPwField']}
+							inputIcon={<Icon name="lock" />}
 						/>
 					</InputLayout>
 				</div>

@@ -2,6 +2,7 @@ import React from 'react';
 import { Label, Header } from 'semantic-ui-react';
 import { IInputLayout } from '@utils/types/componentTypes';
 import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
+import classNames from 'classnames/bind';
 import Style from './Input.module.scss';
 
 const InputLayout = ({
@@ -18,11 +19,15 @@ const InputLayout = ({
 	errorLabelPosition = 'bottom',
 	autoFitErrorLabel = false,
 }: IInputLayout) => {
+	const cx = classNames.bind(Style);
+
+	const labelSize = 'tiny';
+
 	return (
 		<div
 			style={inputElCommStyle(spacing, 'left', stretch)}
 			id={`${id}_inputDefault`}
-			className={Style[className]}
+			className={cx(className, 'inputLayoutDiv')}
 		>
 			{showInputLabel && (
 				<label htmlFor={id}>
@@ -43,6 +48,7 @@ const InputLayout = ({
 					color="red"
 					pointing={errorLabelPosition === 'right' ? 'left' : 'above'}
 					style={{ visibility: `${error ? 'initial' : 'hidden'}` }}
+					size={labelSize}
 				>
 					{errorMsg}
 				</Label>
@@ -52,6 +58,7 @@ const InputLayout = ({
 						basic
 						color="red"
 						pointing={errorLabelPosition === 'right' ? 'left' : 'above'}
+						size={labelSize}
 					>
 						{errorMsg}
 					</Label>
