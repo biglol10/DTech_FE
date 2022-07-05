@@ -1,6 +1,5 @@
 import { ComponentMeta } from '@storybook/react';
-import { InputDefault } from '@components/index';
-import { IInputDefault } from '@utils/types/componentTypes';
+import { InputLayout, InputDefault } from '@components/index';
 
 import { Doc } from './InputDefault.stories.mdx';
 
@@ -14,6 +13,13 @@ export default {
 	},
 	component: InputDefault,
 	argTypes: {
+		labelSize: {
+			defaultValue: 'h2',
+			description: 'label 크기',
+			options: ['h2', 'h3', 'h4', 'h5', 'h6'],
+			control: { type: 'radio' },
+			table: { defaultValue: { summary: 'small' } },
+		},
 		size: {
 			defaultValue: 'small',
 			description: 'InputDefault의 크기',
@@ -46,10 +52,62 @@ export default {
 			control: { type: 'radio' },
 			table: { defaultValue: { summary: 'bottom' } },
 		},
+		error: {
+			defaultValue: false,
+			description: 'error 유무',
+			options: [false, true],
+			control: { type: 'radio' },
+			table: { defaultValue: { summary: false } },
+		},
+		stretch: {
+			defaultValue: false,
+			description: 'width 100% 유무',
+			options: [false, true],
+			control: { type: 'radio' },
+			table: { defaultValue: { summary: false } },
+		},
+		showInputLabel: {
+			defaultValue: false,
+			description: 'label 표시 유무',
+			options: [false, true],
+			control: { type: 'radio' },
+			table: { defaultValue: { summary: false } },
+		},
+		autoFitErrorLabel: {
+			defaultValue: false,
+			description: '에러 표시를 위한 공간 확보 유무',
+			options: [false, true],
+			control: { type: 'radio' },
+			table: { defaultValue: { summary: false } },
+		},
 	},
 } as ComponentMeta<typeof InputDefault>;
 
-export const Default = (args: IInputDefault) => <InputDefault {...args} />;
+export const Default = (args: any) => {
+	console.log(args);
+	return (
+		<div style={{ width: '600px' }}>
+			<InputLayout
+				error={args.error}
+				errorMsg="아이디를 제대로 입력해주세요"
+				stretch={args.stretch}
+				inputLabel="기본 Input"
+				inputLabelSize={args.labelSize}
+				showInputLabel={args.showInputLabel}
+				autoFitErrorLabel={args.autoFitErrorLabel}
+				errorLabelPosition={args.errorLabelPosition}
+			>
+				<InputDefault
+					id="inputDefault"
+					placeholder="값을 입력해주세요"
+					value={args.value}
+					size={args.size}
+				/>
+			</InputLayout>
+		</div>
+	);
+};
+
 Default.args = {
 	placeholder: '값을 입력해주세요',
 	onChange: (result: object) => {

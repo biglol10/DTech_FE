@@ -1,6 +1,6 @@
 import { Label as SemanticLabel, Icon } from 'semantic-ui-react';
 import { ILabel } from '@utils/types/componentTypes';
-import { elCommStyle } from '@utils/styleRelated/stylehelper';
+import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
 import Style from './Label.module.scss';
 
 const Label = ({
@@ -22,8 +22,8 @@ const Label = ({
 			color={color}
 			style={
 				borderNone
-					? { border: 'none', ...elCommStyle(spacing) }
-					: { ...elCommStyle(spacing) }
+					? { border: 'none', ...inputElCommStyle(spacing) }
+					: { ...inputElCommStyle(spacing) }
 			}
 			size={size}
 		>

@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { Icon } from 'semantic-ui-react';
-import { InputDefault } from '@components/index';
+import { InputLayout, InputDefault } from '@components/index';
 import classNames from 'classnames/bind';
 
 import LeftBackground1 from '@public/background/loginLeft.png';
@@ -12,7 +12,7 @@ import Style from './Login.module.scss';
 
 const Login = () => {
 	const regEmail =
-		/^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+		/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 
 	const cx = classNames.bind(Style);
 	const leftBackground = [LeftBackground1, LeftBackground2, LeftBackground3];
@@ -92,22 +92,28 @@ const Login = () => {
 					</aside>
 				</div>
 				<div className={Style['loginMainRight']}>
-					<InputDefault
-						id="inputId"
-						placeholder="아이디를 입력해주세요 (이메일)"
-						value={idInputValue}
-						size="large"
+					<InputLayout
+						error={idInputError}
+						errorMsg="아이디를 제대로 입력해주세요"
 						stretch={true}
 						inputLabel="아이디"
 						inputLabelSize="h2"
 						showInputLabel={true}
-						error={idInputError}
-						errorMsg="아이디를 제대로 입력해주세요"
-						onChange={(obj: { value: string; isError: boolean; errorMsg: string }) => {
-							setIdInputValue(obj.value);
-							setIdInputError(!regEmail.test(obj.value));
-						}}
-					/>
+						autoFitErrorLabel={true}
+					>
+						<InputDefault
+							id="inputId"
+							placeholder="아이디를 입력해주세요 (이메일)"
+							value={idInputValue}
+							size="large"
+							onChange={(obj: { value: string }) => {
+								setIdInputValue(obj.value);
+								obj.value.length !== 0 &&
+									setIdInputError(!regEmail.test(obj.value));
+							}}
+							className={Style['inputIdField']}
+						/>
+					</InputLayout>
 				</div>
 			</main>
 		</div>
