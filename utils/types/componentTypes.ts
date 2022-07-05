@@ -42,6 +42,7 @@ export interface IInputWithIcon extends IInputDefault {
 }
 
 export interface IButton {
+	className?: string;
 	buttonType?: 'primary' | 'secondary' | 'none';
 	content?: string;
 	basic?: boolean;
@@ -50,6 +51,7 @@ export interface IButton {
 	loading?: boolean;
 	onClick?: any;
 	spacing?: number;
+	disabled?: boolean;
 }
 
 export interface ICheckboxDefault {
@@ -79,7 +81,7 @@ export interface ILabel {
 	content?: string;
 	iconOrImage?: 'icon' | 'image' | 'none';
 	icon?: ReactNode;
-	imageSrc?: string;
+	nextImage?: JSX.Element;
 	color?: StrictLabelProps['color'];
 	borderNone?: boolean;
 	size?: StrictLabelProps['size'];

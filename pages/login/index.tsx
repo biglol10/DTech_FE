@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { Icon } from 'semantic-ui-react';
-import { InputLayout, InputDefault, InputWithIcon } from '@components/index';
+import { Button, InputLayout, Label, InputWithIcon } from '@components/index';
 import classNames from 'classnames/bind';
 
 import LeftBackground1 from '@public/background/loginLeft.png';
@@ -13,6 +13,8 @@ import Style from './Login.module.scss';
 const Login = () => {
 	const regEmail =
 		/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+
+	const labelSize = 'h4';
 
 	const cx = classNames.bind(Style);
 	const leftBackground = [LeftBackground1, LeftBackground2, LeftBackground3];
@@ -100,14 +102,21 @@ const Login = () => {
 					</aside>
 				</div>
 				<div className={Style['loginMainRight']}>
+					<Label
+						content="Dtech App"
+						iconOrImage="image"
+						nextImage={<Image src={DLogo} width={48} height={48} />}
+						size="massive"
+					/>
 					<InputLayout
 						error={idInputError}
 						errorMsg="아이디를 제대로 입력해주세요"
 						stretch={true}
 						inputLabel="아이디"
-						inputLabelSize="h2"
+						inputLabelSize={labelSize}
 						showInputLabel={true}
 						autoFitErrorLabel={true}
+						spacing={32}
 					>
 						<InputWithIcon
 							id="inputId"
@@ -126,10 +135,13 @@ const Login = () => {
 					</InputLayout>
 
 					<InputLayout
+						error={pwInputError}
+						errorMsg="비밀번호는 최소 6글자입니다"
 						stretch={true}
 						inputLabel="비밀번호"
-						inputLabelSize="h2"
+						inputLabelSize={labelSize}
 						showInputLabel={true}
+						autoFitErrorLabel={true}
 						spacing={7}
 					>
 						<InputWithIcon
@@ -139,12 +151,23 @@ const Login = () => {
 							size="large"
 							onChange={(obj: { value: string }) => {
 								setPwInputValue(obj.value);
-								obj.value.length === 0 && setPwInputError(true);
+								const pwRegex = /^.{6,30}$/;
+
+								setPwInputError(!pwRegex.test(obj.value));
 							}}
 							className={Style['inputPwField']}
 							inputIcon={<Icon name="lock" />}
+							type="password"
 						/>
 					</InputLayout>
+
+					<Button
+						className={Style['loginButton']}
+						spacing={7}
+						content="로그인"
+						size="large"
+						disabled={idInputError && pwInputError}
+					/>
 				</div>
 			</main>
 		</div>

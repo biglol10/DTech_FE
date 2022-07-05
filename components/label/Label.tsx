@@ -8,7 +8,7 @@ const Label = ({
 	content = '',
 	iconOrImage = 'none',
 	icon = <Icon name="arrow alternate circle right outline" />,
-	imageSrc = '',
+	nextImage,
 	color = 'black',
 	borderNone = true,
 	size = 'small',
@@ -28,7 +28,7 @@ const Label = ({
 			size={size}
 		>
 			{iconOrImage === 'icon' && icon}
-			{iconOrImage === 'image' && <img src={imageSrc} />}
+			{iconOrImage === 'image' && nextImage}
 			{content}
 		</SemanticLabel>
 	);
