@@ -11,7 +11,7 @@
 	"editor.formatOnPaste": true,
 	"explorer.confirmDelete": false,
 	"auto-close-tag.activationOnLanguage": ["html", "xml", "javascript", "javascriptreact"],
-	"window.zoomLevel": 1,
+	"window.zoomLevel": 0,
 	"editor.fontLigatures": false,
 	"editor.insertSpaces": false,
 	"eslint.alwaysShowStatus": true
