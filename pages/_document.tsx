@@ -13,10 +13,13 @@ export default function Document() {
 					href="https://fonts.googleapis.com/icon?family=Material+Icons"
 					rel="stylesheet"
 				/>
-				{/* This is for main index page */}
-				<link rel="icon" href="react/favicon.ico" type="image/x-icon" />
-				{/* This is for pages other than main index */}
-				<link rel="icon" href="favicon.ico" type="image/x-icon" />
+				{/* This is for favicon */}
+				<link rel="icon" href="dtech/favicon.ico" type="image/x-icon" />
+				<link
+					rel="icon"
+					href={`${process.env.MODE_ENV === 'production' ? 'dtech' : ''}/favicon.ico`}
+					type="image/x-icon"
+				/>
 			</Head>
 			<body>
 				<Main />

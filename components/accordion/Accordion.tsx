@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { IAccordion, IAccordionItems } from '@utils/types/componentTypes';
-import { elCommStyle } from '@utils/styleRelated/stylehelper';
+import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
 import Style from './Accordion.module.scss';
 
 interface IJsObj {
@@ -20,6 +20,7 @@ const Accordion = ({
 	backgroundColor = 'white',
 	fontColor = 'black',
 	spacing = 0,
+	stretch = false,
 }: IAccordion) => {
 	const jsObj: IJsObj = {};
 
@@ -37,7 +38,7 @@ const Accordion = ({
 	};
 
 	return (
-		<div className={Style['accordion-wrap']} style={elCommStyle(spacing)}>
+		<div className={Style['accordion-wrap']} style={inputElCommStyle(spacing, 'left', stretch)}>
 			{items.map((item: IAccordionItems, idx: number) => {
 				return (
 					<MUIAccordion

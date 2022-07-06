@@ -2,7 +2,7 @@ import { ICheckboxDefault } from '@utils/types/componentTypes';
 import { useEffect, useState } from 'react';
 import { Checkbox, Icon } from 'semantic-ui-react';
 import { Label } from '@components/index';
-import { elCommStyle } from '@utils/styleRelated/stylehelper';
+import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
 import Style from './Checkbox.module.scss';
 
 const CheckboxDefault = ({
@@ -36,7 +36,7 @@ const CheckboxDefault = ({
 	return (
 		<>
 			{labelPosition === 'top' && (
-				<div className={Style['checkBoxLabelTop']} style={elCommStyle(spacing)}>
+				<div className={Style['checkBoxLabelTop']} style={inputElCommStyle(spacing)}>
 					<div>
 						<Label content={label} color={fontColor} />
 					</div>
@@ -52,7 +52,7 @@ const CheckboxDefault = ({
 				</div>
 			)}
 			{(labelPosition === 'right' || labelPosition === undefined) && (
-				<div className={Style['checkBoxLabelRight']} style={elCommStyle(spacing)}>
+				<div className={Style['checkBoxLabelRight']} style={inputElCommStyle(spacing)}>
 					<Checkbox
 						className={Style['checkBox']}
 						id={id}

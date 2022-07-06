@@ -13,7 +13,8 @@
 			"@store/*": ["store/*"],
 			"@styles/*": ["styles/*"],
 			"@testApi/*": ["testApi/*"],
-			"@saga/*": ["saga/*"]
+			"@saga/*": ["saga/*"],
+			"@public/*": ["public/*"]
 		}
 	}
 }
