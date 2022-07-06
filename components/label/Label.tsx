@@ -1,6 +1,6 @@
 import { Label as SemanticLabel, Icon } from 'semantic-ui-react';
 import { ILabel } from '@utils/types/componentTypes';
-import { elCommStyle } from '@utils/styleRelated/stylehelper';
+import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
 import Style from './Label.module.scss';
 
 const Label = ({
@@ -8,7 +8,7 @@ const Label = ({
 	content = '',
 	iconOrImage = 'none',
 	icon = <Icon name="arrow alternate circle right outline" />,
-	imageSrc = '',
+	nextImage,
 	color = 'black',
 	borderNone = true,
 	size = 'small',
@@ -22,13 +22,13 @@ const Label = ({
 			color={color}
 			style={
 				borderNone
-					? { border: 'none', ...elCommStyle(spacing) }
-					: { ...elCommStyle(spacing) }
+					? { border: 'none', ...inputElCommStyle(spacing) }
+					: { ...inputElCommStyle(spacing) }
 			}
 			size={size}
 		>
 			{iconOrImage === 'icon' && icon}
-			{iconOrImage === 'image' && <img src={imageSrc} />}
+			{iconOrImage === 'image' && nextImage}
 			{content}
 		</SemanticLabel>
 	);

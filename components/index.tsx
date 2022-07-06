@@ -1,4 +1,5 @@
 import ModalPopup from './modal/ModalPopup';
+import InputLayout from './input/InputLayout';
 import InputDefault from './input/InputDefault';
 import CheckboxDefault from './checkbox/CheckboxDefault';
 import InputSearch from './input/InputSearch';
@@ -19,6 +20,7 @@ export {
 	Accordion,
 	Box,
 	Button,
+	InputLayout,
 	InputDefault,
 	InputSearch,
 	InputWithIcon,

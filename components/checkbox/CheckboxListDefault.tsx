@@ -2,7 +2,7 @@ import { ICheckboxListDefault } from '@utils/types/componentTypes';
 import { useCallback, useEffect, useState } from 'react';
 import { CheckboxDefault } from '@components/index';
 
-import { elCommStyle } from '@utils/styleRelated/stylehelper';
+import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
 import Style from './CheckboxList.module.scss';
 
 const CheckboxListDefault = ({
@@ -52,7 +52,7 @@ const CheckboxListDefault = ({
 
 	return (
 		<>
-			<div className={Style['horizontalList']} style={elCommStyle(spacing)}>
+			<div className={Style['horizontalList']} style={inputElCommStyle(spacing)}>
 				{direction === 'horizontal' && (
 					<div className={Style['horizontalList']}>{checkboxList}</div>
 				)}
