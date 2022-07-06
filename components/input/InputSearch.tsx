@@ -19,6 +19,7 @@ const InputSearch = forwardRef<any, IInputSearch>(
 			onSearchIconClick = null,
 			stretch = false,
 			error = false,
+			onEnter = null,
 		},
 		ref,
 	) => {
@@ -59,6 +60,7 @@ const InputSearch = forwardRef<any, IInputSearch>(
 					/>
 				}
 				style={stretch ? { width: '100%' } : {}}
+				onKeyUp={(evt: any) => evt.keyCode === 13 && onEnter && onEnter()}
 			/>
 		);
 	},

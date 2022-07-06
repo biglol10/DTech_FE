@@ -31,6 +31,7 @@ export interface IInputDefault {
 	ref?: any;
 	stretch?: boolean;
 	error?: boolean;
+	onEnter?: Function;
 }
 
 export interface IInputSearch extends IInputDefault {

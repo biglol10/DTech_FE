@@ -1,3 +1,11 @@
+/** ****************************************************************************************
+ * @설명     : 로그인 페이지
+ ********************************************************************************************
+ * 번호    작업자     작업일         브랜치                      변경내용
+ *-------------------------------------------------------------------------------------------
+ * 1      변지욱     2022-07-06   feature/JW/loginpage      최초작성
+ ********************************************************************************************/
+
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { Icon } from 'semantic-ui-react';
@@ -28,10 +36,15 @@ const Login = () => {
 	const [pwInputError, setPwInputError] = useState(false);
 
 	const userIdRef = useRef<any>();
+	const userPwRef = useRef<any>();
 
 	useEffect(() => {
 		userIdRef.current && userIdRef.current.focus();
 	}, []);
+
+	const userLogin = () => {
+		alert('trying login');
+	};
 
 	return (
 		<div className={cx('loginDiv')}>
@@ -110,7 +123,7 @@ const Login = () => {
 					/>
 					<InputLayout
 						error={idInputError}
-						errorMsg="아이디를 제대로 입력해주세요"
+						errorMsg="아이디를 올바로 입력해주세요"
 						stretch={true}
 						inputLabel="아이디"
 						inputLabelSize={labelSize}
@@ -131,12 +144,13 @@ const Login = () => {
 							}}
 							className={Style['inputIdField']}
 							inputIcon={<Icon name="user" />}
+							onEnter={() => userPwRef.current && userPwRef.current.focus()}
 						/>
 					</InputLayout>
 
 					<InputLayout
 						error={pwInputError}
-						errorMsg="비밀번호는 최소 6글자입니다"
+						errorMsg="비밀번호는 최소 6자리입니다"
 						stretch={true}
 						inputLabel="비밀번호"
 						inputLabelSize={labelSize}
@@ -146,18 +160,23 @@ const Login = () => {
 					>
 						<InputWithIcon
 							id="inputPw"
+							ref={userPwRef}
 							placeholder="비밀번호를 입력해주세요"
 							value={pwInputValue}
 							size="large"
 							onChange={(obj: { value: string }) => {
 								setPwInputValue(obj.value);
-								const pwRegex = /^.{6,30}$/;
 
-								setPwInputError(!pwRegex.test(obj.value));
+								if (obj.value.length !== 0) {
+									const pwRegex = /^.{6,30}$/;
+
+									setPwInputError(!pwRegex.test(obj.value));
+								}
 							}}
 							className={Style['inputPwField']}
 							inputIcon={<Icon name="lock" />}
 							type="password"
+							onEnter={() => userLogin()}
 						/>
 					</InputLayout>
 
@@ -166,7 +185,21 @@ const Login = () => {
 						spacing={7}
 						content="로그인"
 						size="large"
-						disabled={idInputError && pwInputError}
+						onClick={() => userLogin()}
+					/>
+
+					<div className={Style['divider']}>
+						<span></span>
+						<span>No Account ?</span>
+						<span></span>
+					</div>
+
+					<Button
+						className={Style['registerButton']}
+						content="회원가입"
+						size="large"
+						color="google plus"
+						buttonType="none"
 					/>
 				</div>
 			</main>
