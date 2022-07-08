@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Icon } from 'semantic-ui-react';
 import { Button, InputLayout, Label, InputWithIcon } from '@components/index';
 import classNames from 'classnames/bind';
+import { useSelector, useDispatch } from 'react-redux';
 
 import LeftBackground1 from '@public/background/loginLeft.png';
 import LeftBackground2 from '@public/background/loginLeft2.png';
@@ -23,6 +24,8 @@ const Login = () => {
 		/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 
 	const labelSize = 'h4';
+
+	const dispatch = useDispatch();
 
 	const cx = classNames.bind(Style);
 	const leftBackground = [LeftBackground1, LeftBackground2, LeftBackground3];
@@ -43,7 +46,16 @@ const Login = () => {
 	}, []);
 
 	const userLogin = () => {
-		alert('trying login');
+		dispatch({
+			type: 'AUTH_SETTING',
+			userSetting: {
+				userId: idInputValue,
+				password: pwInputValue,
+			},
+			callbackFn: (data: string) => {
+				data === 'success' ? alert('Login success') : alert('Login Failed');
+			},
+		});
 	};
 
 	return (
