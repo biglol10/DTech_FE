@@ -1,0 +1,37 @@
+@import 'https://fonts.googleapis.com/css2?family=Trispace&display=swap';
+
+// $backgroundUrl: url('../../public/background/cool-background.png');
+$backgroundUrl: url(~@public/background/cool-background.png);
+$sectionWidth: 60%;
+.loginDiv {
+	background-image: $backgroundUrl;
+	background-size: cover;
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+}
+.loginMain {
+	width: 80%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.loginMainRight {
+	background-color: white;
+	border-radius: 50px 0px 0px 50px;
+	width: $sectionWidth;
+	height: 80%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 0 2%;
+	position: relative;
+
+	.loginButton,
+	.registerButton {
+		width: 100%;
+	}
+}

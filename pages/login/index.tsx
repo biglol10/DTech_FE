@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Icon } from 'semantic-ui-react';
 import { Button, InputLayout, Label, InputWithIcon } from '@components/index';
 import classNames from 'classnames/bind';
+import Link from 'next/link';
 
 import LeftBackground1 from '@public/background/loginLeft.png';
 import LeftBackground2 from '@public/background/loginLeft2.png';
@@ -194,13 +195,15 @@ const Login = () => {
 						<span></span>
 					</div>
 
-					<Button
-						className={Style['registerButton']}
-						content="회원가입"
-						size="large"
-						color="google plus"
-						buttonType="none"
-					/>
+					<Link href="/register">
+						<Button
+							className={Style['registerButton']}
+							content="회원가입"
+							size="large"
+							color="google plus"
+							buttonType="none"
+						/>
+					</Link>
 				</div>
 			</main>
 		</div>
