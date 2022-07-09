@@ -125,13 +125,7 @@ const Index = () => {
 			<br />
 			<br />
 			<Accordion id="accordionId" items={items} />
-			<InputDefault
-				id="inputDefault1"
-				inputLabel="sdf"
-				showInputLabel={true}
-				ref={inputRef}
-				onChange={() => console.log(inputRef.current)}
-			/>
+
 			<Testcomponent />
 			<br />
 			<h2>Checkbox</h2>

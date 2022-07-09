@@ -1,8 +1,8 @@
 import { ComponentMeta } from '@storybook/react';
-import { InputWithIcon } from '@components/index';
-import { IInputWithIcon } from '@utils/types/componentTypes';
-
+import { InputLayout, InputWithIcon } from '@components/index';
 import { Icon } from 'semantic-ui-react';
+
+import inputArgTypes from './modules/argTypes';
 import { Doc } from './InputWithIcon.stories.mdx';
 
 export default {
@@ -15,44 +15,38 @@ export default {
 	},
 	component: InputWithIcon,
 	argTypes: {
-		size: {
-			defaultValue: 'small',
-			description: 'InputDefault의 크기',
-			options: ['mini', 'small', 'large', 'big', 'huge', 'massive'],
-			control: { type: 'radio' },
-			table: { defaultValue: { summary: 'small' } },
-		},
-		type: {
-			defaultValue: 'default',
-			description: 'Input의 형태',
-			options: ['default', 'password'],
-			control: { type: 'radio' },
-			table: { defaultValue: { summary: 'default' } },
-		},
-		value: {
-			defaultValue: '',
-			description: 'Input 값 세팅',
-			table: { defaultValue: { summary: '' } },
-		},
-		validationRegex: {
-			defaultValue: undefined,
-			description: 'Input value Regex',
-			control: { type: 'regex' },
-			table: { defaultValue: { summary: undefined } },
-		},
-		errorLabelPosition: {
-			defaultValue: 'bottom',
-			description: '에러표시 Label의 위치 (bottom 또는 right)',
-			options: ['bottom', 'right'],
-			control: { type: 'radio' },
-			table: { defaultValue: { summary: 'bottom' } },
-		},
+		...inputArgTypes,
 	},
 } as ComponentMeta<typeof InputWithIcon>;
 
-export const WithIcon = (args: IInputWithIcon) => (
-	<InputWithIcon {...args} inputIcon={<Icon name="users" />} />
-);
+export const WithIcon = (args: any) => {
+	return (
+		<div style={{ width: '600px' }}>
+			<InputLayout
+				error={args.error}
+				errorMsg="아이디를 제대로 입력해주세요"
+				stretch={args.stretch}
+				inputLabel="기본 Input"
+				inputLabelSize={args.labelSize}
+				showInputLabel={args.showInputLabel}
+				autoFitErrorLabel={args.autoFitErrorLabel}
+				errorLabelPosition={args.errorLabelPosition}
+			>
+				<InputWithIcon
+					id="inputWithIcon"
+					placeholder="값을 입력해주세요"
+					value={args.value}
+					size={args.size}
+					type={args.type}
+					loading={args.loading}
+					inputIcon={<Icon name="users" />}
+					onEnter={() => alert('input Entered')}
+				/>
+			</InputLayout>
+		</div>
+	);
+};
+
 WithIcon.args = {
 	placeholder: '값을 입력해주세요',
 	onChange: (result: object) => {

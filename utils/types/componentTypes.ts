@@ -1,26 +1,37 @@
 import { ReactNode, JSXElementConstructor as JSX } from 'react';
 import { ButtonProps, StrictLabelProps } from 'semantic-ui-react';
 
+export interface IInputLayout {
+	id?: string;
+	className?: string;
+	children: any;
+	inputLabel?: string;
+	inputLabelSize?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+	showInputLabel?: boolean;
+	spacing?: number;
+	stretch?: boolean;
+	error?: boolean;
+	errorMsg?: string;
+	errorLabelPosition?: 'bottom' | 'right';
+	autoFitErrorLabel?: boolean;
+}
+
 export interface IInputDefault {
 	id: string;
 	placeholder?: string;
 	value?: string;
+	className?: string;
 	onChange?: Function;
 	size?: 'mini' | 'small' | 'large' | 'big' | 'huge' | 'massive';
-	regex?: RegExp;
-	error?: boolean;
 	loading?: boolean;
-	errorMsg?: string;
 	type?: 'default' | 'password';
 	readOnly?: boolean;
 	disabled?: boolean;
 	maxLength?: undefined | number;
-	errorLabelPosition?: 'bottom' | 'right';
-	inputLabel?: string;
-	inputLabelSize?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
-	showInputLabel?: boolean;
 	ref?: any;
-	spacing?: number;
+	stretch?: boolean;
+	error?: boolean;
+	onEnter?: Function;
 }
 
 export interface IInputSearch extends IInputDefault {
@@ -32,6 +43,7 @@ export interface IInputWithIcon extends IInputDefault {
 }
 
 export interface IButton {
+	className?: string;
 	buttonType?: 'primary' | 'secondary' | 'none';
 	content?: string;
 	basic?: boolean;
@@ -40,6 +52,7 @@ export interface IButton {
 	loading?: boolean;
 	onClick?: any;
 	spacing?: number;
+	disabled?: boolean;
 }
 
 export interface ICheckboxDefault {
@@ -69,7 +82,7 @@ export interface ILabel {
 	content?: string;
 	iconOrImage?: 'icon' | 'image' | 'none';
 	icon?: ReactNode;
-	imageSrc?: string;
+	nextImage?: JSX.Element;
 	color?: StrictLabelProps['color'];
 	borderNone?: boolean;
 	size?: StrictLabelProps['size'];
@@ -88,6 +101,7 @@ export interface IAccordion {
 	fontColor?: string;
 	items: IAccordionItems[];
 	spacing?: number;
+	stretch?: boolean;
 }
 
 export interface IBox {
@@ -98,6 +112,7 @@ export interface IBox {
 	className?: string;
 	spacing?: number;
 	onClick?: any;
+	stretch?: boolean;
 }
 
 export interface IToggle {
