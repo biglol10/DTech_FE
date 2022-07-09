@@ -14,6 +14,7 @@ import { Icon } from 'semantic-ui-react';
 import { Button, InputLayout, Label, InputWithIcon } from '@components/index';
 import classNames from 'classnames/bind';
 import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 
 import LeftBackground1 from '@public/background/loginLeft.png';
 import LeftBackground2 from '@public/background/loginLeft2.png';
@@ -22,10 +23,9 @@ import DLogo from '@public/images/DLogo2.png';
 import Style from './Login.module.scss';
 
 const Login = () => {
-	const regEmail =
-		/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-
 	const labelSize = 'h4';
+
+	const router = useRouter();
 
 	const dispatch = useDispatch();
 
@@ -50,12 +50,14 @@ const Login = () => {
 	const userLogin = () => {
 		dispatch({
 			type: 'AUTH_SETTING',
+			setIdInputError,
+			setPwInputError,
 			userSetting: {
 				userId: idInputValue,
 				password: pwInputValue,
 			},
 			callbackFn: (data: string) => {
-				data === 'success' ? alert('Login success') : alert('Login Failed');
+				data === 'success' ? router.push('/') : alert('Login Failed');
 			},
 		});
 	};
@@ -154,7 +156,7 @@ const Login = () => {
 						/>
 						<InputLayout
 							error={idInputError}
-							errorMsg="아이디를 올바로 입력해주세요"
+							errorMsg="아이디를 올바르게 입력해주세요"
 							stretch={true}
 							inputLabel="아이디"
 							inputLabelSize={labelSize}
@@ -170,8 +172,8 @@ const Login = () => {
 								size="large"
 								onChange={(obj: { value: string }) => {
 									setIdInputValue(obj.value);
-									obj.value.length !== 0 &&
-										setIdInputError(!regEmail.test(obj.value));
+
+									setIdInputError(false);
 								}}
 								className={Style['inputIdField']}
 								inputIcon={<Icon name="user" />}
@@ -181,7 +183,7 @@ const Login = () => {
 
 						<InputLayout
 							error={pwInputError}
-							errorMsg="비밀번호는 최소 6자리입니다"
+							errorMsg="비밀번호를 올바르게 입력해주세요"
 							stretch={true}
 							inputLabel="비밀번호"
 							inputLabelSize={labelSize}
@@ -198,11 +200,7 @@ const Login = () => {
 								onChange={(obj: { value: string }) => {
 									setPwInputValue(obj.value);
 
-									if (obj.value.length !== 0) {
-										const pwRegex = /^.{6,30}$/;
-
-										setPwInputError(!pwRegex.test(obj.value));
-									}
+									setPwInputError(false);
 								}}
 								className={Style['inputPwField']}
 								inputIcon={<Icon name="lock" />}

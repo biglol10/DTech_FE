@@ -11,6 +11,8 @@ interface authObjParamSetting {
 interface authObjParam {
 	userSetting: authObjParamSetting;
 	callbackFn: any;
+	setIdInputError: any;
+	setPwInputError: any;
 	type: string;
 }
 
@@ -24,7 +26,25 @@ interface ILoginResult {
 	errObj?: any | undefined;
 }
 
-const setAuthFunction = function* ({ userSetting, callbackFn }: authObjParam) {
+const setAuthFunction = function* ({
+	userSetting,
+	callbackFn,
+	setIdInputError,
+	setPwInputError,
+}: authObjParam) {
+	const regEmail =
+		/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+
+	const regPassword = new RegExp('^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{6,})');
+
+	setIdInputError(!regEmail.test(userSetting.userId));
+	setPwInputError(!regPassword.test(userSetting.password));
+
+	if (!regEmail.test(userSetting.userId) || !regPassword.test(userSetting.password)) {
+		yield call(callbackFn, 'error');
+		return;
+	}
+
 	const loginResult: ILoginResult = yield call(fireLoginRequest, userSetting);
 
 	if (loginResult.result === 'success') {

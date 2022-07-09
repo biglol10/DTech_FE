@@ -1,4 +1,4 @@
-import { ChangeEvent, forwardRef, useEffect, useState } from 'react';
+import { ChangeEvent, forwardRef, useState, useCallback } from 'react';
 import { Input } from 'semantic-ui-react';
 import { IInputDefault } from '@utils/types/componentTypes';
 
@@ -24,16 +24,16 @@ const InputDefault = forwardRef<any, IInputDefault>(
 	) => {
 		const [inputValue, setInputValue] = useState(value);
 
-		const onChangeFn = (e: ChangeEvent<HTMLInputElement>) => {
-			setInputValue(e.target.value);
-		};
-
-		useEffect(() => {
-			onChange &&
-				onChange({
-					value: inputValue,
-				});
-		}, [inputValue, onChange]);
+		const onChangeFn = useCallback(
+			(e: ChangeEvent<HTMLInputElement>) => {
+				setInputValue(e.target.value);
+				onChange &&
+					onChange({
+						value: e.target.value,
+					});
+			},
+			[onChange],
+		);
 
 		return (
 			<Input
