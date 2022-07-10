@@ -36,9 +36,17 @@ const RegisterStepOne = (props: any) => {
 	useEffect(() => {
 		getTeamList();
 	});
+
 	const getTeamList = () => {
-		console.log('getTeamList');
-		console.log(process.env.BK_SRVR_URL);
+		axios.post('http://localhost:3066/api/auth/getTeamList').then((res: any) => {
+			const tempArr = res.data.resultData.queryResult;
+			const newTempArr = tempArr.map((team: any) => {
+				return { key: team.TEAM_CD, value: team.TEAM_CD, text: team.NAME };
+			});
+
+			console.log(tempArr);
+			console.log(newTempArr);
+		});
 	};
 
 	const idCheck = () => {

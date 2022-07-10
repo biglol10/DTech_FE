@@ -1,8 +1,8 @@
 import Image from 'next/image';
-import { Label, RegisterStepOne, RegisterStepTwo, Button } from '@components/index';
-import { Icon } from 'semantic-ui-react';
+import { Label, RegisterStepOne, RegisterStepTwo, RegisterStepThree } from '@components/index';
+import { Stepper, Step, StepLabel } from '@mui/material';
 import axios from 'axios';
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames/bind';
 import DLogo from '@public/images/DLogo2.png';
 import Style from './Register.module.scss';
@@ -26,8 +26,8 @@ const RegisterPage = (props: any) => {
 	const getStepTwoData = (data: any) => {
 		setRegisterData({
 			...registerData,
-			team: 'TMN0000002',
-			title: data.titleInputValue,
+			team: data.teamSelectValue,
+			title: data.titleSelectValue,
 			phonenum: data.phoneNumValue,
 		});
 		console.log('step2');
@@ -36,13 +36,25 @@ const RegisterPage = (props: any) => {
 		setStepNum(3);
 	};
 
-	const clickRegister = () => {
-		axios.post('http://localhost:3066/api/auth/registerUser', registerData).then((res: any) => {
-			console.log(res.data);
+	const clickRegister = (data: any) => {
+		console.log(data);
+		setRegisterData({
+			...registerData,
+			detail: data.detail,
 		});
+
+		console.log({ ...registerData, detail: data.detail });
+		axios
+			.post('http://localhost:3066/api/auth/registerUser', {
+				...registerData,
+				detail: data.detail,
+			})
+			.then((res: any) => {
+				console.log(res.data);
+			});
 	};
 
-	const registerStepOne = (
+	const registerStep = (
 		<div className={Style['loginMainRight']}>
 			<Label
 				content="회원가입"
@@ -50,38 +62,26 @@ const RegisterPage = (props: any) => {
 				nextImage={<Image src={DLogo} width={48} height={48} />}
 				size="massive"
 			/>
+			<Stepper activeStep={stepNum - 1} alternativeLabel>
+				<Step key="1">
+					<StepLabel>one</StepLabel>
+				</Step>
+				<Step key="2">
+					<StepLabel>two</StepLabel>
+				</Step>
+				<Step key="3">
+					<StepLabel>three</StepLabel>
+				</Step>
+			</Stepper>
 			{stepNum === 1 && <RegisterStepOne propFunction={getStepOneData} />}
 			{stepNum === 2 && <RegisterStepTwo propFunction={getStepTwoData} />}
-			{stepNum === 3 && (
-				<Button
-					className={Style['registerButton']}
-					content="회원가입"
-					size="large"
-					color="google plus"
-					buttonType="none"
-					onClick={clickRegister}
-				/>
-			)}
-
-			{/* <InputDefault
-						id="inputId"
-						placeholder="type text"
-						onChange={getInputData}
-						value={data}
-					/>
-					<h3>{data}</h3> */}
-			{/* <Button content="SEND" onClick={sendData} /> */}
-			{/* {resData.map((item: any) => (
-						<h4 key={item.id}>
-							{item.id} {item.name} {item.now}
-						</h4>
-					))} */}
+			{stepNum === 3 && <RegisterStepThree clickFunction={clickRegister} />}
 		</div>
 	);
 
 	return (
 		<div className={cx('loginDiv')}>
-			<main className={cx('loginMain')}>{registerStepOne}</main>
+			<main className={cx('loginMain')}>{registerStep}</main>
 		</div>
 	);
 };

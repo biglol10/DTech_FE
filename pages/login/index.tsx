@@ -3,7 +3,9 @@
  ********************************************************************************************
  * 번호    작업자     작업일         브랜치                      변경내용
  *-------------------------------------------------------------------------------------------
- * 1      변지욱     2022-07-06   feature/JW/loginpage      최초작성
+ * 1      변지욱      2022-07-06     feature/JW/loginpage       최초작성
+ * 2      변지욱      2022-07-08     feature/JW/loginApi        loginApi request 적용
+ * 3      변지욱      2022-07-09     feature/JW/divscroll       div scroll 예시적용 (필요없으면 롤백 예정)
  ********************************************************************************************/
 
 import Image from 'next/image';
@@ -12,6 +14,7 @@ import { Icon } from 'semantic-ui-react';
 import { Button, InputLayout, Label, InputWithIcon } from '@components/index';
 import classNames from 'classnames/bind';
 import Link from 'next/link';
+import { useDispatch } from 'react-redux';
 
 import LeftBackground1 from '@public/background/loginLeft.png';
 import LeftBackground2 from '@public/background/loginLeft2.png';
@@ -24,6 +27,8 @@ const Login = () => {
 		/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 
 	const labelSize = 'h4';
+
+	const dispatch = useDispatch();
 
 	const cx = classNames.bind(Style);
 	const leftBackground = [LeftBackground1, LeftBackground2, LeftBackground3];
@@ -44,8 +49,29 @@ const Login = () => {
 	}, []);
 
 	const userLogin = () => {
-		alert('trying login');
+		dispatch({
+			type: 'AUTH_SETTING',
+			userSetting: {
+				userId: idInputValue,
+				password: pwInputValue,
+			},
+			callbackFn: (data: string) => {
+				data === 'success' ? alert('Login success') : alert('Login Failed');
+			},
+		});
 	};
+
+	const loginMainRightRef = useRef<any>();
+	const loginMainRightDivScrollRef = useRef<any>();
+	const [heightSimilar, setHeightSimilar] = useState<boolean>(false);
+
+	useEffect(() => {
+		const loginMainRightHeight = loginMainRightRef.current.getBoundingClientRect().height;
+		const loginMainRightDivScrollHeight =
+			loginMainRightDivScrollRef.current.getBoundingClientRect().height;
+
+		setHeightSimilar(loginMainRightHeight - loginMainRightDivScrollHeight <= 70);
+	}, []);
 
 	return (
 		<div className={cx('loginDiv')}>
@@ -115,95 +141,101 @@ const Login = () => {
 						/>
 					</aside>
 				</div>
-				<div className={Style['loginMainRight']}>
-					<Label
-						content="Dtech App"
-						iconOrImage="image"
-						nextImage={<Image src={DLogo} width={48} height={48} />}
-						size="massive"
-					/>
-					<InputLayout
-						error={idInputError}
-						errorMsg="아이디를 올바로 입력해주세요"
-						stretch={true}
-						inputLabel="아이디"
-						inputLabelSize={labelSize}
-						showInputLabel={true}
-						autoFitErrorLabel={true}
-						spacing={32}
+				<div ref={loginMainRightRef} className={Style['loginMainRight']}>
+					<div
+						ref={loginMainRightDivScrollRef}
+						className={Style['loginMainRightDivScroll']}
 					>
-						<InputWithIcon
-							id="inputId"
-							ref={userIdRef}
-							placeholder="아이디를 입력해주세요 (이메일)"
-							value={idInputValue}
-							size="large"
-							onChange={(obj: { value: string }) => {
-								setIdInputValue(obj.value);
-								obj.value.length !== 0 &&
-									setIdInputError(!regEmail.test(obj.value));
-							}}
-							className={Style['inputIdField']}
-							inputIcon={<Icon name="user" />}
-							onEnter={() => userPwRef.current && userPwRef.current.focus()}
+						<Label
+							content="Dtech App"
+							iconOrImage="image"
+							nextImage={<Image src={DLogo} width={48} height={48} />}
+							size="massive"
+							spacing={heightSimilar ? 70 : 0}
 						/>
-					</InputLayout>
+						<InputLayout
+							error={idInputError}
+							errorMsg="아이디를 올바로 입력해주세요"
+							stretch={true}
+							inputLabel="아이디"
+							inputLabelSize={labelSize}
+							showInputLabel={true}
+							autoFitErrorLabel={true}
+							spacing={32}
+						>
+							<InputWithIcon
+								id="inputId"
+								ref={userIdRef}
+								placeholder="아이디를 입력해주세요 (이메일)"
+								value={idInputValue}
+								size="large"
+								onChange={(obj: { value: string }) => {
+									setIdInputValue(obj.value);
+									obj.value.length !== 0 &&
+										setIdInputError(!regEmail.test(obj.value));
+								}}
+								className={Style['inputIdField']}
+								inputIcon={<Icon name="user" />}
+								onEnter={() => userPwRef.current && userPwRef.current.focus()}
+							/>
+						</InputLayout>
 
-					<InputLayout
-						error={pwInputError}
-						errorMsg="비밀번호는 최소 6자리입니다"
-						stretch={true}
-						inputLabel="비밀번호"
-						inputLabelSize={labelSize}
-						showInputLabel={true}
-						autoFitErrorLabel={true}
-						spacing={7}
-					>
-						<InputWithIcon
-							id="inputPw"
-							ref={userPwRef}
-							placeholder="비밀번호를 입력해주세요"
-							value={pwInputValue}
-							size="large"
-							onChange={(obj: { value: string }) => {
-								setPwInputValue(obj.value);
+						<InputLayout
+							error={pwInputError}
+							errorMsg="비밀번호는 최소 6자리입니다"
+							stretch={true}
+							inputLabel="비밀번호"
+							inputLabelSize={labelSize}
+							showInputLabel={true}
+							autoFitErrorLabel={true}
+							spacing={7}
+						>
+							<InputWithIcon
+								id="inputPw"
+								ref={userPwRef}
+								placeholder="비밀번호를 입력해주세요"
+								value={pwInputValue}
+								size="large"
+								onChange={(obj: { value: string }) => {
+									setPwInputValue(obj.value);
 
-								if (obj.value.length !== 0) {
-									const pwRegex = /^.{6,30}$/;
+									if (obj.value.length !== 0) {
+										const pwRegex = /^.{6,30}$/;
 
-									setPwInputError(!pwRegex.test(obj.value));
-								}
-							}}
-							className={Style['inputPwField']}
-							inputIcon={<Icon name="lock" />}
-							type="password"
-							onEnter={() => userLogin()}
-						/>
-					</InputLayout>
+										setPwInputError(!pwRegex.test(obj.value));
+									}
+								}}
+								className={Style['inputPwField']}
+								inputIcon={<Icon name="lock" />}
+								type="password"
+								onEnter={() => userLogin()}
+							/>
+						</InputLayout>
 
-					<Button
-						className={Style['loginButton']}
-						spacing={7}
-						content="로그인"
-						size="large"
-						onClick={() => userLogin()}
-					/>
-
-					<div className={Style['divider']}>
-						<span></span>
-						<span>No Account ?</span>
-						<span></span>
-					</div>
-
-					<Link href="/register">
 						<Button
-							className={Style['registerButton']}
-							content="회원가입"
+							className={Style['loginButton']}
+							spacing={7}
+							content="로그인"
 							size="large"
-							color="google plus"
-							buttonType="none"
+							onClick={() => userLogin()}
 						/>
-					</Link>
+
+						<div className={Style['divider']}>
+							<span></span>
+							<span>No Account ?</span>
+							<span></span>
+						</div>
+
+						<Link href="/register">
+							<Button
+								className={Style['registerButton']}
+								content="회원가입"
+								size="large"
+								color="google plus"
+								buttonType="none"
+							/>
+						</Link>
+					</div>
 				</div>
 			</main>
 		</div>

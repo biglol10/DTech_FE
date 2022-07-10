@@ -7,6 +7,7 @@ import userReducer from './userSlice';
 import counterReducer from './counterSlice';
 import testApiReducer from './testApiSlice';
 import modalSlice from './modalSlice';
+import authSlice from './authSlice';
 // import saga from './sagaCounter';
 
 const rootReducer = (state: any, action: any) => {
@@ -22,6 +23,7 @@ const rootReducer = (state: any, action: any) => {
 				counter: counterReducer,
 				testApi: testApiReducer,
 				modal: modalSlice,
+				auth: authSlice,
 			});
 
 			return combinedReducer(state, action);

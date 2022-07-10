@@ -39,3 +39,8 @@ $sectionWidth: 60%;
 .idInputDiv {
 	display: flex;
 }
+
+.registerTextarea {
+	min-height: 250px !important;
+	width: -webkit-fill-available !important;
+}

@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { css } from '@emotion/react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { InputLayout, InputWithIcon, InputDefault, Button } from '@components/index';
-import { Icon } from 'semantic-ui-react';
+
+import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
+import { InputLayout, InputDefault, Button, Label } from '@components/index';
+import { Dropdown } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import Style from './Register.module.scss';
 
@@ -10,61 +11,66 @@ const RegisterStepTwo = (props: any) => {
 	const cx = classNames.bind(Style);
 	const labelSize = 'h4';
 
-	const [teamInputValue, setTeamInputValue] = useState('');
-	const [titleInputValue, setTitleInputValue] = useState('');
+	const [teamSelectValue, setTeamSelectValue] = useState('');
+	const [titleSelectValue, setTitleSelectValue] = useState('');
 	const [phoneNumValue, setPhoneNumValue] = useState('');
+	const [teamList, setTeamList] = useState([]);
 
 	const clickNext = () => {
 		console.log('clickNext2');
-		props.propFunction({ teamInputValue, titleInputValue, phoneNumValue });
+		props.propFunction({ teamSelectValue, titleSelectValue, phoneNumValue });
 	};
 
+	useEffect(() => {
+		getTeamList();
+	});
+
 	const getTeamList = () => {
-		console.log(process.env.BK_SRVR_URL);
+		axios.post('http://localhost:3066/api/auth/getTeamList').then((res: any) => {
+			const tempArr = res.data.resultData.queryResult;
+			const newTempArr = tempArr.map((team: any) => {
+				return { key: team.TEAM_CD, value: team.TEAM_CD, text: team.NAME };
+			});
+
+			setTeamList(newTempArr);
+		});
 	};
+
+	const titleList = [
+		{ key: '사원', value: '사원', text: '사원' },
+		{ key: '선임', value: '선임', text: '선임' },
+		{ key: '책임', value: '책임', text: '책임' },
+		{ key: '총괄', value: '총괄', text: '총괄' },
+		{ key: '팀장', value: '팀장', text: '팀장' },
+	];
 
 	return (
 		<>
-			<div className={cx('idInputDiv')}>
-				{/* 팀, 직급, 핸드폰번호*/}
-				<InputLayout
-					stretch={true}
-					inputLabel="팀"
-					inputLabelSize={labelSize}
-					showInputLabel={true}
-					autoFitErrorLabel={true}
-					spacing={2}
-				>
-					<InputDefault
-						id="inputId"
-						placeholder="팀을 입력해주세요."
-						value={teamInputValue}
-						size="large"
-						onChange={(obj: { value: string }) => {
-							setTeamInputValue(obj.value);
-						}}
-						className={Style['inputIdField']}
-					/>
-				</InputLayout>
-				<InputLayout
-					stretch={true}
-					inputLabel="직급"
-					inputLabelSize={labelSize}
-					showInputLabel={true}
-					autoFitErrorLabel={true}
-					spacing={2}
-				>
-					<InputDefault
-						id="inputId"
-						placeholder="직급을 입력해주세요."
-						value={titleInputValue}
-						size="large"
-						onChange={(obj: { value: string }) => {
-							setTitleInputValue(obj.value);
-						}}
-						className={Style['inputIdField']}
-					/>
-				</InputLayout>
+			<div className={cx('idInputDiv')} style={inputElCommStyle(0, 'left', true)}>
+				<Label content="팀" size="big" />
+				<Dropdown
+					placeholder="팀 선택"
+					fluid
+					search
+					selection
+					options={teamList}
+					onChange={(e, { value }: any) => {
+						console.log(value);
+						setTeamSelectValue(value);
+					}}
+				/>
+				<Label content="직급" />
+				<Dropdown
+					placeholder="직급 선택"
+					fluid
+					search
+					selection
+					options={titleList}
+					onChange={(e, { value }: any) => {
+						console.log(value);
+						setTitleSelectValue(value);
+					}}
+				/>
 				<InputLayout
 					stretch={true}
 					inputLabel="전화번호"

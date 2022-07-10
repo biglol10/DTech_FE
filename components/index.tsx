@@ -17,6 +17,7 @@ import TNSkillFlow from './thumbnail/TNSkillFlow';
 import { Tabs, TabHeader, Tab, TabPanels, TabPanel } from './tab/Tab';
 import RegisterStepOne from './registerStep/registerStepOne';
 import RegisterStepTwo from './registerStep/registerStepTwo';
+import RegisterStepThree from './registerStep/registerStepThree';
 
 export {
 	Accordion,
@@ -42,4 +43,5 @@ export {
 	TabPanel,
 	RegisterStepOne,
 	RegisterStepTwo,
+	RegisterStepThree,
 };
