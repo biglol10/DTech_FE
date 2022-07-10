@@ -1,3 +1,12 @@
+/** ****************************************************************************************
+ * @설명 : Input Default
+ ********************************************************************************************
+ * 번호    작업자     작업일         브랜치                       변경내용
+ *-------------------------------------------------------------------------------------------
+ * 1      변지욱      2022-06-16     feature/JW/input            최초작성
+ * 2      변지욱      2022-07-10     feature/JW/loginValidation  onChange to useCallback
+ ********************************************************************************************/
+
 import { ChangeEvent, forwardRef, useState, useCallback } from 'react';
 import { Input } from 'semantic-ui-react';
 import { IInputDefault } from '@utils/types/componentTypes';
