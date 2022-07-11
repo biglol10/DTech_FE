@@ -15,7 +15,16 @@ const Index = () => {
 							display: 'flex',
 						}}
 					>
-						<div className="items" style={{ display: 'flex', flexDirection: 'column' }}>
+						<div
+							className="wrapper"
+							style={{
+								height: '100vh',
+								display: 'flex',
+								flexDirection: 'column',
+								width: '100%',
+								alignItems: 'center',
+							}}
+						>
 							<img src="https://i.ibb.co/L8D5T60/light.png" />
 							<img src="https://i.ibb.co/zmDbMVZ/diamond.png" />
 							<img src="https://i.ibb.co/W5QZ9Fk/envelope.png" />
