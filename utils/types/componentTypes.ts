@@ -144,3 +144,19 @@ export interface ISNSkillFlow {
 	spacing?: number;
 	items?: Array<{ id?: string; name?: string; href?: string }>;
 }
+
+export interface IInputDropdown {
+	id?: string;
+	className?: string;
+	placeholder?: string;
+	value?: string | string[];
+	options?: object[];
+	onChange?: Function;
+	loading?: boolean;
+	multiple?: boolean;
+	disabled?: boolean;
+	stretch?: boolean;
+	error?: boolean;
+	onEnter?: Function;
+	keyboardInput?: boolean;
+}

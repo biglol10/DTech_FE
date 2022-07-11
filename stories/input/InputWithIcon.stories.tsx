@@ -2,7 +2,7 @@ import { ComponentMeta } from '@storybook/react';
 import { InputLayout, InputWithIcon } from '@components/index';
 import { Icon } from 'semantic-ui-react';
 
-import inputArgTypes from './modules/argTypes';
+import { inputArgTypes } from './modules/argTypes';
 import { Doc } from './InputWithIcon.stories.mdx';
 
 export default {

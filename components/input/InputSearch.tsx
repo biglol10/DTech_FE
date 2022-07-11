@@ -69,7 +69,7 @@ const InputSearch = forwardRef<any, IInputSearch>(
 					/>
 				}
 				style={stretch ? { width: '100%' } : {}}
-				onKeyUp={(evt: any) => evt.keyCode === 13 && onEnter && onEnter()}
+				onKeyUp={(evt: KeyboardEvent) => evt.key === 'Enter' && onEnter && onEnter()}
 			/>
 		);
 	},

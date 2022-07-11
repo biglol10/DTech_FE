@@ -62,7 +62,7 @@ const InputWithIcon = forwardRef<any, IInputWithIcon>(
 				disabled={disabled}
 				maxLength={maxLength}
 				style={stretch ? { width: '100%' } : {}}
-				onKeyUp={(evt: any) => evt.keyCode === 13 && onEnter && onEnter()}
+				onKeyUp={(evt: KeyboardEvent) => evt.key === 'Enter' && onEnter && onEnter()}
 			>
 				{inputIcon}
 				<input />
