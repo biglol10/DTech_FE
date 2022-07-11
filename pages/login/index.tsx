@@ -16,6 +16,7 @@ import { Button, InputLayout, Label, InputWithIcon } from '@components/index';
 import classNames from 'classnames/bind';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
+import cookie from 'js-cookie';
 
 import LeftBackground1 from '@public/background/loginLeft.png';
 import LeftBackground2 from '@public/background/loginLeft2.png';
@@ -57,8 +58,13 @@ const Login = () => {
 				userId: idInputValue,
 				password: pwInputValue,
 			},
-			callbackFn: (data: string) => {
-				data === 'success' && router.push('/');
+			callbackFn: (data: any) => {
+				if (data.result === 'success') {
+					cookie.set('token', data.userToken);
+					router.push('/');
+				} else {
+					alert('login failed');
+				}
 			},
 		});
 	};
