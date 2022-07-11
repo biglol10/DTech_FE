@@ -60,7 +60,7 @@ const InputDefault = forwardRef<any, IInputDefault>(
 				disabled={disabled}
 				maxLength={maxLength}
 				style={stretch ? { width: '100%' } : {}}
-				onKeyUp={(evt: any) => evt.keyCode === 13 && onEnter && onEnter()}
+				onKeyUp={(evt: KeyboardEvent) => evt.key === 'Enter' && onEnter && onEnter()}
 			/>
 		);
 	},

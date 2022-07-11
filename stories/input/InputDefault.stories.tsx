@@ -1,6 +1,6 @@
 import { ComponentMeta } from '@storybook/react';
 import { InputLayout, InputDefault } from '@components/index';
-import inputArgTypes from './modules/argTypes';
+import { inputArgTypes } from './modules/argTypes';
 import { Doc } from './InputDefault.stories.mdx';
 
 export default {
