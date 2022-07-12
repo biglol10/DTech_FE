@@ -15,14 +15,25 @@ $dividerColor: #839192;
 			height: 100%;
 			background-image: linear-gradient(-225deg, #707b7c 0%, #6b7b82 48%, #6d7889 100%);
 			display: flex;
+			flex-direction: column;
+
+			div:first-child {
+				height: 7vh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
+				i {
+					cursor: pointer;
+					color: #efe5fe;
+				}
+			}
 
 			.wrapper {
-				height: 100vh;
 				display: flex;
 				flex-direction: column;
 				width: 100%;
 				align-items: center;
-				padding: 100px 0 0 0;
 
 				img {
 					margin-top: 50px;
@@ -36,6 +47,7 @@ $dividerColor: #839192;
 			height: 100%;
 			background-color: #424949;
 			border-right: 1px solid #34495e;
+			position: relative;
 
 			.chatLogo {
 				display: flex;
@@ -49,23 +61,7 @@ $dividerColor: #839192;
 			.chatArea {
 				height: 87vh;
 				overflow-y: auto;
-
-				&::-webkit-scrollbar {
-					height: 12px;
-					width: 12px;
-					background: #000;
-					border-radius: 1ex;
-				}
-
-				&::-webkit-scrollbar-thumb {
-					background: #393812;
-					-webkit-border-radius: 1ex;
-					-webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75);
-				}
-
-				&::-webkit-scrollbar-corner {
-					background: #000;
-				}
+				position: relative;
 
 				.userSearch {
 					width: 100%;
@@ -184,6 +180,16 @@ $dividerColor: #839192;
 					background-image: linear-gradient(90deg, $dividerColor, transparent);
 				}
 			}
+		}
+
+		.sidebarChat:hover:after {
+			content: '';
+			height: 25px;
+			width: 25px;
+			top: 50%;
+			right: -10.5%;
+			position: absolute;
+			background-color: #2bac76;
 		}
 	}
 

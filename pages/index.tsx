@@ -2,17 +2,26 @@ import { useState } from 'react';
 import Image from 'next/image';
 import DLogo from '@public/images/DLogo2.png';
 import { InputLayout, InputDefault } from '@components/index';
+import { Icon } from 'semantic-ui-react';
 import Style from './index.module.scss';
 
 const Index = () => {
 	const [userSearch, setUserSearch] = useState('');
 	const [isLogoBorderBottom, setIsLogoBorderBottom] = useState(false);
+	const [iconLeft, setIconLeft] = useState(true);
 
 	return (
 		<>
 			<div className={Style['mainLayout']}>
 				<div className={Style['left']}>
 					<nav className={Style['sidebar']}>
+						<div>
+							<Icon
+								name={`angle double ${iconLeft ? 'left' : 'right'}`}
+								size="big"
+								onClick={() => setIconLeft(!iconLeft)}
+							/>
+						</div>
 						<div className={Style['wrapper']}>
 							<img src="https://i.ibb.co/L8D5T60/light.png" />
 							<img src="https://i.ibb.co/zmDbMVZ/diamond.png" />
