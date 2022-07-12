@@ -18,7 +18,6 @@ const LayoutComp = ({ children }: LayoutProps) => {
 			<Head>
 				<title>DCX skill manager</title>
 				<meta name="description" content="DCX Skill manager" />
-				<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300&family=Noto+Serif+KR:wght@300&display=swap" rel="stylesheet"/>
 			</Head>
 			{children}
 			<ModalPopup />

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import DLogo from '@public/images/DLogo2.png';
 import { InputLayout, InputDefault } from '@components/index';
@@ -6,6 +6,7 @@ import Style from './index.module.scss';
 
 const Index = () => {
 	const [userSearch, setUserSearch] = useState('');
+	const [isLogoBorderBottom, setIsLogoBorderBottom] = useState(false);
 
 	return (
 		<>
@@ -22,11 +23,21 @@ const Index = () => {
 						</div>
 					</nav>
 					<div className={Style['sidebarChat']}>
-						<div className={Style['chatLogo']}>
+						<div
+							className={Style['chatLogo']}
+							style={{
+								borderBottom: `${
+									isLogoBorderBottom ? '1px solid #CACFD2' : 'none'
+								}`,
+							}}
+						>
 							<Image src={DLogo} width={48} height={48} /> Dtech App
 						</div>
 
-						<div className={Style['chatArea']}>
+						<div
+							className={Style['chatArea']}
+							onScroll={(e: any) => setIsLogoBorderBottom(e.target.scrollTop > 20)}
+						>
 							<div className={Style['userSearch']}>
 								<InputLayout
 									stretch={true}
