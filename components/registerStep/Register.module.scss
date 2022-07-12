@@ -35,3 +35,8 @@ $sectionWidth: 60%;
 		width: 100%;
 	}
 }
+
+.registerTextarea {
+	min-height: 250px !important;
+	width: -webkit-fill-available !important;
+}

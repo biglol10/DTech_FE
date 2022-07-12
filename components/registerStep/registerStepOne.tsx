@@ -43,9 +43,6 @@ const RegisterStepOne = (props: any) => {
 			const newTempArr = tempArr.map((team: any) => {
 				return { key: team.TEAM_CD, value: team.TEAM_CD, text: team.NAME };
 			});
-
-			console.log(tempArr);
-			console.log(newTempArr);
 		});
 	};
 
