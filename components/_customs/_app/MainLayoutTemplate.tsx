@@ -4,6 +4,7 @@ import Image from 'next/image';
 import DLogo from '@public/images/DLogo2.png';
 import { Icon, Image as SemanticUIImage } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
+import { useRouter } from 'next/router';
 import Style from './MainLayoutTemplate.module.scss';
 
 interface LayoutProps {
@@ -12,6 +13,8 @@ interface LayoutProps {
 
 const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	const cx = classNames.bind(Style);
+
+	const router = useRouter();
 
 	const [userSearch, setUserSearch] = useState('');
 	const [isLogoBorderBottom, setIsLogoBorderBottom] = useState(false);
@@ -52,7 +55,9 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 										borderBottom: `${
 											isLogoBorderBottom ? '1px solid #999999' : 'none'
 										}`,
+										cursor: 'pointer',
 									}}
+									onClick={() => router.push('/')}
 								>
 									<Image src={DLogo} width={48} height={48} /> Dtech App
 								</div>
