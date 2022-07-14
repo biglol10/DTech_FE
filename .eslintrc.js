@@ -43,6 +43,6 @@ module.exports = {
 		'no-use-before-define': ['error', { variables: false }], // ? If this is true, the rule warns every reference to a variable before the variable declaration
 		'no-console': 'warn', // ? console.log 경고
 		'consistent-return': 'off', // ? 굳이 꼭 무언가를 리턴할 필요가 없게끔 설정
-		'react-hooks/exhaustive-deps': 'off', // ? hook 안의 관련 dependency 전부 추가하게끔 하는 설정 off (warn으로 하고 useEffect 확인)
+		'react-hooks/exhaustive-deps': 'warn', // ? hook 안의 관련 dependency 전부 추가하게끔 하는 설정 off (warn으로 하고 useEffect 확인)
 	},
 };
