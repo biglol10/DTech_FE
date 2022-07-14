@@ -5,7 +5,7 @@ import { Icon } from 'semantic-ui-react';
 import Image from 'next/image';
 import classNames from 'classnames/bind';
 
-import Style from './Register.module.scss';
+import Style from './RegisterComp.module.scss';
 
 const RegisterStepOne = (props: any) => {
 	const regEmail =
@@ -15,8 +15,8 @@ const RegisterStepOne = (props: any) => {
 	const cx = classNames.bind(Style);
 	const [idInputValue, setIdInputValue] = useState('');
 	const [idInputError, setIdInputError] = useState(false);
+	const [idInputErrMsg, setIdInputErrMsg] = useState('');
 	const [nameInputValue, setNameInputValue] = useState('');
-	const [nameInputError, setNameInputError] = useState(false);
 	const [pwInputValue, setPwInputValue] = useState('');
 	const [pwInputError, setPwInputError] = useState(false);
 	const [pw2InputValue, setPw2InputValue] = useState('');
@@ -55,6 +55,8 @@ const RegisterStepOne = (props: any) => {
 					if (res.data.foundId) {
 						setIdCheckMsg('이미 등록된 아이디');
 						setIdConfirm(true);
+						setIdInputErrMsg('이미 등록된 아이디');
+						setIdInputError(true);
 					} else {
 						setIdCheckMsg('아이디 사용 가능');
 						setIdConfirm(true);
@@ -63,63 +65,59 @@ const RegisterStepOne = (props: any) => {
 			});
 	};
 
-	// const clickNext = () => {
-	// 	if(idInputError&&nameInputError&&pwInputError&&pw2InputError&&idConfirm){
-
-	// 	}
-	// }
-
 	return (
 		<>
-			<div className={cx('idInputDiv')}>
-				<InputLayout
-					error={idInputError}
-					errorMsg="아이디를 올바로 입력해 주세요"
-					stretch={true}
-					inputLabel="아이디"
-					inputLabelSize={labelSize}
-					showInputLabel={true}
-					autoFitErrorLabel={true}
-					spacing={2}
-				>
+			<InputLayout
+				error={idInputError}
+				errorMsg={idInputErrMsg}
+				stretch={true}
+				inputLabel="이메일"
+				inputLabelSize={labelSize}
+				showInputLabel={true}
+				autoFitErrorLabel={true}
+				spacing={20}
+			>
+				<>
 					<InputWithIcon
 						id="inputId"
 						ref={userIdRef}
-						placeholder="아이디를 입력해주세요 (이메일)"
+						placeholder="이메일을 입력해주세요."
 						value={idInputValue}
 						size="large"
 						onChange={(obj: { value: string }) => {
 							console.log(obj.value);
 							setIdConfirm(false);
-							// setIdCheckMsg('중복확인 버튼을 클릭하세요2');
 							setIdInputValue(obj.value);
 							obj.value.length !== 0 && setIdInputError(!regEmail.test(obj.value));
+
+							if (!regEmail.test(obj.value)) {
+								setIdInputErrMsg('이메일을 정확히 입력해 주세요');
+							}
+							setIdConfirm(false);
 						}}
 						className={Style['inputIdField']}
 						inputIcon={<Icon name="user" />}
 						onEnter={() => userPwRef.current && userPwRef.current.focus()}
 					/>
-				</InputLayout>
-				<Button
-					className={Style['registerButton']}
-					content="중복확인"
-					size="large"
-					color="google plus"
-					buttonType="none"
-					onClick={idCheck}
-				/>
-				{idCheckMsg}
-			</div>
+					<Button
+						className={cx('idCheckBtn')}
+						content="중복확인"
+						size="large"
+						color="google plus"
+						buttonType="none"
+						onClick={idCheck}
+					/>
+				</>
+			</InputLayout>
+			{/* {idCheckMsg} */}
 
 			<InputLayout
-				error={nameInputError}
-				errorMsg="아이디를 올바로 입력해주세요"
 				stretch={true}
 				inputLabel="이름"
 				inputLabelSize={labelSize}
 				showInputLabel={true}
 				autoFitErrorLabel={true}
-				spacing={2}
+				// spacing={2}
 			>
 				<InputWithIcon
 					id="inputId"
@@ -143,7 +141,7 @@ const RegisterStepOne = (props: any) => {
 				inputLabelSize={labelSize}
 				showInputLabel={true}
 				autoFitErrorLabel={true}
-				spacing={2}
+				// spacing={2}
 			>
 				<InputWithIcon
 					id="inputPw"
@@ -173,7 +171,7 @@ const RegisterStepOne = (props: any) => {
 				inputLabelSize={labelSize}
 				showInputLabel={true}
 				autoFitErrorLabel={true}
-				spacing={7}
+				// spacing={7}
 			>
 				<InputWithIcon
 					id="inputPw2Confirm"

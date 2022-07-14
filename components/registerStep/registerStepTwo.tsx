@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, SyntheticEvent } from 'react';
 import axios from 'axios';
 
 import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
-import { InputLayout, InputDefault, Button, Label } from '@components/index';
+import { InputLayout, InputDefault, Button, Label, InputDropdown } from '@components/index';
 import { Dropdown } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
-import Style from './Register.module.scss';
+import Style from './RegisterComp.module.scss';
 
 const RegisterStepTwo = (props: any) => {
 	const cx = classNames.bind(Style);
@@ -18,7 +18,11 @@ const RegisterStepTwo = (props: any) => {
 
 	const clickNext = () => {
 		console.log('clickNext2');
-		props.propFunction({ teamSelectValue, titleSelectValue, phoneNumValue });
+		props.propFunction({ teamSelectValue, titleSelectValue, phoneNumValue, goNext: true });
+	};
+	const clickPrev = () => {
+		console.log('clickPrev2');
+		props.propFunction({ teamSelectValue, titleSelectValue, phoneNumValue, goNext: false });
 	};
 
 	useEffect(() => {
@@ -46,31 +50,45 @@ const RegisterStepTwo = (props: any) => {
 
 	return (
 		<>
-			<div className={cx('idInputDiv')} style={inputElCommStyle(0, 'left', true)}>
-				<Label content="팀" size="big" />
-				<Dropdown
-					placeholder="팀 선택"
-					fluid
-					search
-					selection
-					options={teamList}
-					onChange={(e, { value }: any) => {
-						console.log(value);
-						setTeamSelectValue(value);
-					}}
-				/>
-				<Label content="직급" />
-				<Dropdown
-					placeholder="직급 선택"
-					fluid
-					search
-					selection
-					options={titleList}
-					onChange={(e, { value }: any) => {
-						console.log(value);
-						setTitleSelectValue(value);
-					}}
-				/>
+			<div style={inputElCommStyle(0, 'left', true)}>
+				<InputLayout
+					stretch={true}
+					inputLabel="팀"
+					inputLabelSize={labelSize}
+					showInputLabel={true}
+					autoFitErrorLabel={true}
+					// spacing={2}
+				>
+					<InputDropdown
+						id="inputId"
+						placeholder="팀 선택"
+						options={teamList}
+						onChange={(e: SyntheticEvent<HTMLElement, Event>, { value }: any) => {
+							console.log(value);
+							setTeamSelectValue(value);
+						}}
+						className={Style['inputIdField']}
+					/>
+				</InputLayout>
+				<InputLayout
+					stretch={true}
+					inputLabel="직급"
+					inputLabelSize={labelSize}
+					showInputLabel={true}
+					autoFitErrorLabel={true}
+					// spacing={2}
+				>
+					<InputDropdown
+						id="inputId"
+						placeholder="직급 선택."
+						options={titleList}
+						onChange={(e: SyntheticEvent<HTMLElement, Event>, { value }: any) => {
+							console.log(value);
+							setTitleSelectValue(value);
+						}}
+						className={Style['inputIdField']}
+					/>
+				</InputLayout>
 				<InputLayout
 					stretch={true}
 					inputLabel="전화번호"
@@ -90,14 +108,24 @@ const RegisterStepTwo = (props: any) => {
 						className={Style['inputIdField']}
 					/>
 				</InputLayout>
-				<Button
-					className={Style['registerButton']}
-					content="다음"
-					size="large"
-					color="google plus"
-					buttonType="none"
-					onClick={clickNext}
-				/>
+				<div className={Style['buttonBelow']}>
+					<Button
+						className={Style['registerButton']}
+						content="이전"
+						size="large"
+						color="google plus"
+						buttonType="none"
+						onClick={clickPrev}
+					/>
+					<Button
+						className={Style['registerButton']}
+						content="다음"
+						size="large"
+						color="google plus"
+						buttonType="none"
+						onClick={clickNext}
+					/>
+				</div>
 			</div>
 		</>
 	);

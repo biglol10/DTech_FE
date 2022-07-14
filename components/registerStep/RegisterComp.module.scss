@@ -37,6 +37,20 @@ $sectionWidth: 60%;
 }
 
 .registerTextarea {
-	min-height: 250px !important;
+	min-height: 350px !important;
 	width: -webkit-fill-available !important;
+}
+
+.idInputDiv {
+	display: flex;
+	// width: 100%;
+}
+
+.idCheckBtn {
+	margin: 0px 2px;
+}
+
+.buttonBelow {
+	display: flex;
+	justify-content: space-around;
 }

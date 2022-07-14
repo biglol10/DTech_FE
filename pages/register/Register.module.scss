@@ -18,16 +18,16 @@ $sectionWidth: 60%;
 	justify-content: center;
 }
 
-.loginMainRight {
+.loginMainCenter {
 	background-color: white;
-	border-radius: 50px 0px 0px 50px;
+	border-radius: 50px 50px 50px 50px;
 	width: $sectionWidth;
 	height: 80%;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
+	// justify-content: center;
 	align-items: center;
-	padding: 0 2%;
+	padding: 0 7%;
 	position: relative;
 
 	.loginButton,
@@ -43,4 +43,13 @@ $sectionWidth: 60%;
 .registerTextarea {
 	min-height: 250px !important;
 	width: -webkit-fill-available !important;
+}
+
+// .loginMainCenter {
+// 	padding: 0px 50px;
+// }
+
+.registerStepper {
+	width: 100%;
+	margin-bottom: 10px;
 }

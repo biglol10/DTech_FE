@@ -24,53 +24,58 @@ const RegisterPage = (props: any) => {
 		setStepNum(2);
 	};
 	const getStepTwoData = (data: any) => {
-		setRegisterData({
-			...registerData,
-			team: data.teamSelectValue,
-			title: data.titleSelectValue,
-			phonenum: data.phoneNumValue,
-		});
-		console.log('step2');
-		console.log(registerData);
+		if (data.goNext) {
+			setRegisterData({
+				...registerData,
+				team: data.teamSelectValue,
+				title: data.titleSelectValue,
+				phonenum: data.phoneNumValue,
+			});
 
-		setStepNum(3);
+			setStepNum((prev) => prev + 1);
+		} else {
+			setStepNum((prev) => prev - 1);
+		}
 	};
 
 	const clickRegister = (data: any) => {
-		console.log(data);
-		setRegisterData({
-			...registerData,
-			detail: data.detail,
-		});
-
-		console.log({ ...registerData, detail: data.detail });
-		axios
-			.post('http://localhost:3066/api/auth/registerUser', {
+		if (data.goNext) {
+			setRegisterData({
 				...registerData,
 				detail: data.detail,
-			})
-			.then((res: any) => {
-				console.log(res.data);
 			});
+
+			console.log({ ...registerData, detail: data.detail });
+			axios
+				.post('http://localhost:3066/api/auth/registerUser', {
+					...registerData,
+					detail: data.detail,
+				})
+				.then((res: any) => {
+					console.log(res.data);
+				});
+		} else {
+			setStepNum((prev) => prev - 1);
+		}
 	};
 
 	const registerStep = (
-		<div className={Style['loginMainRight']}>
+		<div className={cx('loginMainCenter')}>
 			<Label
 				content="회원가입"
 				iconOrImage="image"
 				nextImage={<Image src={DLogo} width={48} height={48} />}
 				size="massive"
 			/>
-			<Stepper activeStep={stepNum - 1} alternativeLabel>
+			<Stepper activeStep={stepNum - 1} alternativeLabel className={cx('registerStepper')}>
 				<Step key="1">
-					<StepLabel>one</StepLabel>
+					<StepLabel></StepLabel>
 				</Step>
 				<Step key="2">
-					<StepLabel>two</StepLabel>
+					<StepLabel></StepLabel>
 				</Step>
 				<Step key="3">
-					<StepLabel>three</StepLabel>
+					<StepLabel></StepLabel>
 				</Step>
 			</Stepper>
 			{stepNum === 1 && <RegisterStepOne propFunction={getStepOneData} />}
