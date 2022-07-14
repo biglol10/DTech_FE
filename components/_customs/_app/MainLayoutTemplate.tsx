@@ -1,4 +1,13 @@
-import React, { useState } from 'react';
+/** ****************************************************************************************
+ * @설명 : App layout
+ ********************************************************************************************
+ * 번호    작업자     작업일         브랜치                       변경내용
+ *-------------------------------------------------------------------------------------------
+ * 1      변지욱     2022-07-13   feature/JW/layout           최초작성
+ * 2      변지욱     2022-07-14   feature/JW/layoutchange     세팅팝업 추가 및 세팅영역 밖 클릭 시 세팅팝업 숨김처리
+ ********************************************************************************************/
+
+import React, { useState, useEffect, useRef } from 'react';
 import { InputLayout, InputDefault } from '@components/index';
 import Image from 'next/image';
 import DLogo from '@public/images/DLogo2.png';
@@ -19,9 +28,28 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	const [userSearch, setUserSearch] = useState('');
 	const [isLogoBorderBottom, setIsLogoBorderBottom] = useState(false);
 	const [iconLeft, setIconLeft] = useState(true);
+	const [settingOpen, setSettingOpen] = useState(false);
 
-	const noProfileImage =
-		'data:image/png;base64,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';
+	const wrapperRef = useRef<any>(null);
+
+	useEffect(() => {
+		if (wrapperRef) {
+			const clickSettingOutside = (event: any) => {
+				if (
+					wrapperRef.current &&
+					!wrapperRef.current.contains(event.target) &&
+					event.target.parentElement.id !== 'userSettingArea'
+				) {
+					setSettingOpen(false);
+				}
+			};
+
+			document.addEventListener('mousedown', clickSettingOutside);
+			return () => {
+				document.removeEventListener('mousedown', clickSettingOutside);
+			};
+		}
+	}, []);
 
 	return (
 		<>
@@ -162,12 +190,39 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 							<li>
 								<a href="#about">About</a>
 							</li>
-							<li>
-								<SemanticUIImage src={noProfileImage} avatar />
+							<li id="userSettingArea" onClick={() => setSettingOpen(!settingOpen)}>
+								<SemanticUIImage
+									src={`${
+										process.env.MODE_ENV === 'production' ? 'dtech' : ''
+									}/images/no_profile.png`}
+									avatar
+								/>
 								<span>Username</span>
 							</li>
 						</ul>
 					</nav>
+					{settingOpen && (
+						<div ref={wrapperRef} className={Style['settingPopup']}>
+							<div>
+								<Icon name="user circle" />내 프로필 보기
+							</div>
+							<hr className={Style['menu-separator']} />
+							<div>
+								<Icon name="setting" />내 설정
+							</div>
+							<hr className={Style['menu-separator']} />
+							<div>
+								<Icon name="mail" />
+								건의사항 남기기
+							</div>
+							<hr className={Style['menu-separator']} />
+							<div>
+								<Icon name="user close" />
+								로그아웃
+							</div>
+						</div>
+					)}
+
 					<main className={Style['mainContent']}>{children}</main>
 				</div>
 			</div>
