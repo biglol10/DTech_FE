@@ -1,4 +1,5 @@
-$dividerColor: #839192;
+@import '@styles/_mixinCollection.scss';
+@import '@styles/_variables.scss';
 
 .mainLayout {
 	width: 100%;
@@ -217,6 +218,8 @@ $dividerColor: #839192;
 				font-weight: bold;
 				height: 100%;
 				border-bottom: 1px solid #d1d2d3;
+
+				@include userSelectNone;
 
 				li {
 					float: left;
