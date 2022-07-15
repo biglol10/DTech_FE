@@ -13,6 +13,7 @@ export default function Document() {
 					href="https://fonts.googleapis.com/icon?family=Material+Icons"
 					rel="stylesheet"
 				/>
+				
 				{/* This is for favicon */}
 				<link rel="icon" href="dtech/favicon.ico" type="image/x-icon" />
 				<link

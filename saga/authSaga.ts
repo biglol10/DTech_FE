@@ -52,7 +52,7 @@ const setAuthFunction = function* ({
 	} else {
 		yield put(authReset());
 	}
-	yield call(callbackFn, loginResult.result);
+	yield call(callbackFn, loginResult);
 };
 
 const resetAuthFunction = function* () {

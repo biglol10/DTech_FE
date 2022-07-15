@@ -1,0 +1,288 @@
+$dividerColor: #839192;
+
+.mainLayout {
+	width: 100%;
+	height: 100vh;
+	display: flex;
+	background-color: antiquewhite;
+
+	.left {
+		height: 100%;
+		display: flex;
+
+		.sidebar {
+			width: 80px;
+			height: 100%;
+			background-image: linear-gradient(-225deg, #707b7c 0%, #6b7b82 48%, #6d7889 100%);
+			display: flex;
+			flex-direction: column;
+
+			div:first-child {
+				height: 7vh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
+				i {
+					cursor: pointer;
+					color: #efe5fe;
+				}
+			}
+
+			.wrapper {
+				display: flex;
+				flex-direction: column;
+				width: 100%;
+				align-items: center;
+
+				img {
+					margin-top: 50px;
+					cursor: pointer;
+				}
+			}
+		}
+
+		.showSidebar {
+			width: 250px;
+			border-right: 1px solid #34495e;
+		}
+
+		.hideSidebar {
+			width: 0px;
+			border-right: none;
+		}
+
+		.sidebarChat {
+			height: 100%;
+			background-color: #424949;
+			border-right: 1px solid #34495e;
+			position: relative;
+			transition: width 0.1s ease;
+
+			.chatLogo {
+				display: flex;
+				align-items: center;
+				font-size: 1.7rem;
+				color: white;
+				padding-left: 5%;
+				height: 7vh;
+				font-weight: bold;
+			}
+
+			.chatArea {
+				height: 87vh;
+				overflow-y: auto;
+				position: relative;
+
+				.userSearch {
+					width: 100%;
+					padding: 0 5%;
+
+					h5 {
+						color: #e7fefe;
+					}
+				}
+
+				.usersOnline,
+				.usersOffline {
+					margin: 0 5%;
+					color: white;
+
+					.folder-icons {
+						margin-top: 10px;
+						display: flex;
+						align-items: center;
+						height: 30px;
+
+						.user-avatar {
+							position: relative;
+							display: flex;
+
+							img {
+								width: 30px;
+								border-radius: 10px;
+							}
+
+							&::after {
+								content: '';
+								position: absolute;
+								top: -5px;
+								right: -5px;
+								border: 2px solid #fbfcf8;
+								box-sizing: unset;
+								width: 8px;
+								height: 8px;
+								border-radius: 50%;
+							}
+
+							&.online {
+								&::after {
+									background-color: #2bac76;
+								}
+							}
+
+							&.offline {
+								&::after {
+									background-color: #fe4663;
+								}
+							}
+						}
+
+						.username {
+							margin-left: 10px;
+							font-weight: bold;
+							font-size: 15px;
+						}
+					}
+				}
+
+				.divider {
+					display: flex;
+					font-size: 24px;
+					text-align: center;
+					width: 100%; /* divider width */
+					margin: 25px auto; /* spacing above/below */
+					align-items: center;
+					user-select: none;
+				}
+				.divider span {
+					display: table-cell;
+					position: relative;
+				}
+				.divider span:first-child,
+				.divider span:last-child {
+					width: 50%;
+					-moz-background-size: 100% 2px; /* line width */
+					background-size: 100% 2px; /* line width */
+					background-position: 0 0, 0 100%;
+					background-repeat: no-repeat;
+					height: 2px;
+				}
+				.divider span:first-child {
+					/* color changes in here */
+					background-image: -webkit-gradient(
+						linear,
+						0 0,
+						0 100%,
+						from(transparent),
+						to($dividerColor)
+					);
+					background-image: -webkit-linear-gradient(180deg, transparent, $dividerColor);
+					background-image: -moz-linear-gradient(180deg, transparent, $dividerColor);
+					background-image: -o-linear-gradient(180deg, transparent, $dividerColor);
+					background-image: linear-gradient(90deg, transparent, $dividerColor);
+				}
+				.divider span:nth-child(2) {
+					color: $dividerColor;
+					padding: 0px 5px;
+					width: auto;
+					white-space: nowrap;
+					font-size: 12px;
+				}
+				.divider span:last-child {
+					/* color changes in here */
+					background-image: -webkit-gradient(
+						linear,
+						0 0,
+						0 100%,
+						from($dividerColor),
+						to(transparent)
+					);
+					background-image: -webkit-linear-gradient(180deg, $dividerColor, transparent);
+					background-image: -moz-linear-gradient(180deg, $dividerColor, transparent);
+					background-image: -o-linear-gradient(180deg, $dividerColor, transparent);
+					background-image: linear-gradient(90deg, $dividerColor, transparent);
+				}
+			}
+		}
+	}
+
+	.right {
+		width: 100%;
+		height: 100%;
+
+		.navHeader {
+			width: 100%;
+			height: 6vh;
+
+			ul {
+				list-style-type: none;
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+				background-color: #3e3e42;
+				position: relative;
+				font-size: 1.1rem;
+				font-weight: bold;
+				height: 100%;
+				border-bottom: 1px solid #d1d2d3;
+
+				li {
+					float: left;
+					margin: 0;
+					cursor: pointer;
+
+					a {
+						display: block;
+						color: white;
+						text-align: center;
+						padding: 16px 0;
+						text-decoration: none;
+
+						&::before {
+							content: '';
+							margin-right: 40px;
+							cursor: initial;
+						}
+
+						&::after {
+							content: '|';
+							color: white;
+							margin-left: 40px;
+							cursor: initial;
+						}
+					}
+					&.active {
+						a {
+							color: #ffefca;
+						}
+					}
+				}
+
+				li:first-child {
+					margin-left: 30%;
+				}
+
+				li:last-child {
+					position: absolute;
+					right: 4%;
+					margin: 0;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					height: 100%;
+					color: white;
+
+					::after {
+						visibility: hidden;
+					}
+				}
+
+				li:nth-child(4) {
+					::after {
+						visibility: hidden;
+					}
+				}
+			}
+		}
+
+		.mainContent {
+			width: 100%;
+			height: 94vh;
+			// background-color: #3e3e42;
+			// background-color: white;
+			overflow-y: auto;
+			padding: 1%;
+		}
+	}
+}
