@@ -1,3 +1,4 @@
+@import '@styles/_variables.scss';
 @import 'https://fonts.googleapis.com/css2?family=Trispace&display=swap';
 
 // $backgroundUrl: url('../../public/background/cool-background.png');
@@ -6,7 +7,6 @@ $backgroundUrlLeft: url(~@public/background/loginLeft.png);
 $DLogo: url(~@public/images/DLogo.png);
 $sectionWidth: 30%;
 $transitionTime: 0.4s;
-$dividerColor: #839192;
 
 .loginDiv {
 	background-image: $backgroundUrl;

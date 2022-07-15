@@ -38,7 +38,8 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 				if (
 					wrapperRef.current &&
 					!wrapperRef.current.contains(event.target) &&
-					event.target.parentElement.id !== 'userSettingArea'
+					event.target.parentElement.id !== 'userSettingArea' &&
+					event.target.parentElement.id !== 'userSettingAreaUL'
 				) {
 					setSettingOpen(false);
 				}
@@ -177,7 +178,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 				</div>
 				<div className={Style['right']}>
 					<nav className={Style['navHeader']}>
-						<ul>
+						<ul id="userSettingAreaUL">
 							<li className={Style['active']}>
 								<a href="#home">대시보드</a>
 							</li>
