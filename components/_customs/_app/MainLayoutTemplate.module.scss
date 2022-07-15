@@ -1,4 +1,5 @@
-$dividerColor: #839192;
+@import '@styles/_mixinCollection.scss';
+@import '@styles/_variables.scss';
 
 .mainLayout {
 	width: 100%;
@@ -200,6 +201,7 @@ $dividerColor: #839192;
 	.right {
 		width: 100%;
 		height: 100%;
+		position: relative;
 
 		.navHeader {
 			width: 100%;
@@ -217,10 +219,37 @@ $dividerColor: #839192;
 				height: 100%;
 				border-bottom: 1px solid #d1d2d3;
 
+				@include userSelectNone;
+
 				li {
 					float: left;
 					margin: 0;
 					cursor: pointer;
+
+					&:first-child {
+						margin-left: 30%;
+					}
+
+					&:last-child {
+						position: absolute;
+						right: 4%;
+						margin: 0;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						height: 100%;
+						color: white;
+
+						::after {
+							visibility: hidden;
+						}
+					}
+
+					&:nth-child(4) {
+						::after {
+							visibility: hidden;
+						}
+					}
 
 					a {
 						display: block;
@@ -248,31 +277,44 @@ $dividerColor: #839192;
 						}
 					}
 				}
+			}
+		}
 
-				li:first-child {
-					margin-left: 30%;
+		.settingPopup {
+			position: absolute;
+			right: 4%;
+			background-color: #424949;
+			margin-top: -2px;
+			width: 250px;
+			border-radius: 10px;
+			padding: 20px 0;
+			color: white;
+
+			div {
+				margin: 9px 20px 9px 20px;
+				cursor: pointer;
+
+				&:first-child {
+					margin-top: 0;
 				}
 
-				li:last-child {
-					position: absolute;
-					right: 4%;
-					margin: 0;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					height: 100%;
-					color: white;
-
-					::after {
-						visibility: hidden;
-					}
+				&:last-child {
+					margin-bottom: 0;
 				}
 
-				li:nth-child(4) {
-					::after {
-						visibility: hidden;
-					}
+				i {
+					margin-right: 15px;
 				}
+
+				&:hover {
+					color: aquamarine;
+				}
+			}
+
+			.menu-separator {
+				border-bottom: 0;
+				border-top: 1px solid rgba(232, 232, 232, 0.13);
+				margin: 0;
 			}
 		}
 
