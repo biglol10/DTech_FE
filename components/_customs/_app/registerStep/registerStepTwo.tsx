@@ -1,6 +1,8 @@
 import { useEffect, useState, SyntheticEvent } from 'react';
 import axios from 'axios';
 
+import { useDispatch } from 'react-redux';
+
 import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
 import { InputLayout, InputDefault, Button, Label, InputDropdown } from '@components/index';
 import { Dropdown } from 'semantic-ui-react';
@@ -11,9 +13,13 @@ const RegisterStepTwo = (props: any) => {
 	const cx = classNames.bind(Style);
 	const labelSize = 'h4';
 
-	const [teamSelectValue, setTeamSelectValue] = useState('');
-	const [titleSelectValue, setTitleSelectValue] = useState('');
-	const [phoneNumValue, setPhoneNumValue] = useState('');
+	const dispatch = useDispatch();
+
+	const [teamSelectValue, setTeamSelectValue] = useState(props.registerData.team);
+	const [titleSelectValue, setTitleSelectValue] = useState(props.registerData.title);
+	const [phoneNumValue, setPhoneNumValue] = useState(
+		props.registerData.phonenum === undefined ? '' : props.registerData.phonenum,
+	);
 	const [teamList, setTeamList] = useState([]);
 
 	const clickNext = () => {
@@ -27,18 +33,28 @@ const RegisterStepTwo = (props: any) => {
 
 	useEffect(() => {
 		getTeamList();
-	});
+	}, []);
 
 	const getTeamList = () => {
-		axios.post('http://localhost:3066/api/auth/getTeamList').then((res: any) => {
-			const tempArr = res.data.resultData.queryResult;
-			const newTempArr = tempArr.map((team: any) => {
-				return { key: team.TEAM_CD, value: team.TEAM_CD, text: team.NAME };
-			});
-
-			setTeamList(newTempArr);
+		dispatch({
+			type: 'TEAM_LIST',
+			setTeamList,
 		});
 	};
+
+	// useEffect(() => {
+	// 	if (phoneNumValue.length <= 11) {
+	// 		setPhoneNumValue((prevNum: any) =>
+	// 			prevNum.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'),
+	// 		);
+	// 	} else if (phoneNumValue.lengh === 13) {
+	// 		setPhoneNumValue(
+	// 			phoneNumValue.replace(/-/g, '').replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'),
+	// 		);
+	// 	}
+
+	// 	console.log(phoneNumValue);
+	// }, [phoneNumValue]);
 
 	const titleList = [
 		{ key: '사원', value: '사원', text: '사원' },
@@ -63,9 +79,9 @@ const RegisterStepTwo = (props: any) => {
 						id="inputId"
 						placeholder="팀 선택"
 						options={teamList}
-						onChange={(e: SyntheticEvent<HTMLElement, Event>, { value }: any) => {
-							console.log(value);
-							setTeamSelectValue(value);
+						value={teamSelectValue}
+						onChange={(obj: { value: string }) => {
+							setTeamSelectValue(obj.value);
 						}}
 						className={Style['inputIdField']}
 					/>
@@ -82,16 +98,16 @@ const RegisterStepTwo = (props: any) => {
 						id="inputId"
 						placeholder="직급 선택."
 						options={titleList}
-						onChange={(e: SyntheticEvent<HTMLElement, Event>, { value }: any) => {
-							console.log(value);
-							setTitleSelectValue(value);
+						onChange={(obj: { value: string }) => {
+							console.log(obj.value);
+							setTitleSelectValue(obj.value);
 						}}
 						className={Style['inputIdField']}
 					/>
 				</InputLayout>
 				<InputLayout
 					stretch={true}
-					inputLabel="전화번호"
+					inputLabel="휴대폰 번호"
 					inputLabelSize={labelSize}
 					showInputLabel={true}
 					autoFitErrorLabel={true}
@@ -99,7 +115,7 @@ const RegisterStepTwo = (props: any) => {
 				>
 					<InputDefault
 						id="inputId"
-						placeholder="전화번호를 입력해주세요."
+						placeholder="휴대폰 번호를 입력해주세요."
 						value={phoneNumValue}
 						size="large"
 						onChange={(obj: { value: string }) => {

@@ -1,5 +1,6 @@
 import Image from 'next/image';
-import { Label, RegisterStepOne, RegisterStepTwo, RegisterStepThree } from '@components/index';
+import { Label } from '@components/index';
+import { RegisterStepOne, RegisterStepTwo, RegisterStepThree } from '@components/customs';
 import { Stepper, Step, StepLabel } from '@mui/material';
 import axios from 'axios';
 import React, { useState } from 'react';
@@ -19,19 +20,16 @@ const RegisterPage = (props: any) => {
 			name: data.nameInputValue,
 			passwd: data.pwInputValue,
 		});
-		console.log('step1');
-		console.log(registerData);
 		setStepNum(2);
 	};
 	const getStepTwoData = (data: any) => {
+		setRegisterData({
+			...registerData,
+			team: data.teamSelectValue,
+			title: data.titleSelectValue,
+			phonenum: data.phoneNumValue,
+		});
 		if (data.goNext) {
-			setRegisterData({
-				...registerData,
-				team: data.teamSelectValue,
-				title: data.titleSelectValue,
-				phonenum: data.phoneNumValue,
-			});
-
 			setStepNum((prev) => prev + 1);
 		} else {
 			setStepNum((prev) => prev - 1);
@@ -78,8 +76,12 @@ const RegisterPage = (props: any) => {
 					<StepLabel></StepLabel>
 				</Step>
 			</Stepper>
-			{stepNum === 1 && <RegisterStepOne propFunction={getStepOneData} />}
-			{stepNum === 2 && <RegisterStepTwo propFunction={getStepTwoData} />}
+			{stepNum === 1 && (
+				<RegisterStepOne propFunction={getStepOneData} registerData={registerData} />
+			)}
+			{stepNum === 2 && (
+				<RegisterStepTwo propFunction={getStepTwoData} registerData={registerData} />
+			)}
 			{stepNum === 3 && <RegisterStepThree clickFunction={clickRegister} />}
 		</div>
 	);

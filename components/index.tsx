@@ -16,9 +16,6 @@ import Radio from './radio/Radio';
 import TNSkill from './thumbnail/TNSkill';
 import TNSkillFlow from './thumbnail/TNSkillFlow';
 import { Tabs, TabHeader, Tab, TabPanels, TabPanel } from './tab/Tab';
-import RegisterStepOne from './registerStep/registerStepOne';
-import RegisterStepTwo from './registerStep/registerStepTwo';
-import RegisterStepThree from './registerStep/registerStepThree';
 
 export {
 	Accordion,
@@ -43,7 +40,4 @@ export {
 	Tab,
 	TabPanels,
 	TabPanel,
-	RegisterStepOne,
-	RegisterStepTwo,
-	RegisterStepThree,
 };

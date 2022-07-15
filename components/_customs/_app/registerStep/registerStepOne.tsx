@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+
+import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { Button, InputDefault, Label, InputLayout, InputWithIcon } from '@components/index';
 import { Icon } from 'semantic-ui-react';
@@ -10,17 +12,24 @@ import Style from './RegisterComp.module.scss';
 const RegisterStepOne = (props: any) => {
 	const regEmail =
 		/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-	const labelSize = 'h4';
+	const labelSize = 'h5';
 
+	const dispatch = useDispatch();
 	const cx = classNames.bind(Style);
-	const [idInputValue, setIdInputValue] = useState('');
+	const [idInputValue, setIdInputValue] = useState(props.registerData.user_id);
 	const [idInputError, setIdInputError] = useState(false);
 	const [idInputErrMsg, setIdInputErrMsg] = useState('');
-	const [nameInputValue, setNameInputValue] = useState('');
-	const [pwInputValue, setPwInputValue] = useState('');
+
+	const [nameInputValue, setNameInputValue] = useState(props.registerData.name);
+	const [nameInputError, setNameInputError] = useState(false);
+
+	const [pwInputValue, setPwInputValue] = useState(props.registerData.passwd);
 	const [pwInputError, setPwInputError] = useState(false);
-	const [pw2InputValue, setPw2InputValue] = useState('');
+	const [pwInputErrMsg, setPwInputErrMsg] = useState('');
+
+	const [pw2InputValue, setPw2InputValue] = useState(props.registerData.passwd);
 	const [pw2InputError, setPw2InputError] = useState(false);
+	const [pw2InputErrMsg, setPw2InputErrMsg] = useState('');
 
 	const [idCheckMsg, setIdCheckMsg] = useState('중목확인 버튼을 클릭하세요');
 	const [idConfirm, setIdConfirm] = useState(false);
@@ -28,41 +37,42 @@ const RegisterStepOne = (props: any) => {
 	const userIdRef = useRef<any>();
 	const userPwRef = useRef<any>();
 
+	useEffect(() => {});
+
 	const clickNext = () => {
 		console.log('clickNext');
-		props.propFunction({ idInputValue, nameInputValue, pwInputValue });
-	};
-
-	useEffect(() => {
-		getTeamList();
-	});
-
-	const getTeamList = () => {
-		axios.post('http://localhost:3066/api/auth/getTeamList').then((res: any) => {
-			const tempArr = res.data.resultData.queryResult;
-			const newTempArr = tempArr.map((team: any) => {
-				return { key: team.TEAM_CD, value: team.TEAM_CD, text: team.NAME };
-			});
+		dispatch({
+			type: 'GOSTEP2',
+			idInputValue,
+			nameInputValue,
+			pwInputValue,
+			pw2InputValue,
+			setNameInputError,
+			setIdInputError,
+			setIdInputErrMsg,
+			setPwInputError,
+			setPwInputErrMsg,
+			setPw2InputError,
+			setPw2InputErrMsg,
+			idInputError,
+			nameInputError,
+			pwInputError,
+			pw2InputError,
+			idConfirm,
+			propFunction: props.propFunction,
 		});
+		// props.propFunction({ idInputValue, nameInputValue, pwInputValue, pw2InputValue });
 	};
 
 	const idCheck = () => {
-		axios
-			.post('http://localhost:3066/api/auth/idCheck', { userId: idInputValue })
-			.then((res: any) => {
-				console.log(res.data);
-				if (res.data.result === 'success') {
-					if (res.data.foundId) {
-						setIdCheckMsg('이미 등록된 아이디');
-						setIdConfirm(true);
-						setIdInputErrMsg('이미 등록된 아이디');
-						setIdInputError(true);
-					} else {
-						setIdCheckMsg('아이디 사용 가능');
-						setIdConfirm(true);
-					}
-				}
-			});
+		dispatch({
+			type: 'ID_CHECK',
+			idInputValue,
+			setIdInputError,
+			setIdInputErrMsg,
+			setIdCheckMsg,
+			setIdConfirm,
+		});
 	};
 
 	return (
@@ -93,7 +103,6 @@ const RegisterStepOne = (props: any) => {
 							if (!regEmail.test(obj.value)) {
 								setIdInputErrMsg('이메일을 정확히 입력해 주세요');
 							}
-							setIdConfirm(false);
 						}}
 						className={Style['inputIdField']}
 						inputIcon={<Icon name="user" />}
@@ -101,7 +110,7 @@ const RegisterStepOne = (props: any) => {
 					/>
 					<Button
 						className={cx('idCheckBtn')}
-						content="중복확인"
+						content={idConfirm ? '사용가능!' : '중복확인'}
 						size="large"
 						color="google plus"
 						buttonType="none"
@@ -112,6 +121,8 @@ const RegisterStepOne = (props: any) => {
 			{/* {idCheckMsg} */}
 
 			<InputLayout
+				error={nameInputError}
+				errorMsg="이름을 입력하세요."
 				stretch={true}
 				inputLabel="이름"
 				inputLabelSize={labelSize}
@@ -126,7 +137,11 @@ const RegisterStepOne = (props: any) => {
 					value={nameInputValue}
 					size="large"
 					onChange={(obj: { value: string }) => {
+						console.log(idInputValue);
 						setNameInputValue(obj.value);
+						if (obj.value.length !== 0) {
+							setNameInputError(false);
+						}
 					}}
 					className={Style['inputIdField']}
 					inputIcon={<Icon name="user" />}
@@ -151,7 +166,6 @@ const RegisterStepOne = (props: any) => {
 					size="large"
 					onChange={(obj: { value: string }) => {
 						setPwInputValue(obj.value);
-
 						if (obj.value.length !== 0) {
 							const pwRegex = /^.{6,30}$/;
 
@@ -183,7 +197,7 @@ const RegisterStepOne = (props: any) => {
 						setPw2InputValue(obj.value);
 
 						if (obj.value.length !== 0) {
-							setPw2InputError(pwInputValue !== pw2InputValue);
+							setPw2InputError(pwInputValue !== obj.value);
 						}
 					}}
 					className={Style['inputPwField']}
@@ -199,19 +213,6 @@ const RegisterStepOne = (props: any) => {
 				buttonType="none"
 				onClick={clickNext}
 			/>
-			{/* <InputDefault
-						id="inputId"
-						placeholder="type text"
-						onChange={getInputData}
-						value={data}
-					/>
-					<h3>{data}</h3> */}
-			{/* <Button content="SEND" onClick={sendData} /> */}
-			{/* {resData.map((item: any) => (
-						<h4 key={item.id}>
-							{item.id} {item.name} {item.now}
-						</h4>
-					))} */}
 		</>
 	);
 };
