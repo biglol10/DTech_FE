@@ -5,8 +5,9 @@ import { ModalPopup } from '@components/index';
 import Head from 'next/head';
 import { parseCookies, destroyCookie } from 'nookies';
 import { redirectUser } from '@utils/appRelated/authUser';
-import 'semantic-ui-css/semantic.min.css';
 import '@styles/globals.scss';
+import 'semantic-ui-css/semantic.min.css';
+import 'react-quill/dist/quill.snow.css';
 
 import { MainLayoutTemplate } from '@components/customs';
 
