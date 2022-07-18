@@ -16,9 +16,11 @@ import Radio from './radio/Radio';
 import TNSkill from './thumbnail/TNSkill';
 import TNSkillFlow from './thumbnail/TNSkillFlow';
 import { Tabs, TabHeader, Tab, TabPanels, TabPanel } from './tab/Tab';
+import Avatar from './avatar/Avatar';
 
 export {
 	Accordion,
+	Avatar,
 	Box,
 	Button,
 	InputLayout,
