@@ -19,6 +19,8 @@ npm install css-loader sass sass-loader style-loader --save-dev <= 출처: https
 Getting started with MUI
 npm i sharp <= For production Image Optimization with Next.js, the optional 'sharp' package is strongly recommended
 npm i react-quill --force
+npm i react-chartjs-2
+npm i lodash
 
 <!-- npm i -D @mdx-js/react
 npm i -D @storybook/manager-webpack5 @storybook/builder-webpack5
