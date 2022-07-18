@@ -3,7 +3,7 @@ import Testcomponent from '@components/Testcomponent';
 import { useSelector, useDispatch } from 'react-redux';
 import { increment } from '@store/counterSlice';
 import Link from 'next/link';
-import { Message, Image } from 'semantic-ui-react';
+import { Message, Image, Icon } from 'semantic-ui-react';
 import NextImage from 'next/image';
 import pic from '@public/images/react.jpeg';
 
@@ -17,6 +17,7 @@ import {
 	Toggle,
 	Radio,
 	InputLayout,
+	Label,
 } from '@components/index';
 
 import Style from './examplePage/examplePage.module.scss';
@@ -217,6 +218,22 @@ const Index = () => {
 
 			<br />
 			<br />
+
+			<Label
+				basic
+				content="username"
+				iconOrImage="image"
+				icon={
+					<Image
+						src={`${
+							process.env.MODE_ENV === 'production' ? 'dtech' : ''
+						}/images/no_profile.png`}
+						avatar
+					/>
+				}
+				color="black"
+				borderNone
+			/>
 		</div>
 	);
 };
