@@ -26,28 +26,7 @@ const rootReducer = (state: any, action: any) => {
 			// console.log('HYDRATE', action);
 			// console.log(action);
 
-			console.log('came to hydrate');
-			console.log(state);
-
-			// const nextState = {
-			// 	...state, // use previous state
-			// 	...action.payload, // apply delta from hydration
-			// };
-
-			const nextState = {
-				..._.cloneDeep(state),
-				..._.cloneDeep(action.payload),
-			};
-
-			console.log('nextState is');
-			console.log(nextState);
-
-			// if (state.counter) nextState.counter = state.counter; // preserve count value on client side navigation
-			nextState.modal = state.modal;
-			nextState.counter = state.counter;
-			nextState.auth = state.auth;
-
-			return nextState;
+			return action.payload;
 		}
 		default: {
 			const combinedReducer = combineReducers({
