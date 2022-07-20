@@ -10,6 +10,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { createWrapper, HYDRATE } from 'next-redux-wrapper'; // nextjs friendly
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from '@saga/index';
+import _ from 'lodash';
 
 import userReducer from './userSlice';
 import counterReducer from './counterSlice';
@@ -20,11 +21,13 @@ import authSlice from './authSlice';
 
 const rootReducer = (state: any, action: any) => {
 	switch (action.type) {
-		case HYDRATE: // getInitialProps는 이제 안쓰고 getStaticProps, getServerSideProps를 쓰니 이걸 써줘야함
+		case HYDRATE: {
+			// getInitialProps는 이제 안쓰고 getStaticProps, getServerSideProps를 쓰니 이걸 써줘야함
 			// console.log('HYDRATE', action);
 			// console.log(action);
 
 			return action.payload;
+		}
 		default: {
 			const combinedReducer = combineReducers({
 				user: userReducer,

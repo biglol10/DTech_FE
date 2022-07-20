@@ -3,6 +3,7 @@ import Testcomponent from '@components/Testcomponent';
 import { useSelector, useDispatch } from 'react-redux';
 import { increment } from '@store/counterSlice';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { Message, Image, Icon } from 'semantic-ui-react';
 import NextImage from 'next/image';
 import pic from '@public/images/react.jpeg';
@@ -48,6 +49,8 @@ const Index = () => {
 	const dispatch = useDispatch();
 	const counter = useSelector((state: any) => state.counter.count);
 	const [loading, setLoading] = useState(false);
+
+	const router = useRouter();
 
 	const randomComputation = () => {
 		dispatch({ type: 'RANDOMCOMPUTATION', setLoading });
@@ -111,6 +114,9 @@ const Index = () => {
 			<Link href="/apiTestPage">
 				<a>GoToApiTestPage</a>
 			</Link>
+			<br />
+			<br />
+			<button onClick={() => router.push('/dashboard')}>GoToDashboardPage</button>
 			<br />
 			<br />
 			<button onClick={() => addOneNumber()}>add one number</button>
