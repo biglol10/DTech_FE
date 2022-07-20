@@ -21,7 +21,7 @@ const AvatarGroup = ({ className = '', imageList, spacing = 0, divHeight }: IIma
 						src={imgSrc}
 						className={Style['userImage']}
 						style={{
-							zIndex: `${imageList.length - idx}`,
+							zIndex: `${imageList.length > 5 ? 5 : imageList.length - idx}`,
 						}}
 					/>
 				))}
