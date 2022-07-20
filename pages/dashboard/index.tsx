@@ -15,7 +15,8 @@ import {
 } from 'chart.js';
 import { Icon, Table } from 'semantic-ui-react';
 import Image from 'next/image';
-import { AvatarGroup } from '@components/index';
+import { Avatar, AvatarGroup } from '@components/index';
+import { techImage } from '@utils/constants/techs';
 import Style from './dashboard.module.scss';
 
 interface IProps {
@@ -66,50 +67,6 @@ export const options = {
 	},
 };
 
-// const AvatarGroup = () => {
-// 	return (
-// 		<div className={Style['avatarGroup']}>
-// 			<div className={Style['avatarUser']}>
-// 				<img
-// 					src="https://ca.slack-edge.com/T02SCQ38A22-U039FT91QTD-g0ca8cf5c8e6-24"
-// 					// height={20}
-// 					// width={20}
-// 					style={{ height: '20px', width: '20px' }}
-// 					className={Style['userImage']}
-// 				/>
-// 				<img
-// 					src="https://ca.slack-edge.com/T02SCQ38A22-U02U080JHC2-29078f07fef3-24"
-// 					// height={20}
-// 					// width={20}
-// 					style={{ height: '20px', width: '20px' }}
-// 					className={Style['userImage']}
-// 				/>
-// 				<img
-// 					src="https://ca.slack-edge.com/T02SCQ38A22-USLACKBOT-sv41d8cd98f0-24"
-// 					// height={20}
-// 					// width={20}
-// 					style={{ height: '20px', width: '20px' }}
-// 					className={Style['userImage']}
-// 				/>
-// 				<img
-// 					src="https://ca.slack-edge.com/T02SCQ38A22-U02U2GTV8J0-3c397712af98-24"
-// 					// height={20}
-// 					// width={20}
-// 					style={{ height: '20px', width: '20px' }}
-// 					className={Style['userImage']}
-// 				/>
-// 				<img
-// 					src="https://ca.slack-edge.com/T02SCQ38A22-U0310788JFR-c2ebf48cb030-24"
-// 					// height={20}
-// 					// width={20}
-// 					style={{ height: '20px', width: '20px' }}
-// 					className={Style['userImage']}
-// 				/>
-// 			</div>
-// 		</div>
-// 	);
-// };
-
 const imageList = [
 	'https://ca.slack-edge.com/T02SCQ38A22-U039FT91QTD-g0ca8cf5c8e6-24',
 	'https://ca.slack-edge.com/T02SCQ38A22-U02U080JHC2-29078f07fef3-24',
@@ -120,59 +77,86 @@ const imageList = [
 	'https://ca.slack-edge.com/T02SCQ38A22-U02U08XSSAX-g106a193d8a0-48',
 ];
 
-const TableExampleCelledStriped = () => (
-	<Table celled>
-		<Table.Header>
-			<Table.Row>
-				<Table.HeaderCell colSpan="1">Git Repository</Table.HeaderCell>
-				<Table.HeaderCell colSpan="1">Git Repository</Table.HeaderCell>
-				<Table.HeaderCell colSpan="1">Git Repository</Table.HeaderCell>
-			</Table.Row>
-		</Table.Header>
+const TableExampleCelledStriped = () => {
+	return (
+		<Table celled>
+			<Table.Header>
+				<Table.Row>
+					<Table.HeaderCell colSpan="1">Git Repository</Table.HeaderCell>
+					<Table.HeaderCell colSpan="1">Git Repository</Table.HeaderCell>
+				</Table.Row>
+			</Table.Header>
 
-		<Table.Body>
-			<Table.Row>
-				<Table.Cell collapsing>
-					<Icon name="folder" /> node_modules
-				</Table.Cell>
-				<Table.Cell>
-					<AvatarGroup imageList={imageList} divHeight={20} />
-				</Table.Cell>
-				<Table.Cell collapsing textAlign="right">
-					10 hours ago
-				</Table.Cell>
-			</Table.Row>
-			<Table.Row>
-				<Table.Cell>
-					<Icon name="folder" /> test
-				</Table.Cell>
-				<Table.Cell>Initial commit</Table.Cell>
-				<Table.Cell textAlign="right">10 hours ago</Table.Cell>
-			</Table.Row>
-			<Table.Row>
-				<Table.Cell>
-					<Icon name="folder" /> build
-				</Table.Cell>
-				<Table.Cell>Initial commit</Table.Cell>
-				<Table.Cell textAlign="right">10 hours ago</Table.Cell>
-			</Table.Row>
-			<Table.Row>
-				<Table.Cell>
-					<Icon name="file outline" /> package.json
-				</Table.Cell>
-				<Table.Cell>Initial commit</Table.Cell>
-				<Table.Cell textAlign="right">10 hours ago</Table.Cell>
-			</Table.Row>
-			<Table.Row>
-				<Table.Cell>
-					<Icon name="file outline" /> Gruntfile.js
-				</Table.Cell>
-				<Table.Cell>Initial commit</Table.Cell>
-				<Table.Cell textAlign="right">10 hours ago</Table.Cell>
-			</Table.Row>
-		</Table.Body>
-	</Table>
-);
+			<Table.Body className={Style['skillTableBody']}>
+				<Table.Row>
+					<Table.Cell>
+						<Avatar
+							labelSize="large"
+							src={techImage['React']}
+							color="black"
+							content="React"
+						/>
+					</Table.Cell>
+					<Table.Cell>
+						<AvatarGroup imageList={imageList} divHeight={20} />
+					</Table.Cell>
+				</Table.Row>
+				<Table.Row>
+					<Table.Cell>
+						<Avatar
+							labelSize="large"
+							src={techImage['Node']}
+							color="black"
+							content="Node"
+						/>
+					</Table.Cell>
+					<Table.Cell>
+						<AvatarGroup imageList={imageList} divHeight={20} />
+					</Table.Cell>
+				</Table.Row>
+				<Table.Row>
+					<Table.Cell>
+						<Avatar
+							labelSize="large"
+							src={techImage['Vue']}
+							color="black"
+							content="Vue"
+						/>
+					</Table.Cell>
+					<Table.Cell>
+						<AvatarGroup imageList={imageList} divHeight={20} />
+					</Table.Cell>
+				</Table.Row>
+				<Table.Row>
+					<Table.Cell>
+						<Avatar
+							labelSize="large"
+							src={techImage['Typescript']}
+							color="black"
+							content="Typescript"
+						/>
+					</Table.Cell>
+					<Table.Cell>
+						<AvatarGroup imageList={imageList} divHeight={20} />
+					</Table.Cell>
+				</Table.Row>
+				<Table.Row>
+					<Table.Cell>
+						<Avatar
+							labelSize="large"
+							src={techImage['Spring']}
+							color="black"
+							content="Spring"
+						/>
+					</Table.Cell>
+					<Table.Cell>
+						<AvatarGroup imageList={imageList} divHeight={20} />
+					</Table.Cell>
+				</Table.Row>
+			</Table.Body>
+		</Table>
+	);
+};
 
 const Index = (props: IProps) => {
 	const router = useRouter();
@@ -182,12 +166,12 @@ const Index = (props: IProps) => {
 	return (
 		<>
 			<div className={Style['dashboardTopMain']}>
+				<div className={Style['skillOverview']}>
+					<Bar options={options} data={data} />
+				</div>
 				<div className={Style['recentArticleArea']}>
 					<TableExampleCelledStriped />
 					<AvatarGroup imageList={imageList} divHeight={20} />
-				</div>
-				<div className={Style['skillOverview']}>
-					<Bar options={options} data={data} />
 				</div>
 			</div>
 		</>

@@ -1,18 +1,31 @@
 .dashboardTopMain {
 	height: 50%;
 	width: 100%;
-	display: grid;
-	grid-template-columns: 1fr 2.5fr;
+	display: flex;
+	// grid-template-columns: 2.5fr 1fr;
+	// gap: 25px;
+	flex-wrap: wrap;
 	gap: 25px;
 
 	.skillOverview {
 		height: 100%;
-		width: 100%;
+		width: 70%;
 	}
 
 	.recentArticleArea {
 		height: 100%;
-		width: 100%;
+		width: 28%;
 		background-color: aliceblue;
 	}
 }
+
+.skillTableBody > tr > td:first-child > div {
+	justify-content: flex-start;
+}
+
+.skillTableBody > tr > td:first-child > div > img {
+	height: 20px !important;
+	width: 20px !important;
+}
+
+// #__next > div.MainLayoutTemplate_mainLayout__fJMDr > div.MainLayoutTemplate_right__nzwpK > main > div > div.dashboard_recentArticleArea__Q6HpV > table > tbody > tr:nth-child(1) > td.collapsing > div > img
