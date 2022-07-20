@@ -1,10 +1,14 @@
 import { Box } from '@components/index';
 import { Message, Image } from 'semantic-ui-react';
+import { Doc } from './Box.stories.mdx';
 
 export default {
 	title: 'Example/Box',
 	parameters: {
 		componentSubtitle: 'Box Component',
+		docs: {
+			page: Doc,
+		},
 	},
 	component: Box,
 	argTypes: {
