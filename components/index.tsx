@@ -17,10 +17,12 @@ import TNSkill from './thumbnail/TNSkill';
 import TNSkillFlow from './thumbnail/TNSkillFlow';
 import { Tabs, TabHeader, Tab, TabPanels, TabPanel } from './tab/Tab';
 import Avatar from './avatar/Avatar';
+import AvatarGroup from './avatar/AvatarGroup';
 
 export {
 	Accordion,
 	Avatar,
+	AvatarGroup,
 	Box,
 	Button,
 	InputLayout,

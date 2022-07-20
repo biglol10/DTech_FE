@@ -1,0 +1,18 @@
+.dashboardTopMain {
+	height: 50%;
+	width: 100%;
+	display: grid;
+	grid-template-columns: 1fr 2.5fr;
+	gap: 25px;
+
+	.skillOverview {
+		height: 100%;
+		width: 100%;
+	}
+
+	.recentArticleArea {
+		height: 100%;
+		width: 100%;
+		background-color: aliceblue;
+	}
+}
