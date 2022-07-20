@@ -9,7 +9,7 @@ import classNames from 'classnames/bind';
 
 import Style from './RegisterComp.module.scss';
 
-const RegisterStepOne = (props: any) => {
+const RegisterStep1 = (props: any) => {
 	const regEmail =
 		/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 	const labelSize = 'h5';
@@ -31,8 +31,8 @@ const RegisterStepOne = (props: any) => {
 	const [pw2InputError, setPw2InputError] = useState(false);
 	const [pw2InputErrMsg, setPw2InputErrMsg] = useState('');
 
-	const [idCheckMsg, setIdCheckMsg] = useState('중목확인 버튼을 클릭하세요');
-	const [idConfirm, setIdConfirm] = useState(false);
+	const [idCheckMsg, setIdCheckMsg] = useState('중복확인 버튼을 클릭하세요');
+	const [idConfirm, setIdConfirm] = useState(props.registerData.id_confirmed);
 
 	const userIdRef = useRef<any>();
 	const userPwRef = useRef<any>();
@@ -40,9 +40,8 @@ const RegisterStepOne = (props: any) => {
 	useEffect(() => {});
 
 	const clickNext = () => {
-		console.log('clickNext');
 		dispatch({
-			type: 'GOSTEP2',
+			type: 'VALID_STEP1',
 			idInputValue,
 			nameInputValue,
 			pwInputValue,
@@ -58,6 +57,7 @@ const RegisterStepOne = (props: any) => {
 			nameInputError,
 			pwInputError,
 			pw2InputError,
+			setIdConfirm,
 			idConfirm,
 			propFunction: props.propFunction,
 		});
@@ -81,7 +81,7 @@ const RegisterStepOne = (props: any) => {
 				error={idInputError}
 				errorMsg={idInputErrMsg}
 				stretch={true}
-				inputLabel="이메일"
+				inputLabel="이메일*"
 				inputLabelSize={labelSize}
 				showInputLabel={true}
 				autoFitErrorLabel={true}
@@ -118,13 +118,12 @@ const RegisterStepOne = (props: any) => {
 					/>
 				</>
 			</InputLayout>
-			{/* {idCheckMsg} */}
 
 			<InputLayout
 				error={nameInputError}
 				errorMsg="이름을 입력하세요."
 				stretch={true}
-				inputLabel="이름"
+				inputLabel="이름*"
 				inputLabelSize={labelSize}
 				showInputLabel={true}
 				autoFitErrorLabel={true}
@@ -152,7 +151,7 @@ const RegisterStepOne = (props: any) => {
 				error={pwInputError}
 				errorMsg="비밀번호는 최소 6자리입니다"
 				stretch={true}
-				inputLabel="비밀번호"
+				inputLabel="비밀번호*"
 				inputLabelSize={labelSize}
 				showInputLabel={true}
 				autoFitErrorLabel={true}
@@ -181,7 +180,7 @@ const RegisterStepOne = (props: any) => {
 				error={pw2InputError}
 				errorMsg="비밀번호가 일치하지 않습니다"
 				stretch={true}
-				inputLabel="비밀번호 확인"
+				inputLabel="비밀번호 확인*"
 				inputLabelSize={labelSize}
 				showInputLabel={true}
 				autoFitErrorLabel={true}
@@ -217,4 +216,4 @@ const RegisterStepOne = (props: any) => {
 	);
 };
 
-export default RegisterStepOne;
+export default RegisterStep1;

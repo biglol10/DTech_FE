@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { Label } from '@components/index';
-import { RegisterStepOne, RegisterStepTwo, RegisterStepThree } from '@components/customs';
+import { RegisterStep1, RegisterStep2, RegisterStep3, RegisterStep4 } from '@components/customs';
 import { Stepper, Step, StepLabel } from '@mui/material';
 import axios from 'axios';
 import React, { useState } from 'react';
@@ -10,24 +10,36 @@ import Style from './Register.module.scss';
 
 const RegisterPage = (props: any) => {
 	const cx = classNames.bind(Style);
-	const [stepNum, setStepNum] = useState(1);
+	const [stepNum, setStepNum] = useState(4);
 	const [registerData, setRegisterData] = useState({});
 
-	const getStepOneData = (data: any) => {
+	const getStep1Data = (data: any) => {
 		setRegisterData({
 			...registerData,
 			user_id: data.idInputValue,
 			name: data.nameInputValue,
 			passwd: data.pwInputValue,
+			id_confirmed: data.idConfirm,
 		});
 		setStepNum(2);
 	};
-	const getStepTwoData = (data: any) => {
+	const getStep2Data = (data: any) => {
 		setRegisterData({
 			...registerData,
 			team: data.teamSelectValue,
 			title: data.titleSelectValue,
 			phonenum: data.phoneNumValue,
+		});
+		if (data.goNext) {
+			setStepNum((prev) => prev + 1);
+		} else {
+			setStepNum((prev) => prev - 1);
+		}
+	};
+	const getStep3Data = (data: any) => {
+		setRegisterData({
+			...registerData,
+			detail: data.detail,
 		});
 		if (data.goNext) {
 			setStepNum((prev) => prev + 1);
@@ -75,14 +87,22 @@ const RegisterPage = (props: any) => {
 				<Step key="3">
 					<StepLabel></StepLabel>
 				</Step>
+				<Step key="4">
+					<StepLabel></StepLabel>
+				</Step>
 			</Stepper>
 			{stepNum === 1 && (
-				<RegisterStepOne propFunction={getStepOneData} registerData={registerData} />
+				<RegisterStep1 propFunction={getStep1Data} registerData={registerData} />
 			)}
 			{stepNum === 2 && (
-				<RegisterStepTwo propFunction={getStepTwoData} registerData={registerData} />
+				<RegisterStep2 propFunction={getStep2Data} registerData={registerData} />
 			)}
-			{stepNum === 3 && <RegisterStepThree clickFunction={clickRegister} />}
+			{stepNum === 3 && (
+				<RegisterStep3 clickFunction={getStep3Data} registerData={registerData} />
+			)}
+			{stepNum === 4 && (
+				<RegisterStep4 clickFunction={clickRegister} registerData={registerData} />
+			)}
 		</div>
 	);
 

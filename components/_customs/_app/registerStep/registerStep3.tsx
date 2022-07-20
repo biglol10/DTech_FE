@@ -7,17 +7,17 @@ import { Label, Button } from '@components/index';
 import classNames from 'classnames/bind';
 import Style from './RegisterComp.module.scss';
 
-const RegisterStepThree = (props: any) => {
+const RegisterStep3 = (props: any) => {
 	const cx = classNames.bind(Style);
 	const [detail, setDetail] = useState('');
 
-	const clickRegister = () => {
-		console.log('clickRegister');
-		props.clickFunction({ detail, goNext: true });
-	};
-	const clickPrev = () => {
+	// const clickRegister = () => {
+	// 	console.log('clickRegister');
+	// 	props.clickFunction({ detail, goNext: true });
+	// };
+	const clickNext = (prop: boolean) => {
 		console.log('clickPrev2');
-		props.clickFunction({ goNext: false });
+		props.clickFunction({ detail, goNext: props });
 	};
 
 	return (
@@ -39,15 +39,19 @@ const RegisterStepThree = (props: any) => {
 						size="large"
 						color="google plus"
 						buttonType="none"
-						onClick={clickPrev}
+						onClick={() => {
+							clickNext(false);
+						}}
 					/>
 					<Button
 						className={Style['registerButton']}
-						content="회원가입"
+						content="다음"
 						size="large"
 						color="google plus"
 						buttonType="none"
-						onClick={clickRegister}
+						onClick={() => {
+							clickNext(true);
+						}}
 					/>
 				</div>
 			</div>
@@ -55,4 +59,4 @@ const RegisterStepThree = (props: any) => {
 	);
 };
 
-export default RegisterStepThree;
+export default RegisterStep3;

@@ -1,8 +1,10 @@
 import * as RCONST from '@utils/constants/reducerConstants';
 import axios from 'axios';
 import { all, call, fork, takeLatest } from 'redux-saga/effects';
+import { idCheckRequest } from '@utils/api/register/idCheckRequest';
+import { teamListRequest } from '@utils/api/register/teamListRequest';
 
-interface idCheckParam {
+interface IIdCheckParam {
 	type: string;
 	idInputValue: string;
 	setIdInputError: any;
@@ -10,47 +12,95 @@ interface idCheckParam {
 	setIdCheckMsg: any;
 	setIdConfirm: any;
 }
+interface IIdCheckResult {
+	result: string;
+	foundId: boolean | undefined;
+	errMessage: string | undefined;
+}
+interface ITeamList {
+	result: string;
+	teamList: any | undefined;
+	errMessage: string | undefined;
+}
 const idCheckFunction = function* ({
 	idInputValue,
 	setIdInputError,
 	setIdInputErrMsg,
 	setIdCheckMsg,
 	setIdConfirm,
-}: idCheckParam) {
-	axios
-		.post('http://localhost:3066/api/auth/idCheck', { userId: idInputValue })
-		.then((res: any) => {
-			console.log(res.data);
-			if (res.data.result === 'success') {
-				if (res.data.foundId) {
-					setIdConfirm(false);
-					setIdInputErrMsg('이미 등록된 아이디');
-					setIdInputError(true);
-				} else {
-					setIdCheckMsg('아이디 사용 가능');
-					setIdConfirm(true);
-					setIdInputError(false);
-				}
-			}
-		});
+}: IIdCheckParam) {
+	const idCheckResult: IIdCheckResult = yield call(idCheckRequest, { userId: idInputValue });
+
+	if (idCheckResult.result === 'success') {
+		if (idCheckResult.foundId) {
+			setIdConfirm(false);
+			setIdInputErrMsg('이미 등록된 아이디');
+			setIdInputError(true);
+		} else {
+			setIdCheckMsg('아이디 사용 가능');
+			setIdConfirm(true);
+			setIdInputError(false);
+		}
+	} else {
+		console.error(idCheckResult.errMessage);
+	}
 	yield;
 };
 
 const teamListFunction = function* ({ setTeamList }: any) {
 	console.log('teamListFunction');
-	axios.post('http://localhost:3066/api/auth/getTeamList').then((res: any) => {
-		const tempArr = res.data.resultData.queryResult;
+	const teamListResult: ITeamList = yield call(teamListRequest, {});
+
+	console.log(teamListResult);
+	if (teamListResult.result === 'success') {
+		const tempArr = teamListResult.teamList;
 		const newTempArr = tempArr.map((team: any) => {
 			return { key: team.TEAM_CD, value: team.TEAM_CD, text: team.NAME };
 		});
 
 		setTeamList(newTempArr);
-	});
+	} else {
+		console.error(teamListResult.errMessage);
+	}
+	yield;
+};
+const validStep2Function = function* ({
+	teamSelectValue,
+	titleSelectValue,
+	phoneNumValue,
+	goNext,
+	setTeamSelectError,
+	setTitleSelectError,
+	teamSelectError,
+	titleSelectError,
+	propFunction,
+}: any) {
+	if (goNext) {
+		let reject = false;
+
+		if (teamSelectValue === '' || teamSelectValue === undefined) {
+			setTeamSelectError(true);
+			reject = true;
+		}
+		if (titleSelectValue === '' || titleSelectValue === undefined) {
+			setTitleSelectError(true);
+			reject = true;
+		}
+
+		if (reject === true || teamSelectError === true || titleSelectError === true) {
+			console.log('reject');
+		} else {
+			propFunction({ teamSelectValue, titleSelectValue, phoneNumValue, goNext });
+		}
+	} else {
+		console.log('이전');
+		console.log(teamSelectValue);
+		propFunction({ teamSelectValue, titleSelectValue, phoneNumValue, goNext });
+	}
 
 	yield;
 };
-
-const goStep2Function = function* ({
+const validStep1Function = function* ({
 	propFunction,
 	idInputValue,
 	nameInputValue,
@@ -107,7 +157,7 @@ const goStep2Function = function* ({
 	) {
 		console.log('reject');
 	} else {
-		propFunction({ idInputValue, nameInputValue, pwInputValue, pw2InputValue });
+		propFunction({ idInputValue, nameInputValue, pwInputValue, pw2InputValue, idConfirm });
 	}
 	yield;
 };
@@ -120,10 +170,14 @@ const getTeamList = function* () {
 	yield takeLatest(RCONST.TEAM_LIST, teamListFunction);
 };
 
-const goStepTwo = function* () {
-	yield takeLatest(RCONST.GOSTEP2, goStep2Function);
+const validStep1 = function* () {
+	yield takeLatest(RCONST.VALID_STEP1, validStep1Function);
+};
+
+const validStep2 = function* () {
+	yield takeLatest(RCONST.VALID_STEP2, validStep2Function);
 };
 
 export default function* registerSaga() {
-	yield all([fork(idCheck), fork(getTeamList), fork(goStepTwo)]);
+	yield all([fork(idCheck), fork(getTeamList), fork(validStep1), fork(validStep2)]);
 }

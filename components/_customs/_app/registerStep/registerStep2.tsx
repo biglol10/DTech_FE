@@ -9,26 +9,32 @@ import { Dropdown } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import Style from './RegisterComp.module.scss';
 
-const RegisterStepTwo = (props: any) => {
+const RegisterStep2 = (props: any) => {
 	const cx = classNames.bind(Style);
 	const labelSize = 'h4';
 
 	const dispatch = useDispatch();
 
 	const [teamSelectValue, setTeamSelectValue] = useState(props.registerData.team);
+	const [teamSelectError, setTeamSelectError] = useState(false);
 	const [titleSelectValue, setTitleSelectValue] = useState(props.registerData.title);
+	const [titleSelectError, setTitleSelectError] = useState(false);
 	const [phoneNumValue, setPhoneNumValue] = useState(
 		props.registerData.phonenum === undefined ? '' : props.registerData.phonenum,
 	);
 	const [teamList, setTeamList] = useState([]);
 
-	const clickNext = () => {
-		console.log('clickNext2');
-		props.propFunction({ teamSelectValue, titleSelectValue, phoneNumValue, goNext: true });
-	};
-	const clickPrev = () => {
-		console.log('clickPrev2');
-		props.propFunction({ teamSelectValue, titleSelectValue, phoneNumValue, goNext: false });
+	const clickNext = (prop: boolean) => {
+		dispatch({
+			type: 'VALID_STEP2',
+			teamSelectValue,
+			titleSelectValue,
+			phoneNumValue,
+			setTeamSelectError,
+			setTitleSelectError,
+			goNext: prop,
+			propFunction: props.propFunction,
+		});
 	};
 
 	useEffect(() => {
@@ -42,20 +48,6 @@ const RegisterStepTwo = (props: any) => {
 		});
 	};
 
-	// useEffect(() => {
-	// 	if (phoneNumValue.length <= 11) {
-	// 		setPhoneNumValue((prevNum: any) =>
-	// 			prevNum.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'),
-	// 		);
-	// 	} else if (phoneNumValue.lengh === 13) {
-	// 		setPhoneNumValue(
-	// 			phoneNumValue.replace(/-/g, '').replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'),
-	// 		);
-	// 	}
-
-	// 	console.log(phoneNumValue);
-	// }, [phoneNumValue]);
-
 	const titleList = [
 		{ key: '사원', value: '사원', text: '사원' },
 		{ key: '선임', value: '선임', text: '선임' },
@@ -68,8 +60,10 @@ const RegisterStepTwo = (props: any) => {
 		<>
 			<div style={inputElCommStyle(0, 'left', true)}>
 				<InputLayout
+					error={teamSelectError}
+					errorMsg="팀을 선택하세요."
 					stretch={true}
-					inputLabel="팀"
+					inputLabel="팀*"
 					inputLabelSize={labelSize}
 					showInputLabel={true}
 					autoFitErrorLabel={true}
@@ -82,13 +76,16 @@ const RegisterStepTwo = (props: any) => {
 						value={teamSelectValue}
 						onChange={(obj: { value: string }) => {
 							setTeamSelectValue(obj.value);
+							setTeamSelectError(false);
 						}}
 						className={Style['inputIdField']}
 					/>
 				</InputLayout>
 				<InputLayout
+					error={titleSelectError}
+					errorMsg="직급을 선택하세요."
 					stretch={true}
-					inputLabel="직급"
+					inputLabel="직급*"
 					inputLabelSize={labelSize}
 					showInputLabel={true}
 					autoFitErrorLabel={true}
@@ -101,6 +98,7 @@ const RegisterStepTwo = (props: any) => {
 						onChange={(obj: { value: string }) => {
 							console.log(obj.value);
 							setTitleSelectValue(obj.value);
+							setTitleSelectError(false);
 						}}
 						className={Style['inputIdField']}
 					/>
@@ -131,7 +129,9 @@ const RegisterStepTwo = (props: any) => {
 						size="large"
 						color="google plus"
 						buttonType="none"
-						onClick={clickPrev}
+						onClick={() => {
+							clickNext(false);
+						}}
 					/>
 					<Button
 						className={Style['registerButton']}
@@ -139,7 +139,9 @@ const RegisterStepTwo = (props: any) => {
 						size="large"
 						color="google plus"
 						buttonType="none"
-						onClick={clickNext}
+						onClick={() => {
+							clickNext(true);
+						}}
 					/>
 				</div>
 			</div>
@@ -147,4 +149,4 @@ const RegisterStepTwo = (props: any) => {
 	);
 };
 
-export default RegisterStepTwo;
+export default RegisterStep2;

@@ -1,7 +1,9 @@
 import MainLayoutTemplate from './_customs/_app/MainLayoutTemplate';
 
-import RegisterStepOne from './_customs/_app/registerStep/registerStepOne';
-import RegisterStepTwo from './_customs/_app/registerStep/registerStepTwo';
-import RegisterStepThree from './_customs/_app/registerStep/registerStepThree';
+import RegisterStep1 from './_customs/_app/registerStep/registerStep1';
+import RegisterStep2 from './_customs/_app/registerStep/registerStep2';
+import RegisterStep3 from './_customs/_app/registerStep/registerStep3';
 
-export { MainLayoutTemplate, RegisterStepOne, RegisterStepTwo, RegisterStepThree };
+import RegisterStep4 from './_customs/_app/registerStep/registerStep4';
+
+export { MainLayoutTemplate, RegisterStep1, RegisterStep2, RegisterStep3, RegisterStep4 };
