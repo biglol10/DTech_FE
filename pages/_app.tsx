@@ -60,7 +60,7 @@ MyApp.getInitialProps = async ({ Component, ctx }: any) => {
 
 	const protectedRoutes = protectedRoutesArray.includes(ctx.pathname);
 
-	const withMainLayoutArray = ['/', '/_error', '/apiTestPage', '/anotherPage']; // 새로고침 시 ctx.pathname이 /_error로 됨 이유는 모르겠음
+	const withMainLayoutArray = ['/', '/_error', '/apiTestPage', '/anotherPage', '/dashboard']; // 새로고침 시 ctx.pathname이 /_error로 됨 이유는 모르겠음
 
 	const isWithMainLayout = withMainLayoutArray.includes(ctx.pathname);
 
