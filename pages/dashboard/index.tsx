@@ -110,6 +110,16 @@ export const options = {
 // 	);
 // };
 
+const imageList = [
+	'https://ca.slack-edge.com/T02SCQ38A22-U039FT91QTD-g0ca8cf5c8e6-24',
+	'https://ca.slack-edge.com/T02SCQ38A22-U02U080JHC2-29078f07fef3-24',
+	'https://ca.slack-edge.com/T02SCQ38A22-USLACKBOT-sv41d8cd98f0-24',
+	'https://ca.slack-edge.com/T02SCQ38A22-U02U2GTV8J0-3c397712af98-24',
+	'https://ca.slack-edge.com/T02SCQ38A22-U0310788JFR-c2ebf48cb030-24',
+	'https://ca.slack-edge.com/T02SCQ38A22-U039JQGH1M3-g396a0215b62-48',
+	'https://ca.slack-edge.com/T02SCQ38A22-U02U08XSSAX-g106a193d8a0-48',
+];
+
 const TableExampleCelledStriped = () => (
 	<Table celled>
 		<Table.Header>
@@ -125,7 +135,9 @@ const TableExampleCelledStriped = () => (
 				<Table.Cell collapsing>
 					<Icon name="folder" /> node_modules
 				</Table.Cell>
-				<Table.Cell>Initial commit</Table.Cell>
+				<Table.Cell>
+					<AvatarGroup imageList={imageList} divHeight={20} />
+				</Table.Cell>
 				<Table.Cell collapsing textAlign="right">
 					10 hours ago
 				</Table.Cell>
@@ -164,16 +176,6 @@ const TableExampleCelledStriped = () => (
 
 const Index = (props: IProps) => {
 	const router = useRouter();
-
-	const imageList = [
-		'https://ca.slack-edge.com/T02SCQ38A22-U039FT91QTD-g0ca8cf5c8e6-24',
-		'https://ca.slack-edge.com/T02SCQ38A22-U02U080JHC2-29078f07fef3-24',
-		'https://ca.slack-edge.com/T02SCQ38A22-USLACKBOT-sv41d8cd98f0-24',
-		'https://ca.slack-edge.com/T02SCQ38A22-U02U2GTV8J0-3c397712af98-24',
-		'https://ca.slack-edge.com/T02SCQ38A22-U0310788JFR-c2ebf48cb030-24',
-		'https://ca.slack-edge.com/T02SCQ38A22-U039JQGH1M3-g396a0215b62-48',
-		'https://ca.slack-edge.com/T02SCQ38A22-U02U08XSSAX-g106a193d8a0-48',
-	];
 
 	console.log('props from here');
 	console.log(props);

@@ -21,6 +21,11 @@ export default {
 			type: 'number',
 			description: 'margin-top',
 		},
+		showCount: {
+			defaultValue: true,
+			type: 'boolean',
+			description: 'member count 표시여부',
+		},
 	},
 };
 
@@ -33,5 +38,12 @@ export const AvatarGroupSample = (args: any) => {
 		'https://ca.slack-edge.com/T02SCQ38A22-U0310788JFR-c2ebf48cb030-24',
 	];
 
-	return <AvatarGroup spacing={args.spacing} imageList={imageList} divHeight={args.divHeight} />;
+	return (
+		<AvatarGroup
+			spacing={args.spacing}
+			imageList={imageList}
+			divHeight={args.divHeight}
+			showCount={args.showCount}
+		/>
+	);
 };

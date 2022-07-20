@@ -6,9 +6,16 @@ interface IImageList {
 	spacing?: number;
 	imageList: Array<string>;
 	divHeight: number;
+	showCount?: boolean;
 }
 
-const AvatarGroup = ({ className = '', imageList, spacing = 0, divHeight }: IImageList) => {
+const AvatarGroup = ({
+	className = '',
+	imageList,
+	spacing = 0,
+	divHeight,
+	showCount = true,
+}: IImageList) => {
 	return (
 		<div
 			className={`${Style['avatarGroup']} ${className}`}
@@ -27,7 +34,9 @@ const AvatarGroup = ({ className = '', imageList, spacing = 0, divHeight }: IIma
 				))}
 			</div>
 
-			<span className={Style['avatarUserCount']}>{imageList.length}명의 멤버</span>
+			{showCount && (
+				<span className={Style['avatarUserCount']}>{imageList.length}명의 멤버</span>
+			)}
 		</div>
 	);
 };
