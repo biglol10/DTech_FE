@@ -15,7 +15,7 @@ const AvatarGroup = ({ className = '', imageList, spacing = 0, divHeight }: IIma
 			style={customStyle1(spacing, { name: 'divHeight', value: divHeight })}
 		>
 			<div className={Style['avatarUser']}>
-				{imageList.map((imgSrc, idx) => (
+				{imageList.slice(0, 5).map((imgSrc, idx) => (
 					<img
 						key={`avatarUserImg_${idx}`}
 						src={imgSrc}
