@@ -13,14 +13,14 @@ import {
 	Tooltip,
 	Legend,
 } from 'chart.js';
-import { Icon, Table } from 'semantic-ui-react';
+import { Icon, Table, Pagination } from 'semantic-ui-react';
 import Image from 'next/image';
 import { Avatar, AvatarGroup } from '@components/index';
 import { techImage } from '@utils/constants/techs';
 import Style from './dashboard.module.scss';
 
 interface IProps {
-	[name: string]: unknown;
+	[name: string]: any;
 }
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -42,18 +42,7 @@ const labels = [
 	'July1',
 ];
 
-export const data = {
-	labels,
-	datasets: [
-		{
-			label: 'Dataset 1',
-			data: [10, 20, 50, 40, 5, 110, 30, 10, 20, 50, 40, 5, 110, 30],
-			backgroundColor: 'rgba(255, 99, 132, 0.5)',
-		},
-	],
-};
-
-export const options = {
+const options = {
 	responsive: true,
 	maintainAspectRatio: false,
 	plugins: {
@@ -79,90 +68,157 @@ const imageList = [
 
 const TableExampleCelledStriped = () => {
 	return (
-		<Table celled>
-			<Table.Header>
-				<Table.Row>
-					<Table.HeaderCell colSpan="1">Git Repository</Table.HeaderCell>
-					<Table.HeaderCell colSpan="1">Git Repository</Table.HeaderCell>
-				</Table.Row>
-			</Table.Header>
+		<>
+			<Table celled>
+				<Table.Header>
+					<Table.Row>
+						<Table.HeaderCell colSpan="1">Skill</Table.HeaderCell>
+						<Table.HeaderCell colSpan="1">Members</Table.HeaderCell>
+					</Table.Row>
+				</Table.Header>
 
-			<Table.Body className={Style['skillTableBody']}>
-				<Table.Row>
-					<Table.Cell>
-						<Avatar
-							labelSize="large"
-							src={techImage['React']}
-							color="black"
-							content="React"
-						/>
-					</Table.Cell>
-					<Table.Cell>
-						<AvatarGroup imageList={imageList} divHeight={20} />
-					</Table.Cell>
-				</Table.Row>
-				<Table.Row>
-					<Table.Cell>
-						<Avatar
-							labelSize="large"
-							src={techImage['Node']}
-							color="black"
-							content="Node"
-						/>
-					</Table.Cell>
-					<Table.Cell>
-						<AvatarGroup imageList={imageList} divHeight={20} />
-					</Table.Cell>
-				</Table.Row>
-				<Table.Row>
-					<Table.Cell>
-						<Avatar
-							labelSize="large"
-							src={techImage['Vue']}
-							color="black"
-							content="Vue"
-						/>
-					</Table.Cell>
-					<Table.Cell>
-						<AvatarGroup imageList={imageList} divHeight={20} />
-					</Table.Cell>
-				</Table.Row>
-				<Table.Row>
-					<Table.Cell>
-						<Avatar
-							labelSize="large"
-							src={techImage['Typescript']}
-							color="black"
-							content="Typescript"
-						/>
-					</Table.Cell>
-					<Table.Cell>
-						<AvatarGroup imageList={imageList} divHeight={20} />
-					</Table.Cell>
-				</Table.Row>
-				<Table.Row>
-					<Table.Cell>
-						<Avatar
-							labelSize="large"
-							src={techImage['Spring']}
-							color="black"
-							content="Spring"
-						/>
-					</Table.Cell>
-					<Table.Cell>
-						<AvatarGroup imageList={imageList} divHeight={20} />
-					</Table.Cell>
-				</Table.Row>
-			</Table.Body>
-		</Table>
+				<Table.Body className={Style['skillTableBody']}>
+					<Table.Row>
+						<Table.Cell>
+							<Avatar
+								labelSize="large"
+								src={techImage['React']}
+								color="black"
+								content="React"
+							/>
+						</Table.Cell>
+						<Table.Cell>
+							<AvatarGroup imageList={imageList} divHeight={20} />
+						</Table.Cell>
+					</Table.Row>
+					<Table.Row>
+						<Table.Cell>
+							<Avatar
+								labelSize="large"
+								src={techImage['Node']}
+								color="black"
+								content="Node"
+							/>
+						</Table.Cell>
+						<Table.Cell>
+							<AvatarGroup imageList={imageList} divHeight={20} />
+						</Table.Cell>
+					</Table.Row>
+					<Table.Row>
+						<Table.Cell>
+							<Avatar
+								labelSize="large"
+								src={techImage['Vue']}
+								color="black"
+								content="Vue"
+							/>
+						</Table.Cell>
+						<Table.Cell>
+							<AvatarGroup imageList={imageList} divHeight={20} />
+						</Table.Cell>
+					</Table.Row>
+					<Table.Row>
+						<Table.Cell>
+							<Avatar
+								labelSize="large"
+								src={techImage['Typescript']}
+								color="black"
+								content="Typescript"
+							/>
+						</Table.Cell>
+						<Table.Cell>
+							<AvatarGroup imageList={imageList} divHeight={20} />
+						</Table.Cell>
+					</Table.Row>
+					<Table.Row>
+						<Table.Cell>
+							<Avatar
+								labelSize="large"
+								src={techImage['Spring']}
+								color="black"
+								content="Spring"
+							/>
+						</Table.Cell>
+						<Table.Cell>
+							<AvatarGroup imageList={imageList} divHeight={20} />
+						</Table.Cell>
+					</Table.Row>
+					<Table.Row>
+						<Table.Cell>
+							<Avatar
+								labelSize="large"
+								src={techImage['ASPNET']}
+								color="black"
+								content="ASPNET"
+							/>
+						</Table.Cell>
+						<Table.Cell>
+							<AvatarGroup imageList={imageList} divHeight={20} />
+						</Table.Cell>
+					</Table.Row>
+					<Table.Row>
+						<Table.Cell>
+							<Avatar
+								labelSize="large"
+								src={techImage['ASPNET']}
+								color="black"
+								content="ASPNET"
+							/>
+						</Table.Cell>
+						<Table.Cell>
+							<AvatarGroup imageList={imageList} divHeight={20} />
+						</Table.Cell>
+					</Table.Row>
+				</Table.Body>
+			</Table>
+			<div className={Style['paginationDiv']}>
+				<Pagination
+					defaultActivePage={1}
+					firstItem={null}
+					lastItem={null}
+					pointing
+					secondary
+					totalPages={2}
+				/>
+			</div>
+		</>
 	);
 };
 
-const Index = (props: IProps) => {
+interface ITeamSkillData {
+	subject: string;
+	count: number;
+}
+
+const Index = ({ teamSkillData }: { teamSkillData: ITeamSkillData[] }) => {
 	const router = useRouter();
 
-	console.log('props from here');
-	console.log(props);
+	const data = {
+		labels: teamSkillData.map((item) => item.subject),
+		datasets: [
+			{
+				label: 'Dataset 1',
+				data: teamSkillData.map((item) => item.count),
+				backgroundColor: [
+					'rgba(255, 99, 132, 0.2)',
+					'rgba(54, 162, 235, 0.2)',
+					'rgba(255, 206, 86, 0.2)',
+					'rgba(75, 192, 192, 0.2)',
+					'rgba(153, 102, 255, 0.2)',
+					'rgba(255, 159, 64, 0.2)',
+				],
+				borderColor: [
+					'rgba(255, 99, 132, 1)',
+					'rgba(54, 162, 235, 1)',
+					'rgba(255, 206, 86, 1)',
+					'rgba(75, 192, 192, 1)',
+					'rgba(153, 102, 255, 1)',
+					'rgba(255, 159, 64, 1)',
+				],
+			},
+		],
+	};
+
 	return (
 		<>
 			<div className={Style['dashboardTopMain']}>
@@ -171,17 +227,9 @@ const Index = (props: IProps) => {
 				</div>
 				<div className={Style['recentArticleArea']}>
 					<TableExampleCelledStriped />
-					<AvatarGroup imageList={imageList} divHeight={20} />
 				</div>
 			</div>
 		</>
-
-		// <div className={Style['']}>
-		// 	<Bar options={options} data={data} />
-		// 	<br />
-		// 	<br />
-		// 	<button onClick={() => router.push('/')}>go to index</button>
-		// </div>
 	);
 };
 

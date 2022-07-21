@@ -77,7 +77,6 @@ MyApp.getInitialProps = async ({ Component, ctx }: any) => {
 		protectedRoutes && redirectUser(ctx, '/login');
 	} else {
 		pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
-		pageProps.user = 'biglol';
 		pageProps.isWithMainLayout = isWithMainLayout;
 		pageProps.pathname = ctx.pathname;
 		pageProps.token = token;

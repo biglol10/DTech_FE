@@ -14,6 +14,7 @@ import DLogo from '@public/images/DLogo2.png';
 import { Icon } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 import Style from './MainLayoutTemplate.module.scss';
 
 interface LayoutProps {
@@ -31,6 +32,8 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	const [settingOpen, setSettingOpen] = useState(false);
 
 	const wrapperRef = useRef<any>(null);
+
+	const authStore = useSelector((state: any) => state.auth);
 
 	useEffect(() => {
 		if (wrapperRef) {
@@ -196,7 +199,11 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 								id="li_userSettingArea"
 								onClick={() => setSettingOpen(!settingOpen)}
 							>
-								<Avatar id="userSettingArea" color="white" content="Username" />
+								<Avatar
+									id="userSettingArea"
+									color="white"
+									content={authStore.userName}
+								/>
 							</li>
 						</ul>
 					</nav>
