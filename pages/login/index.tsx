@@ -7,6 +7,7 @@
  * 2      변지욱      2022-07-08     feature/JW/loginApi         loginApi request 적용
  * 3      변지욱      2022-07-09     feature/JW/divscroll        div scroll 예시적용 (필요없으면 롤백 예정)
  * 4      변지욱      2022-07-10     feature/JW/loginValidation  LoginValidation added and scroll rollback
+ * 5      장보영      2022-07-20     feature/BY/register         회원가입 페이지 이동
  ********************************************************************************************/
 
 import Image from 'next/image';
@@ -199,15 +200,13 @@ const Login = () => {
 							onEnter={() => userLogin()}
 						/>
 					</InputLayout>
-					<Link href="./register">
-						<Button
-							className={Style['loginButton']}
-							spacing={7}
-							content="로그인"
-							size="large"
-							onClick={() => userLogin()}
-						/>
-					</Link>
+					<Button
+						className={Style['loginButton']}
+						spacing={7}
+						content="로그인"
+						size="large"
+						onClick={() => userLogin()}
+					/>
 
 					<div className={Style['divider']}>
 						<span></span>
@@ -215,13 +214,17 @@ const Login = () => {
 						<span></span>
 					</div>
 
-					<Button
-						className={Style['registerButton']}
-						content="회원가입"
-						size="large"
-						color="google plus"
-						buttonType="none"
-					/>
+					<Link href="/register">
+						<a>
+							<Button
+								className={Style['registerButton']}
+								content="회원가입"
+								size="large"
+								color="google plus"
+								buttonType="none"
+							/>
+						</a>
+					</Link>
 				</div>
 			</main>
 		</div>

@@ -1,10 +1,16 @@
+/** ****************************************************************************************
+ * @설명 : 회원가입 Step1 컴포넌트
+ ********************************************************************************************
+ * 번호    작업자     작업일         브랜치                       변경내용
+ *-------------------------------------------------------------------------------------------
+ * 1      장보영      2022-07-20     feature/BY/register        최초작성
+ ********************************************************************************************/
+
 import { useEffect, useRef, useState } from 'react';
 
 import { useDispatch } from 'react-redux';
-import axios from 'axios';
-import { Button, InputDefault, Label, InputLayout, InputWithIcon } from '@components/index';
+import { Button, InputLayout, InputWithIcon } from '@components/index';
 import { Icon } from 'semantic-ui-react';
-import Image from 'next/image';
 import classNames from 'classnames/bind';
 
 import Style from './RegisterComp.module.scss';
@@ -31,7 +37,7 @@ const RegisterStep1 = (props: any) => {
 	const [pw2InputError, setPw2InputError] = useState(false);
 	const [pw2InputErrMsg, setPw2InputErrMsg] = useState('');
 
-	const [idCheckMsg, setIdCheckMsg] = useState('중복확인 버튼을 클릭하세요');
+	// const [idCheckMsg, setIdCheckMsg] = useState('중복확인 버튼을 클릭하세요');
 	const [idConfirm, setIdConfirm] = useState(props.registerData.id_confirmed);
 
 	const userIdRef = useRef<any>();
@@ -70,7 +76,6 @@ const RegisterStep1 = (props: any) => {
 			idInputValue,
 			setIdInputError,
 			setIdInputErrMsg,
-			setIdCheckMsg,
 			setIdConfirm,
 		});
 	};
@@ -95,7 +100,6 @@ const RegisterStep1 = (props: any) => {
 						value={idInputValue}
 						size="large"
 						onChange={(obj: { value: string }) => {
-							console.log(obj.value);
 							setIdConfirm(false);
 							setIdInputValue(obj.value);
 							obj.value.length !== 0 && setIdInputError(!regEmail.test(obj.value));
@@ -112,9 +116,13 @@ const RegisterStep1 = (props: any) => {
 						className={cx('idCheckBtn')}
 						content={idConfirm ? '사용가능!' : '중복확인'}
 						size="large"
-						color="google plus"
+						color={idConfirm ? 'blue' : 'google plus'}
 						buttonType="none"
-						onClick={idCheck}
+						onClick={() => {
+							if (regEmail.test(idInputValue)) {
+								idCheck();
+							}
+						}}
 					/>
 				</>
 			</InputLayout>
@@ -136,7 +144,6 @@ const RegisterStep1 = (props: any) => {
 					value={nameInputValue}
 					size="large"
 					onChange={(obj: { value: string }) => {
-						console.log(idInputValue);
 						setNameInputValue(obj.value);
 						if (obj.value.length !== 0) {
 							setNameInputError(false);
@@ -149,7 +156,7 @@ const RegisterStep1 = (props: any) => {
 			</InputLayout>
 			<InputLayout
 				error={pwInputError}
-				errorMsg="비밀번호는 최소 6자리입니다"
+				errorMsg={pwInputErrMsg}
 				stretch={true}
 				inputLabel="비밀번호*"
 				inputLabelSize={labelSize}
@@ -169,6 +176,14 @@ const RegisterStep1 = (props: any) => {
 							const pwRegex = /^.{6,30}$/;
 
 							setPwInputError(!pwRegex.test(obj.value));
+							if (!pwRegex.test(obj.value)) {
+								setPwInputErrMsg('비밀번호는 최소 6자리입니다');
+							}
+
+							if (pw2InputValue !== undefined && pw2InputValue.length !== 0) {
+								setPw2InputError(pwInputValue !== obj.value);
+								setPw2InputErrMsg('비밀번호가 일치하지 않습니다');
+							}
 						}
 					}}
 					className={Style['inputPwField']}
@@ -178,7 +193,7 @@ const RegisterStep1 = (props: any) => {
 			</InputLayout>
 			<InputLayout
 				error={pw2InputError}
-				errorMsg="비밀번호가 일치하지 않습니다"
+				errorMsg={pw2InputErrMsg}
 				stretch={true}
 				inputLabel="비밀번호 확인*"
 				inputLabelSize={labelSize}
@@ -197,6 +212,7 @@ const RegisterStep1 = (props: any) => {
 
 						if (obj.value.length !== 0) {
 							setPw2InputError(pwInputValue !== obj.value);
+							setPw2InputErrMsg('비밀번호가 일치하지 않습니다');
 						}
 					}}
 					className={Style['inputPwField']}

@@ -1,8 +1,9 @@
 import * as RCONST from '@utils/constants/reducerConstants';
-import axios from 'axios';
 import { all, call, fork, takeLatest } from 'redux-saga/effects';
 import { idCheckRequest } from '@utils/api/register/idCheckRequest';
 import { teamListRequest } from '@utils/api/register/teamListRequest';
+import { registerRequest } from '@utils/api/register/registerRequest';
+import { sendUserImgRequest } from '@utils/api/register/sendUserImgRequest';
 
 interface IIdCheckParam {
 	type: string;
@@ -22,11 +23,15 @@ interface ITeamList {
 	teamList: any | undefined;
 	errMessage: string | undefined;
 }
+
+interface IRegisterUser {
+	result: string;
+	errMessage: string | undefined;
+}
 const idCheckFunction = function* ({
 	idInputValue,
 	setIdInputError,
 	setIdInputErrMsg,
-	setIdCheckMsg,
 	setIdConfirm,
 }: IIdCheckParam) {
 	const idCheckResult: IIdCheckResult = yield call(idCheckRequest, { userId: idInputValue });
@@ -37,7 +42,6 @@ const idCheckFunction = function* ({
 			setIdInputErrMsg('이미 등록된 아이디');
 			setIdInputError(true);
 		} else {
-			setIdCheckMsg('아이디 사용 가능');
 			setIdConfirm(true);
 			setIdInputError(false);
 		}
@@ -48,10 +52,8 @@ const idCheckFunction = function* ({
 };
 
 const teamListFunction = function* ({ setTeamList }: any) {
-	console.log('teamListFunction');
 	const teamListResult: ITeamList = yield call(teamListRequest, {});
 
-	console.log(teamListResult);
 	if (teamListResult.result === 'success') {
 		const tempArr = teamListResult.teamList;
 		const newTempArr = tempArr.map((team: any) => {
@@ -64,42 +66,7 @@ const teamListFunction = function* ({ setTeamList }: any) {
 	}
 	yield;
 };
-const validStep2Function = function* ({
-	teamSelectValue,
-	titleSelectValue,
-	phoneNumValue,
-	goNext,
-	setTeamSelectError,
-	setTitleSelectError,
-	teamSelectError,
-	titleSelectError,
-	propFunction,
-}: any) {
-	if (goNext) {
-		let reject = false;
 
-		if (teamSelectValue === '' || teamSelectValue === undefined) {
-			setTeamSelectError(true);
-			reject = true;
-		}
-		if (titleSelectValue === '' || titleSelectValue === undefined) {
-			setTitleSelectError(true);
-			reject = true;
-		}
-
-		if (reject === true || teamSelectError === true || titleSelectError === true) {
-			console.log('reject');
-		} else {
-			propFunction({ teamSelectValue, titleSelectValue, phoneNumValue, goNext });
-		}
-	} else {
-		console.log('이전');
-		console.log(teamSelectValue);
-		propFunction({ teamSelectValue, titleSelectValue, phoneNumValue, goNext });
-	}
-
-	yield;
-};
 const validStep1Function = function* ({
 	propFunction,
 	idInputValue,
@@ -146,7 +113,6 @@ const validStep1Function = function* ({
 		setPw2InputErrMsg('패스워드를 입력하세요.');
 		reject = true;
 	}
-	console.log(`${idInputError} ${nameInputError} ${pwInputError} ${pw2InputError} ${reject}`);
 	if (
 		idInputError === true ||
 		nameInputError === true ||
@@ -160,6 +126,57 @@ const validStep1Function = function* ({
 		propFunction({ idInputValue, nameInputValue, pwInputValue, pw2InputValue, idConfirm });
 	}
 	yield;
+};
+
+const validStep2Function = function* ({
+	teamSelectValue,
+	titleSelectValue,
+	phoneNumValue,
+	goNext,
+	setTeamSelectError,
+	setTitleSelectError,
+	teamSelectError,
+	titleSelectError,
+	propFunction,
+}: any) {
+	if (goNext) {
+		let reject = false;
+
+		if (teamSelectValue === '' || teamSelectValue === undefined) {
+			setTeamSelectError(true);
+			reject = true;
+		}
+		if (titleSelectValue === '' || titleSelectValue === undefined) {
+			setTitleSelectError(true);
+			reject = true;
+		}
+
+		if (reject === true || teamSelectError === true || titleSelectError === true) {
+			console.log('reject');
+		} else {
+			propFunction({ teamSelectValue, titleSelectValue, phoneNumValue, goNext });
+		}
+	} else {
+		propFunction({ teamSelectValue, titleSelectValue, phoneNumValue, goNext });
+	}
+
+	yield;
+};
+
+const registerUserFunction = function* ({ registerData, propFunction }: any) {
+	if (registerData.image.imageFile) {
+		const fileName = registerData.user_id.split('@')[0];
+		const fileExtName = registerData.image.imageFile.name.split('.')[1];
+		const formData = new FormData();
+
+		formData.append('img', registerData.image.imageFile, `${fileName}.${fileExtName}`);
+
+		yield call(sendUserImgRequest, formData);
+	}
+
+	const registerResult: IRegisterUser = yield call(registerRequest, registerData);
+
+	propFunction({ goNext: true, registerResult });
 };
 
 const idCheck = function* () {
@@ -178,6 +195,16 @@ const validStep2 = function* () {
 	yield takeLatest(RCONST.VALID_STEP2, validStep2Function);
 };
 
+const register = function* () {
+	yield takeLatest(RCONST.REGISTER_USER, registerUserFunction);
+};
+
 export default function* registerSaga() {
-	yield all([fork(idCheck), fork(getTeamList), fork(validStep1), fork(validStep2)]);
+	yield all([
+		fork(idCheck),
+		fork(getTeamList),
+		fork(validStep1),
+		fork(validStep2),
+		fork(register),
+	]);
 }

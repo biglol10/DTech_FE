@@ -1,8 +1,21 @@
+/** ****************************************************************************************
+ * @설명 : 회원가입 페이지
+ ********************************************************************************************
+ * 번호    작업자     작업일         브랜치                       변경내용
+ *-------------------------------------------------------------------------------------------
+ * 1      장보영      2022-07-20     feature/BY/register        최초작성
+ ********************************************************************************************/
+
 import Image from 'next/image';
 import { Label } from '@components/index';
-import { RegisterStep1, RegisterStep2, RegisterStep3, RegisterStep4 } from '@components/customs';
+import {
+	RegisterStep1,
+	RegisterStep2,
+	RegisterStep3,
+	RegisterStep4,
+	RegisterStep5,
+} from '@components/customs';
 import { Stepper, Step, StepLabel } from '@mui/material';
-import axios from 'axios';
 import React, { useState } from 'react';
 import classNames from 'classnames/bind';
 import DLogo from '@public/images/DLogo2.png';
@@ -10,8 +23,9 @@ import Style from './Register.module.scss';
 
 const RegisterPage = (props: any) => {
 	const cx = classNames.bind(Style);
-	const [stepNum, setStepNum] = useState(4);
+	const [stepNum, setStepNum] = useState(5);
 	const [registerData, setRegisterData] = useState({});
+	const [resultData, setResultData] = useState({});
 
 	const getStep1Data = (data: any) => {
 		setRegisterData({
@@ -48,22 +62,14 @@ const RegisterPage = (props: any) => {
 		}
 	};
 
-	const clickRegister = (data: any) => {
+	const getStep4Data = (data: any) => {
+		setRegisterData({
+			...registerData,
+			image: data.image,
+		});
 		if (data.goNext) {
-			setRegisterData({
-				...registerData,
-				detail: data.detail,
-			});
-
-			console.log({ ...registerData, detail: data.detail });
-			axios
-				.post('http://localhost:3066/api/auth/registerUser', {
-					...registerData,
-					detail: data.detail,
-				})
-				.then((res: any) => {
-					console.log(res.data);
-				});
+			setResultData(data.registerResult);
+			setStepNum((prev) => prev + 1);
 		} else {
 			setStepNum((prev) => prev - 1);
 		}
@@ -90,6 +96,9 @@ const RegisterPage = (props: any) => {
 				<Step key="4">
 					<StepLabel></StepLabel>
 				</Step>
+				<Step key="5">
+					<StepLabel></StepLabel>
+				</Step>
 			</Stepper>
 			{stepNum === 1 && (
 				<RegisterStep1 propFunction={getStep1Data} registerData={registerData} />
@@ -98,11 +107,12 @@ const RegisterPage = (props: any) => {
 				<RegisterStep2 propFunction={getStep2Data} registerData={registerData} />
 			)}
 			{stepNum === 3 && (
-				<RegisterStep3 clickFunction={getStep3Data} registerData={registerData} />
+				<RegisterStep3 propFunction={getStep3Data} registerData={registerData} />
 			)}
 			{stepNum === 4 && (
-				<RegisterStep4 clickFunction={clickRegister} registerData={registerData} />
+				<RegisterStep4 propFunction={getStep4Data} registerData={registerData} />
 			)}
+			{stepNum === 5 && <RegisterStep5 resultData={resultData} />}
 		</div>
 	);
 

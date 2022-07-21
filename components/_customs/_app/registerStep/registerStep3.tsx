@@ -1,3 +1,11 @@
+/** ****************************************************************************************
+ * @설명 : 회원가입 Step3 컴포넌트
+ ********************************************************************************************
+ * 번호    작업자     작업일         브랜치                       변경내용
+ *-------------------------------------------------------------------------------------------
+ * 1      장보영      2022-07-20     feature/BY/register        최초작성
+ ********************************************************************************************/
+
 import { useState } from 'react';
 import { TextArea } from 'semantic-ui-react';
 
@@ -9,15 +17,10 @@ import Style from './RegisterComp.module.scss';
 
 const RegisterStep3 = (props: any) => {
 	const cx = classNames.bind(Style);
-	const [detail, setDetail] = useState('');
+	const [detail, setDetail] = useState(props.registerData.detail);
 
-	// const clickRegister = () => {
-	// 	console.log('clickRegister');
-	// 	props.clickFunction({ detail, goNext: true });
-	// };
-	const clickNext = (prop: boolean) => {
-		console.log('clickPrev2');
-		props.clickFunction({ detail, goNext: props });
+	const clickNext = (goNext: boolean) => {
+		props.propFunction({ detail, goNext });
 	};
 
 	return (
@@ -27,8 +30,8 @@ const RegisterStep3 = (props: any) => {
 				<TextArea
 					placeholder="관심 기술, 경험 프로젝트 등.."
 					className={cx('registerTextarea')}
+					value={detail}
 					onChange={(e, { value }: any) => {
-						console.log(value);
 						setDetail(value);
 					}}
 				/>

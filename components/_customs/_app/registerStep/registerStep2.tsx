@@ -1,11 +1,17 @@
-import { useEffect, useState, SyntheticEvent } from 'react';
-import axios from 'axios';
+/** ****************************************************************************************
+ * @설명 : 회원가입 Step2 컴포넌트
+ ********************************************************************************************
+ * 번호    작업자     작업일         브랜치                       변경내용
+ *-------------------------------------------------------------------------------------------
+ * 1      장보영      2022-07-20     feature/BY/register        최초작성
+ ********************************************************************************************/
+
+import { useEffect, useState } from 'react';
 
 import { useDispatch } from 'react-redux';
 
 import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
-import { InputLayout, InputDefault, Button, Label, InputDropdown } from '@components/index';
-import { Dropdown } from 'semantic-ui-react';
+import { InputLayout, InputDefault, Button, InputDropdown } from '@components/index';
 import classNames from 'classnames/bind';
 import Style from './RegisterComp.module.scss';
 
@@ -23,6 +29,20 @@ const RegisterStep2 = (props: any) => {
 		props.registerData.phonenum === undefined ? '' : props.registerData.phonenum,
 	);
 	const [teamList, setTeamList] = useState([]);
+	const titleList = [
+		{ key: '사원', value: '사원', text: '사원' },
+		{ key: '선임', value: '선임', text: '선임' },
+		{ key: '책임', value: '책임', text: '책임' },
+		{ key: '총괄', value: '총괄', text: '총괄' },
+		{ key: '팀장', value: '팀장', text: '팀장' },
+	];
+
+	useEffect(() => {
+		dispatch({
+			type: 'TEAM_LIST',
+			setTeamList,
+		});
+	}, []);
 
 	const clickNext = (prop: boolean) => {
 		dispatch({
@@ -36,25 +56,6 @@ const RegisterStep2 = (props: any) => {
 			propFunction: props.propFunction,
 		});
 	};
-
-	useEffect(() => {
-		getTeamList();
-	}, []);
-
-	const getTeamList = () => {
-		dispatch({
-			type: 'TEAM_LIST',
-			setTeamList,
-		});
-	};
-
-	const titleList = [
-		{ key: '사원', value: '사원', text: '사원' },
-		{ key: '선임', value: '선임', text: '선임' },
-		{ key: '책임', value: '책임', text: '책임' },
-		{ key: '총괄', value: '총괄', text: '총괄' },
-		{ key: '팀장', value: '팀장', text: '팀장' },
-	];
 
 	return (
 		<>
@@ -95,8 +96,9 @@ const RegisterStep2 = (props: any) => {
 						id="inputId"
 						placeholder="직급 선택."
 						options={titleList}
+						value={titleSelectValue}
 						onChange={(obj: { value: string }) => {
-							console.log(obj.value);
+							// console.log(obj.value);
 							setTitleSelectValue(obj.value);
 							setTitleSelectError(false);
 						}}
@@ -117,7 +119,14 @@ const RegisterStep2 = (props: any) => {
 						value={phoneNumValue}
 						size="large"
 						onChange={(obj: { value: string }) => {
-							setPhoneNumValue(obj.value);
+							// 수정 필요!!!!
+							const tempValue = obj.value
+								.replace(/[^0-9]/g, '')
+								.replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, '$1-$2-$3')
+								.replace(/(-{1,2})$/g, '');
+
+							console.log(tempValue);
+							setPhoneNumValue(tempValue);
 						}}
 						className={Style['inputIdField']}
 					/>

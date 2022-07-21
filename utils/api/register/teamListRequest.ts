@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const teamListRequest = async (props: any) => {
+	console.log('teamListRequest');
 	const teamListResult = await axios
 		.post('http://localhost:3066/api/auth/getTeamList')
 		.then((res: any) => {
