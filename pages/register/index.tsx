@@ -23,7 +23,7 @@ import Style from './Register.module.scss';
 
 const RegisterPage = (props: any) => {
 	const cx = classNames.bind(Style);
-	const [stepNum, setStepNum] = useState(5);
+	const [stepNum, setStepNum] = useState(1);
 	const [registerData, setRegisterData] = useState({});
 	const [resultData, setResultData] = useState({});
 
