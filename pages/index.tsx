@@ -3,7 +3,8 @@ import Testcomponent from '@components/Testcomponent';
 import { useSelector, useDispatch } from 'react-redux';
 import { increment } from '@store/counterSlice';
 import Link from 'next/link';
-import { Message, Image } from 'semantic-ui-react';
+import { useRouter } from 'next/router';
+import { Message, Image, Icon } from 'semantic-ui-react';
 import NextImage from 'next/image';
 import pic from '@public/images/react.jpeg';
 
@@ -17,6 +18,7 @@ import {
 	Toggle,
 	Radio,
 	InputLayout,
+	Label,
 } from '@components/index';
 
 import Style from './examplePage/examplePage.module.scss';
@@ -47,6 +49,8 @@ const Index = () => {
 	const dispatch = useDispatch();
 	const counter = useSelector((state: any) => state.counter.count);
 	const [loading, setLoading] = useState(false);
+
+	const router = useRouter();
 
 	const randomComputation = () => {
 		dispatch({ type: 'RANDOMCOMPUTATION', setLoading });
@@ -110,6 +114,9 @@ const Index = () => {
 			<Link href="/apiTestPage">
 				<a>GoToApiTestPage</a>
 			</Link>
+			<br />
+			<br />
+			<button onClick={() => router.push('/dashboard')}>GoToDashboardPage</button>
 			<br />
 			<br />
 			<button onClick={() => addOneNumber()}>add one number</button>
@@ -217,6 +224,22 @@ const Index = () => {
 
 			<br />
 			<br />
+
+			<Label
+				basic
+				content="username"
+				iconOrImage="image"
+				icon={
+					<Image
+						src={`${
+							process.env.MODE_ENV === 'production' ? 'dtech' : ''
+						}/images/no_profile.png`}
+						avatar
+					/>
+				}
+				color="black"
+				borderNone
+			/>
 		</div>
 	);
 };

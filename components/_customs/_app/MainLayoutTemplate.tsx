@@ -8,10 +8,10 @@
  ********************************************************************************************/
 
 import React, { useState, useEffect, useRef } from 'react';
-import { InputLayout, InputDefault } from '@components/index';
+import { Avatar, InputLayout, InputDefault } from '@components/index';
 import Image from 'next/image';
 import DLogo from '@public/images/DLogo2.png';
-import { Icon, Image as SemanticUIImage } from 'semantic-ui-react';
+import { Icon } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import { useRouter } from 'next/router';
 import Style from './MainLayoutTemplate.module.scss';
@@ -39,7 +39,8 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 					wrapperRef.current &&
 					!wrapperRef.current.contains(event.target) &&
 					event.target.parentElement.id !== 'userSettingArea' &&
-					event.target.parentElement.id !== 'userSettingAreaUL'
+					event.target.parentElement.id !== 'userSettingAreaUL' &&
+					event.target.parentElement.id !== 'li_userSettingArea'
 				) {
 					setSettingOpen(false);
 				}
@@ -191,14 +192,11 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 							<li>
 								<a href="#about">About</a>
 							</li>
-							<li id="userSettingArea" onClick={() => setSettingOpen(!settingOpen)}>
-								<SemanticUIImage
-									src={`${
-										process.env.MODE_ENV === 'production' ? 'dtech' : ''
-									}/images/no_profile.png`}
-									avatar
-								/>
-								<span>Username</span>
+							<li
+								id="li_userSettingArea"
+								onClick={() => setSettingOpen(!settingOpen)}
+							>
+								<Avatar id="userSettingArea" color="white" content="Username" />
 							</li>
 						</ul>
 					</nav>

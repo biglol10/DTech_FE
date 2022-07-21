@@ -1,3 +1,12 @@
+/** ****************************************************************************************
+ * @설명 : Custom App.tsx
+ ********************************************************************************************
+ * 번호    작업자     작업일         브랜치                       변경내용
+ *-------------------------------------------------------------------------------------------
+ * 1      변지욱     2022-06-16                              최초작성
+ * 2      변지욱     2022-07-13                              페이지에 따른 레이아웃 적용
+ ********************************************************************************************/
+
 import React from 'react';
 import { AppProps } from 'next/app';
 import wrapper from '@store/rootReducer';
@@ -5,8 +14,9 @@ import { ModalPopup } from '@components/index';
 import Head from 'next/head';
 import { parseCookies, destroyCookie } from 'nookies';
 import { redirectUser } from '@utils/appRelated/authUser';
-import 'semantic-ui-css/semantic.min.css';
 import '@styles/globals.scss';
+import 'semantic-ui-css/semantic.min.css';
+import 'react-quill/dist/quill.snow.css';
 
 import { MainLayoutTemplate } from '@components/customs';
 
@@ -50,7 +60,7 @@ MyApp.getInitialProps = async ({ Component, ctx }: any) => {
 
 	const protectedRoutes = protectedRoutesArray.includes(ctx.pathname);
 
-	const withMainLayoutArray = ['/', '/_error', '/apiTestPage', '/anotherPage']; // 새로고침 시 ctx.pathname이 /_error로 됨 이유는 모르겠음
+	const withMainLayoutArray = ['/', '/_error', '/apiTestPage', '/anotherPage', '/dashboard']; // 새로고침 시 ctx.pathname이 /_error로 됨 이유는 모르겠음
 
 	const isWithMainLayout = withMainLayoutArray.includes(ctx.pathname);
 

@@ -18,6 +18,9 @@ npm install @storybook/preset-scss --save-dev
 npm install css-loader sass sass-loader style-loader --save-dev <= 출처: https://trend21c.tistory.com/2216 [나를 찾는 아이:티스토리]
 Getting started with MUI
 npm i sharp <= For production Image Optimization with Next.js, the optional 'sharp' package is strongly recommended
+npm i react-quill --force
+npm i react-chartjs-2
+npm i lodash
 
 <!-- npm i -D @mdx-js/react
 npm i -D @storybook/manager-webpack5 @storybook/builder-webpack5

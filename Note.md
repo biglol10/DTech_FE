@@ -6,9 +6,13 @@
 <br/>
 <p>Saga 쓰는 이유 => https://min9nim.vercel.app/2020-04-23-redux-saga/</p>
 <br/>
+<p>Saga 참고 => https://velog.io/@rlatmdgns94/Next.js-redux-redux-saga-%EC%A0%81%EC%9A%A9, https://velog.io/@danmin20/Next.js%EC%97%90%EC%84%9C-redux-toolkit-%EC%84%B8%ED%8C%85%ED%95%98%EA%B8%B0</p>
+<br/>
 <p>Redux와 Saga 관련 내용 => https://www.inflearn.com/course/%EB%85%B8%EB%93%9C%EB%B2%84%EB%93%9C-%EB%A6%AC%EC%95%A1%ED%8A%B8-%EB%A6%AC%EB%89%B4%EC%96%BC</p>
 <br/>
 <p>NextJS에서 Redux Toolkit와 Saga 구현 => 이 프로젝트 소스</p>
+<br/>
+<p>Wrapper 가 필요한 이유 => https://velog.io/@rlatmdgns94/Next.js-redux-redux-saga-%EC%A0%81%EC%9A%A9, https://simsimjae.medium.com/next-redux-wrapper%EA%B0%80-%ED%95%84%EC%9A%94%ED%95%9C-%EC%9D%B4%EC%9C%A0-5d0176209d14</p>
 <br/>
 <p>CreateStore을 사용하지 않는 이유 => https://stackoverflow.com/questions/71944111/redux-createstore-is-deprecated-cannot-get-state-from-getstate-in-redux-ac</p>
 <br/>

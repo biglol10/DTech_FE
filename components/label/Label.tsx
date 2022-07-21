@@ -1,3 +1,11 @@
+/** ****************************************************************************************
+ * @설명 : Label component
+ ********************************************************************************************
+ * 번호    작업자     작업일         브랜치                       변경내용
+ *-------------------------------------------------------------------------------------------
+ * 1      변지욱     2022-06-19                              최초작성
+ ********************************************************************************************/
+
 import { Label as SemanticLabel, Icon } from 'semantic-ui-react';
 import { ILabel } from '@utils/types/componentTypes';
 import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
@@ -13,17 +21,28 @@ const Label = ({
 	borderNone = true,
 	size = 'small',
 	spacing = 0,
+	paddingNone = false,
 }: ILabel) => {
 	return (
 		<SemanticLabel
 			className={Style['semanticLabel']}
 			basic={basic}
 			image={iconOrImage === 'image'}
-			color={color}
 			style={
 				borderNone
-					? { border: 'none', ...inputElCommStyle(spacing) }
-					: { ...inputElCommStyle(spacing) }
+					? {
+							border: 'none',
+							...inputElCommStyle(spacing),
+							color,
+							background: 'none',
+							padding: `${paddingNone ? '0' : 'auto'}`,
+					  }
+					: {
+							...inputElCommStyle(spacing),
+							color,
+							background: 'none',
+							padding: `${paddingNone ? '0' : 'auto'}`,
+					  }
 			}
 			size={size}
 		>
