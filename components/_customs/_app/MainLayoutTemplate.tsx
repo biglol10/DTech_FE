@@ -8,12 +8,13 @@
  ********************************************************************************************/
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Avatar, InputLayout, InputDefault } from '@components/index';
+import { Avatar, InputLayout, InputDefault, SharpDivider } from '@components/index';
 import Image from 'next/image';
 import DLogo from '@public/images/DLogo2.png';
 import { Icon } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 import Style from './MainLayoutTemplate.module.scss';
 
 interface LayoutProps {
@@ -31,6 +32,8 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	const [settingOpen, setSettingOpen] = useState(false);
 
 	const wrapperRef = useRef<any>(null);
+
+	const authStore = useSelector((state: any) => state.auth);
 
 	useEffect(() => {
 		if (wrapperRef) {
@@ -120,11 +123,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 									</div>
 
 									<div className={Style['usersInfo']}>
-										<div className={Style['divider']}>
-											<span></span>
-											<span>온라인</span>
-											<span></span>
-										</div>
+										<SharpDivider content="온라인" />
 
 										<div className={Style['usersOnline']}>
 											{Array(3)
@@ -146,11 +145,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 												))}
 										</div>
 
-										<div className={Style['divider']}>
-											<span></span>
-											<span>오프라인</span>
-											<span></span>
-										</div>
+										<SharpDivider content="오프라인" />
 
 										<div className={Style['usersOffline']}>
 											{Array(20)
@@ -196,7 +191,11 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 								id="li_userSettingArea"
 								onClick={() => setSettingOpen(!settingOpen)}
 							>
-								<Avatar id="userSettingArea" color="white" content="Username" />
+								<Avatar
+									id="userSettingArea"
+									color="white"
+									content={authStore.userName}
+								/>
 							</li>
 						</ul>
 					</nav>

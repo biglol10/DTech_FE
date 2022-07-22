@@ -13,7 +13,7 @@
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { Icon } from 'semantic-ui-react';
-import { Button, InputLayout, Label, InputWithIcon } from '@components/index';
+import { Button, InputLayout, Label, InputWithIcon, SharpDivider } from '@components/index';
 import classNames from 'classnames/bind';
 import Link from 'next/link';
 import { useDispatch } from 'react-redux';
@@ -208,11 +208,7 @@ const Login = () => {
 						onClick={() => userLogin()}
 					/>
 
-					<div className={Style['divider']}>
-						<span></span>
-						<span>No Account ?</span>
-						<span></span>
-					</div>
+					<SharpDivider content="No Account ?" />
 
 					<Link href="/register">
 						<a>

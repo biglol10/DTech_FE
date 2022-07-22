@@ -1,18 +1,56 @@
 .dashboardTopMain {
 	height: 50%;
 	width: 100%;
-	display: grid;
-	grid-template-columns: 1fr 2.5fr;
-	gap: 25px;
+	display: flex;
+	// grid-template-columns: 2.5fr 1fr;
+	// gap: 25px;
+	flex-wrap: wrap;
+	justify-content: space-between;
 
 	.skillOverview {
 		height: 100%;
-		width: 100%;
+		width: 62.5%;
+		border: 1px solid white;
+		background-color: white;
+		border-radius: 10px;
+		padding: 1%;
+
+		img {
+			margin-right: 30px !important;
+		}
+
+		canvas {
+			height: 85% !important;
+		}
 	}
 
-	.recentArticleArea {
+	.skillOverviewTable {
 		height: 100%;
-		width: 100%;
-		background-color: aliceblue;
+		overflow-y: auto;
+		width: 32.5%;
+		background-color: white;
+		border-radius: 10px;
+
+		position: relative;
 	}
 }
+
+.skillTableBody > tr > td:first-child > div {
+	justify-content: flex-start;
+}
+
+.skillTableBody > tr > td:first-child > div > img {
+	height: 20px !important;
+	width: 20px !important;
+}
+
+.paginationDiv {
+	display: flex;
+	justify-content: center;
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%, 0%);
+	bottom: 3%;
+}
+
+// #__next > div.MainLayoutTemplate_mainLayout__fJMDr > div.MainLayoutTemplate_right__nzwpK > main > div > div.dashboard_recentArticleArea__Q6HpV > table > tbody > tr:nth-child(1) > td.collapsing > div > img

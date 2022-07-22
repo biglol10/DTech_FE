@@ -1,7 +1,7 @@
 import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
 import { authSetting, authReset } from '@store/authSlice';
 import * as RCONST from '@utils/constants/reducerConstants';
-import { fireLoginRequest } from '@utils/api/auth/loginRequest';
+import { fireLoginRequest, fireTokenRequest } from '@utils/api/auth/loginRequest';
 
 interface authObjParamSetting {
 	userId: string;
@@ -55,6 +55,35 @@ const setAuthFunction = function* ({
 	yield call(callbackFn, loginResult);
 };
 
+interface ITokenUser {
+	USER_ID: string;
+	NAME: string;
+	TEAM_CD: string;
+	TITLE: string;
+	ADMIN: number;
+}
+
+interface ITokenResult {
+	success: boolean;
+	user: ITokenUser;
+}
+
+const getAuthFunction = function* ({ token }: any) {
+	const tokenResult: ITokenResult = yield call(fireTokenRequest, token);
+
+	if (tokenResult.success) {
+		const loginResult = {
+			userName: tokenResult.user.NAME,
+			userId: tokenResult.user.USER_ID,
+			userToken: token,
+		};
+
+		yield put(authSetting(loginResult));
+	} else {
+		yield put(authReset());
+	}
+};
+
 const resetAuthFunction = function* () {
 	yield put(authReset());
 };
@@ -67,6 +96,10 @@ const resetAuth = function* () {
 	yield takeLatest(RCONST.AUTH_RESET, resetAuthFunction);
 };
 
+const getAuthByToken = function* () {
+	yield takeLatest(RCONST.AUTH_SETTING_BY_TOKEN, getAuthFunction);
+};
+
 export default function* authSaga() {
-	yield all([fork(setAuth), fork(resetAuth)]);
+	yield all([fork(setAuth), fork(resetAuth), fork(getAuthByToken)]);
 }

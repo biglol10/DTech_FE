@@ -5,6 +5,28 @@ interface authObjParamSetting {
 	password: string;
 }
 
+const fireTokenRequest = async (token: string) => {
+	const authResult = await axios
+		.post(
+			'http://localhost:3066/api/auth/getLoggedInUserInfo',
+			{},
+			{
+				headers: { Authorization: token },
+			},
+		)
+		.then((response) => {
+			return response.data;
+		})
+		.catch((err) => {
+			return {
+				success: false,
+				user: {},
+			};
+		});
+
+	return authResult;
+};
+
 const fireLoginRequest = async (props: authObjParamSetting) => {
 	const loginResult = await axios
 		.post('http://localhost:3066/api/auth/loginUser', props, {
@@ -38,4 +60,4 @@ const fireLoginRequest = async (props: authObjParamSetting) => {
 	return loginResult;
 };
 
-export { fireLoginRequest };
+export { fireLoginRequest, fireTokenRequest };

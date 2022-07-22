@@ -16,7 +16,13 @@ const imageList = [
 ];
 
 return (
-	<AvatarGroup className="sampleClassName" spacing={20} imageList={imageList} divHeight={20} />
+	<AvatarGroup
+		className="sampleClassName"
+		spacing={20}
+		imageList={imageList}
+		divHeight={20}
+		showCount={true}
+	/>
 );
 ```
 
@@ -28,3 +34,4 @@ return (
 | spacing   | number        | 0             | spacing (marginTop) in px                 |
 | imageList | Array<string> | []            | 그룹에 들어갈 이미지 리스트               |
 | divHeight | number        | 20            | div의 height 그리고 img의 height, width값 |
+| showCount | boolean       | true          | member count 표시                         |
