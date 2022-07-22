@@ -15,46 +15,16 @@ import {
 } from 'chart.js';
 import { Icon, Table, Pagination } from 'semantic-ui-react';
 import Image from 'next/image';
-import { Avatar, AvatarGroup } from '@components/index';
+import { Avatar, AvatarGroup, Label } from '@components/index';
 import { techImage } from '@utils/constants/techs';
 import Style from './dashboard.module.scss';
 
-interface IProps {
-	[name: string]: any;
+interface ITeamSkillData {
+	subject: string;
+	count: number;
 }
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
-
-const labels = [
-	'January',
-	'February',
-	'March',
-	'April',
-	'May',
-	'June',
-	'July',
-	'January1',
-	'February1',
-	'March1',
-	'April1',
-	'May1',
-	'June1',
-	'July1',
-];
-
-const options = {
-	responsive: true,
-	maintainAspectRatio: false,
-	plugins: {
-		legend: {
-			position: 'top' as const,
-		},
-		title: {
-			display: true,
-			text: 'Chart.js Bar Chart',
-		},
-	},
-};
 
 const imageList = [
 	'https://ca.slack-edge.com/T02SCQ38A22-U039FT91QTD-g0ca8cf5c8e6-24',
@@ -66,7 +36,9 @@ const imageList = [
 	'https://ca.slack-edge.com/T02SCQ38A22-U02U08XSSAX-g106a193d8a0-48',
 ];
 
-const TableExampleCelledStriped = () => {
+const TableExampleCelledStriped = ({ teamSkillData }: { teamSkillData: ITeamSkillData[] }) => {
+	const [activePage, setActivePage] = useState<number>(1);
+
 	return (
 		<>
 			<Table celled>
@@ -78,117 +50,43 @@ const TableExampleCelledStriped = () => {
 				</Table.Header>
 
 				<Table.Body className={Style['skillTableBody']}>
-					<Table.Row>
-						<Table.Cell>
-							<Avatar
-								labelSize="large"
-								src={techImage['React']}
-								color="black"
-								content="React"
-							/>
-						</Table.Cell>
-						<Table.Cell>
-							<AvatarGroup imageList={imageList} divHeight={20} />
-						</Table.Cell>
-					</Table.Row>
-					<Table.Row>
-						<Table.Cell>
-							<Avatar
-								labelSize="large"
-								src={techImage['Node']}
-								color="black"
-								content="Node"
-							/>
-						</Table.Cell>
-						<Table.Cell>
-							<AvatarGroup imageList={imageList} divHeight={20} />
-						</Table.Cell>
-					</Table.Row>
-					<Table.Row>
-						<Table.Cell>
-							<Avatar
-								labelSize="large"
-								src={techImage['Vue']}
-								color="black"
-								content="Vue"
-							/>
-						</Table.Cell>
-						<Table.Cell>
-							<AvatarGroup imageList={imageList} divHeight={20} />
-						</Table.Cell>
-					</Table.Row>
-					<Table.Row>
-						<Table.Cell>
-							<Avatar
-								labelSize="large"
-								src={techImage['Typescript']}
-								color="black"
-								content="Typescript"
-							/>
-						</Table.Cell>
-						<Table.Cell>
-							<AvatarGroup imageList={imageList} divHeight={20} />
-						</Table.Cell>
-					</Table.Row>
-					<Table.Row>
-						<Table.Cell>
-							<Avatar
-								labelSize="large"
-								src={techImage['Spring']}
-								color="black"
-								content="Spring"
-							/>
-						</Table.Cell>
-						<Table.Cell>
-							<AvatarGroup imageList={imageList} divHeight={20} />
-						</Table.Cell>
-					</Table.Row>
-					<Table.Row>
-						<Table.Cell>
-							<Avatar
-								labelSize="large"
-								src={techImage['ASPNET']}
-								color="black"
-								content="ASPNET"
-							/>
-						</Table.Cell>
-						<Table.Cell>
-							<AvatarGroup imageList={imageList} divHeight={20} />
-						</Table.Cell>
-					</Table.Row>
-					<Table.Row>
-						<Table.Cell>
-							<Avatar
-								labelSize="large"
-								src={techImage['ASPNET']}
-								color="black"
-								content="ASPNET"
-							/>
-						</Table.Cell>
-						<Table.Cell>
-							<AvatarGroup imageList={imageList} divHeight={20} />
-						</Table.Cell>
-					</Table.Row>
+					{teamSkillData.slice(7 * (activePage - 1), 7 * activePage).map((item, idx) => {
+						const itemSubject = item.subject as keyof typeof techImage;
+
+						return (
+							<Table.Row key={`${item.subject}_${idx}`}>
+								<Table.Cell>
+									<Avatar
+										labelSize="large"
+										src={techImage[itemSubject]}
+										color="black"
+										content={itemSubject}
+									/>
+								</Table.Cell>
+								<Table.Cell>
+									<AvatarGroup imageList={imageList} divHeight={20} />
+								</Table.Cell>
+							</Table.Row>
+						);
+					})}
 				</Table.Body>
 			</Table>
 			<div className={Style['paginationDiv']}>
 				<Pagination
-					defaultActivePage={1}
+					activePage={activePage}
 					firstItem={null}
 					lastItem={null}
 					pointing
 					secondary
-					totalPages={2}
+					totalPages={Math.floor(teamSkillData.length / 7) + 1}
+					onPageChange={(event, data) => {
+						setActivePage(data.activePage as number);
+					}}
 				/>
 			</div>
 		</>
 	);
 };
-
-interface ITeamSkillData {
-	subject: string;
-	count: number;
-}
 
 const Index = ({ teamSkillData }: { teamSkillData: ITeamSkillData[] }) => {
 	const router = useRouter();
@@ -197,7 +95,7 @@ const Index = ({ teamSkillData }: { teamSkillData: ITeamSkillData[] }) => {
 		labels: teamSkillData.map((item) => item.subject),
 		datasets: [
 			{
-				label: 'Dataset 1',
+				label: 'asdf',
 				data: teamSkillData.map((item) => item.count),
 				backgroundColor: [
 					'rgba(255, 99, 132, 0.2)',
@@ -219,14 +117,39 @@ const Index = ({ teamSkillData }: { teamSkillData: ITeamSkillData[] }) => {
 		],
 	};
 
+	const options = {
+		responsive: true,
+		maintainAspectRatio: false,
+
+		plugins: {
+			title: {
+				display: false,
+				text: 'DCX 모바일 기술팀 스킬 현황',
+			},
+			legend: {
+				position: 'top' as const,
+				display: false,
+			},
+		},
+	};
+
 	return (
 		<>
 			<div className={Style['dashboardTopMain']}>
 				<div className={Style['skillOverview']}>
+					<Label
+						iconOrImage="image"
+						nextImage={
+							<img src="https://www.lgcns.com/wp-content/uploads/2022/03/img_dcx_introduceLogo-1.png" />
+						}
+						content="DCX 모바일 기술팀 스킬 현황"
+						size="large"
+					/>
+					<br />
 					<Bar options={options} data={data} />
 				</div>
-				<div className={Style['recentArticleArea']}>
-					<TableExampleCelledStriped />
+				<div className={Style['skillOverviewTable']}>
+					<TableExampleCelledStriped teamSkillData={teamSkillData} />
 				</div>
 			</div>
 		</>

@@ -87,7 +87,7 @@ export interface ICheckboxListDefault {
 
 export interface ILabel {
 	basic?: boolean;
-	content: string | JSX.Element;
+	content?: string | JSX.Element;
 	iconOrImage?: 'icon' | 'image' | 'none';
 	icon?: ReactNode;
 	nextImage?: JSX.Element;

@@ -1,0 +1,68 @@
+@import '@styles/_variables.scss';
+
+.sharpDivider {
+	display: flex;
+	font-size: 24px;
+	text-align: center;
+	width: 100%; /* divider width */
+	margin: 25px auto; /* spacing above/below */
+	align-items: center;
+	user-select: none;
+
+	.hidden {
+		display: none;
+	}
+
+	span {
+		display: table-cell;
+		position: relative;
+	}
+
+	span:first-child,
+	span:last-child {
+		width: 50%;
+		-moz-background-size: 100% 2px; /* line width */
+		background-size: 100% 2px; /* line width */
+		background-position: 0 0, 0 100%;
+		background-repeat: no-repeat;
+		height: 2px;
+	}
+
+	span:first-child {
+		/* color changes in here */
+		background-image: -webkit-gradient(
+			linear,
+			0 0,
+			0 100%,
+			from(transparent),
+			to($dividerColor)
+		);
+		background-image: -webkit-linear-gradient(180deg, transparent, $dividerColor);
+		background-image: -moz-linear-gradient(180deg, transparent, $dividerColor);
+		background-image: -o-linear-gradient(180deg, transparent, $dividerColor);
+		background-image: linear-gradient(90deg, transparent, $dividerColor);
+	}
+
+	span:nth-child(2) {
+		color: $dividerColor;
+		padding: 0px 5px;
+		width: auto;
+		white-space: nowrap;
+		font-size: 12px;
+	}
+
+	span:last-child {
+		/* color changes in here */
+		background-image: -webkit-gradient(
+			linear,
+			0 0,
+			0 100%,
+			from($dividerColor),
+			to(transparent)
+		);
+		background-image: -webkit-linear-gradient(180deg, $dividerColor, transparent);
+		background-image: -moz-linear-gradient(180deg, $dividerColor, transparent);
+		background-image: -o-linear-gradient(180deg, $dividerColor, transparent);
+		background-image: linear-gradient(90deg, $dividerColor, transparent);
+	}
+}

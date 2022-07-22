@@ -8,7 +8,7 @@
  ********************************************************************************************/
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Avatar, InputLayout, InputDefault } from '@components/index';
+import { Avatar, InputLayout, InputDefault, SharpDivider } from '@components/index';
 import Image from 'next/image';
 import DLogo from '@public/images/DLogo2.png';
 import { Icon } from 'semantic-ui-react';
@@ -123,11 +123,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 									</div>
 
 									<div className={Style['usersInfo']}>
-										<div className={Style['divider']}>
-											<span></span>
-											<span>온라인</span>
-											<span></span>
-										</div>
+										<SharpDivider content="온라인" />
 
 										<div className={Style['usersOnline']}>
 											{Array(3)
@@ -149,11 +145,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 												))}
 										</div>
 
-										<div className={Style['divider']}>
-											<span></span>
-											<span>오프라인</span>
-											<span></span>
-										</div>
+										<SharpDivider content="오프라인" />
 
 										<div className={Style['usersOffline']}>
 											{Array(20)
