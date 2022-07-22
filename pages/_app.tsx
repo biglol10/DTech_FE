@@ -14,6 +14,8 @@ import { ModalPopup } from '@components/index';
 import Head from 'next/head';
 import { parseCookies, destroyCookie } from 'nookies';
 import { redirectUser } from '@utils/appRelated/authUser';
+import { useSelector, useDispatch } from 'react-redux';
+
 import '@styles/globals.scss';
 import 'semantic-ui-css/semantic.min.css';
 import 'react-quill/dist/quill.snow.css';
@@ -21,6 +23,13 @@ import 'react-quill/dist/quill.snow.css';
 import { MainLayoutTemplate } from '@components/customs';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
+	const authStore = useSelector((state: any) => state.auth);
+	const dispatch = useDispatch();
+
+	if (!authStore || !authStore.userName || !authStore.userToken) {
+		dispatch({ type: 'AUTH_SETTING_BY_TOKEN', token: pageProps.token });
+	}
+
 	return (
 		<>
 			<Head>
@@ -68,9 +77,9 @@ MyApp.getInitialProps = async ({ Component, ctx }: any) => {
 		protectedRoutes && redirectUser(ctx, '/login');
 	} else {
 		pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
-		pageProps.user = 'biglol';
 		pageProps.isWithMainLayout = isWithMainLayout;
 		pageProps.pathname = ctx.pathname;
+		pageProps.token = token;
 	}
 
 	return { pageProps };

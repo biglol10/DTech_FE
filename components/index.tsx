@@ -18,6 +18,7 @@ import TNSkillFlow from './thumbnail/TNSkillFlow';
 import { Tabs, TabHeader, Tab, TabPanels, TabPanel } from './tab/Tab';
 import Avatar from './avatar/Avatar';
 import AvatarGroup from './avatar/AvatarGroup';
+import SharpDivider from './sharpDivider/SharpDivider';
 
 export {
 	Accordion,
@@ -44,4 +45,5 @@ export {
 	Tab,
 	TabPanels,
 	TabPanel,
+	SharpDivider,
 };
