@@ -88,8 +88,12 @@ const TableExampleCelledStriped = ({ teamSkillData }: { teamSkillData: ITeamSkil
 	);
 };
 
-const Index = ({ teamSkillData }: { teamSkillData: ITeamSkillData[] }) => {
+const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aProp: string }) => {
 	const router = useRouter();
+
+	const asdf = process.env.S3_URL;
+
+	console.log(`envenv is ${aProp}`);
 
 	const data = {
 		labels: teamSkillData.map((item) => item.subject),
@@ -173,6 +177,7 @@ export const getServerSideProps = async (context: any) => {
 	return {
 		props: {
 			teamSkillData: axiosData,
+			aProp: process.env.S3_URL,
 		},
 	};
 };

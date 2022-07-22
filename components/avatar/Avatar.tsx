@@ -14,7 +14,7 @@ import Style from './Avatar.module.scss';
 
 const Avatar = ({
 	id = '',
-	src = `${process.env.MODE_ENV === 'production' ? '/dtech' : ''}/images/no_profile.png`,
+	src = `${process.env.NODE_ENV === 'production' ? '/dtech' : ''}/images/no_profile.png`,
 	content = '',
 	color = 'black',
 	spacing = 0,
@@ -22,6 +22,7 @@ const Avatar = ({
 	imageSize = 'mini',
 	labelSize = 'big',
 }: IAvatar) => {
+	// console.log(`env in avatar ${process.env.customKey}`);
 	return (
 		<>
 			<div

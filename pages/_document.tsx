@@ -26,7 +26,7 @@ export default function Document() {
 				<link rel="icon" href="dtech/favicon.ico" type="image/x-icon" />
 				<link
 					rel="icon"
-					href={`${process.env.MODE_ENV === 'production' ? 'dtech' : ''}/favicon.ico`}
+					href={`${process.env.NODE_ENV === 'production' ? 'dtech' : ''}/favicon.ico`}
 					type="image/x-icon"
 				/>
 			</Head>
