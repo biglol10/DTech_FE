@@ -173,11 +173,15 @@ const RegisterStep1 = (props: any) => {
 					onChange={(obj: { value: string }) => {
 						setPwInputValue(obj.value);
 						if (obj.value.length !== 0) {
-							const pwRegex = /^.{6,30}$/;
+							const pwRegex = new RegExp(
+								'^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{6,})',
+							);
 
 							setPwInputError(!pwRegex.test(obj.value));
 							if (!pwRegex.test(obj.value)) {
-								setPwInputErrMsg('비밀번호는 최소 6자리입니다');
+								setPwInputErrMsg(
+									'최소 6자 이상 영어 소문자, 숫자, 특수문자가 포함되어야 합니다.',
+								);
 							}
 
 							if (pw2InputValue !== undefined && pw2InputValue.length !== 0) {
