@@ -232,7 +232,7 @@ const Index = () => {
 				icon={
 					<Image
 						src={`${
-							process.env.MODE_ENV === 'production' ? 'dtech' : ''
+							process.env.NODE_ENV === 'production' ? 'dtech' : ''
 						}/images/no_profile.png`}
 						avatar
 					/>
