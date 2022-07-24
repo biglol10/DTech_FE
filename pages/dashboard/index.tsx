@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { parseCookies, destroyCookie } from 'nookies';
@@ -132,26 +132,24 @@ const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aPro
 		},
 	};
 
-	const options2 = [
-		{ key: 'angular', text: 'Angular', value: 'angular' },
-		{ key: 'css', text: 'CSS', value: 'css' },
-		{ key: 'design', text: 'Graphic Design', value: 'design' },
-		{ key: 'ember', text: 'Ember', value: 'ember' },
-		{ key: 'html', text: 'HTML', value: 'html' },
-		{ key: 'ia', text: 'Information Architecture', value: 'ia' },
-		{ key: 'javascript', text: 'Javascript', value: 'javascript' },
-		{ key: 'mech', text: 'Mechanical Engineering', value: 'mech' },
-		{ key: 'meteor', text: 'Meteor', value: 'meteor' },
-		{ key: 'node', text: 'NodeJS', value: 'node' },
-		{ key: 'plumbing', text: 'Plumbing', value: 'plumbing' },
-		{ key: 'python', text: 'Python', value: 'python' },
-		{ key: 'rails', text: 'Rails', value: 'rails' },
-		{ key: 'react', text: 'React', value: 'react' },
-		{ key: 'repair', text: 'Kitchen Repair', value: 'repair' },
-		{ key: 'ruby', text: 'Ruby', value: 'ruby' },
-		{ key: 'ui', text: 'UI Design', value: 'ui' },
-		{ key: 'ux', text: 'User Experience', value: 'ux' },
-	];
+	const options3 = useMemo(() => {
+		const techArr: any = [];
+
+		Object.keys(techImage).map((item) => {
+			const itemString = item as keyof typeof techImage;
+
+			techArr.push({
+				key: item,
+				text: item,
+				value: item,
+				image: techImage[itemString],
+			});
+
+			return null;
+		});
+
+		return techArr;
+	}, []);
 
 	return (
 		<>
@@ -179,7 +177,7 @@ const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aPro
 							id={Style['inputDropdown']}
 							placeholder="선택해주세요"
 							value={''}
-							options={options2}
+							options={options3}
 						/>
 					</InputLayout>
 				</div>
