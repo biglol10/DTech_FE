@@ -14,7 +14,7 @@ import {
 } from 'chart.js';
 import { Icon, Table, Pagination } from 'semantic-ui-react';
 import Image from 'next/image';
-import { Avatar, AvatarGroup, Label } from '@components/index';
+import { Avatar, AvatarGroup, Label, InputLayout, InputDropdown } from '@components/index';
 import { techImage } from '@utils/constants/techs';
 import Style from './dashboard.module.scss';
 
@@ -132,6 +132,27 @@ const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aPro
 		},
 	};
 
+	const options2 = [
+		{ key: 'angular', text: 'Angular', value: 'angular' },
+		{ key: 'css', text: 'CSS', value: 'css' },
+		{ key: 'design', text: 'Graphic Design', value: 'design' },
+		{ key: 'ember', text: 'Ember', value: 'ember' },
+		{ key: 'html', text: 'HTML', value: 'html' },
+		{ key: 'ia', text: 'Information Architecture', value: 'ia' },
+		{ key: 'javascript', text: 'Javascript', value: 'javascript' },
+		{ key: 'mech', text: 'Mechanical Engineering', value: 'mech' },
+		{ key: 'meteor', text: 'Meteor', value: 'meteor' },
+		{ key: 'node', text: 'NodeJS', value: 'node' },
+		{ key: 'plumbing', text: 'Plumbing', value: 'plumbing' },
+		{ key: 'python', text: 'Python', value: 'python' },
+		{ key: 'rails', text: 'Rails', value: 'rails' },
+		{ key: 'react', text: 'React', value: 'react' },
+		{ key: 'repair', text: 'Kitchen Repair', value: 'repair' },
+		{ key: 'ruby', text: 'Ruby', value: 'ruby' },
+		{ key: 'ui', text: 'UI Design', value: 'ui' },
+		{ key: 'ux', text: 'User Experience', value: 'ux' },
+	];
+
 	return (
 		<>
 			<div className={Style['dashboardTopMain']}>
@@ -152,7 +173,16 @@ const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aPro
 				</div>
 			</div>
 			<div className={Style['dashboardBottomMain']}>
-				<span>asdf</span>
+				<div>
+					<InputLayout inputLabel="dropdown" inputLabelSize="h4" showInputLabel={false}>
+						<InputDropdown
+							id={Style['inputDropdown']}
+							placeholder="선택해주세요"
+							value={''}
+							options={options2}
+						/>
+					</InputLayout>
+				</div>
 			</div>
 		</>
 	);
