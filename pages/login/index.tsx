@@ -19,6 +19,7 @@ import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import cookie from 'js-cookie';
+import { toast } from 'react-toastify';
 
 import LeftBackground1 from '@public/background/loginLeft.png';
 import LeftBackground2 from '@public/background/loginLeft2.png';
@@ -65,7 +66,11 @@ const Login = () => {
 					cookie.set('token', data.userToken);
 					router.push('/');
 				} else {
-					alert('login failed');
+					dispatch({
+						type: 'TOAST_SETTING',
+						position: 'bottom-left',
+					});
+					toast['error'](<>{'login failed'}</>);
 				}
 			},
 		});
@@ -211,15 +216,13 @@ const Login = () => {
 					<SharpDivider content="No Account ?" />
 
 					<Link href="/register">
-						<a>
-							<Button
-								className={Style['registerButton']}
-								content="회원가입"
-								size="large"
-								color="google plus"
-								buttonType="none"
-							/>
-						</a>
+						<Button
+							className={Style['registerButton']}
+							content="회원가입"
+							size="large"
+							color="google plus"
+							buttonType="none"
+						/>
 					</Link>
 				</div>
 			</main>

@@ -1,11 +1,12 @@
 .dashboardTopMain {
-	height: 50%;
+	height: 48%;
 	width: 100%;
 	display: flex;
 	// grid-template-columns: 2.5fr 1fr;
 	// gap: 25px;
 	flex-wrap: wrap;
 	justify-content: space-between;
+	margin-bottom: 2%;
 
 	.skillOverview {
 		height: 100%;
@@ -53,4 +54,8 @@
 	bottom: 3%;
 }
 
-// #__next > div.MainLayoutTemplate_mainLayout__fJMDr > div.MainLayoutTemplate_right__nzwpK > main > div > div.dashboard_recentArticleArea__Q6HpV > table > tbody > tr:nth-child(1) > td.collapsing > div > img
+.dashboardBottomMain {
+	height: 48%;
+	width: 100%;
+	background-color: red;
+}

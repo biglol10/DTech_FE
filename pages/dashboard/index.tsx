@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import wrapper from '@store/rootReducer';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { parseCookies, destroyCookie } from 'nookies';
@@ -91,10 +90,6 @@ const TableExampleCelledStriped = ({ teamSkillData }: { teamSkillData: ITeamSkil
 const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aProp: string }) => {
 	const router = useRouter();
 
-	const asdf = process.env.S3_URL;
-
-	console.log(`envenv is ${aProp}`);
-
 	const data = {
 		labels: teamSkillData.map((item) => item.subject),
 		datasets: [
@@ -155,6 +150,9 @@ const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aPro
 				<div className={Style['skillOverviewTable']}>
 					<TableExampleCelledStriped teamSkillData={teamSkillData} />
 				</div>
+			</div>
+			<div className={Style['dashboardBottomMain']}>
+				<span>asdf</span>
 			</div>
 		</>
 	);

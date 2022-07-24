@@ -22,7 +22,6 @@ const Avatar = ({
 	imageSize = 'mini',
 	labelSize = 'big',
 }: IAvatar) => {
-	// console.log(`env in avatar ${process.env.customKey}`);
 	return (
 		<>
 			<div
@@ -32,7 +31,6 @@ const Avatar = ({
 			>
 				<SemanticUIImage src={src} avatar={avatar} size={imageSize} />
 				<Label content={content} color={color} size={labelSize} paddingNone />
-				{/* <span>{content}</span> */}
 			</div>
 		</>
 	);
