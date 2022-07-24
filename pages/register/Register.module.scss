@@ -1,0 +1,55 @@
+@import 'https://fonts.googleapis.com/css2?family=Trispace&display=swap';
+
+// $backgroundUrl: url('../../public/background/cool-background.png');
+$backgroundUrl: url(~@public/background/cool-background.png);
+$sectionWidth: 60%;
+.loginDiv {
+	background-image: $backgroundUrl;
+	background-size: cover;
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+}
+.loginMain {
+	width: 80%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.loginMainCenter {
+	background-color: white;
+	border-radius: 50px 50px 50px 50px;
+	width: $sectionWidth;
+	height: 80%;
+	display: flex;
+	flex-direction: column;
+	// justify-content: center;
+	align-items: center;
+	padding: 0 7%;
+	position: relative;
+
+	.loginButton,
+	.registerButton {
+		width: 100%;
+	}
+}
+
+.idInputDiv {
+	display: flex;
+}
+
+.registerTextarea {
+	min-height: 250px !important;
+	width: -webkit-fill-available !important;
+}
+
+// .loginMainCenter {
+// 	padding: 0px 50px;
+// }
+
+.registerStepper {
+	width: 100%;
+	margin-bottom: 10px;
+}

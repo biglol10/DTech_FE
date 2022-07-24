@@ -33,7 +33,6 @@ const InputWithIcon = forwardRef<any, IInputWithIcon>(
 		ref,
 	) => {
 		const [inputValue, setInputValue] = useState(value);
-
 		const onChangeFn = useCallback(
 			(e: ChangeEvent<HTMLInputElement>) => {
 				setInputValue(e.target.value);
@@ -72,5 +71,4 @@ const InputWithIcon = forwardRef<any, IInputWithIcon>(
 );
 
 InputWithIcon.displayName = 'InputWithIcon';
-
 export default InputWithIcon;
