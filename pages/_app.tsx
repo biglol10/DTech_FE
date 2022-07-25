@@ -84,6 +84,7 @@ MyApp.getInitialProps = async ({ Component, ctx }: any) => {
 		'/post/[postId]',
 		'/messages',
 		'/search',
+		'/dashboard',
 	];
 
 	const protectedRoutes = protectedRoutesArray.includes(ctx.pathname);

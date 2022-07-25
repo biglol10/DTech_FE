@@ -5,6 +5,7 @@ import RegisterStep2 from './_customs/registerStep/registerStep2';
 import RegisterStep3 from './_customs/registerStep/registerStep3';
 import RegisterStep4 from './_customs/registerStep/registerStep4';
 import RegisterStep5 from './_customs/registerStep/registerStep5';
+import SkillTable from './_customs/dashboard/SkillTable';
 
 export {
 	MainLayoutTemplate,
@@ -13,4 +14,5 @@ export {
 	RegisterStep3,
 	RegisterStep4,
 	RegisterStep5,
+	SkillTable,
 };

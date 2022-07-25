@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { parseCookies, destroyCookie } from 'nookies';
@@ -12,10 +12,10 @@ import {
 	Tooltip,
 	Legend,
 } from 'chart.js';
-import { Icon, Table, Pagination } from 'semantic-ui-react';
 import Image from 'next/image';
-import { Avatar, AvatarGroup, Label, InputLayout, InputDropdown } from '@components/index';
+import { Label, InputLayout, InputDropdown, InputSearch } from '@components/index';
 import { techImage } from '@utils/constants/techs';
+import { SkillTable } from '@components/customs';
 import Style from './dashboard.module.scss';
 
 interface ITeamSkillData {
@@ -25,70 +25,10 @@ interface ITeamSkillData {
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const imageList = [
-	'https://ca.slack-edge.com/T02SCQ38A22-U039FT91QTD-g0ca8cf5c8e6-24',
-	'https://ca.slack-edge.com/T02SCQ38A22-U02U080JHC2-29078f07fef3-24',
-	'https://ca.slack-edge.com/T02SCQ38A22-USLACKBOT-sv41d8cd98f0-24',
-	'https://ca.slack-edge.com/T02SCQ38A22-U02U2GTV8J0-3c397712af98-24',
-	'https://ca.slack-edge.com/T02SCQ38A22-U0310788JFR-c2ebf48cb030-24',
-	'https://ca.slack-edge.com/T02SCQ38A22-U039JQGH1M3-g396a0215b62-48',
-	'https://ca.slack-edge.com/T02SCQ38A22-U02U08XSSAX-g106a193d8a0-48',
-];
-
-const TableExampleCelledStriped = ({ teamSkillData }: { teamSkillData: ITeamSkillData[] }) => {
-	const [activePage, setActivePage] = useState<number>(1);
-
-	return (
-		<>
-			<Table celled>
-				<Table.Header>
-					<Table.Row>
-						<Table.HeaderCell colSpan="1">Skill</Table.HeaderCell>
-						<Table.HeaderCell colSpan="1">Members</Table.HeaderCell>
-					</Table.Row>
-				</Table.Header>
-
-				<Table.Body className={Style['skillTableBody']}>
-					{teamSkillData.slice(7 * (activePage - 1), 7 * activePage).map((item, idx) => {
-						const itemSubject = item.subject as keyof typeof techImage;
-
-						return (
-							<Table.Row key={`${item.subject}_${idx}`}>
-								<Table.Cell>
-									<Avatar
-										labelSize="large"
-										src={techImage[itemSubject]}
-										color="black"
-										content={itemSubject}
-									/>
-								</Table.Cell>
-								<Table.Cell>
-									<AvatarGroup imageList={imageList} divHeight={20} />
-								</Table.Cell>
-							</Table.Row>
-						);
-					})}
-				</Table.Body>
-			</Table>
-			<div className={Style['paginationDiv']}>
-				<Pagination
-					activePage={activePage}
-					firstItem={null}
-					lastItem={null}
-					pointing
-					secondary
-					totalPages={Math.floor(teamSkillData.length / 7) + 1}
-					onPageChange={(event, data) => {
-						setActivePage(data.activePage as number);
-					}}
-				/>
-			</div>
-		</>
-	);
-};
-
 const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aProp: string }) => {
 	const router = useRouter();
+
+	const [searchPerson, setSearchPerson] = useState('');
 
 	const data = {
 		labels: teamSkillData.map((item) => item.subject),
@@ -167,12 +107,17 @@ const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aPro
 					<Bar options={options} data={data} />
 				</div>
 				<div className={Style['skillOverviewTable']}>
-					<TableExampleCelledStriped teamSkillData={teamSkillData} />
+					<SkillTable teamSkillData={teamSkillData} />
 				</div>
 			</div>
 			<div className={Style['dashboardBottomMain']}>
-				<div>
-					<InputLayout inputLabel="dropdown" inputLabelSize="h4" showInputLabel={false}>
+				<div className={Style['skillConditionWrap']}>
+					<InputLayout
+						id={Style['dropdownLayout']}
+						inputLabel="dropdown"
+						inputLabelSize="h4"
+						showInputLabel={false}
+					>
 						<InputDropdown
 							id={Style['inputDropdown']}
 							placeholder="선택해주세요"
@@ -180,6 +125,19 @@ const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aPro
 							options={options3}
 						/>
 					</InputLayout>
+					<InputLayout inputLabel="" showInputLabel={false}>
+						<InputSearch
+							id="inputPerson"
+							placeholder="인물 검색"
+							value={searchPerson}
+							onChange={({ value }: { value: string }) => setSearchPerson(value)}
+						/>
+					</InputLayout>
+					<ul>
+						<li>사원</li>
+						<li>선임</li>
+						<li>책임</li>
+					</ul>
 				</div>
 			</div>
 		</>
