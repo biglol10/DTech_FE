@@ -13,7 +13,14 @@ import {
 	Legend,
 } from 'chart.js';
 import Image from 'next/image';
-import { Label, InputLayout, InputDropdown, InputSearch } from '@components/index';
+import {
+	Label,
+	InputLayout,
+	InputDropdown,
+	InputSearch,
+	SharpDivider,
+	Avatar,
+} from '@components/index';
 import { techImage } from '@utils/constants/techs';
 import { SkillTable } from '@components/customs';
 import Style from './dashboard.module.scss';
@@ -134,10 +141,115 @@ const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aPro
 						/>
 					</InputLayout>
 					<ul>
-						<li>사원</li>
+						<li className={Style['active']}>사원</li>
 						<li>선임</li>
 						<li>책임</li>
 					</ul>
+				</div>
+				<SharpDivider content="" />
+				<div className={Style['peopleCardArea']}>
+					<div>
+						<div style={{ paddingBottom: '5px', borderBottom: '1px solid #F5B7B1' }}>
+							<Avatar content="username1" />
+						</div>
+						<table style={{ marginTop: '5%' }}>
+							<tbody>
+								<tr>
+									<td>직급:</td>
+									<td>선임</td>
+								</tr>
+								<tr>
+									<td>직급:</td>
+									<td>선임</td>
+								</tr>
+							</tbody>
+						</table>
+						{/* <span>asfd</span> */}
+					</div>
+					<div>
+						<div style={{ paddingBottom: '5px', borderBottom: '1px solid #F5B7B1' }}>
+							<Avatar content="username1" />
+						</div>
+						<table style={{ marginTop: '5%' }}>
+							<tbody>
+								<tr>
+									<td>직급:</td>
+									<td>선임</td>
+								</tr>
+							</tbody>
+						</table>
+						{/* <span>asfd</span> */}
+					</div>
+					<div>
+						<div style={{ paddingBottom: '5px', borderBottom: '1px solid #F5B7B1' }}>
+							<Avatar content="username1" />
+						</div>
+						<table style={{ marginTop: '5%' }}>
+							<tbody>
+								<tr>
+									<td>직급:</td>
+									<td>선임</td>
+								</tr>
+							</tbody>
+						</table>
+						{/* <span>asfd</span> */}
+					</div>
+					<div>
+						<div style={{ paddingBottom: '5px', borderBottom: '1px solid #F5B7B1' }}>
+							<Avatar content="username1" />
+						</div>
+						<table style={{ marginTop: '5%' }}>
+							<tbody>
+								<tr>
+									<td>직급:</td>
+									<td>선임</td>
+								</tr>
+							</tbody>
+						</table>
+						{/* <span>asfd</span> */}
+					</div>
+					<div>
+						<div style={{ paddingBottom: '5px', borderBottom: '1px solid #F5B7B1' }}>
+							<Avatar content="username1" />
+						</div>
+						<table style={{ marginTop: '5%' }}>
+							<tbody>
+								<tr>
+									<td>직급:</td>
+									<td>선임</td>
+								</tr>
+							</tbody>
+						</table>
+						{/* <span>asfd</span> */}
+					</div>
+					<div>
+						<div style={{ paddingBottom: '5px', borderBottom: '1px solid #F5B7B1' }}>
+							<Avatar content="username1" />
+						</div>
+						<table style={{ marginTop: '5%' }}>
+							<tbody>
+								<tr>
+									<td>직급:</td>
+									<td>선임</td>
+								</tr>
+							</tbody>
+						</table>
+						{/* <span>asfd</span> */}
+					</div>
+					<div>
+						<div style={{ paddingBottom: '5px', borderBottom: '1px solid #F5B7B1' }}>
+							<Avatar content="username1" />
+						</div>
+						<table style={{ marginTop: '5%' }}>
+							<tbody>
+								<tr>
+									<td>직급:</td>
+									<td>선임</td>
+								</tr>
+							</tbody>
+						</table>
+						{/* <span>asfd</span> */}
+					</div>
 				</div>
 			</div>
 		</>
