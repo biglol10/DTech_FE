@@ -22,7 +22,7 @@ import {
 	Avatar,
 } from '@components/index';
 import { techImage } from '@utils/constants/techs';
-import { SkillTable } from '@components/customs';
+import { SkillTable, PersonCard } from '@components/customs';
 import Style from './dashboard.module.scss';
 
 interface ITeamSkillData {
@@ -80,7 +80,7 @@ const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aPro
 	};
 
 	const options3 = useMemo(() => {
-		const techArr: any = [];
+		const techArr: any = [{ key: '', text: '', value: '' }];
 
 		Object.keys(techImage).map((item) => {
 			const itemString = item as keyof typeof techImage;
@@ -97,6 +97,72 @@ const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aPro
 
 		return techArr;
 	}, []);
+
+	const userListData = [
+		{
+			rank: '선임',
+			skills: 'React, Typescript, Node, Express',
+			domains: '금융, 공공',
+			githubUrl: 'https://github.com/biglol10',
+			detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
+		},
+		{
+			rank: '책임',
+			skills: 'React, Typescript, Node, Express',
+			domains: '금융, 공공',
+			githubUrl: 'https://github.com/biglol10',
+			detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
+		},
+		{
+			rank: '선임',
+			skills: 'React, Typescript, Node, Express',
+			domains: '금융, 공공',
+			githubUrl: 'https://github.com/biglol10',
+			detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
+		},
+		{
+			rank: '사원',
+			skills: 'React, Typescript, Node, Express',
+			domains: '금융, 공공',
+			githubUrl: 'https://github.com/biglol10',
+			detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
+		},
+		{
+			rank: '선임',
+			skills: 'React, Typescript, Node, Express',
+			domains: '금융, 공공',
+			githubUrl: 'https://github.com/biglol10',
+			detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
+		},
+		{
+			rank: '책임',
+			skills: 'React, Typescript, Node, Express',
+			domains: '금융, 공공',
+			githubUrl: 'https://github.com/biglol10',
+			detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
+		},
+		{
+			rank: '사원',
+			skills: 'React, Typescript, Node, Express',
+			domains: '금융, 공공',
+			githubUrl: 'https://github.com/biglol10',
+			detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
+		},
+		{
+			rank: '선임',
+			skills: 'React, Typescript, Node, Express',
+			domains: '금융, 공공',
+			githubUrl: 'https://github.com/biglol10',
+			detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
+		},
+		{
+			rank: '책임',
+			skills: 'React, Typescript, Node, Express',
+			domains: '금융, 공공',
+			githubUrl: 'https://github.com/biglol10',
+			detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
+		},
+	];
 
 	return (
 		<>
@@ -148,108 +214,16 @@ const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aPro
 				</div>
 				<SharpDivider content="" />
 				<div className={Style['peopleCardArea']}>
-					<div>
-						<div style={{ paddingBottom: '5px', borderBottom: '1px solid #F5B7B1' }}>
-							<Avatar content="username1" />
-						</div>
-						<table style={{ marginTop: '5%' }}>
-							<tbody>
-								<tr>
-									<td>직급:</td>
-									<td>선임</td>
-								</tr>
-								<tr>
-									<td>직급:</td>
-									<td>선임</td>
-								</tr>
-							</tbody>
-						</table>
-						{/* <span>asfd</span> */}
-					</div>
-					<div>
-						<div style={{ paddingBottom: '5px', borderBottom: '1px solid #F5B7B1' }}>
-							<Avatar content="username1" />
-						</div>
-						<table style={{ marginTop: '5%' }}>
-							<tbody>
-								<tr>
-									<td>직급:</td>
-									<td>선임</td>
-								</tr>
-							</tbody>
-						</table>
-						{/* <span>asfd</span> */}
-					</div>
-					<div>
-						<div style={{ paddingBottom: '5px', borderBottom: '1px solid #F5B7B1' }}>
-							<Avatar content="username1" />
-						</div>
-						<table style={{ marginTop: '5%' }}>
-							<tbody>
-								<tr>
-									<td>직급:</td>
-									<td>선임</td>
-								</tr>
-							</tbody>
-						</table>
-						{/* <span>asfd</span> */}
-					</div>
-					<div>
-						<div style={{ paddingBottom: '5px', borderBottom: '1px solid #F5B7B1' }}>
-							<Avatar content="username1" />
-						</div>
-						<table style={{ marginTop: '5%' }}>
-							<tbody>
-								<tr>
-									<td>직급:</td>
-									<td>선임</td>
-								</tr>
-							</tbody>
-						</table>
-						{/* <span>asfd</span> */}
-					</div>
-					<div>
-						<div style={{ paddingBottom: '5px', borderBottom: '1px solid #F5B7B1' }}>
-							<Avatar content="username1" />
-						</div>
-						<table style={{ marginTop: '5%' }}>
-							<tbody>
-								<tr>
-									<td>직급:</td>
-									<td>선임</td>
-								</tr>
-							</tbody>
-						</table>
-						{/* <span>asfd</span> */}
-					</div>
-					<div>
-						<div style={{ paddingBottom: '5px', borderBottom: '1px solid #F5B7B1' }}>
-							<Avatar content="username1" />
-						</div>
-						<table style={{ marginTop: '5%' }}>
-							<tbody>
-								<tr>
-									<td>직급:</td>
-									<td>선임</td>
-								</tr>
-							</tbody>
-						</table>
-						{/* <span>asfd</span> */}
-					</div>
-					<div>
-						<div style={{ paddingBottom: '5px', borderBottom: '1px solid #F5B7B1' }}>
-							<Avatar content="username1" />
-						</div>
-						<table style={{ marginTop: '5%' }}>
-							<tbody>
-								<tr>
-									<td>직급:</td>
-									<td>선임</td>
-								</tr>
-							</tbody>
-						</table>
-						{/* <span>asfd</span> */}
-					</div>
+					{userListData.map((item, idx) => (
+						<PersonCard
+							key={`personcard_${idx}`}
+							rank={item.rank}
+							skills={item.skills}
+							domains={item.domains}
+							githubUrl={item.githubUrl}
+							detail={item.detail}
+						/>
+					))}
 				</div>
 			</div>
 		</>

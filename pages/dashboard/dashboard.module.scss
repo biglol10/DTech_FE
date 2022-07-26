@@ -114,9 +114,25 @@
 			padding: 5%;
 			display: flex;
 			flex-direction: column;
+			border-radius: 10px;
+			border: 1px solid #1abc9c;
+
+			table {
+				table-layout: fixed;
+			}
 
 			table > tbody > tr > td:first-child {
 				width: 30%;
+				vertical-align: top;
+			}
+
+			table > tbody > tr > td:nth-child(2) > div {
+				width: 140px;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
+				overflow: hidden;
+				text-overflow: ellipsis;
 			}
 		}
 	}
