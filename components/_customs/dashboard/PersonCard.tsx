@@ -16,16 +16,16 @@ const PersonCard = ({ rank, skills, domains, githubUrl, detail }: PersonDefail) 
 
 	return (
 		<div>
-			<div className={Style['userAvatarArea']} onClick={() => alert('ASDF')}>
+			<div className={Style['userAvatarArea']} onClick={() => setPopupView(!popupView)}>
 				<Avatar content="username1" />
 				{popupView && (
 					<div className={Style['userClickPopup']}>
-						<div>
+						<div onClick={() => alert('visit profile')}>
 							<Icon name="user circle" />
 							프로필 보기
 						</div>
 						<hr className={Style['menu-separator']} />
-						<div>
+						<div onClick={() => alert('go to chat')}>
 							<Icon name="chat" />
 							채팅
 						</div>

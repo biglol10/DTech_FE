@@ -30,6 +30,72 @@ interface ITeamSkillData {
 	count: number;
 }
 
+const fullData = [
+	{
+		rank: '선임',
+		skills: 'React, Typescript, Node, Express',
+		domains: '금융, 공공',
+		githubUrl: 'https://github.com/biglol10',
+		detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
+	},
+	{
+		rank: '책임',
+		skills: 'React, Typescript, Node, Express',
+		domains: '금융, 공공',
+		githubUrl: 'https://github.com/biglol10',
+		detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
+	},
+	{
+		rank: '선임',
+		skills: 'React, Typescript, Node, Express',
+		domains: '금융, 공공',
+		githubUrl: 'https://github.com/biglol10',
+		detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
+	},
+	{
+		rank: '사원',
+		skills: 'React, Typescript, Node, Express',
+		domains: '금융, 공공',
+		githubUrl: 'https://github.com/biglol10',
+		detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
+	},
+	{
+		rank: '선임',
+		skills: 'React, Typescript, Node, Express',
+		domains: '금융, 공공',
+		githubUrl: 'https://github.com/biglol10',
+		detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
+	},
+	{
+		rank: '책임',
+		skills: 'React, Typescript, Node, Express',
+		domains: '금융, 공공',
+		githubUrl: 'https://github.com/biglol10',
+		detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
+	},
+	{
+		rank: '사원',
+		skills: 'React, Typescript, Node, Express',
+		domains: '금융, 공공',
+		githubUrl: 'https://github.com/biglol10',
+		detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
+	},
+	{
+		rank: '선임',
+		skills: 'React, Typescript, Node, Express',
+		domains: '금융, 공공',
+		githubUrl: 'https://github.com/biglol10',
+		detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
+	},
+	{
+		rank: '책임',
+		skills: 'React, Typescript, Node, Express',
+		domains: '금융, 공공',
+		githubUrl: 'https://github.com/biglol10',
+		detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
+	},
+];
+
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aProp: string }) => {
@@ -98,71 +164,21 @@ const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aPro
 		return techArr;
 	}, []);
 
-	const userListData = [
-		{
-			rank: '선임',
-			skills: 'React, Typescript, Node, Express',
-			domains: '금융, 공공',
-			githubUrl: 'https://github.com/biglol10',
-			detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
-		},
-		{
-			rank: '책임',
-			skills: 'React, Typescript, Node, Express',
-			domains: '금융, 공공',
-			githubUrl: 'https://github.com/biglol10',
-			detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
-		},
-		{
-			rank: '선임',
-			skills: 'React, Typescript, Node, Express',
-			domains: '금융, 공공',
-			githubUrl: 'https://github.com/biglol10',
-			detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
-		},
-		{
-			rank: '사원',
-			skills: 'React, Typescript, Node, Express',
-			domains: '금융, 공공',
-			githubUrl: 'https://github.com/biglol10',
-			detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
-		},
-		{
-			rank: '선임',
-			skills: 'React, Typescript, Node, Express',
-			domains: '금융, 공공',
-			githubUrl: 'https://github.com/biglol10',
-			detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
-		},
-		{
-			rank: '책임',
-			skills: 'React, Typescript, Node, Express',
-			domains: '금융, 공공',
-			githubUrl: 'https://github.com/biglol10',
-			detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
-		},
-		{
-			rank: '사원',
-			skills: 'React, Typescript, Node, Express',
-			domains: '금융, 공공',
-			githubUrl: 'https://github.com/biglol10',
-			detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
-		},
-		{
-			rank: '선임',
-			skills: 'React, Typescript, Node, Express',
-			domains: '금융, 공공',
-			githubUrl: 'https://github.com/biglol10',
-			detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
-		},
-		{
-			rank: '책임',
-			skills: 'React, Typescript, Node, Express',
-			domains: '금융, 공공',
-			githubUrl: 'https://github.com/biglol10',
-			detail: 'DCX모바일 기술팀 FE 개발자로 일하고 있습니다. DCX모바일 기술팀 FE 개발자로 일하고 있습니다.',
-		},
-	];
+	const [searchCondition, setSearchCondition] = useState({
+		skillset: '',
+		personname: '',
+		rank: '',
+	});
+
+	const [userListData, setUserListData] = useState(fullData);
+
+	useEffect(() => {
+		setUserListData(
+			searchCondition.rank
+				? fullData.filter((item) => item.rank === searchCondition.rank)
+				: fullData,
+		);
+	}, [searchCondition.rank]);
 
 	return (
 		<>
@@ -207,9 +223,39 @@ const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aPro
 						/>
 					</InputLayout>
 					<ul>
-						<li className={Style['active']}>사원</li>
-						<li>선임</li>
-						<li>책임</li>
+						<li
+							className={searchCondition.rank === '사원' ? Style['active'] : ''}
+							onClick={() =>
+								setSearchCondition((prev) => ({
+									...prev,
+									rank: `${prev.rank === '사원' ? '' : '사원'}`,
+								}))
+							}
+						>
+							사원
+						</li>
+						<li
+							className={searchCondition.rank === '선임' ? Style['active'] : ''}
+							onClick={() =>
+								setSearchCondition((prev) => ({
+									...prev,
+									rank: `${prev.rank === '선임' ? '' : '선임'}`,
+								}))
+							}
+						>
+							선임
+						</li>
+						<li
+							className={searchCondition.rank === '책임' ? Style['active'] : ''}
+							onClick={() =>
+								setSearchCondition((prev) => ({
+									...prev,
+									rank: `${prev.rank === '책임' ? '' : '책임'}`,
+								}))
+							}
+						>
+							책임
+						</li>
 					</ul>
 				</div>
 				<SharpDivider content="" />
