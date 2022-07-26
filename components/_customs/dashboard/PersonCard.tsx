@@ -1,4 +1,5 @@
 import { Avatar } from '@components/index';
+import { useState } from 'react';
 import { Icon } from 'semantic-ui-react';
 import Style from './PersonCard.module.scss';
 
@@ -11,25 +12,25 @@ interface PersonDefail {
 }
 
 const PersonCard = ({ rank, skills, domains, githubUrl, detail }: PersonDefail) => {
+	const [popupView, setPopupView] = useState(false);
+
 	return (
 		<div>
-			<div className={Style['userAvatarArea']}>
+			<div className={Style['userAvatarArea']} onClick={() => alert('ASDF')}>
 				<Avatar content="username1" />
-				<div className={Style['userClickPopup']}>
-					<div>
-						<Icon name="user circle" />내 프로필 보기
+				{popupView && (
+					<div className={Style['userClickPopup']}>
+						<div>
+							<Icon name="user circle" />
+							프로필 보기
+						</div>
+						<hr className={Style['menu-separator']} />
+						<div>
+							<Icon name="chat" />
+							채팅
+						</div>
 					</div>
-					<hr className={Style['menu-separator']} />
-					<div>
-						<Icon name="setting" />내 설정
-					</div>
-					<hr className={Style['menu-separator']} />
-					<div>
-						<Icon name="mail" />
-						건의사항 남기기
-					</div>
-					<hr className={Style['menu-separator']} />
-				</div>
+				)}
 			</div>
 			<table style={{ marginTop: '5%', tableLayout: 'fixed' }}>
 				<tbody>
