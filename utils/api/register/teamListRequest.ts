@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// TODO: console.log 제거
 const teamListRequest = async (props: any) => {
 	console.log('teamListRequest');
 	const teamListResult = await axios

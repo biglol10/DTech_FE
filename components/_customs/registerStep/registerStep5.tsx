@@ -13,6 +13,7 @@ import { Label, Button } from '@components/index';
 
 import Style from './RegisterComp.module.scss';
 
+// TODO: 회원가입한 이름으로 표시 필요
 const RegisterStep3 = (props: any) => {
 	const resultInfo = props.resultData.result;
 
