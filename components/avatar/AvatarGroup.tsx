@@ -7,6 +7,7 @@
  ********************************************************************************************/
 
 import { customStyle1 } from '@utils/styleRelated/stylehelper';
+import { useState } from 'react';
 import Style from './AvatarGroup.module.scss';
 
 interface IImageList {
@@ -24,12 +25,19 @@ const AvatarGroup = ({
 	divHeight,
 	showCount = true,
 }: IImageList) => {
+	const [showTooltip, setShowTooltip] = useState(false);
+
 	return (
 		<div
 			className={`${Style['avatarGroup']} ${className}`}
 			style={customStyle1(spacing, { name: 'divHeight', value: divHeight })}
 		>
-			<div className={Style['avatarUser']}>
+			<div
+				className={Style['avatarUser']}
+				onMouseEnter={() => setShowTooltip(true)}
+				onMouseLeave={() => setShowTooltip(false)}
+				style={{ border: `${showTooltip ? '1px solid red' : 'none'}` }}
+			>
 				{imageList.slice(0, 5).map((imgSrc, idx) => (
 					<img
 						key={`avatarUserImg_${idx}`}
@@ -41,6 +49,23 @@ const AvatarGroup = ({
 					/>
 				))}
 			</div>
+
+			{showTooltip && (
+				<div
+					style={{
+						width: '150px',
+						backgroundColor: '#424949',
+						color: 'white',
+						padding: '10px',
+						position: 'absolute',
+						top: '150%',
+						right: '70%',
+						zIndex: '999',
+					}}
+				>
+					<h6>변지욱(선임), 장보영(선임), 이지은(선임) 외 {imageList.length}멤버</h6>
+				</div>
+			)}
 
 			{showCount && (
 				<span className={Style['avatarUserCount']}>{imageList.length}명의 멤버</span>

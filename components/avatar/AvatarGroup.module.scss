@@ -2,9 +2,11 @@
 	display: flex;
 	margin-top: var(--spacing);
 	height: var(--divHeight);
+	position: relative;
 
 	.avatarUser {
 		display: unset;
+		position: relative;
 
 		.userImage {
 			border: 1px solid #fff;
