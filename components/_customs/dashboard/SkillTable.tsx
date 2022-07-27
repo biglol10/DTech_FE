@@ -1,3 +1,11 @@
+/** ****************************************************************************************
+ * @설명 : 기술 테이블 컴포넌트
+ ********************************************************************************************
+ * 번호    작업자     작업일         브랜치                       변경내용
+ *-------------------------------------------------------------------------------------------
+ * 1      변지욱     2022-07-27   feature/JW/dashboard       최초작성
+ ********************************************************************************************/
+
 import { useState } from 'react';
 import { techImage } from '@utils/constants/techs';
 import { Table, Pagination } from 'semantic-ui-react';
@@ -22,6 +30,8 @@ const SkillTable = ({ teamSkillData }: { teamSkillData: ITeamSkillData[] }) => {
 		'https://ca.slack-edge.com/T02SCQ38A22-U02U08XSSAX-g106a193d8a0-48',
 	];
 
+	const pageSize = 6;
+
 	return (
 		<>
 			<Table celled>
@@ -33,25 +43,27 @@ const SkillTable = ({ teamSkillData }: { teamSkillData: ITeamSkillData[] }) => {
 				</Table.Header>
 
 				<Table.Body className={Style['skillTableBody']}>
-					{teamSkillData.slice(7 * (activePage - 1), 7 * activePage).map((item, idx) => {
-						const itemSubject = item.subject as keyof typeof techImage;
+					{teamSkillData
+						.slice(pageSize * (activePage - 1), pageSize * activePage)
+						.map((item, idx) => {
+							const itemSubject = item.subject as keyof typeof techImage;
 
-						return (
-							<Table.Row key={`${item.subject}_${idx}`}>
-								<Table.Cell>
-									<Avatar
-										labelSize="large"
-										src={techImage[itemSubject]}
-										color="black"
-										content={itemSubject}
-									/>
-								</Table.Cell>
-								<Table.Cell>
-									<AvatarGroup imageList={imageList} divHeight={20} />
-								</Table.Cell>
-							</Table.Row>
-						);
-					})}
+							return (
+								<Table.Row key={`${item.subject}_${idx}`}>
+									<Table.Cell>
+										<Avatar
+											labelSize="large"
+											src={techImage[itemSubject]}
+											color="black"
+											content={itemSubject}
+										/>
+									</Table.Cell>
+									<Table.Cell>
+										<AvatarGroup imageList={imageList} divHeight={20} />
+									</Table.Cell>
+								</Table.Row>
+							);
+						})}
 				</Table.Body>
 			</Table>
 			<div className={Style['paginationDiv']}>
@@ -61,7 +73,7 @@ const SkillTable = ({ teamSkillData }: { teamSkillData: ITeamSkillData[] }) => {
 					lastItem={null}
 					pointing
 					secondary
-					totalPages={Math.floor(teamSkillData.length / 7) + 1}
+					totalPages={Math.floor(teamSkillData.length / pageSize) + 1}
 					onPageChange={(event, data) => {
 						setActivePage(data.activePage as number);
 					}}

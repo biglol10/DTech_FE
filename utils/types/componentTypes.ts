@@ -172,7 +172,7 @@ export interface IInputDropdown {
 
 export interface IAvatar {
 	id?: string;
-	src?: string;
+	src?: any;
 	content: string | JSX.Element;
 	color?: string;
 	spacing?: number;

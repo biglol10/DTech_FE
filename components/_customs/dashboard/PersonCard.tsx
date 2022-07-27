@@ -1,9 +1,19 @@
+/** ****************************************************************************************
+ * @설명 : 유저정보 카드형태로 표시하는 컴포넌트
+ ********************************************************************************************
+ * 번호    작업자     작업일         브랜치                       변경내용
+ *-------------------------------------------------------------------------------------------
+ * 1      변지욱     2022-07-27   feature/JW/dashboard       최초작성
+ ********************************************************************************************/
+
 import { Avatar } from '@components/index';
 import { useState } from 'react';
 import { Icon } from 'semantic-ui-react';
 import Style from './PersonCard.module.scss';
 
 interface PersonDefail {
+	username: string;
+	profileUrl?: string | null;
 	rank: string;
 	skills: string;
 	domains: string;
@@ -11,13 +21,21 @@ interface PersonDefail {
 	detail: string;
 }
 
-const PersonCard = ({ rank, skills, domains, githubUrl, detail }: PersonDefail) => {
+const PersonCard = ({
+	username,
+	profileUrl = null,
+	rank,
+	skills,
+	domains,
+	githubUrl,
+	detail,
+}: PersonDefail) => {
 	const [popupView, setPopupView] = useState(false);
 
 	return (
 		<div>
 			<div className={Style['userAvatarArea']} onClick={() => setPopupView(!popupView)}>
-				<Avatar content="username1" />
+				<Avatar content={username} src={profileUrl} />
 				{popupView && (
 					<div className={Style['userClickPopup']}>
 						<div onClick={() => alert('visit profile')}>
