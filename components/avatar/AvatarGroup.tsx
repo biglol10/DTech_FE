@@ -8,6 +8,7 @@
 
 import { customStyle1 } from '@utils/styleRelated/stylehelper';
 import { useState } from 'react';
+import classNames from 'classnames/bind';
 import Style from './AvatarGroup.module.scss';
 
 interface IImageList {
@@ -27,16 +28,17 @@ const AvatarGroup = ({
 }: IImageList) => {
 	const [showTooltip, setShowTooltip] = useState(false);
 
+	const cx = classNames.bind(Style);
+
 	return (
 		<div
 			className={`${Style['avatarGroup']} ${className}`}
 			style={customStyle1(spacing, { name: 'divHeight', value: divHeight })}
 		>
 			<div
-				className={Style['avatarUser']}
+				className={cx('avatarUser', `${showTooltip ? 'showBorder' : 'hideBorder'}`)}
 				onMouseEnter={() => setShowTooltip(true)}
 				onMouseLeave={() => setShowTooltip(false)}
-				style={{ border: `${showTooltip ? '1px solid red' : 'none'}` }}
 			>
 				{imageList.slice(0, 5).map((imgSrc, idx) => (
 					<img
@@ -63,7 +65,10 @@ const AvatarGroup = ({
 						zIndex: '999',
 					}}
 				>
-					<h6>변지욱(선임), 장보영(선임), 이지은(선임) 외 {imageList.length}멤버</h6>
+					<h6>
+						변지욱(선임), 장보영(선임), 이지은(선임){' '}
+						{imageList.length > 3 && `외 ${imageList.length}명`}
+					</h6>
 				</div>
 			)}
 

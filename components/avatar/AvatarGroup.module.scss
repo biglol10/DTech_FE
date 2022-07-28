@@ -7,6 +7,15 @@
 	.avatarUser {
 		display: unset;
 		position: relative;
+		border: 1px solid white;
+
+		&.showBorder {
+			border: 1px solid #bdc3c7;
+		}
+
+		&.hideBorder {
+			border: 1px solid initial;
+		}
 
 		.userImage {
 			border: 1px solid #fff;
@@ -24,7 +33,7 @@
 		}
 
 		.userImage:last-child {
-			margin-right: 10px;
+			margin-right: 0px;
 		}
 	}
 
@@ -32,5 +41,6 @@
 		color: #696969;
 		font-size: 0.875rem;
 		line-height: var(--divHeight);
+		margin-left: 10px;
 	}
 }
