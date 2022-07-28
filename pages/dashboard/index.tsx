@@ -317,6 +317,9 @@ const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aPro
 							책임
 						</li>
 					</ul>
+					<div>
+						<h4>{userListData.length}명</h4>
+					</div>
 				</div>
 				<SharpDivider content="" />
 				<div className={Style['peopleCardArea']}>

@@ -15,6 +15,7 @@
 		background-color: #f7f9f9;
 		border-radius: 10px;
 		padding: 1%;
+		user-select: none;
 
 		img {
 			margin-right: 30px !important;
@@ -98,6 +99,12 @@
 					content: '';
 				}
 			}
+		}
+
+		& > div:last-child {
+			margin-left: 50px;
+			font-weight: bold;
+			color: #f1948a;
 		}
 	}
 
