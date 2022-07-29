@@ -171,7 +171,7 @@ const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aPro
 	};
 
 	const options3 = useMemo(() => {
-		const techArr: any = [{ key: '', text: '', value: '' }];
+		const techArr: any = [{ key: '전체', text: '전체', value: '전체' }];
 
 		Object.keys(techImage).map((item) => {
 			const itemString = item as keyof typeof techImage;
@@ -190,7 +190,7 @@ const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aPro
 	}, []);
 
 	const [searchCondition, setSearchCondition] = useState({
-		skillset: '',
+		skillset: '전체',
 		personname: '',
 		rank: '',
 	});
@@ -211,14 +211,14 @@ const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aPro
 
 	const enterSearch = useCallback(() => {
 		const filteredData = fullData.filter((item) => {
-			if (searchCondition.personname && searchCondition.skillset) {
+			if (searchCondition.personname && searchCondition.skillset !== '전체') {
 				return (
 					item.username.includes(searchCondition.personname) &&
 					item.skills.includes(searchCondition.skillset)
 				);
 			} else if (searchCondition.personname) {
 				return item.username.includes(searchCondition.personname);
-			} else if (searchCondition.skillset) {
+			} else if (searchCondition.skillset !== '전체') {
 				return item.skills.includes(searchCondition.skillset);
 			} else {
 				return item;
