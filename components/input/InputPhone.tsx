@@ -1,8 +1,14 @@
+/** ****************************************************************************************
+ * @설명 : Input Phone
+ ********************************************************************************************
+ * 번호    작업자     작업일         브랜치                       변경내용
+ *-------------------------------------------------------------------------------------------
+ * 1      변지욱      2022-07-30     feature/JW/inputPhone       최초작성
+ ********************************************************************************************/
+
 import { ChangeEvent, forwardRef, useState, useCallback } from 'react';
 import { Input } from 'semantic-ui-react';
 import { IInputPhone } from '@utils/types/componentTypes';
-
-const phoneReg = /(^01\d{1}-?)(\d{3,4}-?)(\d{4})$/g;
 
 const InputPhone = forwardRef<any, IInputPhone>(
 	(
@@ -14,10 +20,8 @@ const InputPhone = forwardRef<any, IInputPhone>(
 			onChange = null,
 			size = 'small',
 			loading = false,
-			type = 'default',
 			readOnly = false,
 			disabled = false,
-			maxLength = undefined,
 			stretch = false,
 			error = false,
 			onEnter = null,
@@ -28,15 +32,18 @@ const InputPhone = forwardRef<any, IInputPhone>(
 
 		const onChangeFn = useCallback(
 			(e: ChangeEvent<HTMLInputElement>) => {
-				const changedValue = e.target.value;
+				const targetValue = e.target.value;
+				const phoneFormat = e.target.value
+					.replace(/[^0-9]/g, '')
+					.replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, '$1-$2-$3')
+					.replace(/(-{1,2})$/g, '');
 
-				const isError = phoneReg.test(changedValue);
+				setInputValue(phoneFormat);
 
-				setInputValue(changedValue.replace(phoneReg, '$1-$2-$3'));
 				onChange &&
 					onChange({
-						value: e.target.value,
-						isError,
+						value: targetValue.replaceAll('-', ''),
+						phoneFormat,
 					});
 			},
 			[onChange],
@@ -53,10 +60,10 @@ const InputPhone = forwardRef<any, IInputPhone>(
 				onChange={onChangeFn}
 				size={size}
 				error={error}
-				type={'number'}
+				type={'text'}
 				readOnly={readOnly}
 				disabled={disabled}
-				maxLength={maxLength}
+				maxLength={13}
 				style={stretch ? { width: '100%' } : {}}
 				onKeyUp={(evt: KeyboardEvent) => evt.key === 'Enter' && onEnter && onEnter()}
 			/>
