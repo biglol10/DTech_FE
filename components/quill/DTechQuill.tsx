@@ -1,12 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { toast } from 'react-toastify';
+import CloseSvg from '@styles/svg/imgClose.svg';
+import Style from './DTechQuill.module.scss';
 
 const ReactQuill = dynamic(
 	async () => {
 		const { default: RQ } = await import('react-quill');
 
 		return function comp({ forwardedRef, ...props }: any) {
-			return <RQ ref={forwardedRef} {...props} onE />;
+			return <RQ ref={forwardedRef} {...props} />;
 		};
 	},
 	{ ssr: false },
@@ -21,6 +24,7 @@ const DTechQuill = ({
 }) => {
 	const [quillContext, setQuillContext] = useState(value);
 	const [tempQuillContext, setTempQuillContext] = useState('');
+	const [imageHover, setImageHover] = useState(false);
 	const quillRef = useRef<any>();
 
 	const [urlPreviewList, setUrlPreviewList] = useState<any>([]);
@@ -43,13 +47,28 @@ const DTechQuill = ({
 			// ).data;
 			// await uploadImage(presignedURL, file);
 
-			if (input.files) {
-				const mediaPreview = URL.createObjectURL(input.files[0]);
+			if (urlPreviewList.length >= 6) {
+				toast['error'](<>{'이미지는 최대 6개로 제한합니다'}</>);
+				return;
+			}
 
-				setUrlPreviewList([
-					...urlPreviewList,
-					{ fileName: input.files[0].name, filePreview: mediaPreview },
-				]);
+			if (input.files) {
+				const fileType =
+					input.files[0].type.split('/')[input.files[0].type.split('/').length - 1];
+
+				if (
+					['png', 'jpg', 'jpeg'].includes(fileType) &&
+					input.files[0].size <= 1 * 1024 * 1024
+				) {
+					const mediaPreview = URL.createObjectURL(input.files[0]);
+
+					setUrlPreviewList([
+						...urlPreviewList,
+						{ fileName: input.files[0].name, filePreview: mediaPreview },
+					]);
+				} else {
+					toast['error'](<>{'이미지 타입이나 사이즈를 체크해주세요'}</>);
+				}
 			}
 
 			const fileInput = document.body.querySelector(':scope > input');
@@ -137,15 +156,21 @@ const DTechQuill = ({
 					setTempQuillContext(content);
 				}}
 			/>
-			<div style={{ height: '50px', width: '100%', backgroundColor: 'red' }}>
+			<div className={Style['imageListArea']}>
 				{urlPreviewList.map((item: any, idx: number) => {
 					return (
-						<img
+						<div
 							key={`urlPreview_${idx}`}
-							src={item.filePreview}
-							alt=""
-							style={{ height: '30px', width: '30px' }}
-						/>
+							onMouseEnter={() => setImageHover(true)}
+							onMouseLeave={() => setImageHover(false)}
+						>
+							<img src={item.filePreview} alt="" />
+							{imageHover && (
+								<button>
+									<CloseSvg />
+								</button>
+							)}
+						</div>
 					);
 				})}
 			</div>
