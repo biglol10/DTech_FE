@@ -6,10 +6,3 @@ html * {
 	margin: 0;
 	box-sizing: border-box;
 }
-
-// quill editor height 조정
-.ql-editor {
-	min-height: 100px;
-	max-height: 350px;
-	overflow-y: auto;
-}

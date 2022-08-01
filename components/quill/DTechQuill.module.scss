@@ -1,7 +1,7 @@
 .imageListArea {
 	height: 78px;
 	width: 100%;
-	background-color: aliceblue;
+	background-color: floralwhite;
 	display: flex;
 	align-items: center;
 	padding: 0 2%;
@@ -66,5 +66,14 @@
 				border-radius: 50%;
 			}
 		}
+	}
+}
+
+.quillWrap {
+	// quill editor height 조정
+	:global(.ql-editor) {
+		min-height: 80px;
+		max-height: 350px;
+		overflow-y: auto;
 	}
 }

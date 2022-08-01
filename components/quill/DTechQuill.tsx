@@ -120,6 +120,15 @@ const DTechQuill = ({ handleSubmit = null }: { handleSubmit?: any }) => {
 							setUrlPreviewList([]);
 						},
 					},
+					paste: {
+						key: 86,
+						ctrlKey: true,
+						handler: (range: any, context: any) => {
+							console.log(range);
+							console.log(context);
+							alert('SADFASF');
+						},
+					},
 				},
 			},
 		}),
@@ -161,28 +170,32 @@ const DTechQuill = ({ handleSubmit = null }: { handleSubmit?: any }) => {
 
 	return (
 		<>
-			<ReactQuill
-				forwardedRef={quillRef}
-				placeholder="내용을 입력하세요"
-				modules={modules}
-				formats={formats}
-				value={quillContext}
-				onChange={(content: string) => {
-					setTempQuillContext(content);
-				}}
-			/>
+			<div className={Style['quillWrap']}>
+				<ReactQuill
+					forwardedRef={quillRef}
+					placeholder="내용을 입력하세요"
+					modules={modules}
+					formats={formats}
+					value={quillContext}
+					onChange={(content: string) => {
+						setTempQuillContext(content);
+					}}
+				/>
 
-			<div className={Style['imageListArea']}>
-				{urlPreviewList.map((item: any, idx: number) => {
-					return (
-						<PrevieImageComp
-							key={item.fileName}
-							fileName={item.fileName}
-							filePreview={item.filePreview}
-							changeUrlPreviewList={changeUrlPreviewList}
-						/>
-					);
-				})}
+				{urlPreviewList.length > 0 && (
+					<div className={Style['imageListArea']}>
+						{urlPreviewList.map((item: any, idx: number) => {
+							return (
+								<PrevieImageComp
+									key={item.fileName}
+									fileName={item.fileName}
+									filePreview={item.filePreview}
+									changeUrlPreviewList={changeUrlPreviewList}
+								/>
+							);
+						})}
+					</div>
+				)}
 			</div>
 		</>
 	);
