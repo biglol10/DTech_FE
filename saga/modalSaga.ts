@@ -10,6 +10,7 @@ const modalControlFunction = function* (action: any) {
 			modalTitle: action.modalTitle,
 			modalContent: action.modalContent,
 			modalSize: action.modalSize,
+			modalIsBasic: action.modalIsBasic,
 		};
 
 		yield put(showModal(modalObj));

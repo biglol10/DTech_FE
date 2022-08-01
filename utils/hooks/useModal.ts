@@ -16,6 +16,7 @@ const useModal = () => {
 					modalContent: args.modalContent,
 					modalSize: args.modalSize,
 					modalTitle: args.modalTitle,
+					modalIsBasic: args.modalIsBasic,
 				},
 			});
 		},
