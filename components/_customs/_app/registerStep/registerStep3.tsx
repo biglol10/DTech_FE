@@ -8,6 +8,7 @@
 
 import { useState } from 'react';
 import { TextArea } from 'semantic-ui-react';
+import { useDispatch } from 'react-redux';
 
 import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
 import { Label, Button } from '@components/index';
@@ -17,10 +18,16 @@ import Style from './RegisterComp.module.scss';
 
 const RegisterStep3 = (props: any) => {
 	const cx = classNames.bind(Style);
+	const dispatch = useDispatch();
 	const [detail, setDetail] = useState(props.registerData.detail);
 
 	const clickNext = (goNext: boolean) => {
-		props.propFunction({ detail, goNext });
+		dispatch({
+			type: 'VALID_STEP3',
+			goNext,
+			propFunction: props.propFunction,
+		});
+		// props.propFunction({ detail, goNext });
 	};
 
 	return (

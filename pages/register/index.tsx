@@ -23,27 +23,13 @@ import Style from './Register.module.scss';
 
 const RegisterPage = (props: any) => {
 	const cx = classNames.bind(Style);
-	const [stepNum, setStepNum] = useState(1);
-	const [registerData, setRegisterData] = useState({});
+	const [stepNum, setStepNum] = useState(2);
 	const [resultData, setResultData] = useState({});
 
 	const getStep1Data = (data: any) => {
-		setRegisterData({
-			...registerData,
-			user_id: data.idInputValue,
-			name: data.nameInputValue,
-			passwd: data.pwInputValue,
-			id_confirmed: data.idConfirm,
-		});
 		setStepNum(2);
 	};
 	const getStep2Data = (data: any) => {
-		setRegisterData({
-			...registerData,
-			team: data.teamSelectValue,
-			title: data.titleSelectValue,
-			phonenum: data.phoneNumValue,
-		});
 		if (data.goNext) {
 			setStepNum((prev) => prev + 1);
 		} else {
@@ -51,10 +37,6 @@ const RegisterPage = (props: any) => {
 		}
 	};
 	const getStep3Data = (data: any) => {
-		setRegisterData({
-			...registerData,
-			detail: data.detail,
-		});
 		if (data.goNext) {
 			setStepNum((prev) => prev + 1);
 		} else {
@@ -63,10 +45,6 @@ const RegisterPage = (props: any) => {
 	};
 
 	const getStep4Data = (data: any) => {
-		setRegisterData({
-			...registerData,
-			image: data.image,
-		});
 		if (data.goNext) {
 			setResultData(data.registerResult);
 			setStepNum((prev) => prev + 1);
@@ -100,18 +78,10 @@ const RegisterPage = (props: any) => {
 					<StepLabel></StepLabel>
 				</Step>
 			</Stepper>
-			{stepNum === 1 && (
-				<RegisterStep1 propFunction={getStep1Data} registerData={registerData} />
-			)}
-			{stepNum === 2 && (
-				<RegisterStep2 propFunction={getStep2Data} registerData={registerData} />
-			)}
-			{stepNum === 3 && (
-				<RegisterStep3 propFunction={getStep3Data} registerData={registerData} />
-			)}
-			{stepNum === 4 && (
-				<RegisterStep4 propFunction={getStep4Data} registerData={registerData} />
-			)}
+			{stepNum === 1 && <RegisterStep1 propFunction={getStep1Data} />}
+			{stepNum === 2 && <RegisterStep2 propFunction={getStep2Data} />}
+			{stepNum === 3 && <RegisterStep3 propFunction={getStep3Data} />}
+			{stepNum === 4 && <RegisterStep4 propFunction={getStep4Data} />}
 			{stepNum === 5 && <RegisterStep5 resultData={resultData} />}
 		</div>
 	);

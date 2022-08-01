@@ -15,9 +15,7 @@ import { InputLayout, InputDefault, Button, InputDropdown } from '@components/in
 import classNames from 'classnames/bind';
 import Style from './RegisterComp.module.scss';
 
-// TODO: cx 제거 및 useEffect 디팬던시 추가
 const RegisterStep2 = (props: any) => {
-	const cx = classNames.bind(Style);
 	const labelSize = 'h4';
 
 	const dispatch = useDispatch();

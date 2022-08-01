@@ -43,9 +43,6 @@ const RegisterStep1 = (props: any) => {
 	const userIdRef = useRef<any>();
 	const userPwRef = useRef<any>();
 
-	// TODO: remove useEffect
-	useEffect(() => {});
-
 	// TODO: 값들을 store에 관리하지 않을 경우 dispatch로 할 필요 없음... util 이걸 처리할 함수를 만들거나 store에 state 관리
 	const clickNext = () => {
 		dispatch({
