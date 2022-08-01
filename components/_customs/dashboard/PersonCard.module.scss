@@ -1,0 +1,36 @@
+.userAvatarArea {
+	padding-bottom: 5px;
+	border-bottom: 1px solid #f5b7b1;
+	position: relative;
+	user-select: none;
+	cursor: pointer;
+
+	.userClickPopup {
+		position: absolute;
+		right: 20%;
+		top: 110%;
+		background-color: #424949;
+		margin-top: -2px;
+		width: 150px;
+		border-radius: 10px;
+		padding: 0px 20px;
+		color: white;
+		z-index: 1000;
+		cursor: pointer;
+
+		user-select: none;
+
+		div {
+			margin: 10px 0px;
+		}
+
+		& > div:hover {
+			color: #a9dfbf;
+		}
+	}
+
+	img {
+		width: 35px !important;
+		height: 35px !important;
+	}
+}

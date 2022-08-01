@@ -1,4 +1,13 @@
-import { ChangeEvent, forwardRef, useEffect, useState } from 'react';
+/** ****************************************************************************************
+ * @설명 : Input Default
+ ********************************************************************************************
+ * 번호    작업자     작업일         브랜치                       변경내용
+ *-------------------------------------------------------------------------------------------
+ * 1      변지욱      2022-06-16     feature/JW/input            최초작성
+ * 2      변지욱      2022-07-10     feature/JW/loginValidation  onChange to useCallback
+ ********************************************************************************************/
+
+import { ChangeEvent, forwardRef, useState, useCallback } from 'react';
 import { Input } from 'semantic-ui-react';
 import { IInputDefault } from '@utils/types/componentTypes';
 
@@ -24,16 +33,16 @@ const InputDefault = forwardRef<any, IInputDefault>(
 	) => {
 		const [inputValue, setInputValue] = useState(value);
 
-		const onChangeFn = (e: ChangeEvent<HTMLInputElement>) => {
-			setInputValue(e.target.value);
-		};
-
-		useEffect(() => {
-			onChange &&
-				onChange({
-					value: inputValue,
-				});
-		}, [inputValue, onChange]);
+		const onChangeFn = useCallback(
+			(e: ChangeEvent<HTMLInputElement>) => {
+				setInputValue(e.target.value);
+				onChange &&
+					onChange({
+						value: e.target.value,
+					});
+			},
+			[onChange],
+		);
 
 		return (
 			<Input
@@ -51,7 +60,7 @@ const InputDefault = forwardRef<any, IInputDefault>(
 				disabled={disabled}
 				maxLength={maxLength}
 				style={stretch ? { width: '100%' } : {}}
-				onKeyUp={(evt: any) => evt.keyCode === 13 && onEnter && onEnter()}
+				onKeyUp={(evt: KeyboardEvent) => evt.key === 'Enter' && onEnter && onEnter()}
 			/>
 		);
 	},

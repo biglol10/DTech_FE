@@ -1,9 +1,10 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import Testcomponent from '@components/Testcomponent';
 import { useSelector, useDispatch } from 'react-redux';
 import { increment } from '@store/counterSlice';
 import Link from 'next/link';
-import { Message, Image } from 'semantic-ui-react';
+import { useRouter } from 'next/router';
+import { Message, Image, Icon } from 'semantic-ui-react';
 import NextImage from 'next/image';
 import pic from '@public/images/react.jpeg';
 
@@ -11,20 +12,45 @@ import {
 	Accordion,
 	Box,
 	Button,
-	InputDefault,
+	InputDropdown,
 	CheckboxDefault,
 	CheckboxListDefault,
 	Toggle,
 	Radio,
-	TNSkill,
-	TNSkillFlow,
+	InputLayout,
+	Label,
 } from '@components/index';
+
+import Style from './examplePage/examplePage.module.scss';
+
+const options = [
+	{ key: 'angular', text: 'Angular', value: 'angular' },
+	{ key: 'css', text: 'CSS', value: 'css' },
+	{ key: 'design', text: 'Graphic Design', value: 'design' },
+	{ key: 'ember', text: 'Ember', value: 'ember' },
+	{ key: 'html', text: 'HTML', value: 'html' },
+	{ key: 'ia', text: 'Information Architecture', value: 'ia' },
+	{ key: 'javascript', text: 'Javascript', value: 'javascript' },
+	{ key: 'mech', text: 'Mechanical Engineering', value: 'mech' },
+	{ key: 'meteor', text: 'Meteor', value: 'meteor' },
+	{ key: 'node', text: 'NodeJS', value: 'node' },
+	{ key: 'plumbing', text: 'Plumbing', value: 'plumbing' },
+	{ key: 'python', text: 'Python', value: 'python' },
+	{ key: 'rails', text: 'Rails', value: 'rails' },
+	{ key: 'react', text: 'React', value: 'react' },
+	{ key: 'repair', text: 'Kitchen Repair', value: 'repair' },
+	{ key: 'ruby', text: 'Ruby', value: 'ruby' },
+	{ key: 'ui', text: 'UI Design', value: 'ui' },
+	{ key: 'ux', text: 'User Experience', value: 'ux' },
+];
 
 const Index = () => {
 	const [inputValue, setInputValue] = useState(2);
 	const dispatch = useDispatch();
 	const counter = useSelector((state: any) => state.counter.count);
 	const [loading, setLoading] = useState(false);
+
+	const router = useRouter();
 
 	const randomComputation = () => {
 		dispatch({ type: 'RANDOMCOMPUTATION', setLoading });
@@ -42,8 +68,6 @@ const Index = () => {
 		// alert(typeof inputValue); // number
 		dispatch({ type: 'ADDBYAMOUNT', data: inputValue });
 	};
-
-	const inputRef = useRef();
 
 	const items = [
 		{
@@ -92,6 +116,9 @@ const Index = () => {
 			</Link>
 			<br />
 			<br />
+			<button onClick={() => router.push('/dashboard')}>GoToDashboardPage</button>
+			<br />
+			<br />
 			<button onClick={() => addOneNumber()}>add one number</button>
 			<br />
 			<br />
@@ -124,7 +151,11 @@ const Index = () => {
 			{loading ? <h1>Loading...</h1> : <h1>Done</h1>}
 			<br />
 			<br />
+
 			<Accordion id="accordionId" items={items} />
+
+			<br />
+			<br />
 
 			<Testcomponent />
 			<br />
@@ -171,26 +202,44 @@ const Index = () => {
 				onChange={(args: any) => console.log(args)}
 			/>
 			<br />
-			<h2>TNSkill</h2>
-			<TNSkill id="testTNSkill" name="nextjs" href="/anotherPage" />
-			<br />
-			<TNSkillFlow
-				items={[
-					{ name: 'react' },
-					{ name: 'nextjs' },
-					{ name: 'vuejs' },
-					{ name: 'nodejs' },
-					{ name: 'react' },
-					{ name: 'nextjs' },
-					{ name: 'vuejs' },
-					{ name: 'nodejs' },
-				]}
-			/>
 
 			<br />
 			<br />
 
 			<NextImage src={pic} width={500} height={500} />
+
+			<InputLayout
+				inputLabel="dropdown"
+				inputLabelSize="h4"
+				showInputLabel={true}
+				spacing={32}
+			>
+				<InputDropdown
+					id={Style['inputDropdown']}
+					placeholder="선택해주세요"
+					value={''}
+					options={options}
+				/>
+			</InputLayout>
+
+			<br />
+			<br />
+
+			<Label
+				basic
+				content="username"
+				iconOrImage="image"
+				icon={
+					<Image
+						src={`${
+							process.env.NODE_ENV === 'production' ? 'dtech' : ''
+						}/images/no_profile.png`}
+						avatar
+					/>
+				}
+				color="black"
+				borderNone
+			/>
 		</div>
 	);
 };

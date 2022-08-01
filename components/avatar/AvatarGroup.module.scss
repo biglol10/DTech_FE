@@ -1,0 +1,46 @@
+.avatarGroup {
+	display: flex;
+	margin-top: var(--spacing);
+	height: var(--divHeight);
+	position: relative;
+
+	.avatarUser {
+		display: unset;
+		position: relative;
+		border: 1px solid white;
+
+		&.showBorder {
+			border: 1px solid #bdc3c7;
+		}
+
+		&.hideBorder {
+			border: 1px solid initial;
+		}
+
+		.userImage {
+			border: 1px solid #fff;
+			border-radius: 4px;
+			height: var(--divHeight);
+			width: var(--divHeight);
+			text-indent: 100%;
+			overflow: hidden;
+			white-space: nowrap;
+			position: relative;
+		}
+
+		.userImage:not(:first-child) {
+			margin-left: -4px;
+		}
+
+		.userImage:last-child {
+			margin-right: 0px;
+		}
+	}
+
+	.avatarUserCount {
+		color: #696969;
+		font-size: 0.875rem;
+		line-height: var(--divHeight);
+		margin-left: 10px;
+	}
+}

@@ -1,3 +1,11 @@
+/** ****************************************************************************************
+ * @설명 : _document.tsx
+ ********************************************************************************************
+ * 번호    작업자     작업일         브랜치                       변경내용
+ *-------------------------------------------------------------------------------------------
+ * 1      변지욱     2022-06-16                              script 넣는 용도
+ ********************************************************************************************/
+
 import { Html, Head, Main, NextScript } from 'next/document';
 
 export default function Document() {
@@ -13,11 +21,12 @@ export default function Document() {
 					href="https://fonts.googleapis.com/icon?family=Material+Icons"
 					rel="stylesheet"
 				/>
+
 				{/* This is for favicon */}
-				<link rel="icon" href="dtech/favicon.ico" type="image/x-icon" />
+				{/* <link rel="icon" href="dtech/favicon.ico" type="image/x-icon" /> */}
 				<link
 					rel="icon"
-					href={`${process.env.MODE_ENV === 'production' ? 'dtech' : ''}/favicon.ico`}
+					href={`${process.env.NODE_ENV === 'production' ? 'dtech' : ''}/favicon.ico`}
 					type="image/x-icon"
 				/>
 			</Head>

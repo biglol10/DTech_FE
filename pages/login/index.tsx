@@ -1,16 +1,25 @@
 /** ****************************************************************************************
- * @설명     : 로그인 페이지
+ * @설명 : 로그인 페이지
  ********************************************************************************************
- * 번호    작업자     작업일         브랜치                      변경내용
+ * 번호    작업자     작업일         브랜치                       변경내용
  *-------------------------------------------------------------------------------------------
- * 1      변지욱     2022-07-06   feature/JW/loginpage      최초작성
+ * 1      변지욱      2022-07-06     feature/JW/loginpage        최초작성
+ * 2      변지욱      2022-07-08     feature/JW/loginApi         loginApi request 적용
+ * 3      변지욱      2022-07-09     feature/JW/divscroll        div scroll 예시적용 (필요없으면 롤백 예정)
+ * 4      변지욱      2022-07-10     feature/JW/loginValidation  LoginValidation added and scroll rollback
+ * 5      장보영      2022-07-20     feature/BY/register         회원가입 페이지 이동
  ********************************************************************************************/
 
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { Icon } from 'semantic-ui-react';
-import { Button, InputLayout, Label, InputWithIcon } from '@components/index';
+import { Button, InputLayout, Label, InputWithIcon, SharpDivider } from '@components/index';
 import classNames from 'classnames/bind';
+import Link from 'next/link';
+import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
+import cookie from 'js-cookie';
+import { toast } from 'react-toastify';
 
 import LeftBackground1 from '@public/background/loginLeft.png';
 import LeftBackground2 from '@public/background/loginLeft2.png';
@@ -19,10 +28,11 @@ import DLogo from '@public/images/DLogo2.png';
 import Style from './Login.module.scss';
 
 const Login = () => {
-	const regEmail =
-		/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-
 	const labelSize = 'h4';
+
+	const router = useRouter();
+
+	const dispatch = useDispatch();
 
 	const cx = classNames.bind(Style);
 	const leftBackground = [LeftBackground1, LeftBackground2, LeftBackground3];
@@ -43,7 +53,27 @@ const Login = () => {
 	}, []);
 
 	const userLogin = () => {
-		alert('trying login');
+		dispatch({
+			type: 'AUTH_SETTING',
+			setIdInputError,
+			setPwInputError,
+			userSetting: {
+				userId: idInputValue,
+				password: pwInputValue,
+			},
+			callbackFn: (data: any) => {
+				if (data.result === 'success') {
+					cookie.set('token', data.userToken);
+					router.push('/');
+				} else {
+					dispatch({
+						type: 'TOAST_SETTING',
+						position: 'bottom-left',
+					});
+					toast['error'](<>{'login failed'}</>);
+				}
+			},
+		});
 	};
 
 	return (
@@ -123,7 +153,7 @@ const Login = () => {
 					/>
 					<InputLayout
 						error={idInputError}
-						errorMsg="아이디를 올바로 입력해주세요"
+						errorMsg="아이디를 올바르게 입력해주세요"
 						stretch={true}
 						inputLabel="아이디"
 						inputLabelSize={labelSize}
@@ -139,8 +169,8 @@ const Login = () => {
 							size="large"
 							onChange={(obj: { value: string }) => {
 								setIdInputValue(obj.value);
-								obj.value.length !== 0 &&
-									setIdInputError(!regEmail.test(obj.value));
+
+								setIdInputError(false);
 							}}
 							className={Style['inputIdField']}
 							inputIcon={<Icon name="user" />}
@@ -150,7 +180,7 @@ const Login = () => {
 
 					<InputLayout
 						error={pwInputError}
-						errorMsg="비밀번호는 최소 6자리입니다"
+						errorMsg="비밀번호를 올바르게 입력해주세요"
 						stretch={true}
 						inputLabel="비밀번호"
 						inputLabelSize={labelSize}
@@ -167,11 +197,7 @@ const Login = () => {
 							onChange={(obj: { value: string }) => {
 								setPwInputValue(obj.value);
 
-								if (obj.value.length !== 0) {
-									const pwRegex = /^.{6,30}$/;
-
-									setPwInputError(!pwRegex.test(obj.value));
-								}
+								setPwInputError(false);
 							}}
 							className={Style['inputPwField']}
 							inputIcon={<Icon name="lock" />}
@@ -179,7 +205,6 @@ const Login = () => {
 							onEnter={() => userLogin()}
 						/>
 					</InputLayout>
-
 					<Button
 						className={Style['loginButton']}
 						spacing={7}
@@ -188,19 +213,17 @@ const Login = () => {
 						onClick={() => userLogin()}
 					/>
 
-					<div className={Style['divider']}>
-						<span></span>
-						<span>No Account ?</span>
-						<span></span>
-					</div>
+					<SharpDivider content="No Account ?" />
 
-					<Button
-						className={Style['registerButton']}
-						content="회원가입"
-						size="large"
-						color="google plus"
-						buttonType="none"
-					/>
+					<Link href="/register">
+						<Button
+							className={Style['registerButton']}
+							content="회원가입"
+							size="large"
+							color="google plus"
+							buttonType="none"
+						/>
+					</Link>
 				</div>
 			</main>
 		</div>

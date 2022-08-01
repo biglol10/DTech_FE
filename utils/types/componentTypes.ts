@@ -1,3 +1,11 @@
+/** ****************************************************************************************
+ * @설명 : 컴포넌트에 쓰이는 interface / type
+ ********************************************************************************************
+ * 번호    작업자     작업일         브랜치                       변경내용
+ *-------------------------------------------------------------------------------------------
+ * 1      변지욱     2022-06-16                              최초작성
+ ********************************************************************************************/
+
 import { ReactNode, JSXElementConstructor as JSX } from 'react';
 import { ButtonProps, StrictLabelProps } from 'semantic-ui-react';
 
@@ -42,10 +50,12 @@ export interface IInputWithIcon extends IInputDefault {
 	inputIcon?: ReactNode;
 }
 
+export interface IInputPhone extends IInputDefault {}
+
 export interface IButton {
 	className?: string;
 	buttonType?: 'primary' | 'secondary' | 'none';
-	content?: string;
+	content: string | JSX.Element;
 	basic?: boolean;
 	color?: ButtonProps['color'];
 	size?: IInputDefault['size'];
@@ -79,14 +89,15 @@ export interface ICheckboxListDefault {
 
 export interface ILabel {
 	basic?: boolean;
-	content?: string;
+	content?: string | JSX.Element;
 	iconOrImage?: 'icon' | 'image' | 'none';
 	icon?: ReactNode;
 	nextImage?: JSX.Element;
-	color?: StrictLabelProps['color'];
+	color?: string;
 	borderNone?: boolean;
 	size?: StrictLabelProps['size'];
 	spacing?: number;
+	paddingNone?: boolean;
 }
 
 export interface IAccordionItems {
@@ -143,4 +154,31 @@ export interface ISNSkillFlow {
 	id?: string;
 	spacing?: number;
 	items?: Array<{ id?: string; name?: string; href?: string }>;
+}
+
+export interface IInputDropdown {
+	id?: string;
+	className?: string;
+	placeholder?: string;
+	value?: string | string[];
+	options?: object[];
+	onChange?: Function;
+	loading?: boolean;
+	multiple?: boolean;
+	disabled?: boolean;
+	stretch?: boolean;
+	error?: boolean;
+	onEnter?: Function;
+	keyboardInput?: boolean;
+}
+
+export interface IAvatar {
+	id?: string;
+	src?: any;
+	content: string | JSX.Element;
+	color?: string;
+	spacing?: number;
+	avatar?: boolean;
+	imageSize?: 'mini' | 'small' | 'large' | 'big' | 'huge' | 'massive';
+	labelSize?: 'mini' | 'small' | 'large' | 'big' | 'huge' | 'massive';
 }

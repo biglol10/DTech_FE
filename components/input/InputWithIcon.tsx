@@ -1,4 +1,13 @@
-import { ChangeEvent, forwardRef, useEffect, useState } from 'react';
+/** ****************************************************************************************
+ * @설명 : Input With Icon
+ ********************************************************************************************
+ * 번호    작업자     작업일         브랜치                       변경내용
+ *-------------------------------------------------------------------------------------------
+ * 1      변지욱      2022-06-16     feature/JW/input            최초작성
+ * 2      변지욱      2022-07-10     feature/JW/loginValidation  onChange to useCallback
+ ********************************************************************************************/
+
+import { ChangeEvent, forwardRef, useCallback, useState } from 'react';
 import { Icon, Input } from 'semantic-ui-react';
 import { IInputWithIcon } from '@utils/types/componentTypes';
 
@@ -24,17 +33,16 @@ const InputWithIcon = forwardRef<any, IInputWithIcon>(
 		ref,
 	) => {
 		const [inputValue, setInputValue] = useState(value);
-
-		const onChangeFn = (e: ChangeEvent<HTMLInputElement>) => {
-			setInputValue(e.target.value);
-		};
-
-		useEffect(() => {
-			onChange &&
-				onChange({
-					value: inputValue,
-				});
-		}, [inputValue, onChange]);
+		const onChangeFn = useCallback(
+			(e: ChangeEvent<HTMLInputElement>) => {
+				setInputValue(e.target.value);
+				onChange &&
+					onChange({
+						value: e.target.value,
+					});
+			},
+			[onChange],
+		);
 
 		return (
 			<Input
@@ -53,7 +61,7 @@ const InputWithIcon = forwardRef<any, IInputWithIcon>(
 				disabled={disabled}
 				maxLength={maxLength}
 				style={stretch ? { width: '100%' } : {}}
-				onKeyUp={(evt: any) => evt.keyCode === 13 && onEnter && onEnter()}
+				onKeyUp={(evt: KeyboardEvent) => evt.key === 'Enter' && onEnter && onEnter()}
 			>
 				{inputIcon}
 				<input />
@@ -63,5 +71,4 @@ const InputWithIcon = forwardRef<any, IInputWithIcon>(
 );
 
 InputWithIcon.displayName = 'InputWithIcon';
-
 export default InputWithIcon;
