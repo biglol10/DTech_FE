@@ -120,7 +120,7 @@ const DTechQuill = ({ handleSubmit = null }: { handleSubmit?: any }) => {
 							setUrlPreviewList([]);
 						},
 					},
-					paste: {
+					pasteWin: {
 						key: 86,
 						ctrlKey: true,
 						handler: (range: any, context: any) => {
@@ -129,6 +129,15 @@ const DTechQuill = ({ handleSubmit = null }: { handleSubmit?: any }) => {
 							alert('SADFASF');
 						},
 					},
+					// pasteMac: {
+					// 	key: 86,
+					// 	metaKey: true,
+					// 	handler: (range: any, context: any) => {
+					// 		console.log(range);
+					// 		console.log(context);
+					// 		alert('WQERQWRWQR');
+					// 	},
+					// },
 				},
 			},
 		}),
@@ -178,6 +187,7 @@ const DTechQuill = ({ handleSubmit = null }: { handleSubmit?: any }) => {
 					formats={formats}
 					value={quillContext}
 					onChange={(content: string) => {
+						console.log(content);
 						setTempQuillContext(content);
 					}}
 				/>
