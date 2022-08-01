@@ -9,6 +9,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { toast } from 'react-toastify';
+import { generateImageUID } from '@utils/appRelated/helperFunctions';
 
 import PrevieImageComp from './PreviewImageComp';
 import Style from './DTechQuill.module.scss';
@@ -25,7 +26,7 @@ const ReactQuill = dynamic(
 );
 
 const DTechQuill = ({ handleSubmit = null }: { handleSubmit?: any }) => {
-	const [quillContext, setQuillContext] = useState('<p></p>');
+	const [quillContext, setQuillContext] = useState('<p>&nbsp;</p>');
 
 	const [tempQuillContext, setTempQuillContext] = useState('');
 	const [imageCounter, setImageCounter] = useState(0);
@@ -116,19 +117,19 @@ const DTechQuill = ({ handleSubmit = null }: { handleSubmit?: any }) => {
 									value: quillContext,
 									imgList: urlPreviewList,
 								});
-							setQuillContext('<p></p>');
+							setQuillContext('<p>&nbsp;</p>');
 							setUrlPreviewList([]);
 						},
 					},
-					pasteWin: {
-						key: 86,
-						ctrlKey: true,
-						handler: (range: any, context: any) => {
-							console.log(range);
-							console.log(context);
-							alert('SADFASF');
-						},
-					},
+					// pasteWin: {
+					// 	key: 86,
+					// 	ctrlKey: true,
+					// 	handler: (range: any, context: any) => {
+					// 		console.log(range);
+					// 		console.log(context);
+					// 		alert('SADFASF');
+					// 	},
+					// },
 					// pasteMac: {
 					// 	key: 86,
 					// 	metaKey: true,
@@ -167,7 +168,32 @@ const DTechQuill = ({ handleSubmit = null }: { handleSubmit?: any }) => {
 
 	// onChange에서 바로 setQuillContext하면 버그발생
 	useEffect(() => {
-		setQuillContext(tempQuillContext);
+		if (tempQuillContext.indexOf('<img src="') < 0) {
+			setQuillContext(tempQuillContext);
+		} else {
+			const mediaPreview = tempQuillContext.substring(
+				tempQuillContext.indexOf('<img src="') + 10,
+				tempQuillContext.indexOf('"></p>'),
+			);
+
+			const filteredString = tempQuillContext.replace(`<img src="${mediaPreview}">`, '');
+
+			if (mediaPreview && filteredString) {
+				setQuillContext(filteredString);
+				if (urlPreviewList.length >= 6) {
+					toast['error'](<>{'이미지는 최대 6개로 제한합니다'}</>);
+				} else {
+					setUrlPreviewList((prev: any) => [
+						...prev,
+						{
+							fileName: generateImageUID(),
+							filePreview: mediaPreview,
+						},
+					]);
+				}
+			}
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [tempQuillContext]);
 
 	const changeUrlPreviewList = useCallback(
@@ -187,7 +213,6 @@ const DTechQuill = ({ handleSubmit = null }: { handleSubmit?: any }) => {
 					formats={formats}
 					value={quillContext}
 					onChange={(content: string) => {
-						console.log(content);
 						setTempQuillContext(content);
 					}}
 				/>
