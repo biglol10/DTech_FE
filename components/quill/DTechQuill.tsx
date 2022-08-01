@@ -1,7 +1,16 @@
+/** ****************************************************************************************
+ * @설명 : Quill component
+ ********************************************************************************************
+ * 번호    작업자     작업일         브랜치                       변경내용
+ *-------------------------------------------------------------------------------------------
+ * 1      변지욱     2022-08-01   feature/JW/quill            최초작성
+ ********************************************************************************************/
+
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { toast } from 'react-toastify';
-import CloseSvg from '@styles/svg/imgClose.svg';
+
+import PrevieImageComp from './PreviewImageComp';
 import Style from './DTechQuill.module.scss';
 
 const ReactQuill = dynamic(
@@ -15,16 +24,11 @@ const ReactQuill = dynamic(
 	{ ssr: false },
 );
 
-const DTechQuill = ({
-	value = '<p></p>',
-	handleSubmit = null,
-}: {
-	value?: string;
-	handleSubmit?: any;
-}) => {
-	const [quillContext, setQuillContext] = useState(value);
+const DTechQuill = ({ handleSubmit = null }: { handleSubmit?: any }) => {
+	const [quillContext, setQuillContext] = useState('<p></p>');
+
 	const [tempQuillContext, setTempQuillContext] = useState('');
-	const [imageHover, setImageHover] = useState(false);
+	const [imageCounter, setImageCounter] = useState(0);
 	const quillRef = useRef<any>();
 
 	const [urlPreviewList, setUrlPreviewList] = useState<any>([]);
@@ -64,8 +68,13 @@ const DTechQuill = ({
 
 					setUrlPreviewList([
 						...urlPreviewList,
-						{ fileName: input.files[0].name, filePreview: mediaPreview },
+						{
+							fileName: `${input.files[0].name}_${imageCounter}`,
+							filePreview: mediaPreview,
+						},
 					]);
+
+					setImageCounter(imageCounter + 1);
 				} else {
 					toast['error'](<>{'이미지 타입이나 사이즈를 체크해주세요'}</>);
 				}
@@ -77,7 +86,7 @@ const DTechQuill = ({
 				fileInput.remove();
 			}
 		};
-	}, [urlPreviewList]);
+	}, [imageCounter, urlPreviewList]);
 
 	const modules = useMemo(
 		() => ({
@@ -106,7 +115,6 @@ const DTechQuill = ({
 								handleSubmit({
 									value: quillContext,
 									imgList: urlPreviewList,
-									urlPreviewList,
 								});
 							setQuillContext('<p></p>');
 							setUrlPreviewList([]);
@@ -144,6 +152,13 @@ const DTechQuill = ({
 		setQuillContext(tempQuillContext);
 	}, [tempQuillContext]);
 
+	const changeUrlPreviewList = useCallback(
+		(fileName: string) => {
+			setUrlPreviewList(urlPreviewList.filter((item: any) => item.fileName !== fileName));
+		},
+		[urlPreviewList],
+	);
+
 	return (
 		<>
 			<ReactQuill
@@ -152,25 +167,20 @@ const DTechQuill = ({
 				modules={modules}
 				formats={formats}
 				value={quillContext}
-				onChange={(content: any) => {
+				onChange={(content: string) => {
 					setTempQuillContext(content);
 				}}
 			/>
+
 			<div className={Style['imageListArea']}>
 				{urlPreviewList.map((item: any, idx: number) => {
 					return (
-						<div
-							key={`urlPreview_${idx}`}
-							onMouseEnter={() => setImageHover(true)}
-							onMouseLeave={() => setImageHover(false)}
-						>
-							<img src={item.filePreview} alt="" />
-							{imageHover && (
-								<button>
-									<CloseSvg />
-								</button>
-							)}
-						</div>
+						<PrevieImageComp
+							key={item.fileName}
+							fileName={item.fileName}
+							filePreview={item.filePreview}
+							changeUrlPreviewList={changeUrlPreviewList}
+						/>
 					);
 				})}
 			</div>
