@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { increment } from '@store/counterSlice';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Message, Image, Icon } from 'semantic-ui-react';
+import { Message, Image } from 'semantic-ui-react';
 import NextImage from 'next/image';
 import pic from '@public/images/react.jpeg';
 
@@ -19,7 +19,9 @@ import {
 	Radio,
 	InputLayout,
 	Label,
+	DTechQuill,
 } from '@components/index';
+import { MainLayoutTemplate } from '@components/customs';
 
 import Style from './examplePage/examplePage.module.scss';
 
@@ -133,6 +135,17 @@ const Index = () => {
 			<br />
 			<br />
 
+			<div style={{ backgroundColor: 'white' }}>
+				<DTechQuill
+					handleSubmit={(obj: any) => {
+						console.log(obj);
+					}}
+				/>
+			</div>
+
+			<br />
+			<br />
+
 			<Box id="sampleBoxId" spacing={32} boxType="error">
 				alskdfalskfjqwpoieuqwer
 			</Box>
@@ -243,5 +256,7 @@ const Index = () => {
 		</div>
 	);
 };
+
+Index.PageLayout = MainLayoutTemplate;
 
 export default Index;

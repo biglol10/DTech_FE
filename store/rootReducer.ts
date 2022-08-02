@@ -36,7 +36,7 @@ const rootReducer = (state: any, action: any) => {
 				testApi: testApiReducer,
 				modal: modalSlice,
 				auth: authSlice,
-				toastInfo: toastSlice, 
+				toastInfo: toastSlice,
 			});
 
 			return combinedReducer(state, action);
@@ -87,4 +87,5 @@ const makeStore = () => {
 
 const wrapper = createWrapper(makeStore, { debug: devMode });
 
+export { makeStore };
 export default wrapper;

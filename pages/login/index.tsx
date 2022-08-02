@@ -216,13 +216,15 @@ const Login = () => {
 					<SharpDivider content="No Account ?" />
 
 					<Link href="/register">
-						<Button
-							className={Style['registerButton']}
-							content="회원가입"
-							size="large"
-							color="google plus"
-							buttonType="none"
-						/>
+						<a>
+							<Button
+								className={Style['registerButton']}
+								content="회원가입"
+								size="large"
+								color="google plus"
+								buttonType="none"
+							/>
+						</a>
 					</Link>
 				</div>
 			</main>

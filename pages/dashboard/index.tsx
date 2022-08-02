@@ -22,7 +22,7 @@ import {
 } from 'chart.js';
 import { Label, InputLayout, InputDropdown, InputSearch, SharpDivider } from '@components/index';
 import { techImage } from '@utils/constants/techs';
-import { SkillTable, PersonCard } from '@components/customs';
+import { SkillTable, PersonCard, MainLayoutTemplate } from '@components/customs';
 import Style from './dashboard.module.scss';
 
 interface ITeamSkillData {
@@ -362,5 +362,7 @@ export const getServerSideProps = async (context: any) => {
 		},
 	};
 };
+
+Index.PageLayout = MainLayoutTemplate;
 
 export default Index;
