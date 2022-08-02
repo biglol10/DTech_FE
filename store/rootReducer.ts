@@ -89,4 +89,5 @@ const makeStore = () => {
 
 const wrapper = createWrapper(makeStore, { debug: devMode });
 
+export { makeStore };
 export default wrapper;

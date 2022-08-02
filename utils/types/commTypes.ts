@@ -5,4 +5,5 @@ export interface IModalState {
 	modalTitle?: string;
 	modalContent?: React.ReactNode;
 	modalSize?: string;
+	modalIsBasic?: boolean;
 }

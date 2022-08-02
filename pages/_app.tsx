@@ -7,7 +7,7 @@
  * 2      변지욱     2022-07-13                              페이지에 따른 레이아웃 적용
  ********************************************************************************************/
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import { AppProps } from 'next/app';
 import wrapper from '@store/rootReducer';
 import { ModalPopup } from '@components/index';
@@ -15,37 +15,20 @@ import Head from 'next/head';
 import { parseCookies, destroyCookie } from 'nookies';
 import { redirectUser } from '@utils/appRelated/authUser';
 import { useSelector, useDispatch } from 'react-redux';
-import { ToastContainer } from 'react-toastify';
 
 import '@styles/globals.scss';
 import 'semantic-ui-css/semantic.min.css';
 import 'react-quill/dist/quill.snow.css';
-import 'react-toastify/dist/ReactToastify.css';
 
 import { MainLayoutTemplate } from '@components/customs';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
 	const authStore = useSelector((state: any) => state.auth);
-	const toastInfo = useSelector((state: any) => state.toastInfo);
 	const dispatch = useDispatch();
 
-	// if (!authStore || !authStore.userName || !authStore.userToken) {
-	// 	dispatch({ type: 'AUTH_SETTING_BY_TOKEN', token: pageProps.token });
-	// }
-
-	const toastMemo = useMemo(() => {
-		return (
-			<ToastContainer
-				position={toastInfo.position}
-				autoClose={toastInfo.autoClose}
-				hideProgressBar={toastInfo.hideProgressBar}
-				newestOnTop={false}
-				draggable={false}
-				closeOnClick
-				pauseOnHover
-			/>
-		);
-	}, [toastInfo.autoClose, toastInfo.hideProgressBar, toastInfo.position]);
+	if (!authStore || !authStore.userName || !authStore.userToken) {
+		dispatch({ type: 'AUTH_SETTING_BY_TOKEN', token: pageProps.token });
+	}
 
 	return (
 		<>
@@ -59,13 +42,11 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 						<Component {...pageProps} />
 					</MainLayoutTemplate>
 					<ModalPopup />
-					{toastMemo}
 				</>
 			) : (
 				<>
 					<Component {...pageProps} />
 					<ModalPopup />
-					{toastMemo}
 				</>
 			)}
 		</>
@@ -84,7 +65,6 @@ MyApp.getInitialProps = async ({ Component, ctx }: any) => {
 		'/post/[postId]',
 		'/messages',
 		'/search',
-		'/dashboard',
 	];
 
 	const protectedRoutes = protectedRoutesArray.includes(ctx.pathname);

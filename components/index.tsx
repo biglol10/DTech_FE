@@ -20,6 +20,7 @@ import { Tabs, TabHeader, Tab, TabPanels, TabPanel } from './tab/Tab';
 import Avatar from './avatar/Avatar';
 import AvatarGroup from './avatar/AvatarGroup';
 import SharpDivider from './sharpDivider/SharpDivider';
+import DTechQuill from './quill/DTechQuill';
 
 export {
 	Accordion,
@@ -48,4 +49,5 @@ export {
 	TabPanels,
 	TabPanel,
 	SharpDivider,
+	DTechQuill,
 };

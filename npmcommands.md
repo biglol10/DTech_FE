@@ -21,6 +21,7 @@ npm i sharp <= For production Image Optimization with Next.js, the optional 'sha
 npm i react-quill --force
 npm i react-chartjs-2
 npm i lodash
+npm install --save-dev @svgr/webpack => [svg import하는 방법] https://velog.io/@devstefancho/next-next.js%EC%97%90%EC%84%9C-svg%EB%A5%BC-import%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95
 
 <!-- npm i -D @mdx-js/react
 npm i -D @storybook/manager-webpack5 @storybook/builder-webpack5

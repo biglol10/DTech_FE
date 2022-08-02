@@ -4,6 +4,7 @@
  * 번호    작업자     작업일         브랜치                       변경내용
  *-------------------------------------------------------------------------------------------
  * 1      변지욱     2022-06-16                              최초작성
+ * 2      변지욱     2022-08-01   feature/JW/quill           basic prop 관리/추가
  ********************************************************************************************/
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -17,6 +18,7 @@ const ModalPopup = () => {
 	const content = modalState.modalContent;
 	const modalSize = modalState.modalSize || modalUISize.SMALL;
 	const title = modalState.modalTitle || '';
+	const isBasic = modalState.modalIsBasic || false;
 
 	const handleClose = () => {
 		dispatch({ type: 'MODALCONTROL', modalOpen: false });
@@ -24,7 +26,7 @@ const ModalPopup = () => {
 
 	return (
 		<div>
-			<Modal open={open} onClose={handleClose} size={modalSize}>
+			<Modal open={open} onClose={handleClose} size={modalSize} basic={isBasic}>
 				{title && <Modal.Header>{title}</Modal.Header>}
 				<Modal.Content>{content}</Modal.Content>
 			</Modal>
