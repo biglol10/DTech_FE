@@ -21,6 +21,7 @@ import {
 	Label,
 	DTechQuill,
 } from '@components/index';
+import { MainLayoutTemplate } from '@components/customs';
 
 import Style from './examplePage/examplePage.module.scss';
 
@@ -255,5 +256,7 @@ const Index = () => {
 		</div>
 	);
 };
+
+Index.PageLayout = MainLayoutTemplate;
 
 export default Index;

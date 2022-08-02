@@ -106,6 +106,7 @@ $transitionTime: 0.4s;
 	position: relative;
 
 	.loginButton,
+	& > a,
 	.registerButton {
 		width: 100%;
 	}

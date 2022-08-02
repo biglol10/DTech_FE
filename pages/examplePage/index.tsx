@@ -22,6 +22,7 @@ import {
 	TNSkillFlow,
 	InputLayout,
 } from '@components/index';
+import { MainLayoutTemplate } from '@components/customs';
 
 import Style from './examplePage.module.scss';
 
@@ -340,5 +341,7 @@ const Index = () => {
 		</div>
 	);
 };
+
+Index.PageLayout = MainLayoutTemplate;
 
 export default Index;
