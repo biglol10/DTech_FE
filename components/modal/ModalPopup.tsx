@@ -26,7 +26,7 @@ const ModalPopup = () => {
 
 	return (
 		<div>
-			<Modal open={open} onClose={handleClose} size={modalSize} basic={isBasic}>
+			<Modal open={open} onClose={handleClose} size={modalSize} basic={isBasic} closeIcon>
 				{title && <Modal.Header>{title}</Modal.Header>}
 				<Modal.Content>{content}</Modal.Content>
 			</Modal>
