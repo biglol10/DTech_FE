@@ -5,6 +5,7 @@ import CheckboxDefault from './checkbox/CheckboxDefault';
 import InputSearch from './input/InputSearch';
 import InputWithIcon from './input/InputWithIcon';
 import InputDropdown from './input/inputDropdown';
+import InputPhone from './input/InputPhone';
 import Button from './button/Button';
 import Label from './label/Label';
 import Accordion from './accordion/Accordion';
@@ -31,6 +32,7 @@ export {
 	InputDropdown,
 	InputSearch,
 	InputWithIcon,
+	InputPhone,
 	Label,
 	List,
 	ModalPopup,

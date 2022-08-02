@@ -50,6 +50,8 @@ export interface IInputWithIcon extends IInputDefault {
 	inputIcon?: ReactNode;
 }
 
+export interface IInputPhone extends IInputDefault {}
+
 export interface IButton {
 	className?: string;
 	buttonType?: 'primary' | 'secondary' | 'none';
@@ -172,7 +174,7 @@ export interface IInputDropdown {
 
 export interface IAvatar {
 	id?: string;
-	src?: string;
+	src?: any;
 	content: string | JSX.Element;
 	color?: string;
 	spacing?: number;

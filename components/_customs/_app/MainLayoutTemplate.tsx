@@ -15,6 +15,7 @@ import { Icon } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
+import cookie from 'js-cookie';
 import Style from './MainLayoutTemplate.module.scss';
 
 interface LayoutProps {
@@ -55,6 +56,11 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 			};
 		}
 	}, []);
+
+	const logout = () => {
+		cookie.remove('token');
+		router.push('/login');
+	};
 
 	return (
 		<>
@@ -214,7 +220,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 								건의사항 남기기
 							</div>
 							<hr className={Style['menu-separator']} />
-							<div>
+							<div onClick={() => logout()}>
 								<Icon name="user close" />
 								로그아웃
 							</div>

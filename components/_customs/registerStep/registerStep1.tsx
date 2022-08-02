@@ -135,7 +135,7 @@ const RegisterStep1 = (props: any) => {
 				inputLabelSize={labelSize}
 				showInputLabel={true}
 				autoFitErrorLabel={true}
-				// spacing={2}
+				spacing={20}
 			>
 				<InputWithIcon
 					id="inputId"

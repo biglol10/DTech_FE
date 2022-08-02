@@ -1,0 +1,17 @@
+.skillTableBody > tr > td:first-child > div {
+	justify-content: flex-start;
+}
+
+.skillTableBody > tr > td:first-child > div > img {
+	height: 20px !important;
+	width: 20px !important;
+}
+
+.paginationDiv {
+	display: flex;
+	justify-content: center;
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%, 0%);
+	bottom: 2%;
+}

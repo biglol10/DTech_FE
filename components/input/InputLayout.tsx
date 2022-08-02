@@ -34,7 +34,7 @@ const InputLayout = ({
 	return (
 		<div
 			style={inputElCommStyle(spacing, 'left', stretch)}
-			id={`${id}_inputDefault`}
+			id={id}
 			className={cx(className, 'inputLayoutDiv')}
 		>
 			{showInputLabel && (

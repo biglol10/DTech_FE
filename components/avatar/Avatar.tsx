@@ -14,7 +14,7 @@ import Style from './Avatar.module.scss';
 
 const Avatar = ({
 	id = '',
-	src = `${process.env.NODE_ENV === 'production' ? '/dtech' : ''}/images/no_profile.png`,
+	src = null,
 	content = '',
 	color = 'black',
 	spacing = 0,
@@ -22,7 +22,9 @@ const Avatar = ({
 	imageSize = 'mini',
 	labelSize = 'big',
 }: IAvatar) => {
-	// console.log(`env in avatar ${process.env.customKey}`);
+	const imageSrc =
+		src || `${process.env.NODE_ENV === 'production' ? '/dtech' : ''}/images/no_profile.png`;
+
 	return (
 		<>
 			<div
@@ -30,9 +32,8 @@ const Avatar = ({
 				className={Style['avatarDiv']}
 				style={{ color, ...inputElCommStyle(spacing) }}
 			>
-				<SemanticUIImage src={src} avatar={avatar} size={imageSize} />
+				<SemanticUIImage src={imageSrc} avatar={avatar} size={imageSize} />
 				<Label content={content} color={color} size={labelSize} paddingNone />
-				{/* <span>{content}</span> */}
 			</div>
 		</>
 	);
