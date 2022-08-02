@@ -4,7 +4,6 @@
  * 번호    작업자     작업일         브랜치                       변경내용
  *-------------------------------------------------------------------------------------------
  * 1      변지욱     2022-08-01   feature/JW/quill            최초작성
- * 2      변지욱     2022-08-02   feature/JW/quill            텍스트 입력 + 이미지가 6개일 때 editor에 이미지가 추가되지 않게 수정
  ********************************************************************************************/
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -169,6 +168,7 @@ const DTechQuill = ({ handleSubmit = null }: { handleSubmit?: any }) => {
 
 	// onChange에서 바로 setQuillContext하면 버그발생
 	useEffect(() => {
+		// setQuillContext(tempQuillContext);
 		if (tempQuillContext.indexOf('<img src="') < 0) {
 			setQuillContext(tempQuillContext);
 		} else {
@@ -183,9 +183,6 @@ const DTechQuill = ({ handleSubmit = null }: { handleSubmit?: any }) => {
 				setQuillContext(filteredString);
 				if (urlPreviewList.length >= 6) {
 					toast['error'](<>{'이미지는 최대 6개로 제한합니다'}</>);
-
-					// 이걸 해줘야 텍스트 입력 + 이미지가 6개일 때 editor에 이미지가 추가되지 않음
-					setUrlPreviewList((prev: any) => [...prev]);
 				} else {
 					setUrlPreviewList((prev: any) => [
 						...prev,
@@ -197,7 +194,6 @@ const DTechQuill = ({ handleSubmit = null }: { handleSubmit?: any }) => {
 				}
 			}
 		}
-		// 다른 dependency 추가하면 버그 발생
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [tempQuillContext]);
 
@@ -207,6 +203,47 @@ const DTechQuill = ({ handleSubmit = null }: { handleSubmit?: any }) => {
 		},
 		[urlPreviewList],
 	);
+
+	const handlePaste = (e: any) => {
+		e.stopPropagation();
+		e.preventDefault();
+
+		console.log('e.clipboardData is');
+		console.log(e.clipboardData);
+		console.log('window.clipboardData');
+		const clipboardData = e.clipboardData;
+
+		if (clipboardData.files && clipboardData.files.length > 0) {
+			setUrlPreviewList((prev: any) => [
+				...prev,
+				{
+					fileName: generateImageUID(),
+					filePreview: URL.createObjectURL(clipboardData.files[0]),
+				},
+			]);
+		} else {
+			const pastedData = clipboardData.getData('Text');
+
+			setTempQuillContext((prev) => prev + pastedData);
+		}
+	};
+
+	useEffect(() => {
+		setTimeout(() => {
+			const el = document.getElementsByClassName('ql-editor');
+
+			el[0].addEventListener('paste', handlePaste);
+
+			// return () => {
+			// 	el[0].removeEventListener('paste', handlePaste);
+			// };
+		}, 100);
+		// return () => {
+		// 	const el = document.getElementsByClassName('ql-editor');
+
+		// 	el[0].removeEventListener('paste', handlePaste);
+		// };
+	}, []);
 
 	return (
 		<>
