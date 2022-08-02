@@ -5,6 +5,7 @@
  *-------------------------------------------------------------------------------------------
  * 1      변지욱     2022-06-16                              최초작성
  * 2      변지욱     2022-07-13                              페이지에 따른 레이아웃 적용
+ * 3      변지욱     2022-08-02   feature/JW/quill           dispatch에 쿠키 있을 경우 로직 추가
  ********************************************************************************************/
 
 import React, { useMemo } from 'react';
@@ -33,7 +34,7 @@ const MyApp = ({ Component, pageProps }: ComponentWithPageLayout) => {
 	const toastInfo = useSelector((state: any) => state.toastInfo);
 	const dispatch = useDispatch();
 
-	if (!authStore || !authStore.userName || !authStore.userToken) {
+	if ((!authStore || !authStore.userName || !authStore.userToken) && cookie.get('token')) {
 		dispatch({ type: 'AUTH_SETTING_BY_TOKEN', token: cookie.get('token') });
 	}
 
