@@ -1,34 +1,37 @@
 /** ****************************************************************************************
- * @설명 : 회원가입 Step3 컴포넌트
+ * @설명 : 회원가입 Step6 컴포넌트
  ********************************************************************************************
  * 번호    작업자     작업일         브랜치                       변경내용
  *-------------------------------------------------------------------------------------------
- * 1      장보영      2022-07-20     feature/BY/register        최초작성
+ * 1      장보영      2022-08-01     feature/BY/register        최초작성
  ********************************************************************************************/
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TextArea } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
-import { Label, Button, InputLayout } from '@components/index';
+import { Button, InputLayout, Label } from '@components/index';
 
 import classNames from 'classnames/bind';
 import Style from './RegisterComp.module.scss';
 
-const RegisterStep3 = (props: any) => {
+const RegisterStep6 = (props: any) => {
 	const labelSize = 'h4';
 	const cx = classNames.bind(Style);
 	const dispatch = useDispatch();
-	const [userDetailValue, setUserDetailValue] = useState(
-		useSelector((state: any) => state.register.userDetailValue),
-	);
+	const [techList, setTechList] = useState();
+
+	useEffect(() => {
+		dispatch({
+			type: 'TECH_LIST',
+			setTechList,
+		});
+	});
 
 	const clickNext = (goNext: boolean) => {
 		dispatch({
-			type: 'VALID_STEP3',
-			userDetailValue,
-			setUserDetailValue,
+			type: 'VALID_STEP6',
 			goNext,
 			propFunction: props.propFunction,
 		});
@@ -38,40 +41,8 @@ const RegisterStep3 = (props: any) => {
 	return (
 		<>
 			<div style={inputElCommStyle(0, 'left', true)}>
-				<InputLayout
-					error={userDetailValue.userDetailError}
-					errorMsg="1000자 이하로 소개해주세요."
-					inputLabel="회원님을 소개해 주세요."
-					inputLabelSize={labelSize}
-					showInputLabel={true}
-					autoFitErrorLabel={true}
-					spacing={30}
-				>
-					<TextArea
-						placeholder="관심 기술, 경험 프로젝트 등(1000자 이하)"
-						className={cx('registerTextarea')}
-						value={userDetailValue.userDetailValue}
-						onChange={(e, { value }: any) => {
-							let userDetailError = false;
-
-							if (value.length > 10) {
-								userDetailError = true;
-								setUserDetailValue({
-									...userDetailValue,
-									userDetailError,
-								});
-							} else {
-								setUserDetailValue({
-									...userDetailValue,
-									userDetailError,
-									userDetailValue: value,
-								});
-							}
-
-							// setDetail(value);
-						}}
-					/>
-				</InputLayout>
+				<Label content="보유한 기술 또는 관심분야를 선택해주세요." size="large"></Label>
+				<div>{techList}</div>
 
 				<div className={Style['buttonBelow']}>
 					<Button
@@ -100,4 +71,4 @@ const RegisterStep3 = (props: any) => {
 	);
 };
 
-export default RegisterStep3;
+export default RegisterStep6;

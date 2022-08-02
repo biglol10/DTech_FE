@@ -31,8 +31,12 @@ const initialState = {
 	},
 	phoneNumValue: {
 		phoneNumValue: '',
+		phoneNumError: false,
 	},
-	userDetail: '',
+	userDetailValue: {
+		userDetailValue: '',
+		userDetailError: false,
+	},
 	userProfileImage: null,
 };
 
@@ -52,11 +56,11 @@ const registerSlice = createSlice({
 			state.phoneNumValue = action.payload.phoneNumValue || '';
 		},
 		registerStep3(state, action) {
-			state.userDetail = action.payload.userDetail || '';
+			state.userDetailValue = action.payload.userDetailValue || '';
 		},
-		registerStep4(state, action) {
-			state.userDetail = action.payload.userDetail || '';
-		},
+		// registerStep4(state, action) {
+		// 	state.userDetail = action.payload.userDetail || '';
+		// },
 		// registerReset(state) {
 		// 	state.idInputValue = '';
 		// 	state.nameInputValue = '';
@@ -70,5 +74,5 @@ const registerSlice = createSlice({
 	},
 });
 
-export const { registerStep1, registerStep2, registerStep3, registerStep4 } = registerSlice.actions;
+export const { registerStep1, registerStep2, registerStep3 } = registerSlice.actions;
 export default registerSlice.reducer;

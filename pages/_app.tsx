@@ -29,9 +29,9 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 	const toastInfo = useSelector((state: any) => state.toastInfo);
 	const dispatch = useDispatch();
 
-	if (!authStore || !authStore.userName || !authStore.userToken) {
-		dispatch({ type: 'AUTH_SETTING_BY_TOKEN', token: pageProps.token });
-	}
+	// if (!authStore || !authStore.userName || !authStore.userToken) {
+	// 	dispatch({ type: 'AUTH_SETTING_BY_TOKEN', token: pageProps.token });
+	// }
 
 	const toastMemo = useMemo(() => {
 		return (

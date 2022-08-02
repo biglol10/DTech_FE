@@ -13,7 +13,6 @@ import { Label, Button } from '@components/index';
 
 import Style from './RegisterComp.module.scss';
 
-// TODO: 회원가입한 이름으로 표시 필요
 const RegisterStep3 = (props: any) => {
 	const resultInfo = props.resultData.result;
 
@@ -22,8 +21,7 @@ const RegisterStep3 = (props: any) => {
 			<div style={inputElCommStyle(0, 'left', true)}>
 				<div className={Style['step5Div']}>
 					<h1>
-						{/* {resultInfo.name} {resultInfo.title}님! */}
-						장보영 선임님!
+						{resultInfo.name} {resultInfo.title}님!
 					</h1>
 					<Label content="회원가입이 완료되었습니다." size="big" />
 					<Link href="/login">

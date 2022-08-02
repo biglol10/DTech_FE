@@ -14,6 +14,7 @@ import {
 	RegisterStep3,
 	RegisterStep4,
 	RegisterStep5,
+	RegisterStep6,
 } from '@components/customs';
 import { Stepper, Step, StepLabel } from '@mui/material';
 import React, { useState } from 'react';
@@ -23,7 +24,7 @@ import Style from './Register.module.scss';
 
 const RegisterPage = (props: any) => {
 	const cx = classNames.bind(Style);
-	const [stepNum, setStepNum] = useState(2);
+	const [stepNum, setStepNum] = useState(1);
 	const [resultData, setResultData] = useState({});
 
 	const getStep1Data = (data: any) => {
@@ -47,6 +48,14 @@ const RegisterPage = (props: any) => {
 	const getStep4Data = (data: any) => {
 		if (data.goNext) {
 			setResultData(data.registerResult);
+			setStepNum((prev) => prev + 1);
+		} else {
+			setStepNum((prev) => prev - 1);
+		}
+	};
+
+	const getStep6Data = (data: any) => {
+		if (data.goNext) {
 			setStepNum((prev) => prev + 1);
 		} else {
 			setStepNum((prev) => prev - 1);
@@ -81,7 +90,8 @@ const RegisterPage = (props: any) => {
 			{stepNum === 1 && <RegisterStep1 propFunction={getStep1Data} />}
 			{stepNum === 2 && <RegisterStep2 propFunction={getStep2Data} />}
 			{stepNum === 3 && <RegisterStep3 propFunction={getStep3Data} />}
-			{stepNum === 4 && <RegisterStep4 propFunction={getStep4Data} />}
+			{stepNum === 4 && <RegisterStep6 propFunction={getStep6Data} />}
+			{/* {stepNum === 4 && <RegisterStep4 propFunction={getStep4Data} />} */}
 			{stepNum === 5 && <RegisterStep5 resultData={resultData} />}
 		</div>
 	);

@@ -1,13 +1,13 @@
 import axios from 'axios';
 
-const teamListRequest = async (props: any) => {
-	const teamListResult = await axios
+const techListRequest = async (props: any) => {
+	const techListResult = await axios
 		.post('http://localhost:3066/api/auth/getTeamList')
 		.then((res: any) => {
-			if (res.data.resultData.status === 'success') {
+			if (res.data.resultData.status === 'succeess') {
 				return {
 					result: res.data.resultData.status,
-					teamList: res.data.resultData.queryResult,
+					techList: res.data.resultData.queryResult,
 				};
 			} else {
 				return {
@@ -22,7 +22,7 @@ const teamListRequest = async (props: any) => {
 			};
 		});
 
-	return teamListResult;
+	return techListResult;
 };
 
-export { teamListRequest };
+export { techListRequest };
