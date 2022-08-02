@@ -343,5 +343,6 @@ const Index = () => {
 };
 
 Index.PageLayout = MainLayoutTemplate;
+Index.displayName = 'examplePage';
 
 export default Index;

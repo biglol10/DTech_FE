@@ -118,6 +118,11 @@ const Index = () => {
 			</Link>
 			<br />
 			<br />
+			<Link href="/examplePage">
+				<a>GoToExamplePage</a>
+			</Link>
+			<br />
+			<br />
 			<button onClick={() => router.push('/dashboard')}>GoToDashboardPage</button>
 			<br />
 			<br />
@@ -258,5 +263,6 @@ const Index = () => {
 };
 
 Index.PageLayout = MainLayoutTemplate;
+Index.displayName = 'root';
 
 export default Index;
