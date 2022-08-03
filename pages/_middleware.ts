@@ -24,7 +24,9 @@ const middleware = (request: NextRequest) => {
 	];
 
 	if (!cookieValue && protectedRoutesArray.includes(pagePath)) {
-		return NextResponse.redirect('http://localhost:3065/login');
+		return NextResponse.redirect(
+			`http://localhost:3065/${process.env.NODE_ENV === 'production' ? 'dtech/' : ''}login`,
+		);
 	}
 
 	// if (cookieValue && url === 'http://localhost:3065/') {
