@@ -31,7 +31,7 @@ module.exports = {
 		// SVG를 컴포넌트로 사용하기 위해 필요
 		config.module.rules.push({
 			test: /\.svg$/,
-			use: ["@svgr/webpack"]
+			use: ['@svgr/webpack'],
 		});
 
 		// ? 절대경로 설정 (만약에 tsconfig에 정의되어 있지 않거나 .js파일에서 절대경로 쓰고 싶을 경우 여기에 정의하면 된다)
@@ -48,7 +48,7 @@ module.exports = {
 		return {
 			...config,
 			mode: prod ? 'production' : 'development',
-			devtool: 'eval',
+			devtool: prod ? false : 'eval',
 		};
 	},
 	env: {
