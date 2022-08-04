@@ -216,7 +216,7 @@ const DTechQuill = ({
 			const divQuillHeight = document.getElementById('quillWrapper')!.clientHeight;
 
 			returnQuillWrapperHeight && returnQuillWrapperHeight(divQuillHeight);
-		}, 100);
+		}, 50);
 	}, [returnQuillWrapperHeight]);
 
 	useEffect(() => {

@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { DTechQuill } from '@components/index';
+import { useEffect, useRef, useState } from 'react';
+import { Avatar, DTechQuill } from '@components/index';
 import { MainLayoutTemplate } from '@components/customs';
 import { useRouter } from 'next/router';
 import { Container, Segment } from 'semantic-ui-react';
@@ -7,21 +7,42 @@ import { Container, Segment } from 'semantic-ui-react';
 const UserChat = () => {
 	const router = useRouter();
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
+	const bottomRef = useRef<any>(null);
 	const { userId } = router.query;
+
+	useEffect(() => {
+		bottomRef.current?.scrollIntoView({ behavior: 'auto' });
+	}, [quillWrapperHeight]);
+
+	const htmlString = `<div>asdfadfs<br/>wqrqwerqwer</div>`;
 
 	return (
 		<>
 			<div style={{ height: '100%', position: 'relative' }}>
-				<Segment>Pellentesque habitant morbi tristique senectus.</Segment>
-				<div>
+				<div style={{ height: '5%', marginBottom: '2%' }}>
+					<Segment>
+						<Avatar id="userSettingArea" color="white" content={userId as string} />
+					</Segment>
+				</div>
+				<div
+					style={{
+						height: '92%',
+						position: 'absolute',
+						width: '100%',
+						bottom: '0%',
+					}}
+				>
 					{quillWrapperHeight ? (
 						<Segment
 							style={{
 								overflowY: 'auto',
-								height: `${720 - quillWrapperHeight}px`,
-								marginBottom: '100px',
+								height: `calc(100% - ${quillWrapperHeight}px)`,
+								paddingBottom: '20px',
 							}}
 						>
+							<p>
+								<pre>{htmlString}</pre>
+							</p>
 							<p>sdafasf</p>
 							<p>sdafasf</p>
 							<p>sdafasf</p>
@@ -47,11 +68,14 @@ const UserChat = () => {
 							<p>sdafasf</p>
 							<p>sdafasf</p>
 							<p>sdafasf</p>
+							<p>sdafasf</p>
+							<p>sdafasf</p>
+							<p>sdafasf</p>
+							<div ref={bottomRef} />
 						</Segment>
 					) : (
 						<p></p>
 					)}
-
 					<div
 						style={{
 							height: 'auto',
@@ -64,7 +88,6 @@ const UserChat = () => {
 						<DTechQuill
 							quillHeight={250}
 							returnQuillWrapperHeight={(heightValue: number) => {
-								console.log(heightValue);
 								setQuillWrapperHeight(heightValue);
 							}}
 						/>
