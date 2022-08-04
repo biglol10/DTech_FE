@@ -11,6 +11,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { toast } from 'react-toastify';
 import { generateImageUID } from '@utils/appRelated/helperFunctions';
+import { customStyle1 } from '@utils/styleRelated/stylehelper';
 
 import PrevieImageComp from './PreviewImageComp';
 import Style from './DTechQuill.module.scss';
@@ -26,7 +27,15 @@ const ReactQuill = dynamic(
 	{ ssr: false },
 );
 
-const DTechQuill = ({ handleSubmit = null }: { handleSubmit?: any }) => {
+const DTechQuill = ({
+	handleSubmit = null,
+	quillHeight = 200,
+	returnQuillWrapperHeight = null,
+}: {
+	handleSubmit?: any;
+	returnQuillWrapperHeight?: any;
+	quillHeight?: number;
+}) => {
 	const [quillContext, setQuillContext] = useState('<p>&nbsp;</p>');
 
 	const [tempQuillContext, setTempQuillContext] = useState('');
@@ -201,6 +210,21 @@ const DTechQuill = ({ handleSubmit = null }: { handleSubmit?: any }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [tempQuillContext]);
 
+	// first load 때 height값 보내주기
+	useEffect(() => {
+		setTimeout(() => {
+			const divQuillHeight = document.getElementById('quillWrapper')!.clientHeight;
+
+			returnQuillWrapperHeight && returnQuillWrapperHeight(divQuillHeight);
+		}, 100);
+	}, [returnQuillWrapperHeight]);
+
+	useEffect(() => {
+		const divQuillHeight = document.getElementById('quillWrapper')!.clientHeight;
+
+		returnQuillWrapperHeight && returnQuillWrapperHeight(divQuillHeight);
+	}, [quillContext, urlPreviewList, returnQuillWrapperHeight]);
+
 	const changeUrlPreviewList = useCallback(
 		(fileName: string) => {
 			setUrlPreviewList(urlPreviewList.filter((item: any) => item.fileName !== fileName));
@@ -210,7 +234,11 @@ const DTechQuill = ({ handleSubmit = null }: { handleSubmit?: any }) => {
 
 	return (
 		<>
-			<div className={Style['quillWrap']}>
+			<div
+				id="quillWrapper"
+				className={Style['quillWrap']}
+				style={customStyle1(0, { name: 'quillHeight', value: quillHeight })}
+			>
 				<ReactQuill
 					forwardedRef={quillRef}
 					placeholder="내용을 입력하세요"

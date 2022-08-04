@@ -123,6 +123,11 @@ const Index = () => {
 			</Link>
 			<br />
 			<br />
+			<Link href="/chat/salfjdasld;jf">
+				<a>GoToChatPage</a>
+			</Link>
+			<br />
+			<br />
 			<button onClick={() => router.push('/dashboard')}>GoToDashboardPage</button>
 			<br />
 			<br />
