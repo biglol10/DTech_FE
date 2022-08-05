@@ -52,8 +52,6 @@ const UserChat = () => {
 		// }, 2000);
 	}, [quillWrapperHeight]);
 
-	const htmlString = `<div>asdfadfs<br/>wqrqwerqwer</div>`;
-
 	return (
 		<>
 			<div style={{ height: '100%', position: 'relative' }}>
@@ -80,22 +78,33 @@ const UserChat = () => {
 								flexDirection: 'column',
 							}}
 						>
-							{chatList.map((item: any) => {
+							{chatList.map((item: any, idx: number) => {
 								return (
-									<p style={{ maxWidth: '50%', position: 'relative' }}>
-										<Label attached="top left">Code</Label>
+									<div
+										style={{
+											maxWidth: '70%',
+											position: 'relative',
+											margin: '5px 0px',
+											alignSelf: `${
+												idx % 2 === 0 ? 'self-start' : 'self-end'
+											}`,
+										}}
+									>
+										<Label attached={`top ${idx % 2 === 0 ? 'left' : 'right'}`}>
+											sadf
+										</Label>
 										<Divider hidden style={{ marginBottom: '7px' }} />
 										<Label
 											basic
 											color="red"
-											pointing={'right'}
+											pointing={`${idx % 2 === 0 ? 'left' : 'right'}`}
 											style={{
 												maxWidth: '100%',
 											}}
 										>
 											<pre className={Style['preClass']}>{`${item}`}</pre>
 										</Label>
-									</p>
+									</div>
 								);
 							})}
 							<div ref={bottomRef} />
