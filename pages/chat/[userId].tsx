@@ -3,7 +3,15 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Avatar, DTechQuill } from '@components/index';
 import { MainLayoutTemplate } from '@components/customs';
 import { useRouter } from 'next/router';
-import { Container, Segment, Label, Divider } from 'semantic-ui-react';
+import { techImage } from '@utils/constants/techs';
+import {
+	Container,
+	Segment,
+	Label,
+	Divider,
+	Button as SemanticUIButton,
+	Icon,
+} from 'semantic-ui-react';
 
 import Style from './[userId].module.scss';
 
@@ -52,6 +60,10 @@ const UserChat = () => {
 		// }, 2000);
 	}, [quillWrapperHeight]);
 
+	useEffect(() => {
+		bottomRef.current?.scrollIntoView({ behavior: 'auto' });
+	}, [chatList]);
+
 	return (
 		<>
 			<div style={{ height: '100%', position: 'relative' }}>
@@ -90,8 +102,16 @@ const UserChat = () => {
 											}`,
 										}}
 									>
-										<Label attached={`top ${idx % 2 === 0 ? 'left' : 'right'}`}>
-											sadf
+										<Label
+											attached={`top ${idx % 2 === 0 ? 'left' : 'right'}`}
+											className={Style['avatarLabel']}
+										>
+											<Avatar
+												labelSize="mini"
+												src={techImage['Docker']}
+												color="black"
+												content={'asfd'}
+											/>
 										</Label>
 										<Divider hidden style={{ marginBottom: '7px' }} />
 										<Label
@@ -104,6 +124,28 @@ const UserChat = () => {
 										>
 											<pre className={Style['preClass']}>{`${item}`}</pre>
 										</Label>
+										<SemanticUIButton
+											style={
+												idx % 2 === 0
+													? {
+															position: 'absolute',
+															left: '101%',
+															border: 'none',
+															borderRadius: '5px',
+															bottom: '0%',
+													  }
+													: {
+															position: 'absolute',
+															right: '100%',
+															border: 'none',
+															borderRadius: '5px',
+															bottom: '0%',
+													  }
+											}
+											size="mini"
+										>
+											<Icon name="copy" size="mini" />
+										</SemanticUIButton>
 									</div>
 								);
 							})}
