@@ -124,10 +124,10 @@ const DTechQuill = ({
 							// submit form }
 							handleSubmit &&
 								handleSubmit({
-									value: quillContext,
+									value: quillRef.current.getEditor().getText().trim(),
 									imgList: urlPreviewList,
 								});
-							setQuillContext('<p>&nbsp;</p>');
+							setQuillContext('<p></p>');
 							setUrlPreviewList([]);
 						},
 					},
@@ -152,7 +152,7 @@ const DTechQuill = ({
 				},
 			},
 		}),
-		[handleSubmit, imageHandler, quillContext, urlPreviewList],
+		[handleSubmit, imageHandler, urlPreviewList],
 	);
 
 	const formats = [

@@ -1,17 +1,55 @@
-import { useEffect, useRef, useState } from 'react';
+/* eslint-disable react/jsx-key */
+import React, { useEffect, useRef, useState } from 'react';
 import { Avatar, DTechQuill } from '@components/index';
 import { MainLayoutTemplate } from '@components/customs';
 import { useRouter } from 'next/router';
-import { Container, Segment } from 'semantic-ui-react';
+import { Container, Segment, Label } from 'semantic-ui-react';
+
+import Style from './[userId].module.scss';
 
 const UserChat = () => {
 	const router = useRouter();
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
+	const [chatList, setChatList] = useState<any>([]);
+	const firstLoad = useRef<boolean>(true);
 	const bottomRef = useRef<any>(null);
 	const { userId } = router.query;
 
 	useEffect(() => {
 		bottomRef.current?.scrollIntoView({ behavior: 'auto' });
+	}, [quillWrapperHeight]);
+
+	useEffect(() => {
+		if (quillWrapperHeight && firstLoad.current) {
+			const tempChat = [
+				'sdafasf',
+				'sdafasf',
+				'sdafasf',
+				'sdafasf',
+				'sdafasf',
+				'sdafasf',
+				'sdafasf',
+				'sdafasf',
+			];
+
+			if (bottomRef.current) setChatList(tempChat);
+
+			firstLoad.current = false;
+		}
+		// setTimeout(() => {
+		// 	const tempChat = [
+		// 		'sdafasf',
+		// 		'sdafasf',
+		// 		'sdafasf',
+		// 		'sdafasf',
+		// 		'sdafasf',
+		// 		'sdafasf',
+		// 		'sdafasf',
+		// 		'sdafasf',
+		// 	];
+
+		// 	if (bottomRef.current) setChatList(tempChat);
+		// }, 2000);
 	}, [quillWrapperHeight]);
 
 	const htmlString = `<div>asdfadfs<br/>wqrqwerqwer</div>`;
@@ -40,37 +78,25 @@ const UserChat = () => {
 								paddingBottom: '20px',
 							}}
 						>
-							<p>
-								<pre>{htmlString}</pre>
-							</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
-							<p>sdafasf</p>
+							{chatList.map((item: any) => {
+								// return (
+								// 	<p>
+								// 		<pre>{`${item}`}</pre>
+								// 	</p>
+								// );
+								return (
+									<p style={{ width: '50%' }}>
+										<Label
+											basic
+											color="red"
+											pointing={'right'}
+											style={{ width: '100%' }}
+										>
+											<pre className={Style['preClass']}>{`${item}`}</pre>
+										</Label>
+									</p>
+								);
+							})}
 							<div ref={bottomRef} />
 						</Segment>
 					) : (
@@ -88,7 +114,13 @@ const UserChat = () => {
 						<DTechQuill
 							quillHeight={250}
 							returnQuillWrapperHeight={(heightValue: number) => {
+								console.log(`height is ${quillWrapperHeight}`);
 								setQuillWrapperHeight(heightValue);
+							}}
+							handleSubmit={(content: any) => {
+								console.log('content is');
+								console.log(content);
+								setChatList((prev: any) => [...prev, content.value]);
 							}}
 						/>
 					</div>
@@ -99,5 +131,6 @@ const UserChat = () => {
 };
 
 UserChat.PageLayout = MainLayoutTemplate;
+UserChat.displayName = 'chat';
 
 export default UserChat;
