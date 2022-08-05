@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Avatar, DTechQuill } from '@components/index';
 import { MainLayoutTemplate } from '@components/customs';
 import { useRouter } from 'next/router';
-import { Container, Segment, Label } from 'semantic-ui-react';
+import { Container, Segment, Label, Divider } from 'semantic-ui-react';
 
 import Style from './[userId].module.scss';
 
@@ -76,21 +76,22 @@ const UserChat = () => {
 								overflowY: 'auto',
 								height: `calc(100% - ${quillWrapperHeight}px)`,
 								paddingBottom: '20px',
+								display: 'flex',
+								flexDirection: 'column',
 							}}
 						>
 							{chatList.map((item: any) => {
-								// return (
-								// 	<p>
-								// 		<pre>{`${item}`}</pre>
-								// 	</p>
-								// );
 								return (
-									<p style={{ width: '50%' }}>
+									<p style={{ maxWidth: '50%', position: 'relative' }}>
+										<Label attached="top left">Code</Label>
+										<Divider hidden style={{ marginBottom: '7px' }} />
 										<Label
 											basic
 											color="red"
 											pointing={'right'}
-											style={{ width: '100%' }}
+											style={{
+												maxWidth: '100%',
+											}}
 										>
 											<pre className={Style['preClass']}>{`${item}`}</pre>
 										</Label>
