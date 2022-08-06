@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import useModal from '@utils/hooks/useModal';
+import { useModal } from '@utils/hooks/customHooks';
 import { modalUISize } from '@utils/constants/uiConstants';
 import CloseSvg from '@styles/svg/imgClose.svg';
 

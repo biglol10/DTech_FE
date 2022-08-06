@@ -364,5 +364,6 @@ export const getServerSideProps = async (context: any) => {
 };
 
 Index.PageLayout = MainLayoutTemplate;
+Index.displayName = 'dashboard';
 
 export default Index;

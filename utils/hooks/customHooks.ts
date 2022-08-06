@@ -29,4 +29,4 @@ const useModal = () => {
 	};
 };
 
-export default useModal;
+export { useModal };

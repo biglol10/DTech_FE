@@ -1,7 +1,7 @@
 /** ****************************************************************************************
  * @설명 : Rootreducer (메인 reducer) (redux-toolkit, redux-saga)
  ********************************************************************************************
- * 번호    작업자     작업일         브랜치                       변경내용
+ * 번호    작업자     작업일         브랜치                   변경내용
  *-------------------------------------------------------------------------------------------
  * 1      변지욱     2022-06-16                              최초작성
  ********************************************************************************************/
@@ -10,7 +10,6 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { createWrapper, HYDRATE } from 'next-redux-wrapper'; // nextjs friendly
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from '@saga/index';
-import _ from 'lodash';
 
 import userReducer from './userSlice';
 import counterReducer from './counterSlice';
@@ -19,6 +18,7 @@ import modalSlice from './modalSlice';
 import authSlice from './authSlice';
 import registerSlice from './registerSlice';
 import toastSlice from './toastSlice';
+import appCommonSlice from './appCommon'
 // import saga from './sagaCounter';
 
 const rootReducer = (state: any, action: any) => {
@@ -39,6 +39,7 @@ const rootReducer = (state: any, action: any) => {
 				auth: authSlice,
 				register: registerSlice,
 				toastInfo: toastSlice,
+				appCommon: appCommonSlice,
 			});
 
 			return combinedReducer(state, action);

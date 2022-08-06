@@ -35,6 +35,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	const wrapperRef = useRef<any>(null);
 
 	const authStore = useSelector((state: any) => state.auth);
+	const appCommon = useSelector((state: any) => state.appCommon);
 
 	useEffect(() => {
 		if (wrapperRef) {
@@ -181,16 +182,32 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 				<div className={Style['right']}>
 					<nav className={Style['navHeader']}>
 						<ul id="userSettingAreaUL">
-							<li className={Style['active']}>
+							<li
+								className={
+									Style[`${appCommon.currentRoute === 'dashboard' && 'active'}`]
+								}
+							>
 								<a href="#home">대시보드</a>
 							</li>
-							<li>
+							<li
+								className={
+									Style[`${appCommon.currentRoute === 'chat' && 'active'}`]
+								}
+							>
 								<a href="#news">채팅</a>
 							</li>
-							<li>
+							<li
+								className={
+									Style[`${appCommon.currentRoute === 'examplePage' && 'active'}`]
+								}
+							>
 								<a href="#contact">게시판</a>
 							</li>
-							<li>
+							<li
+								className={
+									Style[`${appCommon.currentRoute === 'about' && 'active'}`]
+								}
+							>
 								<a href="#about">About</a>
 							</li>
 							<li

@@ -38,6 +38,12 @@ const MyApp = ({ Component, pageProps }: ComponentWithPageLayout) => {
 		dispatch({ type: 'AUTH_SETTING_BY_TOKEN', token: cookie.get('token') });
 	}
 
+	if (Component.displayName) {
+		const displayName = Component.displayName;
+
+		dispatch({ type: 'SET_CURRENT_ROUTE', displayName });
+	}
+
 	const toastMemo = useMemo(() => {
 		return (
 			<ToastContainer
