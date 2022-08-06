@@ -122,10 +122,21 @@ const DTechQuill = ({
 						key: 13,
 						handler: () => {
 							// submit form }
+							console.log(
+								quillRef.current
+									.getEditor()
+									.getContents()
+									.filter((item: any) => item.attributes?.link),
+							);
+
 							handleSubmit &&
 								handleSubmit({
 									value: quillRef.current.getEditor().getText().trim(),
 									imgList: urlPreviewList,
+									linkList: quillRef.current
+										.getEditor()
+										.getContents()
+										.filter((item: any) => item.attributes?.link),
 								});
 							setQuillContext('<p></p>');
 							setUrlPreviewList([]);

@@ -44,20 +44,6 @@ const UserChat = () => {
 
 			firstLoad.current = false;
 		}
-		// setTimeout(() => {
-		// 	const tempChat = [
-		// 		'sdafasf',
-		// 		'sdafasf',
-		// 		'sdafasf',
-		// 		'sdafasf',
-		// 		'sdafasf',
-		// 		'sdafasf',
-		// 		'sdafasf',
-		// 		'sdafasf',
-		// 	];
-
-		// 	if (bottomRef.current) setChatList(tempChat);
-		// }, 2000);
 	}, [quillWrapperHeight]);
 
 	useEffect(() => {
@@ -66,37 +52,28 @@ const UserChat = () => {
 
 	return (
 		<>
-			<div style={{ height: '100%', position: 'relative' }}>
-				<div style={{ height: '5%', marginBottom: '2%' }}>
-					<Segment>
-						<Avatar id="userSettingArea" color="white" content={userId as string} />
-					</Segment>
-				</div>
-				<div
-					style={{
-						height: '92%',
-						position: 'absolute',
-						width: '100%',
-						bottom: '0%',
-					}}
-				>
+			<main id={Style['chatMain']}>
+				<Segment>
+					<Avatar
+						id="userSettingArea"
+						color="white"
+						content={userId as string}
+						imageSize="mini"
+						labelSize="mini"
+					/>
+				</Segment>
+				<Container>
 					{quillWrapperHeight ? (
 						<Segment
 							style={{
-								overflowY: 'auto',
 								height: `calc(100% - ${quillWrapperHeight}px)`,
-								paddingBottom: '20px',
-								display: 'flex',
-								flexDirection: 'column',
 							}}
+							className={Style['chatWrapperSegment']}
 						>
 							{chatList.map((item: any, idx: number) => {
 								return (
 									<div
 										style={{
-											maxWidth: '70%',
-											position: 'relative',
-											margin: '5px 0px',
 											alignSelf: `${
 												idx % 2 === 0 ? 'self-start' : 'self-end'
 											}`,
@@ -122,8 +99,14 @@ const UserChat = () => {
 												maxWidth: '100%',
 											}}
 										>
-											<pre className={Style['preClass']}>{`${item}`}</pre>
+											<pre className={Style['preClass']}>{`${item.replaceAll(
+												'\t',
+												' '.repeat(4),
+											)}`}</pre>
 										</Label>
+										<div style={{ backgroundColor: 'red', width: '100%' }}>
+											asddfafd
+										</div>
 										<SemanticUIButton
 											style={
 												idx % 2 === 0
@@ -176,8 +159,8 @@ const UserChat = () => {
 							}}
 						/>
 					</div>
-				</div>
-			</div>
+				</Container>
+			</main>
 		</>
 	);
 };
