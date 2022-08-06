@@ -80,10 +80,16 @@ const techListFunction = function* ({ setTechList }: any) {
 	const techListResult: ITechList = yield call(techListRequest, {});
 
 	if (techListResult.result === 'success') {
-		setTechList(techListResult.techList);
+		const tempArr = techListResult.techList;
+		const newTempArr = tempArr.map((tech: any) => {
+			return { key: tech.TECH_CD, value: false, name: tech.NAME };
+		});
+
+		setTechList(newTempArr);
 	} else {
 		console.error(techListResult.errMessage);
 	}
+	yield;
 };
 
 const validStep1Function = function* ({
@@ -250,7 +256,6 @@ const registerUserFunction = function* ({ registerData, propFunction }: any) {
 };
 
 const idCheck = function* () {
-	console.log('idcheck11');
 	yield takeLatest(RCONST.ID_CHECK, idCheckFunction);
 };
 
@@ -259,6 +264,7 @@ const getTeamList = function* () {
 };
 
 const getTechList = function* () {
+	console.log('getTechList');
 	yield takeLatest(RCONST.TECH_LIST, techListFunction);
 };
 

@@ -37,6 +37,9 @@ const initialState = {
 		userDetailValue: '',
 		userDetailError: false,
 	},
+	techSelectValue: {
+		userTechValue: [],
+	},
 	userProfileImage: null,
 };
 
@@ -57,6 +60,9 @@ const registerSlice = createSlice({
 		},
 		registerStep3(state, action) {
 			state.userDetailValue = action.payload.userDetailValue || '';
+		},
+		registerStep6(state, action) {
+			state.techSelectValue = action.payload.techSelectValue;
 		},
 		// registerStep4(state, action) {
 		// 	state.userDetail = action.payload.userDetail || '';

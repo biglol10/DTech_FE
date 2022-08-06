@@ -18,16 +18,18 @@ import Style from './RegisterComp.module.scss';
 
 const RegisterStep6 = (props: any) => {
 	const labelSize = 'h4';
-	const cx = classNames.bind(Style);
 	const dispatch = useDispatch();
-	const [techList, setTechList] = useState();
+	const [techList, setTechList] = useState([] as any);
+	const [techSelectedList, setTechSelectedList] = useState(
+		useSelector((state: any) => state.register.techSelectValue),
+	);
 
 	useEffect(() => {
 		dispatch({
 			type: 'TECH_LIST',
 			setTechList,
 		});
-	});
+	}, []);
 
 	const clickNext = (goNext: boolean) => {
 		dispatch({
@@ -38,11 +40,39 @@ const RegisterStep6 = (props: any) => {
 		// props.propFunction({ detail, goNext });
 	};
 
+	const handleTechClick = (key: any) => {
+		const findIndex = techList.findIndex((element: any) => element.key === key);
+
+		if (findIndex !== -1) {
+			setTechList(
+				techList.map((tech: any) =>
+					tech.key === key ? { ...tech, value: !tech.value } : tech,
+				),
+			);
+		}
+	};
+
 	return (
 		<>
 			<div style={inputElCommStyle(0, 'left', true)}>
 				<Label content="보유한 기술 또는 관심분야를 선택해주세요." size="large"></Label>
-				<div>{techList}</div>
+				<div className={Style['techBtnDiv']}>
+					{techList.map((tech: any) => {
+						return (
+							<Button
+								content={tech.name}
+								key={tech.key}
+								size="mini"
+								color="grey"
+								spacing={5}
+								basic={!tech.value}
+								onClick={(e: any) => {
+									handleTechClick(tech.key);
+								}}
+							/>
+						);
+					})}
+				</div>
 
 				<div className={Style['buttonBelow']}>
 					<Button

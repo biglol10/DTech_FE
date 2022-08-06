@@ -54,7 +54,7 @@ const RegisterStep3 = (props: any) => {
 						onChange={(e, { value }: any) => {
 							let userDetailError = false;
 
-							if (value.length > 10) {
+							if (value.length > 1000) {
 								userDetailError = true;
 								setUserDetailValue({
 									...userDetailValue,
