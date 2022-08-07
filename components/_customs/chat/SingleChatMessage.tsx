@@ -2,17 +2,14 @@ import { useState } from 'react';
 import { Avatar, Button } from '@components/index';
 import { techImage } from '@utils/constants/techs';
 import { Label } from 'semantic-ui-react';
-import _ from 'lodash';
 import Style from './SingleChatMessage.module.scss';
 
 const SingleChatMessage = ({
 	messageOwner,
 	context,
-	copyString = _.cloneDeep(context),
 }: {
 	messageOwner: string;
 	context: string;
-	copyString?: string;
 }) => {
 	const [showCopyButton, setShowCopyButton] = useState(false);
 	const [copyButtonClicked, setCopyButtonClicked] = useState(false);
@@ -36,7 +33,6 @@ const SingleChatMessage = ({
 					<Label
 						attached={`top ${messageOwner === 'other' ? 'left' : 'right'}`}
 						className={Style['avatarLabel']}
-						// onMouseEnter={() => setShowCopyButton(false)}
 					>
 						<Avatar
 							labelSize="mini"
@@ -59,16 +55,9 @@ const SingleChatMessage = ({
 					>
 						<pre className={Style['preClass']}>{`${context.replaceAll(
 							'\t',
-							' '.repeat(4),
+							' '.repeat(3),
 						)}`}</pre>
 					</Label>
-					{/* <SemanticUIButton
-						size="mini"
-						className={cx('copyButton', messageOwner)}
-						style={{ visibility: `${showCopyButton ? 'initial' : 'hidden'}` }}
-					>
-						<Icon name="copy" size="mini" />
-					</SemanticUIButton> */}
 				</div>
 				{showCopyButton && (
 					<div className={Style['copyButton']}>
@@ -76,9 +65,13 @@ const SingleChatMessage = ({
 							content={copyButtonClicked ? 'copied!' : 'copy'}
 							color={copyButtonClicked ? 'google plus' : 'instagram'}
 							buttonType="none"
-							onClick={() => {
+							onClick={async () => {
 								setCopyButtonClicked(true);
-								navigator.clipboard.writeText(copyString);
+								if ('clipboard' in navigator) {
+									await navigator.clipboard.writeText(context);
+								} else {
+									return document.execCommand('copy', true, context);
+								}
 								setTimeout(() => {
 									setCopyButtonClicked(false);
 								}, 3000);

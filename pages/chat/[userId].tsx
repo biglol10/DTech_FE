@@ -38,7 +38,8 @@ const UserChat = () => {
 				'sdafasf',
 				'sdafasf',
 				'sdafasf',
-				`<SemanticUIButton
+				`
+			<SemanticUIButton
 				style={
 					idx % 2 === 0
 						? {

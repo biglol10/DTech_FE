@@ -220,6 +220,8 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 									id="userSettingArea"
 									color="white"
 									content={authStore.userName}
+									imageSize="mini"
+									labelSize="big"
 								/>
 							</li>
 						</ul>
