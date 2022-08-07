@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Avatar, Button } from '@components/index';
 import { techImage } from '@utils/constants/techs';
-import { Label } from 'semantic-ui-react';
+import { Divider, Label } from 'semantic-ui-react';
+import Image from 'next/image';
 import Style from './SingleChatMessage.module.scss';
 
 const SingleChatMessage = ({
@@ -27,6 +28,8 @@ const SingleChatMessage = ({
 				<div
 					style={{
 						alignSelf: `${messageOwner === 'other' ? 'self-start' : 'self-end'}`,
+						display: 'flex',
+						flexDirection: 'column',
 					}}
 					className={Style['singleChatDiv']}
 				>
@@ -51,6 +54,7 @@ const SingleChatMessage = ({
 								messageOwner === 'other' ? 'darkorange' : 'darkmagenta'
 							}`,
 							color: 'black !important',
+							alignSelf: `${messageOwner === 'other' ? 'self-start' : 'self-end'}`,
 						}}
 					>
 						<pre className={Style['preClass']}>{`${context.replaceAll(
@@ -58,6 +62,17 @@ const SingleChatMessage = ({
 							' '.repeat(3),
 						)}`}</pre>
 					</Label>
+					<div
+						style={{
+							marginTop: '10px',
+							display: 'flex',
+							gap: '8px',
+						}}
+					>
+						<Image src={techImage['React']} height={50} width={50} />
+						<Image src={techImage['React']} height={50} width={50} />
+						<Image src={techImage['React']} height={50} width={50} />
+					</div>
 				</div>
 				{showCopyButton && (
 					<div className={Style['copyButton']}>
