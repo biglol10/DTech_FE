@@ -44,6 +44,7 @@ const Login = () => {
 	const [idInputError, setIdInputError] = useState(false);
 	const [pwInputValue, setPwInputValue] = useState('');
 	const [pwInputError, setPwInputError] = useState(false);
+	const [loading, setLoading] = useState(false);
 
 	const userIdRef = useRef<any>();
 	const userPwRef = useRef<any>();
@@ -53,6 +54,7 @@ const Login = () => {
 	}, []);
 
 	const userLogin = () => {
+		setLoading(true);
 		dispatch({
 			type: 'AUTH_SETTING',
 			setIdInputError,
@@ -62,6 +64,7 @@ const Login = () => {
 				password: pwInputValue,
 			},
 			callbackFn: (data: any) => {
+				setLoading(false);
 				if (data.result === 'success') {
 					cookie.set('token', data.userToken);
 					router.push('/');
@@ -175,6 +178,7 @@ const Login = () => {
 							className={Style['inputIdField']}
 							inputIcon={<Icon name="user" />}
 							onEnter={() => userPwRef.current && userPwRef.current.focus()}
+							loading={loading}
 						/>
 					</InputLayout>
 
@@ -203,6 +207,7 @@ const Login = () => {
 							inputIcon={<Icon name="lock" />}
 							type="password"
 							onEnter={() => userLogin()}
+							loading={loading}
 						/>
 					</InputLayout>
 					<Button

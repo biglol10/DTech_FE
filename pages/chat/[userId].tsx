@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key */
 import React, { useEffect, useRef, useState } from 'react';
 import { Avatar, DTechQuill } from '@components/index';
-import { MainLayoutTemplate } from '@components/customs';
+import { MainLayoutTemplate, SingleChatMessage } from '@components/customs';
 import { useRouter } from 'next/router';
 import { techImage } from '@utils/constants/techs';
 import {
@@ -38,26 +38,42 @@ const UserChat = () => {
 				'sdafasf',
 				'sdafasf',
 				'sdafasf',
+				`
+			<SemanticUIButton
+				style={
+					idx % 2 === 0
+						? {
+								position: 'absolute',
+								left: '100.5%',
+								bottom: '2%',
+								height: '20px',
+								border: 'none',
+								borderRadius: '5px',
+								display: 'flex',
+								justifyContent: 'center',
+								alignItems: 'center',
+						  }
+						: {
+								position: 'absolute',
+								right: '100%',
+								bottom: '2%',
+								height: '20px',
+								border: 'none',
+								borderRadius: '5px',
+								display: 'flex',
+								justifyContent: 'center',
+								alignItems: 'center',
+						  }
+				}
+			>
+				<Icon name="copy" />
+			</SemanticUIButton>`,
 			];
 
 			if (bottomRef.current) setChatList(tempChat);
 
 			firstLoad.current = false;
 		}
-		// setTimeout(() => {
-		// 	const tempChat = [
-		// 		'sdafasf',
-		// 		'sdafasf',
-		// 		'sdafasf',
-		// 		'sdafasf',
-		// 		'sdafasf',
-		// 		'sdafasf',
-		// 		'sdafasf',
-		// 		'sdafasf',
-		// 	];
-
-		// 	if (bottomRef.current) setChatList(tempChat);
-		// }, 2000);
 	}, [quillWrapperHeight]);
 
 	useEffect(() => {
@@ -66,87 +82,91 @@ const UserChat = () => {
 
 	return (
 		<>
-			<div style={{ height: '100%', position: 'relative' }}>
-				<div style={{ height: '5%', marginBottom: '2%' }}>
-					<Segment>
-						<Avatar id="userSettingArea" color="white" content={userId as string} />
-					</Segment>
-				</div>
-				<div
-					style={{
-						height: '92%',
-						position: 'absolute',
-						width: '100%',
-						bottom: '0%',
-					}}
-				>
+			<main id={Style['chatMain']}>
+				<Segment>
+					<Avatar
+						id="userSettingArea"
+						color="white"
+						content={userId as string}
+						imageSize="mini"
+						labelSize="mini"
+					/>
+				</Segment>
+				<Container>
 					{quillWrapperHeight ? (
 						<Segment
 							style={{
-								overflowY: 'auto',
 								height: `calc(100% - ${quillWrapperHeight}px)`,
-								paddingBottom: '20px',
-								display: 'flex',
-								flexDirection: 'column',
 							}}
+							className={Style['chatWrapperSegment']}
 						>
 							{chatList.map((item: any, idx: number) => {
 								return (
-									<div
-										style={{
-											maxWidth: '70%',
-											position: 'relative',
-											margin: '5px 0px',
-											alignSelf: `${
-												idx % 2 === 0 ? 'self-start' : 'self-end'
-											}`,
-										}}
-									>
-										<Label
-											attached={`top ${idx % 2 === 0 ? 'left' : 'right'}`}
-											className={Style['avatarLabel']}
-										>
-											<Avatar
-												labelSize="mini"
-												src={techImage['Docker']}
-												color="black"
-												content={'asfd'}
-											/>
-										</Label>
-										<Divider hidden style={{ marginBottom: '7px' }} />
-										<Label
-											basic
-											color="red"
-											pointing={`${idx % 2 === 0 ? 'left' : 'right'}`}
+									<>
+										<SingleChatMessage
+											key={`asdf_${idx}`}
+											context={item}
+											messageOwner={idx % 2 === 0 ? 'other' : 'mine'}
+										/>
+										{/* <div
 											style={{
-												maxWidth: '100%',
+												alignSelf: `${
+													idx % 2 === 0 ? 'self-start' : 'self-end'
+												}`,
 											}}
 										>
-											<pre className={Style['preClass']}>{`${item}`}</pre>
-										</Label>
-										<SemanticUIButton
-											style={
-												idx % 2 === 0
-													? {
-															position: 'absolute',
-															left: '101%',
-															border: 'none',
-															borderRadius: '5px',
-															bottom: '0%',
-													  }
-													: {
-															position: 'absolute',
-															right: '100%',
-															border: 'none',
-															borderRadius: '5px',
-															bottom: '0%',
-													  }
-											}
-											size="mini"
-										>
-											<Icon name="copy" size="mini" />
-										</SemanticUIButton>
-									</div>
+											<Label
+												attached={`top ${idx % 2 === 0 ? 'left' : 'right'}`}
+												className={Style['avatarLabel']}
+											>
+												<Avatar
+													labelSize="mini"
+													src={techImage['Docker']}
+													color="black"
+													content={'asfd'}
+												/>
+											</Label>
+											<Divider hidden style={{ marginBottom: '7px' }} />
+											<Label
+												basic
+												color="red"
+												pointing={`${idx % 2 === 0 ? 'left' : 'right'}`}
+												style={{
+													maxWidth: '100%',
+												}}
+											>
+												<pre
+													className={Style['preClass']}
+												>{`${item.replaceAll('\t', ' '.repeat(4))}`}</pre>
+											</Label>
+
+											<SemanticUIButton
+												style={
+													idx % 2 === 0
+														? {
+																position: 'absolute',
+																left: '101%',
+																border: 'none',
+																borderRadius: '5px',
+																bottom: '0%',
+														  }
+														: {
+																position: 'absolute',
+																right: '100%',
+																border: 'none',
+																borderRadius: '5px',
+																bottom: '0%',
+														  }
+												}
+												size="mini"
+											>
+												<Icon name="copy" size="mini" />
+											</SemanticUIButton>
+										</div> */}
+										{/* <div style={{ backgroundColor: 'red', width: '100%' }}>
+											asddfafd
+										</div> */}
+									</>
 								);
 							})}
 							<div ref={bottomRef} />
@@ -170,14 +190,13 @@ const UserChat = () => {
 								setQuillWrapperHeight(heightValue);
 							}}
 							handleSubmit={(content: any) => {
-								console.log('content is');
 								console.log(content);
 								setChatList((prev: any) => [...prev, content.value]);
 							}}
 						/>
 					</div>
-				</div>
-			</div>
+				</Container>
+			</main>
 		</>
 	);
 };

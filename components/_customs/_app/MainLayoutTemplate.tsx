@@ -186,29 +186,31 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 								className={
 									Style[`${appCommon.currentRoute === 'dashboard' && 'active'}`]
 								}
+								onClick={() => router.push('/dashboard')}
 							>
-								<a href="#home">대시보드</a>
+								<a>대시보드</a>
 							</li>
 							<li
 								className={
 									Style[`${appCommon.currentRoute === 'chat' && 'active'}`]
 								}
+								onClick={() => router.push('/chat/sdafadsf')}
 							>
-								<a href="#news">채팅</a>
+								<a>채팅</a>
 							</li>
 							<li
 								className={
 									Style[`${appCommon.currentRoute === 'examplePage' && 'active'}`]
 								}
 							>
-								<a href="#contact">게시판</a>
+								<a>게시판</a>
 							</li>
 							<li
 								className={
 									Style[`${appCommon.currentRoute === 'about' && 'active'}`]
 								}
 							>
-								<a href="#about">About</a>
+								<a>About</a>
 							</li>
 							<li
 								id="li_userSettingArea"
@@ -218,6 +220,8 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 									id="userSettingArea"
 									color="white"
 									content={authStore.userName}
+									imageSize="mini"
+									labelSize="big"
 								/>
 							</li>
 						</ul>
