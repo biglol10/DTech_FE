@@ -67,8 +67,12 @@ const SingleChatMessage = ({
 							marginTop: '10px',
 							display: 'flex',
 							gap: '8px',
+							alignSelf: `${messageOwner === 'other' ? 'self-start' : 'self-end'}`,
 						}}
 					>
+						<Image src={techImage['React']} height={50} width={50} />
+						<Image src={techImage['React']} height={50} width={50} />
+						<Image src={techImage['React']} height={50} width={50} />
 						<Image src={techImage['React']} height={50} width={50} />
 						<Image src={techImage['React']} height={50} width={50} />
 						<Image src={techImage['React']} height={50} width={50} />
