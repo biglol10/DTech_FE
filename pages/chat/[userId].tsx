@@ -3,16 +3,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Avatar, DTechQuill } from '@components/index';
 import { MainLayoutTemplate, SingleChatMessage } from '@components/customs';
 import { useRouter } from 'next/router';
-import { techImage } from '@utils/constants/techs';
-import {
-	Container,
-	Segment,
-	Label,
-	Divider,
-	Button as SemanticUIButton,
-	Icon,
-} from 'semantic-ui-react';
+import { Container, Segment } from 'semantic-ui-react';
 
+import { ChatList } from '@utils/types/commTypes';
 import Style from './[userId].module.scss';
 
 const UserChat = () => {
@@ -29,48 +22,9 @@ const UserChat = () => {
 
 	useEffect(() => {
 		if (quillWrapperHeight && firstLoad.current) {
-			const tempChat = [
-				'sdafasf',
-				'sdafasf',
-				'sdafasf',
-				'sdafasf',
-				'sdafasf',
-				'sdafasf',
-				'sdafasf',
-				'sdafasf',
-				`
-			<SemanticUIButton
-				style={
-					idx % 2 === 0
-						? {
-								position: 'absolute',
-								left: '100.5%',
-								bottom: '2%',
-								height: '20px',
-								border: 'none',
-								borderRadius: '5px',
-								display: 'flex',
-								justifyContent: 'center',
-								alignItems: 'center',
-						  }
-						: {
-								position: 'absolute',
-								right: '100%',
-								bottom: '2%',
-								height: '20px',
-								border: 'none',
-								borderRadius: '5px',
-								display: 'flex',
-								justifyContent: 'center',
-								alignItems: 'center',
-						  }
-				}
-			>
-				<Icon name="copy" />
-			</SemanticUIButton>`,
-			];
+			const chatListArray: ChatList[] = [{ value: 'asdfasdf', imgList: [], linkList: [] }];
 
-			if (bottomRef.current) setChatList(tempChat);
+			if (bottomRef.current) setChatList(chatListArray);
 
 			firstLoad.current = false;
 		}
@@ -100,12 +54,14 @@ const UserChat = () => {
 							}}
 							className={Style['chatWrapperSegment']}
 						>
-							{chatList.map((item: any, idx: number) => {
+							{chatList.map((item: ChatList, idx: number) => {
 								return (
 									<>
 										<SingleChatMessage
 											key={`asdf_${idx}`}
-											context={item}
+											value={item.value}
+											imgList={item.imgList}
+											linkList={item.linkList}
 											messageOwner={idx % 2 === 0 ? 'other' : 'mine'}
 										/>
 										{/* <div
@@ -186,12 +142,18 @@ const UserChat = () => {
 						<DTechQuill
 							quillHeight={250}
 							returnQuillWrapperHeight={(heightValue: number) => {
-								console.log(`height is ${quillWrapperHeight}`);
 								setQuillWrapperHeight(heightValue);
 							}}
-							handleSubmit={(content: any) => {
-								console.log(content);
-								setChatList((prev: any) => [...prev, content.value]);
+							handleSubmit={(content: ChatList) => {
+								// 이미지 S3 되면 올리고 setChatList 호출
+								setChatList((prev: ChatList[]) => [
+									...prev,
+									{
+										value: content.value,
+										imgList: content.imgList,
+										linkList: content.linkList,
+									},
+								]);
 							}}
 						/>
 					</div>

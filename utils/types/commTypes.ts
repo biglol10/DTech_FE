@@ -7,3 +7,9 @@ export interface IModalState {
 	modalSize?: string;
 	modalIsBasic?: boolean;
 }
+
+export interface ChatList {
+	value: string;
+	imgList: { fileName: string; filePreview: string }[] | never[];
+	linkList: string[] | never[];
+}
