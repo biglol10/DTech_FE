@@ -86,7 +86,12 @@ const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListE
 							))}
 						</div>
 					)}
+
+					{linkList?.length > 0 && (
+						<div className={cx('linkListDiv', messageOwner)}></div>
+					)}
 				</div>
+
 				{showCopyButton && (
 					<div className={Style['copyButton']}>
 						<Button

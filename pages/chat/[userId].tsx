@@ -64,64 +64,6 @@ const UserChat = () => {
 											linkList={item.linkList}
 											messageOwner={idx % 2 === 0 ? 'other' : 'mine'}
 										/>
-										{/* <div
-											style={{
-												alignSelf: `${
-													idx % 2 === 0 ? 'self-start' : 'self-end'
-												}`,
-											}}
-										>
-											<Label
-												attached={`top ${idx % 2 === 0 ? 'left' : 'right'}`}
-												className={Style['avatarLabel']}
-											>
-												<Avatar
-													labelSize="mini"
-													src={techImage['Docker']}
-													color="black"
-													content={'asfd'}
-												/>
-											</Label>
-											<Divider hidden style={{ marginBottom: '7px' }} />
-											<Label
-												basic
-												color="red"
-												pointing={`${idx % 2 === 0 ? 'left' : 'right'}`}
-												style={{
-													maxWidth: '100%',
-												}}
-											>
-												<pre
-													className={Style['preClass']}
-												>{`${item.replaceAll('\t', ' '.repeat(4))}`}</pre>
-											</Label>
-
-											<SemanticUIButton
-												style={
-													idx % 2 === 0
-														? {
-																position: 'absolute',
-																left: '101%',
-																border: 'none',
-																borderRadius: '5px',
-																bottom: '0%',
-														  }
-														: {
-																position: 'absolute',
-																right: '100%',
-																border: 'none',
-																borderRadius: '5px',
-																bottom: '0%',
-														  }
-												}
-												size="mini"
-											>
-												<Icon name="copy" size="mini" />
-											</SemanticUIButton>
-										</div> */}
-										{/* <div style={{ backgroundColor: 'red', width: '100%' }}>
-											asddfafd
-										</div> */}
 									</>
 								);
 							})}
@@ -145,6 +87,7 @@ const UserChat = () => {
 								setQuillWrapperHeight(heightValue);
 							}}
 							handleSubmit={(content: ChatList) => {
+								console.log(content);
 								// 이미지 S3 되면 올리고 setChatList 호출
 								setChatList((prev: ChatList[]) => [
 									...prev,
