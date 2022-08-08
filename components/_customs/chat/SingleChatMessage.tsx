@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Avatar, Button } from '@components/index';
 import { techImage } from '@utils/constants/techs';
-import { Label } from 'semantic-ui-react';
+import { Label, ListList } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import { useModal } from '@utils/hooks/customHooks';
 import { modalUISize } from '@utils/constants/uiConstants';
 import Image from 'next/image';
 import { ChatList } from '@utils/types/commTypes';
+import axios from 'axios';
 import Style from './SingleChatMessage.module.scss';
 
 interface ChatListExtends extends ChatList {
@@ -16,6 +17,7 @@ interface ChatListExtends extends ChatList {
 const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListExtends) => {
 	const [showCopyButton, setShowCopyButton] = useState(false);
 	const [copyButtonClicked, setCopyButtonClicked] = useState(false);
+	const [linkMetadata, setLinkMetadata] = useState<any>([]);
 
 	const { handleModal } = useModal();
 
@@ -39,6 +41,25 @@ const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListE
 	};
 
 	const cx = classNames.bind(Style);
+
+	useEffect(() => {
+		const result = async () => {
+			await axios
+				.get('http://localhost:3066/api/utils/getMetadata', {
+					params: { linkList },
+				})
+				.then((response) => {
+					console.log('data fetch success');
+					console.log(response);
+				})
+				.catch((err) => {
+					console.log('data fetch error');
+					console.log(err);
+				});
+		};
+
+		if (linkList.length > 0) result();
+	}, [linkList]);
 
 	return (
 		<>

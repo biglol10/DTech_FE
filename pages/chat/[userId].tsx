@@ -87,14 +87,13 @@ const UserChat = () => {
 								setQuillWrapperHeight(heightValue);
 							}}
 							handleSubmit={(content: ChatList) => {
-								console.log(content);
 								// 이미지 S3 되면 올리고 setChatList 호출
 								setChatList((prev: ChatList[]) => [
 									...prev,
 									{
 										value: content.value,
 										imgList: content.imgList,
-										linkList: content.linkList,
+										linkList: content.linkList.map((item: any) => item.insert),
 									},
 								]);
 							}}
