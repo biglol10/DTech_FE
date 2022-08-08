@@ -63,19 +63,22 @@ const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListE
 						/>
 					</Label>
 					{/* <Divider hidden style={{ marginBottom: '7px' }} /> */}
-					<Label
-						basic
-						pointing={`${messageOwner === 'other' ? 'left' : 'right'}`}
-						className={cx('messageLabel', messageOwner)}
-					>
-						<pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre>
-					</Label>
+					{value && (
+						<Label
+							basic
+							pointing={`${messageOwner === 'other' ? 'left' : 'right'}`}
+							className={cx('messageLabel', messageOwner)}
+						>
+							<pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre>
+						</Label>
+					)}
+
 					{imgList?.length > 0 && (
 						<div className={cx('imageListDiv', messageOwner)}>
 							{imgList.map((item: { fileName: string; filePreview: string }, idx) => (
 								<Image
 									key={`asdf_${idx}`}
-									src={item.filePreview}
+									src={item.filePreview} // 아직 이미지 S3에 올리는 작업을 하지 않았으니 미리보기 적용
 									height={50}
 									width={50}
 									onClick={() => openImageModal(item.filePreview)}
@@ -83,44 +86,6 @@ const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListE
 							))}
 						</div>
 					)}
-					{/* <div className={cx('imageListDiv', messageOwner)}>
-						<Image
-							src={techImage['React']}
-							height={50}
-							width={50}
-							onClick={() => openImageModal(techImage['React'])}
-						/>
-						<Image
-							src={techImage['Docker']}
-							height={50}
-							width={50}
-							onClick={() => openImageModal(techImage['Docker'])}
-						/>
-						<Image
-							src={techImage['Node']}
-							height={50}
-							width={50}
-							onClick={() => openImageModal(techImage['Node'])}
-						/>
-						<Image
-							src={techImage['Typescript']}
-							height={50}
-							width={50}
-							onClick={() => openImageModal(techImage['Typescript'])}
-						/>
-						<Image
-							src={techImage['Express']}
-							height={50}
-							width={50}
-							onClick={() => openImageModal(techImage['Express'])}
-						/>
-						<Image
-							src={techImage['Vue']}
-							height={50}
-							width={50}
-							onClick={() => openImageModal(techImage['Vue'])}
-						/>
-					</div> */}
 				</div>
 				{showCopyButton && (
 					<div className={Style['copyButton']}>

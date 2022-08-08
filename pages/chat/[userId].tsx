@@ -145,6 +145,7 @@ const UserChat = () => {
 								setQuillWrapperHeight(heightValue);
 							}}
 							handleSubmit={(content: ChatList) => {
+								// 이미지 S3 되면 올리고 setChatList 호출
 								setChatList((prev: ChatList[]) => [
 									...prev,
 									{
