@@ -147,6 +147,9 @@ const RegisterStep2 = (props: any) => {
 							});
 						}}
 						className={Style['inputIdField']}
+						onEnter={() => {
+							clickNext(true);
+						}}
 					/>
 				</InputLayout>
 				<div className={Style['buttonBelow']}>

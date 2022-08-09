@@ -5,7 +5,13 @@ import { teamListRequest } from '@utils/api/register/teamListRequest';
 import { techListRequest } from '@utils/api/register/getTechListRequest';
 import { registerRequest } from '@utils/api/register/registerRequest';
 import { sendUserImgRequest } from '@utils/api/register/sendUserImgRequest';
-import { registerStep1, registerStep2, registerStep3 } from '@store/registerSlice';
+import {
+	registerStep1,
+	registerStep2,
+	registerStep3,
+	registerStep4,
+	registerReset,
+} from '@store/registerSlice';
 
 interface IIdCheckParam {
 	type: string;
@@ -76,7 +82,7 @@ const teamListFunction = function* ({ setTeamList }: any) {
 	yield;
 };
 
-const techListFunction = function* ({ setTechList }: any) {
+const techListFunction = function* ({ setTechSelectedList }: any) {
 	const techListResult: ITechList = yield call(techListRequest, {});
 
 	if (techListResult.result === 'success') {
@@ -85,7 +91,7 @@ const techListFunction = function* ({ setTechList }: any) {
 			return { key: tech.TECH_CD, value: false, name: tech.NAME };
 		});
 
-		setTechList(newTempArr);
+		setTechSelectedList(newTempArr);
 	} else {
 		console.error(techListResult.errMessage);
 	}
@@ -216,6 +222,15 @@ const validStep2Function = function* ({
 		}),
 	);
 };
+
+const validStep4Function = function* ({ techSelectedList, goNext, propFunction }: any) {
+	propFunction({ goNext });
+
+	console.log('validStep4Function');
+	console.log(techSelectedList);
+
+	yield put(registerStep4({ techSelectValue: techSelectedList }));
+};
 const validStep3Function = function* ({
 	userDetailValue,
 	setUserDetailValue,
@@ -241,7 +256,7 @@ const validStep3Function = function* ({
 };
 const registerUserFunction = function* ({ registerData, propFunction }: any) {
 	if (registerData.image.imageFile) {
-		const fileName = registerData.user_id.split('@')[0];
+		const fileName = registerData.idInputValue.idInputValue.split('@')[0];
 		const fileExtName = registerData.image.imageFile.name.split('.')[1];
 		const formData = new FormData();
 
@@ -253,6 +268,7 @@ const registerUserFunction = function* ({ registerData, propFunction }: any) {
 	const registerResult: IRegisterUser = yield call(registerRequest, registerData);
 
 	propFunction({ goNext: true, registerResult });
+	yield put(registerReset());
 };
 
 const idCheck = function* () {
@@ -264,7 +280,6 @@ const getTeamList = function* () {
 };
 
 const getTechList = function* () {
-	console.log('getTechList');
 	yield takeLatest(RCONST.TECH_LIST, techListFunction);
 };
 
@@ -279,6 +294,10 @@ const validStep3 = function* () {
 	yield takeLatest(RCONST.VALID_STEP3, validStep3Function);
 };
 
+const validStep4 = function* () {
+	yield takeLatest(RCONST.VALID_STEP4, validStep4Function);
+};
+
 const register = function* () {
 	yield takeLatest(RCONST.REGISTER_USER, registerUserFunction);
 };
@@ -290,6 +309,7 @@ export default function* registerSaga() {
 		fork(validStep1),
 		fork(validStep2),
 		fork(validStep3),
+		fork(validStep4),
 		fork(register),
 		fork(getTechList),
 	]);

@@ -37,10 +37,12 @@ const initialState = {
 		userDetailValue: '',
 		userDetailError: false,
 	},
-	techSelectValue: {
-		userTechValue: [],
+	techSelectValue: [],
+
+	userProfileImage: {
+		imageFile: null,
+		previewURL: '',
 	},
-	userProfileImage: null,
 };
 
 const registerSlice = createSlice({
@@ -61,24 +63,59 @@ const registerSlice = createSlice({
 		registerStep3(state, action) {
 			state.userDetailValue = action.payload.userDetailValue || '';
 		},
-		registerStep6(state, action) {
+		registerStep4(state, action) {
 			state.techSelectValue = action.payload.techSelectValue;
 		},
 		// registerStep4(state, action) {
 		// 	state.userDetail = action.payload.userDetail || '';
 		// },
-		// registerReset(state) {
-		// 	state.idInputValue = '';
-		// 	state.nameInputValue = '';
-		// 	state.pwInputValue = '';
-		// 	state.teamSelectValue = '';
-		// 	state.titleSelectValue = '';
-		// 	state.phoneNumValue = '';
-		// 	state.userDetail = '';
-		// 	state.userProfileImage = null;
-		// },
+		registerReset(state) {
+			state.idInputValue = {
+				idInputValue: '',
+				idInputError: false,
+				idInputErrMsg: 'blank',
+				idConfirm: false,
+			};
+			state.nameInputValue = {
+				nameInputValue: '',
+				nameInputError: false,
+			};
+			state.pwInputValue = {
+				pwInputValue: '',
+				pwInputError: false,
+				pwInputErrMsg: '',
+			};
+			state.pwInput2Value = {
+				pwInput2Value: '',
+				pwInput2Error: false,
+				pwInput2ErrMsg: '',
+			};
+			state.teamSelectValue = {
+				teamSelectValue: '',
+				teamSelectError: false,
+			};
+			state.titleSelectValue = {
+				titleSelectValue: '',
+				titleSelectError: false,
+			};
+			state.phoneNumValue = {
+				phoneNumValue: '',
+				phoneNumError: false,
+			};
+			state.userDetailValue = {
+				userDetailValue: '',
+				userDetailError: false,
+			};
+			state.techSelectValue = [];
+
+			state.userProfileImage = {
+				imageFile: null,
+				previewURL: '',
+			};
+		},
 	},
 });
 
-export const { registerStep1, registerStep2, registerStep3 } = registerSlice.actions;
+export const { registerStep1, registerStep2, registerStep3, registerStep4, registerReset } =
+	registerSlice.actions;
 export default registerSlice.reducer;

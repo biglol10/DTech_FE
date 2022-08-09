@@ -246,6 +246,7 @@ const RegisterStep1 = (props: any) => {
 							pwInput2ErrMsg,
 						});
 					}}
+					onEnter={clickNext}
 					className={Style['inputPwField']}
 					inputIcon={<Icon name="lock" />}
 					type="password"
