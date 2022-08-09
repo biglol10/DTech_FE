@@ -56,19 +56,16 @@ const registerSlice = createSlice({
 			state.pwInput2Value = action.payload.pwInput2Value;
 		},
 		registerStep2(state, action) {
-			state.teamSelectValue = action.payload.teamSelectValue || '';
-			state.titleSelectValue = action.payload.titleSelectValue || '';
-			state.phoneNumValue = action.payload.phoneNumValue || '';
+			state.teamSelectValue = action.payload.teamSelectValue;
+			state.titleSelectValue = action.payload.titleSelectValue;
+			state.phoneNumValue = action.payload.phoneNumValue;
 		},
 		registerStep3(state, action) {
-			state.userDetailValue = action.payload.userDetailValue || '';
+			state.userDetailValue = action.payload.userDetailValue;
 		},
 		registerStep4(state, action) {
 			state.techSelectValue = action.payload.techSelectValue;
 		},
-		// registerStep4(state, action) {
-		// 	state.userDetail = action.payload.userDetail || '';
-		// },
 		registerReset(state) {
 			state.idInputValue = {
 				idInputValue: '',

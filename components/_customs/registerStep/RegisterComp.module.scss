@@ -51,6 +51,7 @@ $sectionWidth: 60%;
 }
 
 .buttonBelow {
+	bottom: 35px;
 	display: flex;
 	justify-content: space-around;
 }
@@ -60,8 +61,11 @@ $sectionWidth: 60%;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	// border: 2px rgb(189, 188, 188) solid;
+	// border-radius: 15px;
 	.img-wrapper {
 		margin: 10px 0 10px 0;
+
 		img {
 			width: 200px;
 			height: 200px;
@@ -69,7 +73,7 @@ $sectionWidth: 60%;
 	}
 	.upload-button {
 		button {
-			margin: 0 25px;
+			margin-bottom: 45px;
 		}
 	}
 }
@@ -83,6 +87,8 @@ $sectionWidth: 60%;
 
 .loginBtn {
 	margin-top: 50px;
+	display: flex;
+	justify-content: center;
 }
 
 .techBtnDiv {

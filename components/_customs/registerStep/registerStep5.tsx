@@ -9,6 +9,8 @@
 import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
 import profileImg from '@public/images/profile.png';
 import { Label, Button } from '@components/index';
 import Style from './RegisterComp.module.scss';
@@ -20,7 +22,6 @@ const RegisterStep5 = (props: any) => {
 		useSelector((state: any) => state.register.userProfileImage),
 	);
 
-	let inputRef: any;
 	const imgRef = useRef<any>();
 
 	useEffect(() => {}, [image]);
@@ -62,64 +63,66 @@ const RegisterStep5 = (props: any) => {
 
 	return (
 		<>
-			<Label content="프로필 사진" size="big" />
-			<div className={Style['uploader-wrapper']}>
-				<input
-					type="file"
-					accept="image/*"
-					ref={imgRef}
-					onChange={saveImage}
-					style={{ display: 'none' }}
-				/>
-				<div className={Style['img-wrapper']}>
-					{image.imageFile !== null ? (
-						// <img src={image.previewURL} />
-						<Image src={image.previewURL} width={200} height={200} />
-					) : (
-						<Image src={profileImg} width={200} height={200} />
-					)}
+			<div style={inputElCommStyle(0, 'left', true)}>
+				<Label content="프로필 사진" size="big" />
+				<div className={Style['uploader-wrapper']}>
+					<input
+						type="file"
+						accept="image/*"
+						ref={imgRef}
+						onChange={saveImage}
+						style={{ display: 'none' }}
+					/>
+					<div className={Style['img-wrapper']}>
+						{image.imageFile !== null ? (
+							// <img src={image.previewURL} />
+							<Image src={image.previewURL} width={200} height={200} />
+						) : (
+							<Image src={profileImg} width={200} height={200} />
+						)}
+					</div>
+					<div className={Style['upload-button']}>
+						<Button
+							className={Style['registerButton']}
+							content="업로드"
+							size="large"
+							color="grey"
+							buttonType="none"
+							onClick={() => imgRef.current.click()}
+						/>
+						<Button
+							className={Style['registerButton']}
+							content="삭제"
+							size="large"
+							color="grey"
+							buttonType="none"
+							onClick={deleteImage}
+						/>
+					</div>
 				</div>
-			</div>
-			<div className={Style['upload-button']}>
-				<Button
-					className={Style['registerButton']}
-					content="업로드"
-					size="large"
-					color="grey"
-					buttonType="none"
-					onClick={() => imgRef.current.click()}
-				/>
-				<Button
-					className={Style['registerButton']}
-					content="삭제"
-					size="large"
-					color="grey"
-					buttonType="none"
-					onClick={deleteImage}
-				/>
-			</div>
 
-			<div className={Style['buttonBelow']}>
-				<Button
-					className={Style['registerButton']}
-					content="이전"
-					size="large"
-					color="google plus"
-					buttonType="none"
-					onClick={() => {
-						clickNext(false);
-					}}
-				/>
-				<Button
-					className={Style['registerButton']}
-					content="회원가입"
-					size="large"
-					color="google plus"
-					buttonType="none"
-					onClick={() => {
-						clickNext(true);
-					}}
-				/>
+				<div className={Style['buttonBelow']}>
+					<Button
+						className={Style['registerButton']}
+						content="이전"
+						size="large"
+						color="google plus"
+						buttonType="none"
+						onClick={() => {
+							clickNext(false);
+						}}
+					/>
+					<Button
+						className={Style['registerButton']}
+						content="회원가입"
+						size="large"
+						color="google plus"
+						buttonType="none"
+						onClick={() => {
+							clickNext(true);
+						}}
+					/>
+				</div>
 			</div>
 		</>
 	);

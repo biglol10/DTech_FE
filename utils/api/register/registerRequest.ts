@@ -6,7 +6,7 @@ const registerRequest = async (props: any) => {
 		name: props.nameInputValue.nameInputValue,
 		passwd: props.pwInputValue.pwInputValue,
 		team: props.teamSelectValue.teamSelectValue,
-		title: props.titleSelectValue.teamSelectValue,
+		title: props.titleSelectValue.titleSelectValue,
 		phonenum: props.phoneNumValue.phoneNumValue,
 		detail: props.userDetailValue.userDetailValue,
 		tech_list: props.techSelectValue

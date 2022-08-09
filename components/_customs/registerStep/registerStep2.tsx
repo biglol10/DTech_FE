@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
-import { InputLayout, InputDefault, Button, InputDropdown, InputPhone } from '@components/index';
+import { InputLayout, Button, InputDropdown, InputPhone } from '@components/index';
 import Style from './RegisterComp.module.scss';
 
 const RegisterStep2 = (props: any) => {
@@ -19,9 +19,6 @@ const RegisterStep2 = (props: any) => {
 
 	const dispatch = useDispatch();
 
-	// const [idInputValue, setIdInputValue] = useState(
-	// 	useSelector((state: any) => state.register.idInputValue),
-	// );
 	const [teamSelectValue, setTeamSelectValue] = useState(
 		useSelector((state: any) => state.register.teamSelectValue),
 	);
@@ -31,11 +28,6 @@ const RegisterStep2 = (props: any) => {
 	const [phoneNumValue, setPhoneNumValue] = useState(
 		useSelector((state: any) => state.register.phoneNumValue),
 	);
-	// const [teamSelectValue, setTeamSelectValue] = useState(props.registerData.team);
-	// const [teamSelectError, setTeamSelectError] = useState(false);
-	// const [titleSelectValue, setTitleSelectValue] = useState(props.registerData.title);
-	// const [titleSelectError, setTitleSelectError] = useState(false);
-
 	const [teamList, setTeamList] = useState([]);
 	const titleList = [
 		{ key: '사원', value: '사원', text: '사원' },
@@ -77,7 +69,7 @@ const RegisterStep2 = (props: any) => {
 					inputLabelSize={labelSize}
 					showInputLabel={true}
 					autoFitErrorLabel={true}
-					// spacing={2}
+					spacing={40}
 				>
 					<InputDropdown
 						id="inputId"
@@ -102,13 +94,13 @@ const RegisterStep2 = (props: any) => {
 					inputLabelSize={labelSize}
 					showInputLabel={true}
 					autoFitErrorLabel={true}
-					// spacing={2}
+					spacing={2}
 				>
 					<InputDropdown
 						id="inputId"
 						placeholder="직급 선택"
 						options={titleList}
-						value={titleSelectValue.teamSelectValue}
+						value={titleSelectValue.titleSelectValue}
 						onChange={(obj: { value: string }) => {
 							setTitleSelectValue({
 								...titleSelectValue,

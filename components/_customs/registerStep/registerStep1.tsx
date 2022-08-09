@@ -4,9 +4,10 @@
  * 번호    작업자     작업일         브랜치                       변경내용
  *-------------------------------------------------------------------------------------------
  * 1      장보영      2022-07-20     feature/BY/register        최초작성
+ * 2      장보영      2022-08-04     feature/BY/register        store수정
  ********************************************************************************************/
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, InputLayout, InputWithIcon } from '@components/index';
@@ -55,11 +56,9 @@ const RegisterStep1 = (props: any) => {
 			goNext: true,
 			propFunction: props.propFunction,
 		});
-		// props.propFunction({ idInputValue, nameInputValue, pwInputValue, pw2InputValue });
 	};
 
 	const idCheck = () => {
-		console.log('idCheck');
 		dispatch({
 			type: 'ID_CHECK',
 			idInputValue,
@@ -77,7 +76,7 @@ const RegisterStep1 = (props: any) => {
 				inputLabelSize={labelSize}
 				showInputLabel={true}
 				autoFitErrorLabel={true}
-				spacing={20}
+				spacing={40}
 			>
 				<>
 					<InputWithIcon
@@ -134,7 +133,7 @@ const RegisterStep1 = (props: any) => {
 				inputLabelSize={labelSize}
 				showInputLabel={true}
 				autoFitErrorLabel={true}
-				// spacing={2}
+				spacing={2}
 			>
 				<InputWithIcon
 					id="inputId"
@@ -168,7 +167,7 @@ const RegisterStep1 = (props: any) => {
 				inputLabelSize={labelSize}
 				showInputLabel={true}
 				autoFitErrorLabel={true}
-				// spacing={2}
+				spacing={2}
 			>
 				<InputWithIcon
 					id="inputPw"
@@ -222,7 +221,7 @@ const RegisterStep1 = (props: any) => {
 				inputLabelSize={labelSize}
 				showInputLabel={true}
 				autoFitErrorLabel={true}
-				// spacing={7}
+				spacing={2}
 			>
 				<InputWithIcon
 					id="inputPw2Confirm"
@@ -252,14 +251,16 @@ const RegisterStep1 = (props: any) => {
 					type="password"
 				/>
 			</InputLayout>
-			<Button
-				className={Style['registerButton']}
-				content="다음"
-				size="large"
-				color="google plus"
-				buttonType="none"
-				onClick={clickNext}
-			/>
+			<div className={Style['buttonBelow']}>
+				<Button
+					className={Style['registerButton']}
+					content="다음"
+					size="large"
+					color="google plus"
+					buttonType="none"
+					onClick={clickNext}
+				/>
+			</div>
 		</>
 	);
 };
