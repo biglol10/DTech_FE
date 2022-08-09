@@ -86,7 +86,7 @@
 	.linkListDiv {
 		width: 100%;
 		height: auto;
-		background-color: #fff5ff;
+		background-color: floralwhite;
 		display: grid;
 		grid-template-columns: repeat(5, 1fr);
 		gap: 20px;
@@ -99,6 +99,16 @@
 
 			&:hover {
 				opacity: 1;
+			}
+
+			p {
+				font-weight: bold;
+			}
+
+			img {
+				height: 120px;
+				width: 120px;
+				border-radius: 5px;
 			}
 		}
 

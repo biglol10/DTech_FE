@@ -109,10 +109,6 @@ const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListE
 							))}
 						</div>
 					)}
-
-					{/* {linkList?.length > 0 && (
-						<div className={cx('linkListDiv', messageOwner)}></div>
-					)} */}
 				</div>
 
 				{showCopyButton && (
@@ -136,34 +132,40 @@ const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListE
 					</div>
 				)}
 
-				<div className={Style['linkListDiv']}>
-					{linkMetadata.length > 0 &&
-						linkMetadata.map((item: { [name: string]: string }) => {
-							return (
-								// eslint-disable-next-line react/jsx-key
-								<a href={item.url} target="_blank" rel="noopener noreferrer">
-									<div>
-										<h4>{item.url}</h4>
-										{item.status === 'success' && <p>{item.metadata_title}</p>}
-										{item.status === 'success' && (
-											<div>{item.metadata_description}</div>
-										)}
-										{item.status === 'success' && (
-											<img
-												src={item.metadata_image}
-												alt=""
-												style={{
-													height: '150px',
-													width: '150px',
-													borderRadius: '5px',
-												}}
-											/>
-										)}
-									</div>
-								</a>
-							);
-						})}
-				</div>
+				{!!linkMetadata.length && (
+					<div className={Style['linkListDiv']}>
+						<>
+							{messageOwner === 'mine' &&
+								Array(6 - linkMetadata.length).map((item, idx) => {
+									return <div key={`emptyDiv_${idx}`}></div>;
+								})}
+							{linkMetadata.map((item: { [name: string]: string }, idx: number) => {
+								return (
+									<a
+										key={`ahref_${item.url}_${idx}`}
+										href={item.url}
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										<div>
+											<h4>{item.url}</h4>
+											{item.status === 'success' && item.metadata_title && (
+												<p>{item.metadata_title}</p>
+											)}
+											{item.status === 'success' &&
+												item.metadata_description && (
+													<div>{item.metadata_description}</div>
+												)}
+											{item.status === 'success' && item.metadata_image && (
+												<img src={item.metadata_image} alt="" />
+											)}
+										</div>
+									</a>
+								);
+							})}
+						</>
+					</div>
+				)}
 			</div>
 		</>
 	);
