@@ -11,7 +11,7 @@ import { TextArea } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
-import { Label, Button, InputLayout } from '@components/index';
+import { Button, InputLayout } from '@components/index';
 
 import classNames from 'classnames/bind';
 import Style from './RegisterComp.module.scss';
@@ -32,7 +32,6 @@ const RegisterStep3 = (props: any) => {
 			goNext,
 			propFunction: props.propFunction,
 		});
-		// props.propFunction({ detail, goNext });
 	};
 
 	return (

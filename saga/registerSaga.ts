@@ -40,7 +40,6 @@ interface IRegisterUser {
 	errMessage: string | undefined;
 }
 const idCheckFunction = function* ({ idInputValue, setIdInputValue }: IIdCheckParam) {
-	console.log('idCheckFunction');
 	const idCheckResult: IIdCheckResult = yield call(idCheckRequest, {
 		userId: idInputValue.idInputValue,
 	});
@@ -225,9 +224,6 @@ const validStep2Function = function* ({
 
 const validStep4Function = function* ({ techSelectedList, goNext, propFunction }: any) {
 	propFunction({ goNext });
-
-	console.log('validStep4Function');
-	console.log(techSelectedList);
 
 	yield put(registerStep4({ techSelectValue: techSelectedList }));
 };

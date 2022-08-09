@@ -7,7 +7,6 @@
  ********************************************************************************************/
 
 import { useState, useEffect } from 'react';
-import { TextArea } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
@@ -22,7 +21,6 @@ const RegisterStep4 = (props: any) => {
 	const [techSelectedList, setTechSelectedList] = useState(
 		useSelector((state: any) => state.register.techSelectValue),
 	);
-	const [registerData, setRegisterData] = useState(useSelector((state: any) => state.register));
 
 	useEffect(() => {
 		if (techSelectedList.filter((tech: any) => tech.value === true).length === 0) {
