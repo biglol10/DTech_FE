@@ -1,3 +1,33 @@
+#chatMain {
+	height: 100%;
+	position: relative;
+
+	& > div:first-child {
+		padding: 5px 0px;
+		margin-bottom: 7px;
+	}
+
+	& > div:last-child {
+		height: 93%;
+		position: absolute;
+		width: 100%;
+		bottom: 0%;
+
+		.chatWrapperSegment {
+			overflow-y: auto;
+			padding-bottom: 20px;
+			display: flex;
+			flex-direction: column;
+
+			// & > div {
+			// 	max-width: 70%;
+			// 	position: relative;
+			// 	margin: 5px 0px;
+			// }
+		}
+	}
+}
+
 .preClass {
 	white-space: pre-wrap; /* css-3 */
 	white-space: -moz-pre-wrap; /* Mozilla */

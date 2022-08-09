@@ -8,6 +8,7 @@ import RegisterStep5 from './_customs/registerStep/registerStep5';
 import RegisterResult from './_customs/registerStep/registerResult';
 import SkillTable from './_customs/dashboard/SkillTable';
 import PersonCard from './_customs/dashboard/PersonCard';
+import SingleChatMessage from './_customs/chat/SingleChatMessage';
 
 export {
 	MainLayoutTemplate,
@@ -19,4 +20,5 @@ export {
 	RegisterResult,
 	SkillTable,
 	PersonCard,
+	SingleChatMessage,
 };
