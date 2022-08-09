@@ -49,8 +49,9 @@ const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListE
 					params: { linkList },
 				})
 				.then((response) => {
-					console.log('data fetch success');
-					console.log(response);
+					const { metadataArr } = response.data;
+
+					setLinkMetadata(metadataArr);
 				})
 				.catch((err) => {
 					console.log('data fetch error');
@@ -90,7 +91,8 @@ const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListE
 							pointing={`${messageOwner === 'other' ? 'left' : 'right'}`}
 							className={cx('messageLabel', messageOwner)}
 						>
-							<pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre>
+							<pre>{value}</pre>
+							{/* <pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre> */}
 						</Label>
 					)}
 
@@ -108,9 +110,9 @@ const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListE
 						</div>
 					)}
 
-					{linkList?.length > 0 && (
+					{/* {linkList?.length > 0 && (
 						<div className={cx('linkListDiv', messageOwner)}></div>
-					)}
+					)} */}
 				</div>
 
 				{showCopyButton && (
@@ -133,6 +135,35 @@ const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListE
 						/>
 					</div>
 				)}
+
+				<div className={Style['linkListDiv']}>
+					{linkMetadata.length > 0 &&
+						linkMetadata.map((item: { [name: string]: string }) => {
+							return (
+								// eslint-disable-next-line react/jsx-key
+								<a href={item.url} target="_blank" rel="noopener noreferrer">
+									<div>
+										<h4>{item.url}</h4>
+										{item.status === 'success' && <p>{item.metadata_title}</p>}
+										{item.status === 'success' && (
+											<div>{item.metadata_description}</div>
+										)}
+										{item.status === 'success' && (
+											<img
+												src={item.metadata_image}
+												alt=""
+												style={{
+													height: '150px',
+													width: '150px',
+													borderRadius: '5px',
+												}}
+											/>
+										)}
+									</div>
+								</a>
+							);
+						})}
+				</div>
 			</div>
 		</>
 	);
