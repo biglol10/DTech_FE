@@ -135,10 +135,6 @@ const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListE
 				{!!linkMetadata.length && (
 					<div className={Style['linkListDiv']}>
 						<>
-							{messageOwner !== 'other' &&
-								Array(6 - linkMetadata.length)
-									.fill(0)
-									.map((item: any) => <a></a>)}
 							{linkMetadata.map((item: { [name: string]: string }, idx: number) => {
 								return (
 									<a
@@ -163,6 +159,10 @@ const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListE
 									</a>
 								);
 							})}
+							{messageOwner !== 'other' &&
+								Array(6 - linkMetadata.length)
+									.fill(0)
+									.map((item: null, idx) => <div key={`emptyA_${idx}`}></div>)}
 						</>
 					</div>
 				)}

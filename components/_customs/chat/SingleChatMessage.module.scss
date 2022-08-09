@@ -105,6 +105,11 @@
 				font-weight: bold;
 			}
 
+			h4,
+			p {
+				@include lineClamp(1);
+			}
+
 			img {
 				height: 120px;
 				width: 120px;
