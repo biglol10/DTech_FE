@@ -184,7 +184,11 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 						<ul id="userSettingAreaUL">
 							<li
 								className={
-									Style[`${appCommon.currentRoute === 'dashboard' && 'active'}`]
+									Style[
+										`${
+											appCommon.route.currentRoute === 'dashboard' && 'active'
+										}`
+									]
 								}
 								onClick={() => router.push('/dashboard')}
 							>
@@ -192,7 +196,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 							</li>
 							<li
 								className={
-									Style[`${appCommon.currentRoute === 'chat' && 'active'}`]
+									Style[`${appCommon.route.currentRoute === 'chat' && 'active'}`]
 								}
 								onClick={() => router.push('/chat/sdafadsf')}
 							>
@@ -200,14 +204,19 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 							</li>
 							<li
 								className={
-									Style[`${appCommon.currentRoute === 'examplePage' && 'active'}`]
+									Style[
+										`${
+											appCommon.route.currentRoute === 'examplePage' &&
+											'active'
+										}`
+									]
 								}
 							>
 								<a>게시판</a>
 							</li>
 							<li
 								className={
-									Style[`${appCommon.currentRoute === 'about' && 'active'}`]
+									Style[`${appCommon.route.currentRoute === 'about' && 'active'}`]
 								}
 							>
 								<a>About</a>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Avatar, Button } from '@components/index';
 import { techImage } from '@utils/constants/techs';
-import { Label, ListList } from 'semantic-ui-react';
+import { Label } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import { useModal } from '@utils/hooks/customHooks';
 import { modalUISize } from '@utils/constants/uiConstants';
@@ -54,12 +54,11 @@ const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListE
 					setLinkMetadata(metadataArr);
 				})
 				.catch((err) => {
-					console.log('data fetch error');
-					console.log(err);
+					return null;
 				});
 		};
 
-		if (linkList.length > 0) result();
+		if (linkList.length) result();
 	}, [linkList]);
 
 	return (
