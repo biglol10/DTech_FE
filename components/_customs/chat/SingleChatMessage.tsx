@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Avatar, Button } from '@components/index';
 import { techImage } from '@utils/constants/techs';
-import { Label } from 'semantic-ui-react';
+import { Label, ListList } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import { useModal } from '@utils/hooks/customHooks';
 import { modalUISize } from '@utils/constants/uiConstants';
 import Image from 'next/image';
 import { ChatList } from '@utils/types/commTypes';
+import axios from 'axios';
 import Style from './SingleChatMessage.module.scss';
 
 interface ChatListExtends extends ChatList {
@@ -16,6 +17,7 @@ interface ChatListExtends extends ChatList {
 const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListExtends) => {
 	const [showCopyButton, setShowCopyButton] = useState(false);
 	const [copyButtonClicked, setCopyButtonClicked] = useState(false);
+	const [linkMetadata, setLinkMetadata] = useState<any>([]);
 
 	const { handleModal } = useModal();
 
@@ -39,6 +41,26 @@ const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListE
 	};
 
 	const cx = classNames.bind(Style);
+
+	useEffect(() => {
+		const result = async () => {
+			await axios
+				.get('http://localhost:3066/api/utils/getMetadata', {
+					params: { linkList },
+				})
+				.then((response) => {
+					const { metadataArr } = response.data;
+
+					setLinkMetadata(metadataArr);
+				})
+				.catch((err) => {
+					console.log('data fetch error');
+					console.log(err);
+				});
+		};
+
+		if (linkList.length > 0) result();
+	}, [linkList]);
 
 	return (
 		<>
@@ -69,7 +91,8 @@ const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListE
 							pointing={`${messageOwner === 'other' ? 'left' : 'right'}`}
 							className={cx('messageLabel', messageOwner)}
 						>
-							<pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre>
+							<pre>{value}</pre>
+							{/* <pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre> */}
 						</Label>
 					)}
 
@@ -87,6 +110,7 @@ const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListE
 						</div>
 					)}
 				</div>
+
 				{showCopyButton && (
 					<div className={Style['copyButton']}>
 						<Button
@@ -105,6 +129,41 @@ const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListE
 								}, 3000);
 							}}
 						/>
+					</div>
+				)}
+
+				{!!linkMetadata.length && (
+					<div className={Style['linkListDiv']}>
+						<>
+							{linkMetadata.map((item: { [name: string]: string }, idx: number) => {
+								return (
+									<a
+										key={`ahref_${item.url}_${idx}`}
+										href={item.url}
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										<div>
+											<h4>{item.url}</h4>
+											{item.status === 'success' && item.metadata_title && (
+												<p>{item.metadata_title}</p>
+											)}
+											{item.status === 'success' &&
+												item.metadata_description && (
+													<div>{item.metadata_description}</div>
+												)}
+											{item.status === 'success' && item.metadata_image && (
+												<img src={item.metadata_image} alt="" />
+											)}
+										</div>
+									</a>
+								);
+							})}
+							{messageOwner !== 'other' &&
+								Array(6 - linkMetadata.length)
+									.fill(0)
+									.map((item: null, idx) => <div key={`emptyA_${idx}`}></div>)}
+						</>
 					</div>
 				)}
 			</div>

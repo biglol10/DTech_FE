@@ -1,8 +1,11 @@
+@import '@styles/_mixinCollection.scss';
+
 .chatWrapper {
 	width: 100%;
 	display: flex;
 	flex-direction: column;
 	position: relative;
+	// margin-top: 1px;
 
 	.avatarLabel {
 		border-radius: 10px !important;
@@ -63,7 +66,7 @@
 			display: flex;
 			gap: 8px;
 			margin-top: 10px;
-			border: 1px solid paleturquoise;
+			border: 1px solid #ffdfca;
 			border-radius: 5px;
 			padding: 1%;
 
@@ -77,6 +80,45 @@
 			&.mine {
 				align-self: self-end;
 			}
+		}
+	}
+
+	.linkListDiv {
+		width: 100%;
+		height: auto;
+		background-color: floralwhite;
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		gap: 20px;
+		padding: 10px;
+
+		& > a {
+			color: black;
+			opacity: 0.6;
+			cursor: zoom-in;
+
+			&:hover {
+				opacity: 1;
+			}
+
+			p {
+				font-weight: bold;
+			}
+
+			h4,
+			p {
+				@include lineClamp(1);
+			}
+
+			img {
+				height: 120px;
+				width: 120px;
+				border-radius: 5px;
+			}
+		}
+
+		& > a > div > div {
+			@include lineClamp(2);
 		}
 	}
 }
