@@ -80,20 +80,20 @@ const MyApp = ({ Component, pageProps }: ComponentWithPageLayout) => {
 				</>
 			)}
 			{/* {pageProps.isWithMainLayout ? (
-				<>
-					<MainLayoutTemplate>
-						<Component {...pageProps} />
-					</MainLayoutTemplate>
-					<ModalPopup />
-					{toastMemo}
-				</>
-			) : (
-				<>
-					<Component {...pageProps} />
-					<ModalPopup />
-					{toastMemo}
-				</>
-			)} */}
+				 <>
+					 <MainLayoutTemplate>
+						 <Component {...pageProps} />
+					 </MainLayoutTemplate>
+					 <ModalPopup />
+					 {toastMemo}
+				 </>
+			 ) : (
+				 <>
+					 <Component {...pageProps} />
+					 <ModalPopup />
+					 {toastMemo}
+				 </>
+			 )} */}
 		</>
 	);
 };

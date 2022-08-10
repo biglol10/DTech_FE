@@ -14,6 +14,7 @@ import {
 	RegisterStep3,
 	RegisterStep4,
 	RegisterStep5,
+	RegisterResult,
 } from '@components/customs';
 import { Stepper, Step, StepLabel } from '@mui/material';
 import React, { useState } from 'react';
@@ -24,51 +25,13 @@ import Style from './Register.module.scss';
 const RegisterPage = (props: any) => {
 	const cx = classNames.bind(Style);
 	const [stepNum, setStepNum] = useState(1);
-	const [registerData, setRegisterData] = useState({});
 	const [resultData, setResultData] = useState({});
 
-	const getStep1Data = (data: any) => {
-		setRegisterData({
-			...registerData,
-			user_id: data.idInputValue,
-			name: data.nameInputValue,
-			passwd: data.pwInputValue,
-			id_confirmed: data.idConfirm,
-		});
-		setStepNum(2);
-	};
-	const getStep2Data = (data: any) => {
-		setRegisterData({
-			...registerData,
-			team: data.teamSelectValue,
-			title: data.titleSelectValue,
-			phonenum: data.phoneNumValue,
-		});
-		if (data.goNext) {
-			setStepNum((prev) => prev + 1);
-		} else {
-			setStepNum((prev) => prev - 1);
-		}
-	};
-	const getStep3Data = (data: any) => {
-		setRegisterData({
-			...registerData,
-			detail: data.detail,
-		});
-		if (data.goNext) {
-			setStepNum((prev) => prev + 1);
-		} else {
-			setStepNum((prev) => prev - 1);
-		}
-	};
-
-	const getStep4Data = (data: any) => {
-		setRegisterData({
-			...registerData,
-			image: data.image,
-		});
-		if (data.goNext) {
+	const goNextFunc = (data: any) => {
+		if (stepNum === 5) {
 			setResultData(data.registerResult);
+		}
+		if (data.goNext) {
 			setStepNum((prev) => prev + 1);
 		} else {
 			setStepNum((prev) => prev - 1);
@@ -83,36 +46,36 @@ const RegisterPage = (props: any) => {
 				nextImage={<Image src={DLogo} width={48} height={48} />}
 				size="massive"
 			/>
-			<Stepper activeStep={stepNum - 1} alternativeLabel className={cx('registerStepper')}>
-				<Step key="1">
-					<StepLabel></StepLabel>
-				</Step>
-				<Step key="2">
-					<StepLabel></StepLabel>
-				</Step>
-				<Step key="3">
-					<StepLabel></StepLabel>
-				</Step>
-				<Step key="4">
-					<StepLabel></StepLabel>
-				</Step>
-				<Step key="5">
-					<StepLabel></StepLabel>
-				</Step>
-			</Stepper>
-			{stepNum === 1 && (
-				<RegisterStep1 propFunction={getStep1Data} registerData={registerData} />
+			{stepNum < 6 && (
+				<Stepper
+					activeStep={stepNum - 1}
+					alternativeLabel
+					className={cx('registerStepper')}
+				>
+					<Step key="1">
+						<StepLabel></StepLabel>
+					</Step>
+					<Step key="2">
+						<StepLabel></StepLabel>
+					</Step>
+					<Step key="3">
+						<StepLabel></StepLabel>
+					</Step>
+					<Step key="4">
+						<StepLabel></StepLabel>
+					</Step>
+					<Step key="5">
+						<StepLabel></StepLabel>
+					</Step>
+				</Stepper>
 			)}
-			{stepNum === 2 && (
-				<RegisterStep2 propFunction={getStep2Data} registerData={registerData} />
-			)}
-			{stepNum === 3 && (
-				<RegisterStep3 propFunction={getStep3Data} registerData={registerData} />
-			)}
-			{stepNum === 4 && (
-				<RegisterStep4 propFunction={getStep4Data} registerData={registerData} />
-			)}
-			{stepNum === 5 && <RegisterStep5 resultData={resultData} />}
+
+			{stepNum === 1 && <RegisterStep1 propFunction={goNextFunc} />}
+			{stepNum === 2 && <RegisterStep2 propFunction={goNextFunc} />}
+			{stepNum === 3 && <RegisterStep3 propFunction={goNextFunc} />}
+			{stepNum === 4 && <RegisterStep4 propFunction={goNextFunc} />}
+			{stepNum === 5 && <RegisterStep5 propFunction={goNextFunc} />}
+			{stepNum === 6 && <RegisterResult resultData={resultData} />}
 		</div>
 	);
 

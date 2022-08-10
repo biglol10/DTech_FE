@@ -1,17 +1,22 @@
 import * as RCONST from '@utils/constants/reducerConstants';
-import { all, call, fork, takeLatest } from 'redux-saga/effects';
+import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
 import { idCheckRequest } from '@utils/api/register/idCheckRequest';
 import { teamListRequest } from '@utils/api/register/teamListRequest';
+import { techListRequest } from '@utils/api/register/getTechListRequest';
 import { registerRequest } from '@utils/api/register/registerRequest';
 import { sendUserImgRequest } from '@utils/api/register/sendUserImgRequest';
+import {
+	registerStep1,
+	registerStep2,
+	registerStep3,
+	registerStep4,
+	registerReset,
+} from '@store/registerSlice';
 
 interface IIdCheckParam {
 	type: string;
-	idInputValue: string;
-	setIdInputError: any;
-	setIdInputErrMsg: any;
-	setIdCheckMsg: any;
-	setIdConfirm: any;
+	idInputValue: any;
+	setIdInputValue: any;
 }
 interface IIdCheckResult {
 	result: string;
@@ -24,26 +29,35 @@ interface ITeamList {
 	errMessage: string | undefined;
 }
 
+interface ITechList {
+	result: string;
+	techList: any | undefined;
+	errMessage: string | undefined;
+}
+
 interface IRegisterUser {
 	result: string;
 	errMessage: string | undefined;
 }
-const idCheckFunction = function* ({
-	idInputValue,
-	setIdInputError,
-	setIdInputErrMsg,
-	setIdConfirm,
-}: IIdCheckParam) {
-	const idCheckResult: IIdCheckResult = yield call(idCheckRequest, { userId: idInputValue });
+const idCheckFunction = function* ({ idInputValue, setIdInputValue }: IIdCheckParam) {
+	const idCheckResult: IIdCheckResult = yield call(idCheckRequest, {
+		userId: idInputValue.idInputValue,
+	});
 
 	if (idCheckResult.result === 'success') {
 		if (idCheckResult.foundId) {
-			setIdConfirm(false);
-			setIdInputErrMsg('이미 등록된 아이디');
-			setIdInputError(true);
+			setIdInputValue({
+				...idInputValue,
+				idInputError: true,
+				idInputErrMsg: '이미 등록된 아이디입니다.',
+				idConfirm: false,
+			});
 		} else {
-			setIdConfirm(true);
-			setIdInputError(false);
+			setIdInputValue({
+				...idInputValue,
+				idInputError: false,
+				idConfirm: true,
+			});
 		}
 	} else {
 		console.error(idCheckResult.errMessage);
@@ -67,105 +81,178 @@ const teamListFunction = function* ({ setTeamList }: any) {
 	yield;
 };
 
-const validStep1Function = function* ({
-	propFunction,
-	idInputValue,
-	nameInputValue,
-	pwInputValue,
-	pw2InputValue,
-	setNameInputError,
-	setIdInputError,
-	setIdInputErrMsg,
-	setPwInputError,
-	setPwInputErrMsg,
-	setPw2InputError,
-	setPw2InputErrMsg,
-	idInputError,
-	nameInputError,
-	pwInputError,
-	pw2InputError,
-	idConfirm,
-}: any) {
-	let reject = false;
+const techListFunction = function* ({ setTechSelectedList }: any) {
+	const techListResult: ITechList = yield call(techListRequest, {});
 
-	if (idConfirm === false) {
-		setIdInputError(true);
-		setIdInputErrMsg('중복확인을 해주세요.');
-		reject = true;
-	}
+	if (techListResult.result === 'success') {
+		const tempArr = techListResult.techList;
+		const newTempArr = tempArr.map((tech: any) => {
+			return { key: tech.TECH_CD, value: false, name: tech.NAME };
+		});
 
-	if (idInputValue === undefined || idInputValue === '') {
-		setIdInputError(true);
-		setIdInputErrMsg('이메일을 입력하세요.');
-		reject = true;
-	}
-	if (nameInputValue === undefined || nameInputValue === '') {
-		setNameInputError(true);
-		reject = true;
-	}
-	if (pwInputValue === undefined || pwInputValue === '') {
-		setPwInputError(true);
-		setPwInputErrMsg('패스워드를 입력하세요.');
-		reject = true;
-	}
-	if (pw2InputValue === undefined || pw2InputValue === '') {
-		setPw2InputError(true);
-		setPw2InputErrMsg('패스워드를 입력하세요.');
-		reject = true;
-	}
-	if (
-		idInputError === true ||
-		nameInputError === true ||
-		pwInputError === true ||
-		pw2InputError === true ||
-		reject === true ||
-		idConfirm === false
-	) {
-		console.log('reject');
+		setTechSelectedList(newTempArr);
 	} else {
-		propFunction({ idInputValue, nameInputValue, pwInputValue, pw2InputValue, idConfirm });
+		console.error(techListResult.errMessage);
 	}
 	yield;
+};
+
+const validStep1Function = function* ({
+	idInputValue,
+	setIdInputValue,
+	nameInputValue,
+	setNameInputValue,
+	pwInputValue,
+	setPwInputValue,
+	pwInput2Value,
+	setPwInput2Value,
+	propFunction,
+	goNext,
+}: any) {
+	let idInputError = false;
+	let idInputErrMsg = '';
+	let nameInputError = false;
+	let pwInputError = false;
+	let pwInputErrMsg = '';
+	let pwInput2Error = false;
+	let pwInput2ErrMsg = '';
+	let isReject = false;
+
+	if (idInputValue.idConfirm === false) {
+		idInputError = true;
+		idInputErrMsg = '중복확인을 해주세요.';
+		isReject = true;
+	}
+
+	if (idInputValue.idInputValue === '') {
+		idInputError = true;
+		idInputErrMsg = '이메일을 입력하세요.';
+		isReject = true;
+	}
+	if (nameInputValue.nameInputValue === '') {
+		nameInputError = true;
+		isReject = true;
+	}
+	if (pwInputValue.pwInputValue === '') {
+		pwInputError = true;
+		pwInputErrMsg = '패스워드를 입력하세요.';
+		isReject = true;
+	}
+	if (pwInput2Value.pwInput2Value === '') {
+		pwInput2Error = true;
+		pwInput2ErrMsg = '패스워드를 입력하세요.';
+		isReject = true;
+	}
+	if (pwInput2Value.pwInput2Value !== pwInputValue.pwInputValue) {
+		pwInput2Error = true;
+		pwInput2ErrMsg = '비밀번호가 일치하지 않습니다.';
+		isReject = true;
+	}
+
+	setIdInputValue({ ...idInputValue, idInputError, idInputErrMsg });
+	setNameInputValue({ ...nameInputValue, nameInputError });
+	setPwInputValue({ ...pwInputValue, pwInputError, pwInputErrMsg });
+	setPwInput2Value({ ...pwInput2Value, pwInput2Error, pwInput2ErrMsg });
+
+	if (isReject) {
+		console.log('reject');
+	} else {
+		propFunction({
+			goNext,
+		});
+	}
+	yield put(
+		registerStep1({
+			idInputValue,
+			nameInputValue,
+			pwInputValue,
+			pwInput2Value,
+		}),
+	);
 };
 
 const validStep2Function = function* ({
 	teamSelectValue,
+	setTeamSelectValue,
 	titleSelectValue,
+	setTitleSelectValue,
 	phoneNumValue,
+	setPhoneNumValue,
 	goNext,
-	setTeamSelectError,
-	setTitleSelectError,
-	teamSelectError,
-	titleSelectError,
 	propFunction,
 }: any) {
+	let isReject = false;
+	let teamSelectError = false;
+	let titleSelectError = false;
+	let phoneNumError = false;
+
 	if (goNext) {
-		let reject = false;
-
-		if (teamSelectValue === '' || teamSelectValue === undefined) {
-			setTeamSelectError(true);
-			reject = true;
+		if (teamSelectValue.teamSelectValue === '') {
+			teamSelectError = true;
+			isReject = true;
 		}
-		if (titleSelectValue === '' || titleSelectValue === undefined) {
-			setTitleSelectError(true);
-			reject = true;
+		if (titleSelectValue.titleSelectValue === '') {
+			titleSelectError = true;
+			isReject = true;
 		}
 
-		if (reject === true || teamSelectError === true || titleSelectError === true) {
+		if (phoneNumValue.phoneNumValue.length > 0 && phoneNumValue.phoneNumValue.length < 11) {
+			phoneNumError = true;
+			isReject = true;
+		}
+
+		setTeamSelectValue({ ...teamSelectValue, teamSelectError });
+		setTitleSelectValue({ ...titleSelectValue, titleSelectError });
+		setPhoneNumValue({ ...phoneNumValue, phoneNumError });
+
+		if (isReject) {
 			console.log('reject');
 		} else {
-			propFunction({ teamSelectValue, titleSelectValue, phoneNumValue, goNext });
+			propFunction({ goNext });
 		}
 	} else {
-		propFunction({ teamSelectValue, titleSelectValue, phoneNumValue, goNext });
+		propFunction({ goNext });
 	}
-
-	yield;
+	yield put(
+		registerStep2({
+			teamSelectValue,
+			titleSelectValue,
+			phoneNumValue,
+		}),
+	);
 };
 
+const validStep4Function = function* ({ techSelectedList, goNext, propFunction }: any) {
+	propFunction({ goNext });
+
+	yield put(registerStep4({ techSelectValue: techSelectedList }));
+};
+const validStep3Function = function* ({
+	userDetailValue,
+	setUserDetailValue,
+	goNext,
+	propFunction,
+}: any) {
+	let isReject = false;
+
+	if (goNext) {
+		if (userDetailValue.userDetailError) {
+			isReject = true;
+		}
+
+		if (isReject) {
+			console.log('reject');
+		} else {
+			propFunction({ goNext });
+		}
+	} else {
+		propFunction({ goNext });
+	}
+	yield put(registerStep3({ userDetailValue }));
+};
 const registerUserFunction = function* ({ registerData, propFunction }: any) {
 	if (registerData.image.imageFile) {
-		const fileName = registerData.user_id.split('@')[0];
+		const fileName = registerData.idInputValue.idInputValue.split('@')[0];
 		const fileExtName = registerData.image.imageFile.name.split('.')[1];
 		const formData = new FormData();
 
@@ -177,6 +264,7 @@ const registerUserFunction = function* ({ registerData, propFunction }: any) {
 	const registerResult: IRegisterUser = yield call(registerRequest, registerData);
 
 	propFunction({ goNext: true, registerResult });
+	yield put(registerReset());
 };
 
 const idCheck = function* () {
@@ -187,12 +275,23 @@ const getTeamList = function* () {
 	yield takeLatest(RCONST.TEAM_LIST, teamListFunction);
 };
 
+const getTechList = function* () {
+	yield takeLatest(RCONST.TECH_LIST, techListFunction);
+};
+
 const validStep1 = function* () {
 	yield takeLatest(RCONST.VALID_STEP1, validStep1Function);
 };
 
 const validStep2 = function* () {
 	yield takeLatest(RCONST.VALID_STEP2, validStep2Function);
+};
+const validStep3 = function* () {
+	yield takeLatest(RCONST.VALID_STEP3, validStep3Function);
+};
+
+const validStep4 = function* () {
+	yield takeLatest(RCONST.VALID_STEP4, validStep4Function);
 };
 
 const register = function* () {
@@ -205,6 +304,9 @@ export default function* registerSaga() {
 		fork(getTeamList),
 		fork(validStep1),
 		fork(validStep2),
+		fork(validStep3),
+		fork(validStep4),
 		fork(register),
+		fork(getTechList),
 	]);
 }
