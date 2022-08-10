@@ -8,26 +8,25 @@
 
 import { useEffect, useState } from 'react';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
-import { InputLayout, InputDefault, Button, InputDropdown } from '@components/index';
-import classNames from 'classnames/bind';
+import { InputLayout, Button, InputDropdown, InputPhone } from '@components/index';
 import Style from './RegisterComp.module.scss';
 
-// TODO: cx 제거 및 useEffect 디팬던시 추가
 const RegisterStep2 = (props: any) => {
-	const cx = classNames.bind(Style);
 	const labelSize = 'h4';
 
 	const dispatch = useDispatch();
 
-	const [teamSelectValue, setTeamSelectValue] = useState(props.registerData.team);
-	const [teamSelectError, setTeamSelectError] = useState(false);
-	const [titleSelectValue, setTitleSelectValue] = useState(props.registerData.title);
-	const [titleSelectError, setTitleSelectError] = useState(false);
+	const [teamSelectValue, setTeamSelectValue] = useState(
+		useSelector((state: any) => state.register.teamSelectValue),
+	);
+	const [titleSelectValue, setTitleSelectValue] = useState(
+		useSelector((state: any) => state.register.titleSelectValue),
+	);
 	const [phoneNumValue, setPhoneNumValue] = useState(
-		props.registerData.phonenum === undefined ? '' : props.registerData.phonenum,
+		useSelector((state: any) => state.register.phoneNumValue),
 	);
 	const [teamList, setTeamList] = useState([]);
 	const titleList = [
@@ -49,10 +48,11 @@ const RegisterStep2 = (props: any) => {
 		dispatch({
 			type: 'VALID_STEP2',
 			teamSelectValue,
+			setTeamSelectValue,
 			titleSelectValue,
+			setTitleSelectValue,
 			phoneNumValue,
-			setTeamSelectError,
-			setTitleSelectError,
+			setPhoneNumValue,
 			goNext: prop,
 			propFunction: props.propFunction,
 		});
@@ -62,51 +62,58 @@ const RegisterStep2 = (props: any) => {
 		<>
 			<div style={inputElCommStyle(0, 'left', true)}>
 				<InputLayout
-					error={teamSelectError}
+					error={teamSelectValue.teamSelectError}
 					errorMsg="팀을 선택하세요."
 					stretch={true}
 					inputLabel="팀*"
 					inputLabelSize={labelSize}
 					showInputLabel={true}
 					autoFitErrorLabel={true}
-					// spacing={2}
+					spacing={40}
 				>
 					<InputDropdown
 						id="inputId"
 						placeholder="팀 선택"
 						options={teamList}
-						value={teamSelectValue}
+						value={teamSelectValue.teamSelectValue}
 						onChange={(obj: { value: string }) => {
-							setTeamSelectValue(obj.value);
-							setTeamSelectError(false);
+							setTeamSelectValue({
+								...teamSelectValue,
+								teamSelectValue: obj.value,
+								teamSelectError: false,
+							});
 						}}
 						className={Style['inputIdField']}
 					/>
 				</InputLayout>
 				<InputLayout
-					error={titleSelectError}
+					error={titleSelectValue.titleSelectError}
 					errorMsg="직급을 선택하세요."
 					stretch={true}
 					inputLabel="직급*"
 					inputLabelSize={labelSize}
 					showInputLabel={true}
 					autoFitErrorLabel={true}
-					// spacing={2}
+					spacing={2}
 				>
 					<InputDropdown
 						id="inputId"
-						placeholder="직급 선택."
+						placeholder="직급 선택"
 						options={titleList}
-						value={titleSelectValue}
+						value={titleSelectValue.titleSelectValue}
 						onChange={(obj: { value: string }) => {
-							// console.log(obj.value);
-							setTitleSelectValue(obj.value);
-							setTitleSelectError(false);
+							setTitleSelectValue({
+								...titleSelectValue,
+								titleSelectValue: obj.value,
+								titleSelectError: false,
+							});
 						}}
 						className={Style['inputIdField']}
 					/>
 				</InputLayout>
 				<InputLayout
+					error={phoneNumValue.phoneNumError}
+					errorMsg="휴대폰 번호를 올바르게 입력하세요."
 					stretch={true}
 					inputLabel="휴대폰 번호"
 					inputLabelSize={labelSize}
@@ -114,22 +121,27 @@ const RegisterStep2 = (props: any) => {
 					autoFitErrorLabel={true}
 					spacing={2}
 				>
-					<InputDefault
+					<InputPhone
 						id="inputId"
 						placeholder="휴대폰 번호를 입력해주세요."
-						value={phoneNumValue}
+						value={phoneNumValue.phoneNumValue}
 						size="large"
 						onChange={(obj: { value: string }) => {
-							// 수정 필요!!!!
-							const tempValue = obj.value
-								.replace(/[^0-9]/g, '')
-								.replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, '$1-$2-$3')
-								.replace(/(-{1,2})$/g, '');
+							let phoneNumError = phoneNumValue.phoneNumError;
 
-							console.log(tempValue);
-							setPhoneNumValue(tempValue);
+							if (obj.value.length === 11) {
+								phoneNumError = false;
+							}
+							setPhoneNumValue({
+								...phoneNumValue,
+								phoneNumValue: obj.value,
+								phoneNumError,
+							});
 						}}
 						className={Style['inputIdField']}
+						onEnter={() => {
+							clickNext(true);
+						}}
 					/>
 				</InputLayout>
 				<div className={Style['buttonBelow']}>
