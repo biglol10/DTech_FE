@@ -18,6 +18,10 @@
 
 	&:hover {
 		background-color: #f8f8f8;
+
+		.linkListDiv {
+			background-color: snow;
+		}
 	}
 
 	.singleChatDiv {
@@ -86,7 +90,7 @@
 	.linkListDiv {
 		width: 100%;
 		height: auto;
-		background-color: floralwhite;
+		// background-color: snow;
 		display: grid;
 		grid-template-columns: repeat(5, 1fr);
 		gap: 20px;

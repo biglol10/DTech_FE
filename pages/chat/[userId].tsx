@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { Container, Segment } from 'semantic-ui-react';
 
 import { ChatList } from '@utils/types/commTypes';
+import { techImage } from '@utils/constants/techs';
 import Style from './[userId].module.scss';
 
 const UserChat = () => {
@@ -22,7 +23,73 @@ const UserChat = () => {
 
 	useEffect(() => {
 		if (quillWrapperHeight && firstLoad.current) {
-			const chatListArray: ChatList[] = [{ value: 'asdfasdf', imgList: [], linkList: [] }];
+			const chatListArray: ChatList[] = [
+				{ value: 'asdfasdf', imgList: [], linkList: [] },
+				{
+					value: 'linkListTest',
+					imgList: [
+						{ fileName: 'React', filePreview: techImage['React'] },
+						{ fileName: 'Node', filePreview: techImage['Node'] },
+					],
+					linkList: ['https://github.com/', 'https://www.inflearn.com/'],
+				},
+				{
+					value: 'linkListTest',
+					imgList: [
+						{ fileName: 'React', filePreview: techImage['React'] },
+						{ fileName: 'Node', filePreview: techImage['Node'] },
+					],
+					linkList: ['https://github.com/', 'https://www.inflearn.com/'],
+				},
+				{
+					value: 'linkListTest',
+					imgList: [
+						{ fileName: 'React', filePreview: techImage['React'] },
+						{ fileName: 'Node', filePreview: techImage['Node'] },
+					],
+					linkList: ['https://github.com/', 'https://www.inflearn.com/'],
+				},
+				{
+					value: 'linkListTest',
+					imgList: [
+						{ fileName: 'React', filePreview: techImage['React'] },
+						{ fileName: 'Node', filePreview: techImage['Node'] },
+					],
+					linkList: ['https://github.com/', 'https://www.inflearn.com/'],
+				},
+				{
+					value: 'linkListTest',
+					imgList: [
+						{ fileName: 'React', filePreview: techImage['React'] },
+						{ fileName: 'Node', filePreview: techImage['Node'] },
+					],
+					linkList: ['https://github.com/', 'https://www.inflearn.com/'],
+				},
+				{
+					value: 'linkListTest',
+					imgList: [
+						{ fileName: 'React', filePreview: techImage['React'] },
+						{ fileName: 'Node', filePreview: techImage['Node'] },
+					],
+					linkList: ['https://github.com/', 'https://www.inflearn.com/'],
+				},
+				{
+					value: 'linkListTest',
+					imgList: [
+						{ fileName: 'React', filePreview: techImage['React'] },
+						{ fileName: 'Node', filePreview: techImage['Node'] },
+					],
+					linkList: ['https://github.com/', 'https://www.inflearn.com/'],
+				},
+				{
+					value: 'linkListTest',
+					imgList: [
+						{ fileName: 'React', filePreview: techImage['React'] },
+						{ fileName: 'Node', filePreview: techImage['Node'] },
+					],
+					linkList: ['https://github.com/', 'https://www.inflearn.com/'],
+				},
+			];
 
 			if (bottomRef.current) setChatList(chatListArray);
 
