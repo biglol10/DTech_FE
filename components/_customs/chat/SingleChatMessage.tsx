@@ -1,3 +1,4 @@
+/* eslint-disable no-control-regex */
 import { useEffect, useState } from 'react';
 import { Avatar, Button } from '@components/index';
 import { techImage } from '@utils/constants/techs';
@@ -83,15 +84,15 @@ const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListE
 							content={'username1'}
 						/>
 					</Label>
-					{/* <Divider hidden style={{ marginBottom: '7px' }} /> */}
+
 					{value && (
 						<Label
 							basic
 							pointing={`${messageOwner === 'other' ? 'left' : 'right'}`}
 							className={cx('messageLabel', messageOwner)}
 						>
-							<pre>{value}</pre>
-							{/* <pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre> */}
+							{/* <pre>{value}</pre> */}
+							<pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre>
 						</Label>
 					)}
 
@@ -119,9 +120,15 @@ const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListE
 							onClick={async () => {
 								setCopyButtonClicked(true);
 								if ('clipboard' in navigator) {
-									await navigator.clipboard.writeText(value);
+									await navigator.clipboard.writeText(
+										value.replace(/[^\x00-\x7F]/g, ''),
+									);
 								} else {
-									return document.execCommand('copy', true, value);
+									return document.execCommand(
+										'copy',
+										true,
+										value.replace(/[^\x00-\x7F]/g, ''),
+									);
 								}
 								setTimeout(() => {
 									setCopyButtonClicked(false);
@@ -134,6 +141,10 @@ const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListE
 				{!!linkMetadata.length && (
 					<div className={Style['linkListDiv']}>
 						<>
+							{messageOwner !== 'other' &&
+								Array(6 - linkMetadata.length - 1)
+									.fill(0)
+									.map((item: null, idx) => <div key={`emptyA_${idx}`}></div>)}
 							{linkMetadata.map((item: { [name: string]: string }, idx: number) => {
 								return (
 									<a
@@ -158,10 +169,6 @@ const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListE
 									</a>
 								);
 							})}
-							{messageOwner !== 'other' &&
-								Array(6 - linkMetadata.length)
-									.fill(0)
-									.map((item: null, idx) => <div key={`emptyA_${idx}`}></div>)}
 						</>
 					</div>
 				)}
