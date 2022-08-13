@@ -6,7 +6,7 @@ module.exports = {
 	reactStrictMode: false, // react strict mode가 설정되어 있을 때, React가 side effects를 찾아내기 위해 의도적으로 hook을 이중 호출할 수 있는데 그걸 끔
 	distDir: '.next',
 	basePath: process.env.NODE_ENV === 'production' ? '/dtech' : '',
-	assetPrefix: process.env.NODE_ENV === 'production' ? '/dtech' : '',
+	// assetPrefix: process.env.NODE_ENV === 'production' ? '/dtech' : '',
 	async redirects() {
 		// Url/react 이렇게 붙여서 load해주는 것
 		if (process.env.NODE_ENV === 'production') {

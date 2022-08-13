@@ -2,6 +2,23 @@
 	height: 100%;
 	position: relative;
 
+	#chatUserBox {
+		display: flex;
+		align-items: center;
+		padding-left: 30px;
+	}
+
+	.chatUserBox > div {
+		justify-content: flex-start !important;
+		margin-left: 10px;
+
+		& > div {
+			color: black !important;
+			font-size: 1rem;
+			font-weight: bold;
+		}
+	}
+
 	& > div:first-child {
 		padding: 5px 0px;
 		margin-bottom: 7px;
