@@ -170,7 +170,7 @@ const UserChat = () => {
 						}}
 					>
 						<DTechQuill
-							quillHeight={250}
+							quillMaxHeight={250}
 							returnQuillWrapperHeight={(heightValue: number) => {
 								setQuillWrapperHeight(heightValue);
 							}}

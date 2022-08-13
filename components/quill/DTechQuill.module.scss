@@ -72,8 +72,8 @@
 .quillWrap {
 	// quill editor height 조정
 	:global(.ql-editor) {
-		min-height: 80px;
-		max-height: var(--quillHeight);
+		min-height: var(--quillMinHeight);
+		max-height: var(--quillMaxHeight);
 		overflow-y: auto;
 	}
 }
