@@ -7,6 +7,7 @@ import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
 import Style from './Radio.module.scss';
 
 const Radio = ({
+	className = '',
 	id = '',
 	spacing = 0,
 	name = 'radioGroup',
@@ -49,7 +50,7 @@ const Radio = ({
 	}, []);
 
 	const radioList = itemList.map((item) => (
-		<div key={item.value} className={Style[`label_${labelPosition}`]}>
+		<div key={item.value} className={`${Style[`label_${labelPosition}`]} ${className}`}>
 			<SemanticRadio
 				id={item.value}
 				name={name}

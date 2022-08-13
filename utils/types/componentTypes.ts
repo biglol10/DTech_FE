@@ -66,6 +66,7 @@ export interface IButton {
 }
 
 export interface ICheckboxDefault {
+	className?: string;
 	id: string;
 	disabled?: boolean;
 	checked?: boolean;
@@ -134,6 +135,7 @@ export interface IToggle {
 }
 
 export interface IRadio {
+	className?: string;
 	id?: string;
 	name?: string;
 	onChange?: any;
@@ -144,6 +146,7 @@ export interface IRadio {
 }
 
 export interface IThumbnail {
+	className?: string;
 	id?: string;
 	spacing?: number;
 	name?: string;
