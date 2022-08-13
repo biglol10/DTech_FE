@@ -15,12 +15,18 @@ interface ICustomObj {
 	[name: string]: string;
 }
 
-const customStyle1: any = (spacing = 0, param: IParam) => {
+const customStyle1: any = (spacing = 0, param: IParam[]) => {
 	const customObj: ICustomObj = {};
 
 	customObj['--spacing'] = `${spacing}px`;
-	customObj[`--${param.name}`] =
-		typeof param.value === 'number' ? `${param.value}px` : param.value;
+
+	param.map((item) => {
+		customObj[`--${item.name}`] = typeof item.value === 'number' ? `${item.value}px` : item.value;
+		return null;
+	})
+
+	// customObj[`--${param.name}`] =
+	// 	typeof param.value === 'number' ? `${param.value}px` : param.value;
 
 	return {
 		...customObj,

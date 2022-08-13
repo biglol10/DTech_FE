@@ -33,7 +33,7 @@ const AvatarGroup = ({
 	return (
 		<div
 			className={`${Style['avatarGroup']} ${className}`}
-			style={customStyle1(spacing, { name: 'divHeight', value: divHeight })}
+			style={customStyle1(spacing, [{ name: 'divHeight', value: divHeight }])}
 		>
 			<div
 				className={cx('avatarUser', `${showTooltip ? 'showBorder' : 'hideBorder'}`)}
