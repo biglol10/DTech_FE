@@ -1,13 +1,26 @@
 /* eslint-disable react/jsx-key */
 import React, { useEffect, useRef, useState } from 'react';
-import { Avatar, DTechQuill } from '@components/index';
+import { Avatar, Box, DTechQuill } from '@components/index';
 import { MainLayoutTemplate, SingleChatMessage } from '@components/customs';
 import { useRouter } from 'next/router';
 import { Container, Segment } from 'semantic-ui-react';
+import dynamic from 'next/dynamic';
 
 import { ChatList } from '@utils/types/commTypes';
 import { techImage } from '@utils/constants/techs';
+import OnlineSvg from '@styles/svg/online.svg';
 import Style from './[userId].module.scss';
+
+const ReactQuill = dynamic(
+	async () => {
+		const { default: RQ } = await import('react-quill');
+
+		return function comp({ forwardedRef, ...props }: any) {
+			return <RQ ref={forwardedRef} {...props} />;
+		};
+	},
+	{ ssr: false },
+);
 
 const UserChat = () => {
 	const router = useRouter();
@@ -104,7 +117,14 @@ const UserChat = () => {
 	return (
 		<>
 			<main id={Style['chatMain']}>
-				<Segment>
+				<Box
+					id={Style['chatUserBox']}
+					spacing={0}
+					boxType="basic"
+					textAlign="left"
+					className={Style['chatUserBox']}
+				>
+					<OnlineSvg />
 					<Avatar
 						id="userSettingArea"
 						color="white"
@@ -112,7 +132,7 @@ const UserChat = () => {
 						imageSize="mini"
 						labelSize="mini"
 					/>
-				</Segment>
+				</Box>
 				<Container>
 					{quillWrapperHeight ? (
 						<Segment
@@ -130,6 +150,7 @@ const UserChat = () => {
 											imgList={item.imgList}
 											linkList={item.linkList}
 											messageOwner={idx % 2 === 0 ? 'other' : 'mine'}
+											bottomRef={bottomRef}
 										/>
 									</>
 								);
@@ -149,7 +170,7 @@ const UserChat = () => {
 						}}
 					>
 						<DTechQuill
-							quillHeight={250}
+							quillMaxHeight={250}
 							returnQuillWrapperHeight={(heightValue: number) => {
 								setQuillWrapperHeight(heightValue);
 							}}
@@ -164,6 +185,7 @@ const UserChat = () => {
 									},
 								]);
 							}}
+							QuillSSR={ReactQuill}
 						/>
 					</div>
 				</Container>

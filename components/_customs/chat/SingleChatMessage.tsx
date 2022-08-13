@@ -13,9 +13,16 @@ import Style from './SingleChatMessage.module.scss';
 
 interface ChatListExtends extends ChatList {
 	messageOwner: 'other' | 'mine';
+	bottomRef: any;
 }
 
-const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListExtends) => {
+const SingleChatMessage = ({
+	messageOwner,
+	value,
+	imgList,
+	linkList,
+	bottomRef,
+}: ChatListExtends) => {
 	const [showCopyButton, setShowCopyButton] = useState(false);
 	const [copyButtonClicked, setCopyButtonClicked] = useState(false);
 	const [linkMetadata, setLinkMetadata] = useState<any>([]);
@@ -61,6 +68,10 @@ const SingleChatMessage = ({ messageOwner, value, imgList, linkList }: ChatListE
 
 		if (linkList.length) result();
 	}, [linkList]);
+
+	useEffect(() => {
+		bottomRef?.current?.scrollIntoView({ behavior: 'auto' });
+	}, [bottomRef, linkMetadata]);
 
 	return (
 		<>

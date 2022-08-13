@@ -29,12 +29,16 @@ const ReactQuill = dynamic(
 
 const DTechQuill = ({
 	handleSubmit = null,
-	quillHeight = 200,
+	quillMinHeight = 80,
+	quillMaxHeight = 200,
 	returnQuillWrapperHeight = null,
+	QuillSSR,
 }: {
 	handleSubmit?: any;
 	returnQuillWrapperHeight?: any;
-	quillHeight?: number;
+	quillMinHeight?: number;
+	quillMaxHeight?: number;
+	QuillSSR: any;
 }) => {
 	const [quillContext, setQuillContext] = useState('<p>&nbsp;</p>');
 
@@ -240,21 +244,37 @@ const DTechQuill = ({
 			<div
 				id="quillWrapper"
 				className={Style['quillWrap']}
-				style={customStyle1(0, { name: 'quillHeight', value: quillHeight })}
+				style={customStyle1(0, [
+					{ name: 'quillMinHeight', value: quillMinHeight },
+					{ name: 'quillMaxHeight', value: quillMaxHeight },
+				])}
 			>
-				<ReactQuill
-					forwardedRef={quillRef}
-					placeholder="내용을 입력하세요"
-					modules={modules}
-					formats={formats}
-					value={quillContext}
-					onChange={(content: string) => {
-						setTempQuillContext(content);
-					}}
-				/>
+				{QuillSSR ? (
+					<QuillSSR
+						forwardedRef={quillRef}
+						placeholder="내용을 입력하세요"
+						modules={modules}
+						formats={formats}
+						value={quillContext}
+						onChange={(content: string) => {
+							setTempQuillContext(content);
+						}}
+					/>
+				) : (
+					<ReactQuill
+						forwardedRef={quillRef}
+						placeholder="내용을 입력하세요"
+						modules={modules}
+						formats={formats}
+						value={quillContext}
+						onChange={(content: string) => {
+							setTempQuillContext(content);
+						}}
+					/>
+				)}
 
 				{!!urlPreviewList.length && (
-					<div className={Style['imageListArea']}>
+					<div className={Style['imageListArea']} style={{ gridColumn: 'span 1' }}>
 						{urlPreviewList.map((item: any, idx: number) => {
 							return (
 								<PrevieImageComp

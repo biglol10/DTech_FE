@@ -22,6 +22,7 @@ import {
 	DTechQuill,
 } from '@components/index';
 import { MainLayoutTemplate } from '@components/customs';
+import dynamic from 'next/dynamic';
 
 import Style from './examplePage/examplePage.module.scss';
 
@@ -45,6 +46,17 @@ const options = [
 	{ key: 'ui', text: 'UI Design', value: 'ui' },
 	{ key: 'ux', text: 'User Experience', value: 'ux' },
 ];
+
+const ReactQuill = dynamic(
+	async () => {
+		const { default: RQ } = await import('react-quill');
+
+		return function comp({ forwardedRef, ...props }: any) {
+			return <RQ ref={forwardedRef} {...props} />;
+		};
+	},
+	{ ssr: false },
+);
 
 const Index = () => {
 	const [inputValue, setInputValue] = useState(2);
@@ -150,6 +162,7 @@ const Index = () => {
 					handleSubmit={(obj: any) => {
 						console.log(obj);
 					}}
+					QuillSSR={ReactQuill}
 				/>
 			</div>
 
