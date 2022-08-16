@@ -5,13 +5,15 @@
  *-------------------------------------------------------------------------------------------
  * 1      변지욱     2022-08-01   feature/JW/quill            최초작성
  * 2      변지욱     2022-08-02   feature/JW/quill            텍스트 입력 + 이미지가 6개일 때 editor에 이미지가 추가되지 않게 수정
+ * 3      변지욱     2022-08-16   feature/JW/quill            submit 버튼 추가 및 enter 이벤트 제어 가능토록 수정
  ********************************************************************************************/
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { ComponentType, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { toast } from 'react-toastify';
 import { generateImageUID } from '@utils/appRelated/helperFunctions';
-import { customStyle1 } from '@utils/styleRelated/stylehelper';
+import { customStyleObj } from '@utils/styleRelated/stylehelper';
+import SendSvg from '@styles/svg/sendSvg.svg';
 
 import PrevieImageComp from './PreviewImageComp';
 import Style from './DTechQuill.module.scss';
@@ -32,13 +34,15 @@ const DTechQuill = ({
 	quillMinHeight = 80,
 	quillMaxHeight = 200,
 	returnQuillWrapperHeight = null,
+	enterSubmit = true,
 	QuillSSR,
 }: {
 	handleSubmit?: any;
 	returnQuillWrapperHeight?: any;
 	quillMinHeight?: number;
 	quillMaxHeight?: number;
-	QuillSSR: any;
+	enterSubmit?: boolean;
+	QuillSSR: ComponentType<any>;
 }) => {
 	const [quillContext, setQuillContext] = useState('<p>&nbsp;</p>');
 
@@ -103,6 +107,26 @@ const DTechQuill = ({
 		};
 	}, [imageCounter, urlPreviewList]);
 
+	const editorSubmitEvent = useCallback(() => {
+		if (
+			quillRef.current.getEditor().getText().trim().length === 0 &&
+			urlPreviewList.length === 0
+		)
+			return null;
+
+		handleSubmit &&
+			handleSubmit({
+				value: quillRef.current.getEditor().getText().trim(),
+				imgList: urlPreviewList,
+				linkList: quillRef.current
+					.getEditor()
+					.getContents()
+					.filter((item: any) => item.attributes?.link),
+			});
+		setQuillContext('<p></p>');
+		setUrlPreviewList([]);
+	}, [handleSubmit, urlPreviewList]);
+
 	const modules = useMemo(
 		() => ({
 			toolbar: {
@@ -118,24 +142,20 @@ const DTechQuill = ({
 					shift_enter: {
 						key: 13,
 						shiftKey: true,
-						handler: (range: any, ctx: any) => {
+						handler: (range: any) => {
 							quillRef.current.getEditor().insertText(range.index, '\n');
+							quillRef.current.getEditor().scrollIntoView({ behavior: 'auto' });
 						},
 					},
 					enter: {
 						key: 13,
-						handler: () => {
-							handleSubmit &&
-								handleSubmit({
-									value: quillRef.current.getEditor().getText().trim(),
-									imgList: urlPreviewList,
-									linkList: quillRef.current
-										.getEditor()
-										.getContents()
-										.filter((item: any) => item.attributes?.link),
-								});
-							setQuillContext('<p></p>');
-							setUrlPreviewList([]);
+						handler: (range: any) => {
+							if (enterSubmit) {
+								editorSubmitEvent();
+							} else {
+								quillRef.current.getEditor().insertText(range.index, '\n');
+								quillRef.current.getEditor().scrollIntoView({ behavior: 'auto' });
+							}
 						},
 					},
 					// pasteWin: {
@@ -159,7 +179,7 @@ const DTechQuill = ({
 				},
 			},
 		}),
-		[handleSubmit, imageHandler, urlPreviewList],
+		[editorSubmitEvent, enterSubmit, imageHandler],
 	);
 
 	const formats = [
@@ -244,7 +264,7 @@ const DTechQuill = ({
 			<div
 				id="quillWrapper"
 				className={Style['quillWrap']}
-				style={customStyle1(0, [
+				style={customStyleObj(0, [
 					{ name: 'quillMinHeight', value: quillMinHeight },
 					{ name: 'quillMaxHeight', value: quillMaxHeight },
 				])}
@@ -287,6 +307,11 @@ const DTechQuill = ({
 						})}
 					</div>
 				)}
+
+				<button onClick={() => editorSubmitEvent()}>
+					<SendSvg />
+					<span>submit</span>
+				</button>
 			</div>
 		</>
 	);

@@ -6,7 +6,7 @@
  * 1      변지욱     2022-07-20                              최초작성
  ********************************************************************************************/
 
-import { customStyle1 } from '@utils/styleRelated/stylehelper';
+import { customStyleObj } from '@utils/styleRelated/stylehelper';
 import { useState } from 'react';
 import classNames from 'classnames/bind';
 import Style from './AvatarGroup.module.scss';
@@ -33,7 +33,7 @@ const AvatarGroup = ({
 	return (
 		<div
 			className={`${Style['avatarGroup']} ${className}`}
-			style={customStyle1(spacing, [{ name: 'divHeight', value: divHeight }])}
+			style={customStyleObj(spacing, [{ name: 'divHeight', value: divHeight }])}
 		>
 			<div
 				className={cx('avatarUser', `${showTooltip ? 'showBorder' : 'hideBorder'}`)}
