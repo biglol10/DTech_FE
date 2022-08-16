@@ -15,15 +15,16 @@ interface ICustomObj {
 	[name: string]: string;
 }
 
-const customStyle1: any = (spacing = 0, param: IParam[]) => {
+const customStyleObj: any = (spacing = 0, param: IParam[]) => {
 	const customObj: ICustomObj = {};
 
 	customObj['--spacing'] = `${spacing}px`;
 
 	param.map((item) => {
-		customObj[`--${item.name}`] = typeof item.value === 'number' ? `${item.value}px` : item.value;
+		customObj[`--${item.name}`] =
+			typeof item.value === 'number' ? `${item.value}px` : item.value;
 		return null;
-	})
+	});
 
 	// customObj[`--${param.name}`] =
 	// 	typeof param.value === 'number' ? `${param.value}px` : param.value;
@@ -33,4 +34,4 @@ const customStyle1: any = (spacing = 0, param: IParam[]) => {
 	};
 };
 
-export { inputElCommStyle, customStyle1 };
+export { inputElCommStyle, customStyleObj };
