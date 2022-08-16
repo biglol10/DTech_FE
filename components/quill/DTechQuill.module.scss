@@ -70,10 +70,32 @@
 }
 
 .quillWrap {
+	position: relative;
+
 	// quill editor height 조정
 	:global(.ql-editor) {
 		min-height: var(--quillMinHeight);
 		max-height: var(--quillMaxHeight);
 		overflow-y: auto;
+	}
+
+	& > button:last-child {
+		position: absolute;
+		top: 0;
+		right: 1%;
+		height: 34px;
+		margin: 4px 0px;
+		background: #138567;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		span {
+			color: #fbfcfc;
+			margin-left: 2px;
+		}
 	}
 }

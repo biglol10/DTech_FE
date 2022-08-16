@@ -3,17 +3,6 @@ import dynamic from 'next/dynamic';
 
 import { Doc } from './DTechQuill.stories.mdx';
 
-const ReactQuill = dynamic(
-	async () => {
-		const { default: RQ } = await import('react-quill');
-
-		return function comp({ forwardedRef, ...props }: any) {
-			return <RQ ref={forwardedRef} {...props} />;
-		};
-	},
-	{ ssr: false },
-);
-
 export default {
 	title: 'Example/CustomQuill',
 	parameters: {
@@ -23,16 +12,36 @@ export default {
 		},
 	},
 	component: DTechQuill,
-	argTypes: {},
+	argTypes: {
+		enterSubmit: {
+			defaultValue: true,
+			description: '엔터 시 submit여부',
+			options: [true, false],
+			control: { type: 'radio' },
+			table: { defaultValue: { summary: true } },
+		},
+	},
 };
 
-export const QuillSample = () => {
+export const QuillSample = (args: any) => {
+	const ReactQuill = dynamic(
+		async () => {
+			const { default: RQ } = await import('react-quill');
+
+			return function comp({ forwardedRef, ...props }: any) {
+				return <RQ ref={forwardedRef} {...props} />;
+			};
+		},
+		{ ssr: false },
+	);
+
 	return (
 		<DTechQuill
-			quillMinHeight={120}
-			quillMaxHeight={400}
-			handleSubmit={(obj: any) => console.log(obj)}
+			quillMinHeight={args.quillMinHeight}
+			quillMaxHeight={args.quillMaxHeight}
+			handleSubmit={(obj: any) => null}
 			QuillSSR={ReactQuill}
+			enterSubmit={args.enterSubmit}
 		/>
 	);
 };
