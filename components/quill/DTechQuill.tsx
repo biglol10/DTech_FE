@@ -11,7 +11,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { toast } from 'react-toastify';
 import { generateImageUID } from '@utils/appRelated/helperFunctions';
-import { customStyle1 } from '@utils/styleRelated/stylehelper';
+import { customStyleObj } from '@utils/styleRelated/stylehelper';
 
 import PrevieImageComp from './PreviewImageComp';
 import Style from './DTechQuill.module.scss';
@@ -244,7 +244,7 @@ const DTechQuill = ({
 			<div
 				id="quillWrapper"
 				className={Style['quillWrap']}
-				style={customStyle1(0, [
+				style={customStyleObj(0, [
 					{ name: 'quillMinHeight', value: quillMinHeight },
 					{ name: 'quillMaxHeight', value: quillMaxHeight },
 				])}

@@ -21,6 +21,7 @@ import Avatar from './avatar/Avatar';
 import AvatarGroup from './avatar/AvatarGroup';
 import SharpDivider from './sharpDivider/SharpDivider';
 import DTechQuill from './quill/DTechQuill';
+import TextArea from './textarea/TextArea';
 
 export {
 	Accordion,
@@ -50,4 +51,5 @@ export {
 	TabPanel,
 	SharpDivider,
 	DTechQuill,
+	TextArea,
 };
