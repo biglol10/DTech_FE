@@ -6,6 +6,7 @@
  * 1      변지욱     2022-08-01   feature/JW/quill            최초작성
  * 2      변지욱     2022-08-02   feature/JW/quill            텍스트 입력 + 이미지가 6개일 때 editor에 이미지가 추가되지 않게 수정
  * 3      변지욱     2022-08-16   feature/JW/quill            submit 버튼 추가 및 enter 이벤트 제어 가능토록 수정
+ * 4      변지욱     2022-08-17   feature/JW/quill            setInterval로 quill height값 지속적으로 보내도록 수정 및 button disabled 추가
  ********************************************************************************************/
 
 import React, { ComponentType, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -239,11 +240,24 @@ const DTechQuill = ({
 
 	// first load 때 height값 보내주기
 	useEffect(() => {
-		setTimeout(() => {
+		let counter = 0;
+
+		const timer = setInterval(() => {
 			const divQuillHeight = document.getElementById('quillWrapper')!.clientHeight;
 
 			returnQuillWrapperHeight && returnQuillWrapperHeight(divQuillHeight);
+			counter++;
 		}, 50);
+
+		if (counter >= 2) clearInterval(timer);
+
+		return () => clearInterval(timer);
+
+		// setTimeout(() => {
+		// 	const divQuillHeight = document.getElementById('quillWrapper')!.clientHeight;
+
+		// 	returnQuillWrapperHeight && returnQuillWrapperHeight(divQuillHeight);
+		// }, 50);
 	}, [returnQuillWrapperHeight]);
 
 	useEffect(() => {
@@ -308,7 +322,16 @@ const DTechQuill = ({
 					</div>
 				)}
 
-				<button onClick={() => editorSubmitEvent()}>
+				<button
+					type="button"
+					disabled={
+						quillContext.trim() === '<p>&nbsp;</p>' ||
+						quillContext.trim() === '<p></p>' ||
+						quillContext.trim().length === 0 ||
+						quillContext.trim() === '<p><br></p>'
+					}
+					onClick={() => editorSubmitEvent()}
+				>
 					<SendSvg />
 					<span>submit</span>
 				</button>
