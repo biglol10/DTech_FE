@@ -73,7 +73,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 				console.log(obj);
 			});
 		}
-	}, [authStore, initSocket]);
+	}, [authStore]);
 
 	const logout = () => {
 		cookie.remove('token');
