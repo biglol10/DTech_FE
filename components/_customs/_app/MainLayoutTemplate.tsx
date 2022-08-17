@@ -16,6 +16,8 @@ import classNames from 'classnames/bind';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import cookie from 'js-cookie';
+import { useSocket } from '@utils/appRelated/authUser';
+
 import Style from './MainLayoutTemplate.module.scss';
 
 interface LayoutProps {
@@ -37,6 +39,8 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	const authStore = useSelector((state: any) => state.auth);
 	const appCommon = useSelector((state: any) => state.appCommon);
 
+	const { init: initSocket } = useSocket();
+
 	useEffect(() => {
 		if (wrapperRef) {
 			const clickSettingOutside = (event: any) => {
@@ -57,6 +61,19 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 			};
 		}
 	}, []);
+
+	useEffect(() => {
+		const socket = authStore.userSocket;
+
+		if (!socket) {
+			initSocket(authStore.userId);
+		} else {
+			socket.on('connectedUsers', (obj: any) => {
+				console.log('console log in mainlayout');
+				console.log(obj);
+			});
+		}
+	}, [authStore, initSocket]);
 
 	const logout = () => {
 		cookie.remove('token');

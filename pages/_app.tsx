@@ -16,6 +16,7 @@ import Head from 'next/head';
 import { useSelector, useDispatch } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import cookie from 'js-cookie';
+import { useSocket } from '@utils/appRelated/authUser';
 
 import '@styles/globals.scss';
 import 'semantic-ui-css/semantic.min.css';
@@ -33,9 +34,16 @@ const MyApp = ({ Component, pageProps }: ComponentWithPageLayout) => {
 	const authStore = useSelector((state: any) => state.auth);
 	const toastInfo = useSelector((state: any) => state.toastInfo);
 	const dispatch = useDispatch();
+	const { init: initSocket } = useSocket();
 
 	if ((!authStore || !authStore.userName || !authStore.userToken) && cookie.get('token')) {
-		dispatch({ type: 'AUTH_SETTING_BY_TOKEN', token: cookie.get('token') });
+		dispatch({
+			type: 'AUTH_SETTING_BY_TOKEN',
+			token: cookie.get('token'),
+			callbackFn: async (userId: string) => {
+				initSocket(userId);
+			},
+		});
 	}
 
 	if (Component.displayName) {
