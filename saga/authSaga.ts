@@ -1,5 +1,5 @@
 import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
-import { authSetting, authReset, authSocket } from '@store/authSlice';
+import { authSetting, authReset, authSocket, resetAuthSocket } from '@store/authSlice';
 import * as RCONST from '@utils/constants/reducerConstants';
 import { fireLoginRequest, fireTokenRequest } from '@utils/api/auth/loginRequest';
 
@@ -94,6 +94,10 @@ const setUserSocketFunction = function* ({ socketRef }: any) {
 	yield put(authSocket(socketRef));
 };
 
+const resetUserSocketFunction = function* () {
+	yield put(resetAuthSocket());
+};
+
 const setAuth = function* () {
 	yield takeLatest(RCONST.AUTH_SETTING, setAuthFunction);
 };
@@ -110,6 +114,10 @@ const setUserSocket = function* () {
 	yield takeLatest(RCONST.AUTH_USERSOCKET, setUserSocketFunction);
 };
 
+const resetUserSocket = function* () {
+	yield takeLatest(RCONST.AUTH_USERSOCKET_RESET, resetUserSocketFunction);
+};
+
 export default function* authSaga() {
-	yield all([fork(setAuth), fork(resetAuth), fork(getAuthByToken), fork(setUserSocket)]);
+	yield all([fork(setAuth), fork(resetAuth), fork(getAuthByToken), fork(setUserSocket), fork(resetUserSocket)]);
 }

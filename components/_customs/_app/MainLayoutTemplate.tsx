@@ -14,7 +14,7 @@ import DLogo from '@public/images/DLogo2.png';
 import { Icon } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import cookie from 'js-cookie';
 import { useSocket } from '@utils/appRelated/authUser';
 
@@ -33,13 +33,16 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	const [isLogoBorderBottom, setIsLogoBorderBottom] = useState(false);
 	const [iconLeft, setIconLeft] = useState(true);
 	const [settingOpen, setSettingOpen] = useState(false);
+	const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
 
 	const wrapperRef = useRef<any>(null);
 
 	const authStore = useSelector((state: any) => state.auth);
 	const appCommon = useSelector((state: any) => state.appCommon);
 
-	const { init: initSocket } = useSocket();
+	const { init: initSocket, disconnect } = useSocket();
+
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		if (wrapperRef) {
@@ -68,14 +71,24 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 		if (!socket) {
 			initSocket(authStore.userId);
 		} else {
-			socket.on('connectedUsers', (obj: any) => {
-				console.log('console log in mainlayout');
-				console.log(obj);
-			});
+			socket.on(
+				'connectedUsers',
+				({ users }: { users: { userId: string; socketId: string }[] }) => {
+					console.log(`console log in mainlayout ${users}`);
+					const onlineUsersArr = users.map((item) => item.userId);
+
+					setOnlineUsers(onlineUsersArr);
+				},
+			);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [authStore]);
 
 	const logout = () => {
+		disconnect();
+		dispatch({
+			type: 'AUTH_RESET',
+		});
 		cookie.remove('token');
 		router.push('/login');
 	};
@@ -150,7 +163,18 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 										<SharpDivider content="온라인" />
 
 										<div className={Style['usersOnline']}>
-											{Array(3)
+											{onlineUsers.map((item, idx) => (
+												<div
+													className={Style['folder-icons']}
+													key={`online_${idx}`}
+												>
+													<div className={cx('user-avatar', 'online')}>
+														<img src="https://randomuser.me/api/portraits/women/71.jpg" />
+													</div>
+													<div className={Style['username']}>{item}</div>
+												</div>
+											))}
+											{/* {Array(3)
 												.fill(0)
 												.map((item, idx) => (
 													<div
@@ -166,7 +190,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 															User Online{idx}
 														</div>
 													</div>
-												))}
+												))} */}
 										</div>
 
 										<SharpDivider content="오프라인" />

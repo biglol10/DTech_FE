@@ -8,12 +8,14 @@
 
 import { useRef } from 'react';
 import io from 'socket.io-client';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const useSocket = () => {
 	const socket = useRef<any>();
 
 	const dispatch = useDispatch();
+
+	const authStore = useSelector((state: any) => state.auth);
 
 	const init = (userId: string) => {
 		if (!userId) return;
@@ -31,8 +33,18 @@ const useSocket = () => {
 		}
 	};
 
+	const disconnect = () => {
+		dispatch({
+			type: 'AUTH_USERSOCKET_RESET',
+		});
+		const socketStore = authStore.userSocket;
+		
+		socketStore && socketStore.disconnect();
+	};
+
 	return {
 		init,
+		disconnect,
 	};
 };
 
