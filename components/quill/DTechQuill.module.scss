@@ -92,6 +92,12 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		opacity: 1;
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: auto;
+		}
 
 		span {
 			color: #fbfcfc;
