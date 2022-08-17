@@ -185,3 +185,14 @@ export interface IAvatar {
 	imageSize?: 'mini' | 'small' | 'large' | 'big' | 'huge' | 'massive';
 	labelSize?: 'mini' | 'small' | 'large' | 'big' | 'huge' | 'massive';
 }
+
+export interface ICard {
+	id?: string;
+	className?: string;
+	title?: string;
+	content?: string;
+	upvote?: number;
+	date?: Date;
+	userName?: string;
+	userTitle?: string;
+}

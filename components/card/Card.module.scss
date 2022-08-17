@@ -1,0 +1,31 @@
+.cardComp{
+  width:500px;
+  margin-top:10px;
+  .card{
+    display: flex;
+    flex-direction: row;
+    border-radius: 20px;
+    .upvote{
+      padding-top:15px;
+      background-color: rgb(245, 243, 243);
+      width:40px;
+      display: flex;
+      flex-direction: column;
+      // align-content: center;
+      align-items: center;
+      .likeCnt{
+        margin-top:10px;
+      }
+    }
+    .cardContent{
+      width:400px;
+      .cardMeta{
+        display: flex;
+        justify-content:space-between;
+      }
+    }
+  }
+  
+}
+
+
