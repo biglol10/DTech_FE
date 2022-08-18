@@ -1,5 +1,5 @@
 import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
-import { authSetting, authReset } from '@store/authSlice';
+import { authSetting, authReset, authSocket } from '@store/authSlice';
 import * as RCONST from '@utils/constants/reducerConstants';
 import { fireLoginRequest, fireTokenRequest } from '@utils/api/auth/loginRequest';
 
@@ -68,7 +68,7 @@ interface ITokenResult {
 	user: ITokenUser;
 }
 
-const getAuthFunction = function* ({ token }: any) {
+const getAuthFunction = function* ({ token, callbackFn }: any) {
 	const tokenResult: ITokenResult = yield call(fireTokenRequest, token);
 
 	if (tokenResult.success) {
@@ -79,13 +79,23 @@ const getAuthFunction = function* ({ token }: any) {
 		};
 
 		yield put(authSetting(loginResult));
+		yield call(callbackFn, loginResult.userId);
 	} else {
 		yield put(authReset());
+		yield call(callbackFn, '');
 	}
 };
 
 const resetAuthFunction = function* () {
 	yield put(authReset());
+};
+
+const setUserSocketFunction = function* ({ socketRef }: any) {
+	yield put(authSocket(socketRef));
+};
+
+const resetUserSocketFunction = function* () {
+	yield put(authSocket(null));
 };
 
 const setAuth = function* () {
@@ -100,6 +110,20 @@ const getAuthByToken = function* () {
 	yield takeLatest(RCONST.AUTH_SETTING_BY_TOKEN, getAuthFunction);
 };
 
+const setUserSocket = function* () {
+	yield takeLatest(RCONST.AUTH_USERSOCKET, setUserSocketFunction);
+};
+
+const resetUserSocket = function* () {
+	yield takeLatest(RCONST.AUTH_USERSOCKET_RESET, resetUserSocketFunction);
+};
+
 export default function* authSaga() {
-	yield all([fork(setAuth), fork(resetAuth), fork(getAuthByToken)]);
+	yield all([
+		fork(setAuth),
+		fork(resetAuth),
+		fork(getAuthByToken),
+		fork(setUserSocket),
+		fork(resetUserSocket),
+	]);
 }
