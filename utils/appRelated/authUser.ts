@@ -3,15 +3,15 @@
  ********************************************************************************************
  * 번호    작업자     작업일         브랜치                       변경내용
  *-------------------------------------------------------------------------------------------
- * 1      변지욱     2022-08-17   feature/JW/socket          최초작성 (socket 초기화 훅 작성)
+ * 1      변지욱     2022-08-17   feature/JW/socket          최초작성 (socket 연결 관련 훅 작성)
  ********************************************************************************************/
 
 import { useRef } from 'react';
-import io from 'socket.io-client';
+import io, { Socket } from 'socket.io-client';
 import { useDispatch, useSelector } from 'react-redux';
 
 const useSocket = () => {
-	const socket = useRef<any>();
+	const socket = useRef<Socket>();
 
 	const dispatch = useDispatch();
 
@@ -34,12 +34,13 @@ const useSocket = () => {
 	};
 
 	const disconnect = () => {
+		const socketStore = authStore.userSocket;
+
+		socketStore && socketStore.disconnect();
+
 		dispatch({
 			type: 'AUTH_USERSOCKET_RESET',
 		});
-		const socketStore = authStore.userSocket;
-		
-		socketStore && socketStore.disconnect();
 	};
 
 	return {

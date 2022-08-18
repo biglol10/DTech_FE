@@ -55,11 +55,8 @@ const authSlice = createSlice({
 		authSocket(state, action) {
 			state.userSocket = action.payload || null;
 		},
-		resetAuthSocket(state) {
-			state.userSocket = null;
-		},
 	},
 });
 
-export const { authSetting, authReset, authSocket, resetAuthSocket } = authSlice.actions;
+export const { authSetting, authReset, authSocket } = authSlice.actions;
 export default authSlice.reducer;
