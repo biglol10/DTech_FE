@@ -189,12 +189,18 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 
 										<div className={Style['usersOnline']}>
 											{usersStatusArr.map(
-												(item: any, idx: number) =>
+												(item, idx: number) =>
 													item.USER_ID !== authStore.userId &&
 													item.ONLINE_STATUS === 'ONLINE' && (
 														<div
 															className={Style['folder-icons']}
 															key={`online_${idx}`}
+															data-uid={item.USER_UID}
+															onClick={() =>
+																router.push(
+																	`/chat/${item.USER_UID}`,
+																)
+															}
 														>
 															<div
 																className={cx(
@@ -222,6 +228,12 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 														<div
 															className={Style['folder-icons']}
 															key={`offline_${idx}`}
+															data-uid={item.USER_UID}
+															onClick={() =>
+																router.push(
+																	`/chat/${item.USER_UID}`,
+																)
+															}
 														>
 															<div
 																className={cx(
