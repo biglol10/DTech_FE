@@ -1,5 +1,5 @@
 import MainLayoutTemplate from './_customs/_app/MainLayoutTemplate';
-
+import IndividualChatUser from './_customs/_app/IndividualChatUser';
 import RegisterStep1 from './_customs/registerStep/registerStep1';
 import RegisterStep2 from './_customs/registerStep/registerStep2';
 import RegisterStep3 from './_customs/registerStep/registerStep3';
@@ -12,6 +12,7 @@ import SingleChatMessage from './_customs/chat/SingleChatMessage';
 
 export {
 	MainLayoutTemplate,
+	IndividualChatUser,
 	RegisterStep1,
 	RegisterStep2,
 	RegisterStep3,
