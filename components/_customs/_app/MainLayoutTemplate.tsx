@@ -5,6 +5,7 @@
  *-------------------------------------------------------------------------------------------
  * 1      변지욱     2022-07-13   feature/JW/layout           최초작성
  * 2      변지욱     2022-07-14   feature/JW/layoutchange     세팅팝업 추가 및 세팅영역 밖 클릭 시 세팅팝업 숨김처리
+ * 3      변지욱     2022-08-18   feature/JW/socket           Socket으로 온라인 오프라인 유저 표시
  ********************************************************************************************/
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -14,8 +15,14 @@ import DLogo from '@public/images/DLogo2.png';
 import { Icon } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import cookie from 'js-cookie';
+import { useSocket } from '@utils/appRelated/authUser';
+import axios from 'axios';
+import { IAuth, IAppCommon, IUsersStatusArr } from '@utils/types/commAndStoreTypes';
+import * as RCONST from '@utils/constants/reducerConstants';
+
+import IndividualChatUser from './IndividualChatUser';
 import Style from './MainLayoutTemplate.module.scss';
 
 interface LayoutProps {
@@ -31,10 +38,17 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	const [isLogoBorderBottom, setIsLogoBorderBottom] = useState(false);
 	const [iconLeft, setIconLeft] = useState(true);
 	const [settingOpen, setSettingOpen] = useState(false);
+	const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
+	const [usersStatusArr, setUsersStatusArr] = useState<IUsersStatusArr[]>([]);
 
-	const wrapperRef = useRef<any>(null);
+	const wrapperRef = useRef<HTMLDivElement>(null);
 
-	const authStore = useSelector((state: any) => state.auth);
+	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
+	const appCommon = useSelector((state: { appCommon: IAppCommon }) => state.appCommon);
+
+	const { init: initSocket, disconnect } = useSocket();
+
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		if (wrapperRef) {
@@ -57,7 +71,43 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 		}
 	}, []);
 
+	useEffect(() => {
+		const socket = authStore.userSocket;
+
+		if (!socket) {
+			initSocket(authStore.userId);
+		} else {
+			socket.on(
+				'connectedUsers',
+				({ users }: { users: { userId: string; socketId: string }[] }) => {
+					const onlineUsersArr = users.map((item) => item.userId);
+
+					setOnlineUsers(onlineUsersArr);
+				},
+			);
+		}
+		// 다른 dependency 추가하면 connectedUsers가 여러번 찍힘... 딱히 문제는 없지만 최소한으로 작동하는게 목적
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [authStore]);
+
+	useEffect(() => {
+		axios
+			.get('http://localhost:3066/api/auth/getUsersStatus', {
+				params: { onlineUsers: onlineUsers.length > 0 ? onlineUsers : ['none'] },
+				// headers: { Authorization: authStore.userToken },
+			})
+			.then((response) => {
+				dispatch({ type: RCONST.SET_USERS_OVERVIEW, users: response.data.usersStatus });
+				setUsersStatusArr(response.data.usersStatus);
+			})
+			.catch((err) => {});
+	}, [dispatch, onlineUsers]);
+
 	const logout = () => {
+		disconnect();
+		dispatch({
+			type: 'AUTH_RESET',
+		});
 		cookie.remove('token');
 		router.push('/login');
 	};
@@ -132,45 +182,39 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 										<SharpDivider content="온라인" />
 
 										<div className={Style['usersOnline']}>
-											{Array(3)
-												.fill(0)
-												.map((item, idx) => (
-													<div
-														className={Style['folder-icons']}
-														key={`online_${idx}`}
-													>
-														<div
-															className={cx('user-avatar', 'online')}
-														>
-															<img src="https://randomuser.me/api/portraits/women/71.jpg" />
-														</div>
-														<div className={Style['username']}>
-															User Online{idx}
-														</div>
-													</div>
-												))}
+											{usersStatusArr.map(
+												(item, idx: number) =>
+													item.USER_ID !== authStore.userId &&
+													item.ONLINE_STATUS === 'ONLINE' && (
+														<IndividualChatUser
+															key={`online_${idx}`}
+															onlineStatus="ONLINE"
+															userUID={item.USER_UID}
+															userName={item.NAME}
+															userTitle={item.TITLE}
+															userImg={item.IMG_URL}
+														/>
+													),
+											)}
 										</div>
 
 										<SharpDivider content="오프라인" />
 
 										<div className={Style['usersOffline']}>
-											{Array(20)
-												.fill(0)
-												.map((item, idx) => (
-													<div
-														className={Style['folder-icons']}
-														key={`offline_${idx}`}
-													>
-														<div
-															className={cx('user-avatar', 'offline')}
-														>
-															<img src="https://randomuser.me/api/portraits/women/71.jpg" />
-														</div>
-														<div className={Style['username']}>
-															User Offline{idx}
-														</div>
-													</div>
-												))}
+											{usersStatusArr.map(
+												(item, idx) =>
+													item.USER_ID !== authStore.userId &&
+													item.ONLINE_STATUS === 'OFFLINE' && (
+														<IndividualChatUser
+															key={`offline_${idx}`}
+															onlineStatus="OFFLINE"
+															userUID={item.USER_UID}
+															userName={item.NAME}
+															userTitle={item.TITLE}
+															userImg={item.IMG_URL}
+														/>
+													),
+											)}
 										</div>
 									</div>
 								</div>
@@ -181,17 +225,44 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 				<div className={Style['right']}>
 					<nav className={Style['navHeader']}>
 						<ul id="userSettingAreaUL">
-							<li className={Style['active']}>
-								<a href="#home">대시보드</a>
+							<li
+								className={
+									Style[
+										`${
+											appCommon.route.currentRoute === 'dashboard' && 'active'
+										}`
+									]
+								}
+								onClick={() => router.push('/dashboard')}
+							>
+								<a>대시보드</a>
 							</li>
-							<li>
-								<a href="#news">채팅</a>
+							<li
+								className={
+									Style[`${appCommon.route.currentRoute === 'chat' && 'active'}`]
+								}
+								onClick={() => router.push('/chat/sdafadsf')}
+							>
+								<a>채팅</a>
 							</li>
-							<li>
-								<a href="#contact">게시판</a>
+							<li
+								className={
+									Style[
+										`${
+											appCommon.route.currentRoute === 'examplePage' &&
+											'active'
+										}`
+									]
+								}
+							>
+								<a>게시판</a>
 							</li>
-							<li>
-								<a href="#about">About</a>
+							<li
+								className={
+									Style[`${appCommon.route.currentRoute === 'about' && 'active'}`]
+								}
+							>
+								<a>About</a>
 							</li>
 							<li
 								id="li_userSettingArea"
@@ -201,6 +272,8 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 									id="userSettingArea"
 									color="white"
 									content={authStore.userName}
+									imageSize="mini"
+									labelSize="big"
 								/>
 							</li>
 						</ul>

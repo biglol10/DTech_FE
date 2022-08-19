@@ -6,7 +6,7 @@ module.exports = {
 	reactStrictMode: false, // react strict mode가 설정되어 있을 때, React가 side effects를 찾아내기 위해 의도적으로 hook을 이중 호출할 수 있는데 그걸 끔
 	distDir: '.next',
 	basePath: process.env.NODE_ENV === 'production' ? '/dtech' : '',
-	assetPrefix: process.env.NODE_ENV === 'production' ? '/dtech' : '',
+	// assetPrefix: process.env.NODE_ENV === 'production' ? '/dtech' : '',
 	async redirects() {
 		// Url/react 이렇게 붙여서 load해주는 것
 		if (process.env.NODE_ENV === 'production') {
@@ -31,7 +31,7 @@ module.exports = {
 		// SVG를 컴포넌트로 사용하기 위해 필요
 		config.module.rules.push({
 			test: /\.svg$/,
-			use: ["@svgr/webpack"]
+			use: ['@svgr/webpack'],
 		});
 
 		// ? 절대경로 설정 (만약에 tsconfig에 정의되어 있지 않거나 .js파일에서 절대경로 쓰고 싶을 경우 여기에 정의하면 된다)
@@ -48,7 +48,7 @@ module.exports = {
 		return {
 			...config,
 			mode: prod ? 'production' : 'development',
-			devtool: 'eval',
+			devtool: prod ? false : 'eval',
 		};
 	},
 	env: {

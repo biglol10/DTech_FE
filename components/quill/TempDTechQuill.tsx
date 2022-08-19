@@ -259,7 +259,7 @@ const DTechQuill = ({ handleSubmit = null }: { handleSubmit?: any }) => {
 					}}
 				/>
 
-				{urlPreviewList.length > 0 && (
+				{!!urlPreviewList.length && (
 					<div className={Style['imageListArea']}>
 						{urlPreviewList.map((item: any, idx: number) => {
 							return (

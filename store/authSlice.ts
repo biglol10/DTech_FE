@@ -1,10 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { IAuth } from '@utils/types/commAndStoreTypes';
 
-interface IInitialState {
-	[name: string]: null | string;
-}
-
-const initialState: IInitialState = {
+const initialState: IAuth = {
 	userId: '',
 	userName: '',
 	userTeamCD: '',
@@ -17,6 +14,7 @@ const initialState: IInitialState = {
 	userProject: '',
 	userEmail: '',
 	userToken: '',
+	userSocket: null,
 };
 
 const authSlice = createSlice({
@@ -51,8 +49,11 @@ const authSlice = createSlice({
 			state.userEmail = '';
 			state.userToken = '';
 		},
+		authSocket(state, action) {
+			state.userSocket = action.payload || null;
+		},
 	},
 });
 
-export const { authSetting, authReset } = authSlice.actions;
+export const { authSetting, authReset, authSocket } = authSlice.actions;
 export default authSlice.reducer;

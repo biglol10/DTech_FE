@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IModalState } from '@utils/types/commTypes';
+import { IModalState } from '@utils/types/commAndStoreTypes';
 import { modalUISize } from '@utils/constants/uiConstants';
 
 interface IActionPayload extends IModalState {}
