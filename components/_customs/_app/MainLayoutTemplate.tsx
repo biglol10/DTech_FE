@@ -5,6 +5,7 @@
  *-------------------------------------------------------------------------------------------
  * 1      변지욱     2022-07-13   feature/JW/layout           최초작성
  * 2      변지욱     2022-07-14   feature/JW/layoutchange     세팅팝업 추가 및 세팅영역 밖 클릭 시 세팅팝업 숨김처리
+ * 3      변지욱     2022-08-18   feature/JW/socket           Socket으로 온라인 오프라인 유저 표시
  ********************************************************************************************/
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -14,12 +15,25 @@ import DLogo from '@public/images/DLogo2.png';
 import { Icon } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import cookie from 'js-cookie';
+import { useSocket } from '@utils/appRelated/authUser';
+import axios from 'axios';
+
 import Style from './MainLayoutTemplate.module.scss';
 
 interface LayoutProps {
 	children: React.ReactNode;
+}
+
+interface IUsersStatusArr {
+	USER_UID: string;
+	USER_ID: string;
+	NAME: string;
+	TITLE: string;
+	DETAIL: string;
+	IMG_URL: string;
+	ONLINE_STATUS: 'ONLINE' | 'OFFLINE';
 }
 
 const MainLayoutTemplate = ({ children }: LayoutProps) => {
@@ -31,11 +45,17 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	const [isLogoBorderBottom, setIsLogoBorderBottom] = useState(false);
 	const [iconLeft, setIconLeft] = useState(true);
 	const [settingOpen, setSettingOpen] = useState(false);
+	const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
+	const [usersStatusArr, setUsersStatusArr] = useState<IUsersStatusArr[]>([]);
 
-	const wrapperRef = useRef<any>(null);
+	const wrapperRef = useRef<HTMLDivElement>(null);
 
 	const authStore = useSelector((state: any) => state.auth);
 	const appCommon = useSelector((state: any) => state.appCommon);
+
+	const { init: initSocket, disconnect } = useSocket();
+
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		if (wrapperRef) {
@@ -58,7 +78,42 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 		}
 	}, []);
 
+	useEffect(() => {
+		const socket = authStore.userSocket;
+
+		if (!socket) {
+			initSocket(authStore.userId);
+		} else {
+			socket.on(
+				'connectedUsers',
+				({ users }: { users: { userId: string; socketId: string }[] }) => {
+					const onlineUsersArr = users.map((item) => item.userId);
+
+					setOnlineUsers(onlineUsersArr);
+				},
+			);
+		}
+		// 다른 dependency 추가하면 connectedUsers가 여러번 찍힘... 딱히 문제는 없지만 최소한으로 작동하는게 목적
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [authStore]);
+
+	useEffect(() => {
+		axios
+			.get('http://localhost:3066/api/auth/getUsersStatus', {
+				params: { onlineUsers: onlineUsers.length > 0 ? onlineUsers : ['none'] },
+				// headers: { Authorization: authStore.userToken },
+			})
+			.then((response) => {
+				setUsersStatusArr(response.data.usersStatus);
+			})
+			.catch((err) => {});
+	}, [onlineUsers]);
+
 	const logout = () => {
+		disconnect();
+		dispatch({
+			type: 'AUTH_RESET',
+		});
 		cookie.remove('token');
 		router.push('/login');
 	};
@@ -133,45 +188,55 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 										<SharpDivider content="온라인" />
 
 										<div className={Style['usersOnline']}>
-											{Array(3)
-												.fill(0)
-												.map((item, idx) => (
-													<div
-														className={Style['folder-icons']}
-														key={`online_${idx}`}
-													>
+											{usersStatusArr.map(
+												(item: any, idx: number) =>
+													item.USER_ID !== authStore.userId &&
+													item.ONLINE_STATUS === 'ONLINE' && (
 														<div
-															className={cx('user-avatar', 'online')}
+															className={Style['folder-icons']}
+															key={`online_${idx}`}
 														>
-															<img src="https://randomuser.me/api/portraits/women/71.jpg" />
+															<div
+																className={cx(
+																	'user-avatar',
+																	'online',
+																)}
+															>
+																<img src="https://randomuser.me/api/portraits/women/71.jpg" />
+															</div>
+															<div
+																className={Style['username']}
+															>{`${item.NAME} (${item.TITLE})`}</div>
 														</div>
-														<div className={Style['username']}>
-															User Online{idx}
-														</div>
-													</div>
-												))}
+													),
+											)}
 										</div>
 
 										<SharpDivider content="오프라인" />
 
 										<div className={Style['usersOffline']}>
-											{Array(20)
-												.fill(0)
-												.map((item, idx) => (
-													<div
-														className={Style['folder-icons']}
-														key={`offline_${idx}`}
-													>
+											{usersStatusArr.map(
+												(item, idx) =>
+													item.USER_ID !== authStore.userId &&
+													item.ONLINE_STATUS === 'OFFLINE' && (
 														<div
-															className={cx('user-avatar', 'offline')}
+															className={Style['folder-icons']}
+															key={`offline_${idx}`}
 														>
-															<img src="https://randomuser.me/api/portraits/women/71.jpg" />
+															<div
+																className={cx(
+																	'user-avatar',
+																	'offline',
+																)}
+															>
+																<img src="https://randomuser.me/api/portraits/women/71.jpg" />
+															</div>
+															<div className={Style['username']}>
+																{`${item.NAME} (${item.TITLE})`}
+															</div>
 														</div>
-														<div className={Style['username']}>
-															User Offline{idx}
-														</div>
-													</div>
-												))}
+													),
+											)}
 										</div>
 									</div>
 								</div>
