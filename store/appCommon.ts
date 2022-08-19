@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { IAppCommon } from '@utils/types/commAndStoreTypes';
 
 // 현재 페이지 route
-const initialState = {
+const initialState: IAppCommon = {
 	route: {
 		currentRoute: 'dashboard',
 	},

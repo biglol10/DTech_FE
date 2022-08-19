@@ -5,10 +5,14 @@ import { MainLayoutTemplate, SingleChatMessage } from '@components/customs';
 import { useRouter } from 'next/router';
 import { Container, Segment } from 'semantic-ui-react';
 import dynamic from 'next/dynamic';
+import { useSelector } from 'react-redux';
 
-import { ChatList } from '@utils/types/commTypes';
+import { ChatList, IUsersStatusArr } from '@utils/types/commAndStoreTypes';
 import { techImage } from '@utils/constants/techs';
 import OnlineSvg from '@styles/svg/online.svg';
+import OfflineSvg from '@styles/svg/offline.svg';
+import axios from 'axios';
+
 import Style from './[userId].module.scss';
 
 const ReactQuill = dynamic(
@@ -25,10 +29,35 @@ const ReactQuill = dynamic(
 const UserChat = () => {
 	const router = useRouter();
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
+	const [chatUser, setChatUser] = useState<{ [name: string]: string }>();
 	const [chatList, setChatList] = useState<any>([]);
+
 	const firstLoad = useRef<boolean>(true);
 	const bottomRef = useRef<any>(null);
 	const { userId } = router.query;
+
+	const usersStore = useSelector(
+		(state: { users: { usersOverview: IUsersStatusArr[] } }) => state.users.usersOverview,
+	);
+
+	// const userIsOnline = useMemo(() => {
+
+	// },[usersStore])
+
+	useEffect(() => {
+		axios
+			.get('http://localhost:3066/api/auth/getUsersInfo', {
+				params: { usersParam: [userId] },
+				// headers: { Authorization: authStore.userToken },
+			})
+			.then((response) => {
+				console.log(response.data);
+				setChatUser(response.data.usersInfo[0]);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}, [userId]);
 
 	useEffect(() => {
 		bottomRef.current?.scrollIntoView({ behavior: 'auto' });
@@ -124,11 +153,18 @@ const UserChat = () => {
 					textAlign="left"
 					className={Style['chatUserBox']}
 				>
-					<OnlineSvg />
+					{usersStore.filter(
+						(item) => item.USER_UID === userId && item.ONLINE_STATUS === 'ONLINE',
+					).length > 0 ? (
+						<OnlineSvg />
+					) : (
+						<OfflineSvg />
+					)}
+					{/* <OnlineSvg /> */}
 					<Avatar
 						id="userSettingArea"
 						color="white"
-						content={userId as string}
+						content={chatUser ? `${chatUser.NAME} (${chatUser.TITLE})` : ''}
 						imageSize="mini"
 						labelSize="mini"
 					/>

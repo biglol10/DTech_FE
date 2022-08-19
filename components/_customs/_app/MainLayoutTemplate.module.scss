@@ -88,53 +88,6 @@
 				.usersOffline {
 					margin: 0 5%;
 					color: white;
-
-					.folder-icons {
-						margin-top: 10px;
-						display: flex;
-						align-items: center;
-						height: 30px;
-
-						.user-avatar {
-							position: relative;
-							display: flex;
-
-							img {
-								width: 30px;
-								border-radius: 10px;
-							}
-
-							&::after {
-								content: '';
-								position: absolute;
-								top: -5px;
-								right: -5px;
-								border: 2px solid #fbfcf8;
-								box-sizing: unset;
-								width: 8px;
-								height: 8px;
-								border-radius: 50%;
-							}
-
-							&.online {
-								&::after {
-									background-color: #2bac76;
-								}
-							}
-
-							&.offline {
-								&::after {
-									background-color: #fe4663;
-								}
-							}
-						}
-
-						.username {
-							margin-left: 10px;
-							font-weight: bold;
-							font-size: 15px;
-						}
-					}
 				}
 			}
 		}

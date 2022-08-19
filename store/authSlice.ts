@@ -1,10 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { IAuth } from '@utils/types/commAndStoreTypes';
 
-interface IInitialState {
-	[name: string]: null | string;
-}
-
-const initialState: IInitialState = {
+const initialState: IAuth = {
 	userId: '',
 	userName: '',
 	userTeamCD: '',

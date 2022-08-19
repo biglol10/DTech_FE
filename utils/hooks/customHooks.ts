@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { IModalState } from '@utils/types/commTypes';
+import { IModalState } from '@utils/types/commAndStoreTypes';
 
 const useModal = () => {
 	const modalState = useSelector((state: any) => state.modal);

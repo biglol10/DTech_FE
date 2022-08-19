@@ -7,7 +7,7 @@ import classNames from 'classnames/bind';
 import { useModal } from '@utils/hooks/customHooks';
 import { modalUISize } from '@utils/constants/uiConstants';
 import Image from 'next/image';
-import { ChatList } from '@utils/types/commTypes';
+import { ChatList } from '@utils/types/commAndStoreTypes';
 import axios from 'axios';
 import Style from './SingleChatMessage.module.scss';
 

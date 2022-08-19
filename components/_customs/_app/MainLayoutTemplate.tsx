@@ -19,21 +19,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import cookie from 'js-cookie';
 import { useSocket } from '@utils/appRelated/authUser';
 import axios from 'axios';
+import { IAuth, IAppCommon, IUsersStatusArr } from '@utils/types/commAndStoreTypes';
+import * as RCONST from '@utils/constants/reducerConstants';
 
+import IndividualChatUser from './IndividualChatUser';
 import Style from './MainLayoutTemplate.module.scss';
 
 interface LayoutProps {
 	children: React.ReactNode;
-}
-
-interface IUsersStatusArr {
-	USER_UID: string;
-	USER_ID: string;
-	NAME: string;
-	TITLE: string;
-	DETAIL: string;
-	IMG_URL: string;
-	ONLINE_STATUS: 'ONLINE' | 'OFFLINE';
 }
 
 const MainLayoutTemplate = ({ children }: LayoutProps) => {
@@ -50,8 +43,8 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 
 	const wrapperRef = useRef<HTMLDivElement>(null);
 
-	const authStore = useSelector((state: any) => state.auth);
-	const appCommon = useSelector((state: any) => state.appCommon);
+	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
+	const appCommon = useSelector((state: { appCommon: IAppCommon }) => state.appCommon);
 
 	const { init: initSocket, disconnect } = useSocket();
 
@@ -104,10 +97,11 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 				// headers: { Authorization: authStore.userToken },
 			})
 			.then((response) => {
+				dispatch({ type: RCONST.SET_USERS_OVERVIEW, users: response.data.usersStatus });
 				setUsersStatusArr(response.data.usersStatus);
 			})
 			.catch((err) => {});
-	}, [onlineUsers]);
+	}, [dispatch, onlineUsers]);
 
 	const logout = () => {
 		disconnect();
@@ -189,25 +183,17 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 
 										<div className={Style['usersOnline']}>
 											{usersStatusArr.map(
-												(item: any, idx: number) =>
+												(item, idx: number) =>
 													item.USER_ID !== authStore.userId &&
 													item.ONLINE_STATUS === 'ONLINE' && (
-														<div
-															className={Style['folder-icons']}
+														<IndividualChatUser
 															key={`online_${idx}`}
-														>
-															<div
-																className={cx(
-																	'user-avatar',
-																	'online',
-																)}
-															>
-																<img src="https://randomuser.me/api/portraits/women/71.jpg" />
-															</div>
-															<div
-																className={Style['username']}
-															>{`${item.NAME} (${item.TITLE})`}</div>
-														</div>
+															onlineStatus="ONLINE"
+															userUID={item.USER_UID}
+															userName={item.NAME}
+															userTitle={item.TITLE}
+															userImg={item.IMG_URL}
+														/>
 													),
 											)}
 										</div>
@@ -219,22 +205,14 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 												(item, idx) =>
 													item.USER_ID !== authStore.userId &&
 													item.ONLINE_STATUS === 'OFFLINE' && (
-														<div
-															className={Style['folder-icons']}
+														<IndividualChatUser
 															key={`offline_${idx}`}
-														>
-															<div
-																className={cx(
-																	'user-avatar',
-																	'offline',
-																)}
-															>
-																<img src="https://randomuser.me/api/portraits/women/71.jpg" />
-															</div>
-															<div className={Style['username']}>
-																{`${item.NAME} (${item.TITLE})`}
-															</div>
-														</div>
+															onlineStatus="OFFLINE"
+															userUID={item.USER_UID}
+															userName={item.NAME}
+															userTitle={item.TITLE}
+															userImg={item.IMG_URL}
+														/>
 													),
 											)}
 										</div>
