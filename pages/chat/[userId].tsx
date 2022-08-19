@@ -26,7 +26,7 @@ const ReactQuill = dynamic(
 	{ ssr: false },
 );
 
-const UserChat = () => {
+const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => {
 	const router = useRouter();
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
 	const [chatUser, setChatUser] = useState<{ [name: string]: string }>();
@@ -35,10 +35,6 @@ const UserChat = () => {
 	const firstLoad = useRef<boolean>(true);
 	const bottomRef = useRef<any>(null);
 	const { userId } = router.query;
-
-	const usersStore = useSelector(
-		(state: { users: { usersOverview: IUsersStatusArr[] } }) => state.users.usersOverview,
-	);
 
 	// const userIsOnline = useMemo(() => {
 
@@ -51,12 +47,9 @@ const UserChat = () => {
 				// headers: { Authorization: authStore.userToken },
 			})
 			.then((response) => {
-				console.log(response.data);
 				setChatUser(response.data.usersInfo[0]);
 			})
-			.catch((err) => {
-				console.log(err);
-			});
+			.catch((err) => {});
 	}, [userId]);
 
 	useEffect(() => {
@@ -153,14 +146,11 @@ const UserChat = () => {
 					textAlign="left"
 					className={Style['chatUserBox']}
 				>
-					{usersStore.filter(
-						(item) => item.USER_UID === userId && item.ONLINE_STATUS === 'ONLINE',
-					).length > 0 ? (
+					{usersStatusArr.filter((item) => item.USER_UID === userId).length > 0 ? (
 						<OnlineSvg />
 					) : (
 						<OfflineSvg />
 					)}
-					{/* <OnlineSvg /> */}
 					<Avatar
 						id="userSettingArea"
 						color="white"
