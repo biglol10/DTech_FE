@@ -8,6 +8,7 @@ import registerSaga from './registerSaga';
 import toastSaga from './toastSaga';
 import appCommonSaga from './appCommonSaga';
 import boardSaga from './boardSaga';
+import usersSaga from './usersSaga';
 
 export default function* rootSaga() {
 	yield all([
@@ -19,5 +20,6 @@ export default function* rootSaga() {
 		fork(toastSaga),
 		fork(appCommonSaga),
 		fork(boardSaga),
+		fork(usersSaga),
 	]);
 }

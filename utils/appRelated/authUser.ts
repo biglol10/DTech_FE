@@ -24,12 +24,12 @@ const useSocket = () => {
 		}
 
 		if (socket.current) {
+			socket.current.connect();
+			socket.current.emit('connectUser', { userId });
 			dispatch({
 				type: 'AUTH_USERSOCKET',
 				socketRef: socket.current,
 			});
-			socket.current.connect();
-			socket.current.emit('connectUser', { userId });
 		}
 	};
 

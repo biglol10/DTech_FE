@@ -11,14 +11,14 @@ import { createWrapper, HYDRATE } from 'next-redux-wrapper'; // nextjs friendly
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from '@saga/index';
 
-import userReducer from './userSlice';
+import usersSlice from './usersSlice';
 import counterReducer from './counterSlice';
 import testApiReducer from './testApiSlice';
 import modalSlice from './modalSlice';
 import authSlice from './authSlice';
 import registerSlice from './registerSlice';
 import toastSlice from './toastSlice';
-import appCommonSlice from './appCommon'
+import appCommonSlice from './appCommon';
 // import saga from './sagaCounter';
 
 const rootReducer = (state: any, action: any) => {
@@ -32,7 +32,7 @@ const rootReducer = (state: any, action: any) => {
 		}
 		default: {
 			const combinedReducer = combineReducers({
-				user: userReducer,
+				users: usersSlice,
 				counter: counterReducer,
 				testApi: testApiReducer,
 				modal: modalSlice,
