@@ -188,11 +188,14 @@ export interface IAvatar {
 
 export interface ICard {
 	id?: string;
+	key?: string;
 	className?: string;
 	title?: string;
 	content?: string;
-	upvote?: number;
+	likeCnt?: number;
+	commentCnt?: number;
 	date?: Date;
 	userName?: string;
 	userTitle?: string;
+	images?: Array<any>;
 }

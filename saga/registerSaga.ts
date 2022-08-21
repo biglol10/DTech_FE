@@ -254,6 +254,8 @@ const registerUserFunction = function* ({ registerData, propFunction }: any) {
 	if (registerData.image.imageFile) {
 		const fileName = registerData.idInputValue.idInputValue.split('@')[0];
 		const fileExtName = registerData.image.imageFile.name.split('.')[1];
+
+		console.log(fileName, fileExtName);
 		const formData = new FormData();
 
 		formData.append('img', registerData.image.imageFile, `${fileName}.${fileExtName}`);
