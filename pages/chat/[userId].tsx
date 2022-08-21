@@ -5,7 +5,6 @@ import { MainLayoutTemplate, SingleChatMessage } from '@components/customs';
 import { useRouter } from 'next/router';
 import { Container, Segment } from 'semantic-ui-react';
 import dynamic from 'next/dynamic';
-import { useSelector } from 'react-redux';
 
 import { ChatList, IUsersStatusArr } from '@utils/types/commAndStoreTypes';
 import { techImage } from '@utils/constants/techs';
@@ -34,7 +33,7 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 
 	const firstLoad = useRef<boolean>(true);
 	const bottomRef = useRef<any>(null);
-	const { userId } = router.query;
+	const { userId: userUID } = router.query; // UID in here
 
 	// const userIsOnline = useMemo(() => {
 
@@ -43,14 +42,15 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 	useEffect(() => {
 		axios
 			.get('http://localhost:3066/api/auth/getUsersInfo', {
-				params: { usersParam: [userId] },
+				params: { usersParam: [userUID] },
 				// headers: { Authorization: authStore.userToken },
 			})
 			.then((response) => {
+				// console.log(response);
 				setChatUser(response.data.usersInfo[0]);
 			})
 			.catch((err) => {});
-	}, [userId]);
+	}, [userUID]);
 
 	useEffect(() => {
 		bottomRef.current?.scrollIntoView({ behavior: 'auto' });
@@ -66,7 +66,10 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 						{ fileName: 'React', filePreview: techImage['React'] },
 						{ fileName: 'Node', filePreview: techImage['Node'] },
 					],
-					linkList: ['https://github.com/', 'https://www.inflearn.com/'],
+					linkList: [
+						'https://steemit.com/technology/@inspiredjw/node-js-xss',
+						'https://www.inflearn.com/',
+					],
 				},
 				{
 					value: 'linkListTest',
@@ -74,7 +77,10 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 						{ fileName: 'React', filePreview: techImage['React'] },
 						{ fileName: 'Node', filePreview: techImage['Node'] },
 					],
-					linkList: ['https://github.com/', 'https://www.inflearn.com/'],
+					linkList: [
+						'https://steemit.com/technology/@inspiredjw/node-js-xss',
+						'https://www.inflearn.com/',
+					],
 				},
 				{
 					value: 'linkListTest',
@@ -82,7 +88,10 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 						{ fileName: 'React', filePreview: techImage['React'] },
 						{ fileName: 'Node', filePreview: techImage['Node'] },
 					],
-					linkList: ['https://github.com/', 'https://www.inflearn.com/'],
+					linkList: [
+						'https://steemit.com/technology/@inspiredjw/node-js-xss',
+						'https://www.inflearn.com/',
+					],
 				},
 				{
 					value: 'linkListTest',
@@ -90,7 +99,10 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 						{ fileName: 'React', filePreview: techImage['React'] },
 						{ fileName: 'Node', filePreview: techImage['Node'] },
 					],
-					linkList: ['https://github.com/', 'https://www.inflearn.com/'],
+					linkList: [
+						'https://steemit.com/technology/@inspiredjw/node-js-xss',
+						'https://www.inflearn.com/',
+					],
 				},
 				{
 					value: 'linkListTest',
@@ -98,7 +110,10 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 						{ fileName: 'React', filePreview: techImage['React'] },
 						{ fileName: 'Node', filePreview: techImage['Node'] },
 					],
-					linkList: ['https://github.com/', 'https://www.inflearn.com/'],
+					linkList: [
+						'https://steemit.com/technology/@inspiredjw/node-js-xss',
+						'https://www.inflearn.com/',
+					],
 				},
 				{
 					value: 'linkListTest',
@@ -106,7 +121,10 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 						{ fileName: 'React', filePreview: techImage['React'] },
 						{ fileName: 'Node', filePreview: techImage['Node'] },
 					],
-					linkList: ['https://github.com/', 'https://www.inflearn.com/'],
+					linkList: [
+						'https://steemit.com/technology/@inspiredjw/node-js-xss',
+						'https://www.inflearn.com/',
+					],
 				},
 				{
 					value: 'linkListTest',
@@ -114,7 +132,10 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 						{ fileName: 'React', filePreview: techImage['React'] },
 						{ fileName: 'Node', filePreview: techImage['Node'] },
 					],
-					linkList: ['https://github.com/', 'https://www.inflearn.com/'],
+					linkList: [
+						'https://steemit.com/technology/@inspiredjw/node-js-xss',
+						'https://www.inflearn.com/',
+					],
 				},
 				{
 					value: 'linkListTest',
@@ -122,7 +143,10 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 						{ fileName: 'React', filePreview: techImage['React'] },
 						{ fileName: 'Node', filePreview: techImage['Node'] },
 					],
-					linkList: ['https://github.com/', 'https://www.inflearn.com/'],
+					linkList: [
+						'https://steemit.com/technology/@inspiredjw/node-js-xss',
+						'https://www.inflearn.com/',
+					],
 				},
 			];
 
@@ -146,7 +170,7 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 					textAlign="left"
 					className={Style['chatUserBox']}
 				>
-					{usersStatusArr.filter((item) => item.USER_UID === userId).length > 0 ? (
+					{usersStatusArr.filter((item) => item.USER_UID === userUID).length > 0 ? (
 						<OnlineSvg />
 					) : (
 						<OfflineSvg />
