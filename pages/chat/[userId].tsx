@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-key */
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Avatar, Box, DTechQuill } from '@components/index';
 import { MainLayoutTemplate, SingleChatMessage } from '@components/customs';
 import { useRouter } from 'next/router';
@@ -7,7 +7,6 @@ import { Container, Segment } from 'semantic-ui-react';
 import dynamic from 'next/dynamic';
 
 import { ChatList, IUsersStatusArr, IAuth } from '@utils/types/commAndStoreTypes';
-import { techImage } from '@utils/constants/techs';
 import OnlineSvg from '@styles/svg/online.svg';
 import OfflineSvg from '@styles/svg/offline.svg';
 import axios from 'axios';
@@ -37,6 +36,7 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 	const { userId: userUID } = router.query; // UID in here
 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
+	const socket = authStore.userSocket;
 
 	useEffect(() => {
 		axios
@@ -53,7 +53,7 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 		bottomRef.current?.scrollIntoView({ behavior: 'auto' });
 	}, [quillWrapperHeight]);
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		if (authStore.userUID && authStore.userToken && userUID) {
 			axios
 				.post(
@@ -175,6 +175,40 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 		bottomRef.current?.scrollIntoView({ behavior: 'auto' });
 	}, [chatList]);
 
+	const sendMessageFunction = useCallback(
+		(content: ChatList) => {
+			console.log('socket is');
+			console.log(socket);
+			socket?.emit('sendPrivateMessage', {
+				chatMessage: content.value,
+				userUID: authStore.userUID,
+				convId: conversationId.current,
+				imgList: JSON.stringify(content.imgList),
+				linkList: JSON.stringify(content.linkList),
+			});
+
+			// axios
+			// 	.post(
+			// 		'http://localhost:3066/api/chat/savePrivateChat',
+			// 		{
+			// 			chatMessage: content.value,
+			// 			userUID: authStore.userUID,
+			// 			convId: conversationId.current,
+			// 			imgList: JSON.stringify(content.imgList),
+			// 			linkList: JSON.stringify(content.linkList),
+			// 		},
+			// 		{
+			// 			headers: { Authorization: authStore.userToken },
+			// 		},
+			// 	)
+			// 	.then((response) => {
+			// 		setChatList(response.data.chatList);
+			// 	})
+			// 	.catch((err) => {});
+		},
+		[authStore.userUID, socket],
+	);
+
 	return (
 		<>
 			<main id={Style['chatMain']}>
@@ -213,23 +247,14 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 										value={item.MESSAGE_TEXT}
 										messageOwner={item.USER_UID === userUID ? 'other' : 'mine'}
 										bottomRef={bottomRef}
+										linkList={
+											item.LINK_LIST &&
+											!!JSON.parse(item.LINK_LIST).length &&
+											JSON.parse(item.LINK_LIST)
+										}
 									/>
 								);
 							})}
-							{/* {chatList.map((item: ChatList, idx: number) => {
-								return (
-									<>
-										<SingleChatMessage
-											key={`asdf_${idx}`}
-											value={item.value}
-											imgList={item.imgList}
-											linkList={item.linkList}
-											messageOwner={idx % 2 === 0 ? 'other' : 'mine'}
-											bottomRef={bottomRef}
-										/>
-									</>
-								);
-							})} */}
 							<div ref={bottomRef} />
 						</Segment>
 					) : (
@@ -250,31 +275,8 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 								setQuillWrapperHeight(heightValue);
 							}}
 							handleSubmit={(content: ChatList) => {
-								console.log(content.imgList);
-								console.log(JSON.stringify(content.imgList));
-								console.log(content.linkList);
-								console.log(JSON.stringify(content.linkList));
-								axios
-									.post(
-										'http://localhost:3066/api/chat/savePrivateChat',
-										{
-											chatMessage: content.value,
-											userUID: authStore.userUID,
-											convId: conversationId.current,
-										},
-										{
-											headers: { Authorization: authStore.userToken },
-										},
-									)
-									.then((response) => {
-										console.log('success in chat');
-										console.log(response);
-										setChatList(response.data.chatList);
-									})
-									.catch((err) => {
-										console.log('error in chat');
-										console.log(err);
-									});
+								sendMessageFunction(content);
+
 								// 이미지 S3 되면 올리고 setChatList 호출
 								// setChatList((prev: ChatList[]) => [
 								// 	...prev,
