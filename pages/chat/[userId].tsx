@@ -185,6 +185,7 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 				convId: conversationId.current,
 				imgList: JSON.stringify(content.imgList),
 				linkList: JSON.stringify(content.linkList),
+				toUserId: chatUser && chatUser.USER_ID,
 			});
 
 			// axios
@@ -206,7 +207,7 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 			// 	})
 			// 	.catch((err) => {});
 		},
-		[authStore.userUID, socket],
+		[authStore.userUID, chatUser, socket],
 	);
 
 	return (
