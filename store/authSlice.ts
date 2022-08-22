@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { IAuth } from '@utils/types/commAndStoreTypes';
 
 const initialState: IAuth = {
+	userUID: '',
 	userId: '',
 	userName: '',
 	userTeamCD: '',
@@ -22,6 +23,7 @@ const authSlice = createSlice({
 	initialState,
 	reducers: {
 		authSetting(state, action) {
+			state.userUID = action.payload.userUID || '';
 			state.userId = action.payload.userId || '';
 			state.userName = action.payload.userName || '';
 			state.userTeamCD = action.payload.userTeamCD || '';
@@ -36,6 +38,7 @@ const authSlice = createSlice({
 			state.userToken = action.payload.userToken || '';
 		},
 		authReset(state) {
+			state.userUID = '';
 			state.userId = '';
 			state.userName = '';
 			state.userTeamCD = '';

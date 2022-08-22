@@ -13,8 +13,8 @@ export interface IModalState {
 
 export interface ChatList {
 	value: string;
-	imgList: { fileName: string; filePreview: string }[] | never[];
-	linkList: string[];
+	imgList?: { fileName: string; filePreview: string }[] | never[];
+	linkList?: string[];
 }
 
 export interface IToastState {
@@ -48,6 +48,7 @@ export interface IAppCommon {
 }
 
 export interface IAuth {
+	userUID: string;
 	userId: string;
 	userName: string;
 	userTeamCD: string;

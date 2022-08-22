@@ -66,7 +66,7 @@ const SingleChatMessage = ({
 				});
 		};
 
-		if (linkList.length) result();
+		if (linkList && linkList.length) result();
 	}, [linkList]);
 
 	useEffect(() => {
@@ -107,7 +107,7 @@ const SingleChatMessage = ({
 						</Label>
 					)}
 
-					{imgList?.length > 0 && (
+					{imgList && imgList.length > 0 && (
 						<div className={cx('imageListDiv', messageOwner)}>
 							{imgList.map((item: { fileName: string; filePreview: string }, idx) => (
 								<Image
