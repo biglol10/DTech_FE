@@ -10,7 +10,7 @@ import { ChatList, IUsersStatusArr, IAuth } from '@utils/types/commAndStoreTypes
 import OnlineSvg from '@styles/svg/online.svg';
 import OfflineSvg from '@styles/svg/offline.svg';
 import axios from 'axios';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import Style from './[userId].module.scss';
 
@@ -39,14 +39,15 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 	const socket = authStore.userSocket;
 
 	useEffect(() => {
-		axios
-			.get('http://localhost:3066/api/auth/getUsersInfo', {
-				params: { usersParam: [userUID] },
-			})
-			.then((response) => {
-				setChatUser(response.data.usersInfo[0]);
-			})
-			.catch((err) => {});
+		userUID &&
+			axios
+				.get('http://localhost:3066/api/auth/getUsersInfo', {
+					params: { usersParam: [userUID] },
+				})
+				.then((response) => {
+					setChatUser(response.data.usersInfo[0]);
+				})
+				.catch((err) => {});
 	}, [userUID]);
 
 	useEffect(() => {
@@ -65,120 +66,60 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 				)
 				.then((response) => {
 					conversationId.current = response.data.convId;
+					const chatListResponse = response.data.chatList;
+
+					const groupsReduce = chatListResponse.reduce(
+						(previouseVal: any, currentVal: any) => {
+							const date = currentVal.SENT_DATETIME.split('T')[0];
+
+							if (!previouseVal[date]) {
+								previouseVal[date] = [];
+							}
+							previouseVal[date].push(currentVal);
+							return previouseVal;
+						},
+						{},
+					);
+
+					const groupArrays = Object.keys(groupsReduce).map((date) => {
+						return {
+							date,
+							dateChatList: groupsReduce[date],
+						};
+					});
+
+					console.log(groupArrays); // [0] => {date: '2022-08-22', dateChatList: Array(14)}
+
 					setChatList(response.data.chatList);
 				})
 				.catch((err) => {});
 		}
 	}, [authStore.userToken, authStore.userUID, userUID]);
 
-	// useEffect(() => {
-	// 	if (quillWrapperHeight && firstLoad.current) {
-	// 		const chatListArray: ChatList[] = [
-	// 			{ value: 'asdfasdf', imgList: [], linkList: [] },
-	// 			{
-	// 				value: 'linkListTest',
-	// 				imgList: [
-	// 					{ fileName: 'React', filePreview: techImage['React'] },
-	// 					{ fileName: 'Node', filePreview: techImage['Node'] },
-	// 				],
-	// 				linkList: [
-	// 					'https://steemit.com/technology/@inspiredjw/node-js-xss',
-	// 					'https://www.inflearn.com/',
-	// 				],
-	// 			},
-	// 			{
-	// 				value: 'linkListTest',
-	// 				imgList: [
-	// 					{ fileName: 'React', filePreview: techImage['React'] },
-	// 					{ fileName: 'Node', filePreview: techImage['Node'] },
-	// 				],
-	// 				linkList: [
-	// 					'https://steemit.com/technology/@inspiredjw/node-js-xss',
-	// 					'https://www.inflearn.com/',
-	// 				],
-	// 			},
-	// 			{
-	// 				value: 'linkListTest',
-	// 				imgList: [
-	// 					{ fileName: 'React', filePreview: techImage['React'] },
-	// 					{ fileName: 'Node', filePreview: techImage['Node'] },
-	// 				],
-	// 				linkList: [
-	// 					'https://steemit.com/technology/@inspiredjw/node-js-xss',
-	// 					'https://www.inflearn.com/',
-	// 				],
-	// 			},
-	// 			{
-	// 				value: 'linkListTest',
-	// 				imgList: [
-	// 					{ fileName: 'React', filePreview: techImage['React'] },
-	// 					{ fileName: 'Node', filePreview: techImage['Node'] },
-	// 				],
-	// 				linkList: [
-	// 					'https://steemit.com/technology/@inspiredjw/node-js-xss',
-	// 					'https://www.inflearn.com/',
-	// 				],
-	// 			},
-	// 			{
-	// 				value: 'linkListTest',
-	// 				imgList: [
-	// 					{ fileName: 'React', filePreview: techImage['React'] },
-	// 					{ fileName: 'Node', filePreview: techImage['Node'] },
-	// 				],
-	// 				linkList: [
-	// 					'https://steemit.com/technology/@inspiredjw/node-js-xss',
-	// 					'https://www.inflearn.com/',
-	// 				],
-	// 			},
-	// 			{
-	// 				value: 'linkListTest',
-	// 				imgList: [
-	// 					{ fileName: 'React', filePreview: techImage['React'] },
-	// 					{ fileName: 'Node', filePreview: techImage['Node'] },
-	// 				],
-	// 				linkList: [
-	// 					'https://steemit.com/technology/@inspiredjw/node-js-xss',
-	// 					'https://www.inflearn.com/',
-	// 				],
-	// 			},
-	// 			{
-	// 				value: 'linkListTest',
-	// 				imgList: [
-	// 					{ fileName: 'React', filePreview: techImage['React'] },
-	// 					{ fileName: 'Node', filePreview: techImage['Node'] },
-	// 				],
-	// 				linkList: [
-	// 					'https://steemit.com/technology/@inspiredjw/node-js-xss',
-	// 					'https://www.inflearn.com/',
-	// 				],
-	// 			},
-	// 			{
-	// 				value: 'linkListTest',
-	// 				imgList: [
-	// 					{ fileName: 'React', filePreview: techImage['React'] },
-	// 					{ fileName: 'Node', filePreview: techImage['Node'] },
-	// 				],
-	// 				linkList: [
-	// 					'https://steemit.com/technology/@inspiredjw/node-js-xss',
-	// 					'https://www.inflearn.com/',
-	// 				],
-	// 			},
-	// 		];
-
-	// 		if (bottomRef.current) setChatList(chatListArray);
-
-	// 		firstLoad.current = false;
-	// 	}
-	// }, [quillWrapperHeight]);
-
 	useEffect(() => {
 		bottomRef.current?.scrollIntoView({ behavior: 'auto' });
 	}, [chatList]);
 
+	const getPrivateChatListAxios = useCallback(() => {
+		if (authStore.userUID && authStore.userToken && userUID) {
+			axios
+				.post(
+					'http://localhost:3066/api/chat/getPrivateChatList',
+					{ fromUID: authStore.userUID, toUID: userUID },
+					{
+						headers: { Authorization: authStore.userToken },
+					},
+				)
+				.then((response) => {
+					conversationId.current = response.data.convId;
+					setChatList(response.data.chatList);
+				})
+				.catch((err) => {});
+		}
+	}, [authStore.userToken, authStore.userUID, userUID]);
+
 	const sendMessageFunction = useCallback(
 		(content: ChatList) => {
-			console.log('socket is');
-			console.log(socket);
 			socket?.emit('sendPrivateMessage', {
 				chatMessage: content.value,
 				userUID: authStore.userUID,
@@ -187,28 +128,16 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 				linkList: JSON.stringify(content.linkList),
 				toUserId: chatUser && chatUser.USER_ID,
 			});
-
-			// axios
-			// 	.post(
-			// 		'http://localhost:3066/api/chat/savePrivateChat',
-			// 		{
-			// 			chatMessage: content.value,
-			// 			userUID: authStore.userUID,
-			// 			convId: conversationId.current,
-			// 			imgList: JSON.stringify(content.imgList),
-			// 			linkList: JSON.stringify(content.linkList),
-			// 		},
-			// 		{
-			// 			headers: { Authorization: authStore.userToken },
-			// 		},
-			// 	)
-			// 	.then((response) => {
-			// 		setChatList(response.data.chatList);
-			// 	})
-			// 	.catch((err) => {});
+			getPrivateChatListAxios();
 		},
-		[authStore.userUID, chatUser, socket],
+		[authStore.userUID, chatUser, getPrivateChatListAxios, socket],
 	);
+
+	useEffect(() => {
+		socket?.on('newMessageReceived', () => {
+			getPrivateChatListAxios();
+		});
+	}, [authStore.userToken, authStore.userUID, getPrivateChatListAxios, socket, userUID]);
 
 	return (
 		<>
