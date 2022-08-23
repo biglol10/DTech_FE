@@ -104,7 +104,12 @@ const SingleChatMessage = ({
 
 					{value && (
 						<>
-							<div style={{ display: 'flex' }}>
+							<div
+								style={{
+									display: 'flex',
+									justifyContent: `${messageOwner === 'mine' ? 'right' : 'left'}`,
+								}}
+							>
 								{messageOwner === 'other' ? (
 									<>
 										<Label
