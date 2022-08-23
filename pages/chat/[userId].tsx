@@ -112,6 +112,9 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 					},
 				)
 				.then((response) => {
+					console.log('response is ');
+					console.log(response.data);
+					setChatList([]);
 					conversationId.current = response.data.convId;
 					setChatList(response.data.chatList);
 				})
@@ -129,7 +132,11 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 				linkList: JSON.stringify(content.linkList),
 				toUserId: chatUser && chatUser.USER_ID,
 			});
-			getPrivateChatListAxios();
+
+			socket?.on('messageSendSuccess', () => {
+				alert('SADFsaf');
+				getPrivateChatListAxios();
+			});
 		},
 		[authStore.userUID, chatUser, getPrivateChatListAxios, socket],
 	);
