@@ -20,6 +20,7 @@ import cookie from 'js-cookie';
 import { useSocket } from '@utils/appRelated/authUser';
 import axios from 'axios';
 import { IAuth, IAppCommon, IUsersStatusArr } from '@utils/types/commAndStoreTypes';
+import _ from 'lodash';
 
 import IndividualChatUser from './IndividualChatUser';
 import Style from './MainLayoutTemplate.module.scss';
@@ -81,7 +82,8 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 				({ users }: { users: { userId: string; socketId: string }[] }) => {
 					const onlineUsersArr = users.map((item) => item.userId);
 
-					setOnlineUsers(onlineUsersArr);
+					if (!_.isEqual(onlineUsers, onlineUsersArr)) setOnlineUsers(onlineUsersArr);
+					// setOnlineUsers(onlineUsersArr);
 				},
 			);
 		}

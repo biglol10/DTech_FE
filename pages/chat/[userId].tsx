@@ -11,6 +11,7 @@ import OnlineSvg from '@styles/svg/online.svg';
 import OfflineSvg from '@styles/svg/offline.svg';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import dayjs from 'dayjs';
 
 import Style from './[userId].module.scss';
 
@@ -30,6 +31,7 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
 	const [chatUser, setChatUser] = useState<{ [name: string]: string }>();
 	const [chatList, setChatList] = useState<any>([]);
+	const [tempList, setTempList] = useState<any>({});
 	const conversationId = useRef();
 
 	const bottomRef = useRef<any>(null);
@@ -56,6 +58,7 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 
 	useEffect(() => {
 		if (authStore.userUID && authStore.userToken && userUID) {
+			setChatList([]);
 			axios
 				.post(
 					'http://localhost:3066/api/chat/getPrivateChatList',
@@ -72,23 +75,21 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 						(previouseVal: any, currentVal: any) => {
 							const date = currentVal.SENT_DATETIME.split('T')[0];
 
+							const hourMin = dayjs(currentVal.SENT_DATETIME).format('HH:mm');
+
 							if (!previouseVal[date]) {
-								previouseVal[date] = [];
+								previouseVal[date] = {};
 							}
-							previouseVal[date].push(currentVal);
+							if (!previouseVal[date][hourMin]) {
+								previouseVal[date][hourMin] = [];
+							}
+							previouseVal[date][hourMin].push(currentVal);
 							return previouseVal;
 						},
 						{},
 					);
 
-					const groupArrays = Object.keys(groupsReduce).map((date) => {
-						return {
-							date,
-							dateChatList: groupsReduce[date],
-						};
-					});
-
-					console.log(groupArrays); // [0] => {date: '2022-08-22', dateChatList: Array(14)}
+					setTempList(groupsReduce);
 
 					setChatList(response.data.chatList);
 				})
@@ -170,7 +171,64 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 							}}
 							className={Style['chatWrapperSegment']}
 						>
-							{chatList.map((item: any, idx: number) => {
+							{Object.keys(tempList).map((item: string, idx: number) => {
+								return (
+									<>
+										<h1>{item}</h1>
+										{Object.keys(tempList[item]).map(
+											(item2: string, idx2: number) => {
+												return (
+													<>
+														{tempList[item][item2].map(
+															(item3: any, idx3: number) => {
+																return (
+																	<SingleChatMessage
+																		key={item3.MESSAGE_ID}
+																		value={item3.MESSAGE_TEXT}
+																		messageOwner={
+																			item3.USER_UID ===
+																			userUID
+																				? 'other'
+																				: 'mine'
+																		}
+																		bottomRef={bottomRef}
+																		linkList={
+																			item3.LINK_LIST &&
+																			!!JSON.parse(
+																				item3.LINK_LIST,
+																			).length &&
+																			JSON.parse(
+																				item3.LINK_LIST,
+																			)
+																		}
+																		sentTime={
+																			idx3 ===
+																			tempList[item][item2]
+																				.length -
+																				1
+																				? item3.SENT_DATETIME
+																				: null
+																		}
+																	/>
+																);
+															},
+														)}
+													</>
+												);
+											},
+										)}
+									</>
+								);
+							})}
+
+							{/* {chatList.map((item: any, idx: number) => {
+								const isSameTime =
+									idx < chatList.length - 1 &&
+									dayjs(item.SENT_DATETIME).format('YYYY-MM-DD HH:mm') ===
+										dayjs(chatList[idx + 1].SENT_DATETIME).format(
+											'YYYY-MM-DD HH:mm',
+										);
+
 								return (
 									<SingleChatMessage
 										key={item.MESSAGE_ID}
@@ -182,9 +240,10 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 											!!JSON.parse(item.LINK_LIST).length &&
 											JSON.parse(item.LINK_LIST)
 										}
+										sentTime={isSameTime ? null : item.SENT_DATETIME}
 									/>
 								);
-							})}
+							})} */}
 							<div ref={bottomRef} />
 						</Segment>
 					) : (
