@@ -20,7 +20,7 @@ import cookie from 'js-cookie';
 import { useSocket } from '@utils/appRelated/authUser';
 import axios from 'axios';
 import { IAuth, IAppCommon, IUsersStatusArr } from '@utils/types/commAndStoreTypes';
-import * as RCONST from '@utils/constants/reducerConstants';
+import _ from 'lodash';
 
 import IndividualChatUser from './IndividualChatUser';
 import Style from './MainLayoutTemplate.module.scss';
@@ -82,7 +82,8 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 				({ users }: { users: { userId: string; socketId: string }[] }) => {
 					const onlineUsersArr = users.map((item) => item.userId);
 
-					setOnlineUsers(onlineUsersArr);
+					if (!_.isEqual(onlineUsers, onlineUsersArr)) setOnlineUsers(onlineUsersArr);
+					// setOnlineUsers(onlineUsersArr);
 				},
 			);
 		}
@@ -97,7 +98,6 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 				// headers: { Authorization: authStore.userToken },
 			})
 			.then((response) => {
-				dispatch({ type: RCONST.SET_USERS_OVERVIEW, users: response.data.usersStatus });
 				setUsersStatusArr(response.data.usersStatus);
 			})
 			.catch((err) => {});
@@ -300,7 +300,19 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 						</div>
 					)}
 
-					<main className={Style['mainContent']}>{children}</main>
+					<main className={Style['mainContent']}>
+						{React.Children.map(children, (el: any) => {
+							if (el.type.name === 'UserChat' && el.type.displayName === 'chat') {
+								return React.cloneElement(el, {
+									usersStatusArr: usersStatusArr.filter(
+										(item) => item.ONLINE_STATUS === 'ONLINE',
+									),
+								});
+							} else {
+								return React.cloneElement(el);
+							}
+						})}
+					</main>
 				</div>
 			</div>
 		</>

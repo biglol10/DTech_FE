@@ -23,6 +23,8 @@ import {
 import { Label, InputLayout, InputDropdown, InputSearch, SharpDivider } from '@components/index';
 import { techImage } from '@utils/constants/techs';
 import { SkillTable, PersonCard, MainLayoutTemplate } from '@components/customs';
+import CountUp from 'react-countup';
+
 import Style from './dashboard.module.scss';
 
 interface ITeamSkillData {
@@ -318,7 +320,9 @@ const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aPro
 						</li>
 					</ul>
 					<div>
-						<h4>{userListData.length}명</h4>
+						<h4>
+							<CountUp end={userListData.length} delay={0} duration={0.2} />명
+						</h4>
 					</div>
 				</div>
 				<SharpDivider content="" />

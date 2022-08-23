@@ -122,7 +122,8 @@ const DTechQuill = ({
 				linkList: quillRef.current
 					.getEditor()
 					.getContents()
-					.filter((item: any) => item.attributes?.link),
+					.filter((item: any) => item.attributes?.link)
+					.map((item2: any) => item2.insert),
 			});
 		setQuillContext('<p></p>');
 		setUrlPreviewList([]);

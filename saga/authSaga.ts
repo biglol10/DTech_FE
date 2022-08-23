@@ -16,15 +16,15 @@ interface authObjParam {
 	type: string;
 }
 
-interface ILoginResult {
-	name: string | undefined;
-	userId: string | undefined;
-	time: any;
-	token: string | undefined;
-	result: string;
-	errMessage?: string | undefined;
-	errObj?: any | undefined;
-}
+// interface ILoginResult {
+// 	name: string | undefined;
+// 	userId: string | undefined;
+// 	time: any;
+// 	token: string | undefined;
+// 	result: string;
+// 	errMessage?: string | undefined;
+// 	errObj?: any | undefined;
+// }
 
 const setAuthFunction = function* ({
 	userSetting,
@@ -45,7 +45,15 @@ const setAuthFunction = function* ({
 		return;
 	}
 
-	const loginResult: ILoginResult = yield call(fireLoginRequest, userSetting);
+	const loginResult: {
+		result: string;
+		errMessage?: any;
+		userUID?: string;
+		userId?: string;
+		userName?: string;
+		time?: any;
+		userToken?: string;
+	} = yield call(fireLoginRequest, userSetting);
 
 	if (loginResult.result === 'success') {
 		yield put(authSetting(loginResult));
@@ -56,6 +64,7 @@ const setAuthFunction = function* ({
 };
 
 interface ITokenUser {
+	USER_UID: string;
 	USER_ID: string;
 	NAME: string;
 	TEAM_CD: string;
@@ -76,6 +85,7 @@ const getAuthFunction = function* ({ token, callbackFn }: any) {
 			userName: tokenResult.user.NAME,
 			userId: tokenResult.user.USER_ID,
 			userToken: token,
+			userUID: tokenResult.user.USER_UID,
 		};
 
 		yield put(authSetting(loginResult));
