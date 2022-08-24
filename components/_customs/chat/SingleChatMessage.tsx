@@ -1,5 +1,5 @@
 /* eslint-disable no-control-regex */
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Avatar, Button } from '@components/index';
 import { techImage } from '@utils/constants/techs';
 import { Label } from 'semantic-ui-react';
@@ -31,6 +31,11 @@ const SingleChatMessage = ({
 	const [copyButtonClicked, setCopyButtonClicked] = useState(false);
 	const [linkMetadata, setLinkMetadata] = useState<any>([]);
 
+	// console.log('linkMetadata is');
+	// console.log(linkMetadata);
+	// console.log('bottomReef is');
+	// console.log(bottomRef);
+
 	const { handleModal } = useModal();
 
 	const sentTimeRef = useRef(sentTime ? dayjs(sentTime).format('HH:mm') : null);
@@ -57,8 +62,8 @@ const SingleChatMessage = ({
 	const cx = classNames.bind(Style);
 
 	useEffect(() => {
-		const result = async () => {
-			await axios
+		linkList &&
+			axios
 				.get('http://localhost:3066/api/utils/getMetadata', {
 					params: { linkList },
 				})
@@ -66,18 +71,20 @@ const SingleChatMessage = ({
 					const { metadataArr } = response.data;
 
 					setLinkMetadata(metadataArr);
+
+					setTimeout(() => {
+						bottomRef?.current?.scrollIntoView({ behavior: 'auto' });
+					}, 100);
 				})
 				.catch((err) => {
 					return null;
 				});
-		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
-		if (linkList && linkList.length) result();
-	}, [linkList]);
-
-	useEffect(() => {
-		bottomRef?.current?.scrollIntoView({ behavior: 'auto' });
-	}, [bottomRef, linkMetadata]);
+	// useEffect(() => {
+	// 	bottomRef?.current?.scrollIntoView({ behavior: 'auto' });
+	// }, [bottomRef, linkMetadata]);
 
 	return (
 		<>
@@ -104,7 +111,12 @@ const SingleChatMessage = ({
 
 					{value && (
 						<>
-							<div style={{ display: 'flex' }}>
+							<div
+								style={{
+									display: 'flex',
+									justifyContent: `${messageOwner === 'mine' ? 'right' : 'left'}`,
+								}}
+							>
 								{messageOwner === 'other' ? (
 									<>
 										<Label
