@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Avatar, Box, DTechQuill } from '@components/index';
+import { Avatar, Box, DTechQuill, SharpDivider } from '@components/index';
 import { MainLayoutTemplate, SingleChatMessage } from '@components/customs';
 import { useRouter } from 'next/router';
 import { Container, Segment } from 'semantic-ui-react';
@@ -176,7 +176,7 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 								Object.keys(chatList).map((item: string, idx: number) => {
 									return (
 										<>
-											<div
+											{/* <div
 												style={{
 													display: 'flex',
 													justifyContent: 'center',
@@ -190,7 +190,8 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 												}}
 											>
 												<h1>{item}</h1>
-											</div>
+											</div> */}
+											<SharpDivider content={item} />
 											{Object.keys(chatList[item]).map(
 												(item2: string, idx2: number) => {
 													return (
