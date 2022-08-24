@@ -53,6 +53,13 @@
 	word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 
+.dateDivider {
+	& > span:nth-child(2) {
+		color: mediumslateblue;
+		font-size: 18px;
+	}
+}
+
 .avatarLabel {
 	img {
 		height: 15px !important;

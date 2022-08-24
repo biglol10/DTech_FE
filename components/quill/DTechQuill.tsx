@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 /** ****************************************************************************************
  * @설명 : Quill component
  ********************************************************************************************
@@ -119,7 +121,8 @@ const DTechQuill = ({
 					.filter((item: any) => item.attributes?.link)
 					.map((item2: any) => item2.insert),
 			});
-		setQuillContext('<p></p>');
+		quillRef.current.getEditor().setText('');
+		setQuillContext('');
 		setUrlPreviewList([]);
 	}, [handleSubmit, urlPreviewList]);
 
@@ -229,41 +232,43 @@ const DTechQuill = ({
 		[urlPreviewList],
 	);
 
-	const quillTextChange = useCallback(
-		(content: any) => {
-			if (content.indexOf('<img src="') < 0) {
-				if (quillRef.current) {
-					quillRef.current.innerHTML = content;
-				}
-			} else {
-				const mediaPreview = content.substring(
-					content.indexOf('<img src="') + 10,
-					content.indexOf('"></p>'),
-				);
+	const quillTextChange = useCallback((content: any) => {
+		if (content.indexOf('<img src="') < 0) {
+			if (quillRef.current) {
+				quillRef.current.innerHTML = content;
+				setQuillContext(content);
+			}
+		} else {
+			const mediaPreview = content.substring(
+				content.indexOf('<img src="') + 10,
+				content.indexOf('"></p>'),
+			);
 
-				const filteredString = content.replace(`<img src="${mediaPreview}">`, '');
+			const filteredString = quillRef.current
+				.getEditor()
+				.getText()
+				.replace(`<img src="${mediaPreview}">`, '');
 
-				if (mediaPreview && filteredString) {
-					setQuillContext(filteredString);
-					if (urlPreviewList.length >= 6) {
-						toast['error'](<>{'이미지는 최대 6개로 제한합니다'}</>);
+			if (mediaPreview && filteredString) {
+				setQuillContext(filteredString);
+				quillRef.current.getEditor().setText(filteredString);
+				if (urlPreviewList.length >= 6) {
+					toast['error'](<>{'이미지는 최대 6개로 제한합니다'}</>);
 
-						// 이걸 해줘야 텍스트 입력 + 이미지가 6개일 때 editor에 이미지가 추가되지 않음
-						setUrlPreviewList((prev: any) => [...prev]);
-					} else {
-						setUrlPreviewList((prev: any) => [
-							...prev,
-							{
-								fileName: generateImageUID(),
-								filePreview: mediaPreview,
-							},
-						]);
-					}
+					// 이걸 해줘야 텍스트 입력 + 이미지가 6개일 때 editor에 이미지가 추가되지 않음
+					setUrlPreviewList((prev: any) => [...prev]);
+				} else {
+					setUrlPreviewList((prev: any) => [
+						...prev,
+						{
+							fileName: generateImageUID(),
+							filePreview: mediaPreview,
+						},
+					]);
 				}
 			}
-		},
-		[urlPreviewList.length],
-	);
+		}
+	}, []);
 
 	return (
 		<>
@@ -287,7 +292,7 @@ const DTechQuill = ({
 						placeholder="내용을 입력하세요"
 						modules={modules}
 						formats={formats}
-						value={quillContext}
+						// value={quillContext}
 						onChange={(content: any, delta: any, source: any, editor: any) => {
 							quillTextChange(editor.getHTML());
 						}}
@@ -298,7 +303,7 @@ const DTechQuill = ({
 						placeholder="내용을 입력하세요"
 						modules={modules}
 						formats={formats}
-						value={quillContext}
+						// value={quillContext}
 						onChange={(content: any, delta: any, source: any, editor: any) => {
 							quillTextChange(editor.getHTML());
 						}}
