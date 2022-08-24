@@ -42,6 +42,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	const [usersStatusArr, setUsersStatusArr] = useState<IUsersStatusArr[]>([]);
 
 	const wrapperRef = useRef<HTMLDivElement>(null);
+	const connectedUsersRef = useRef<any>([]);
 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
 	const appCommon = useSelector((state: { appCommon: IAppCommon }) => state.appCommon);
@@ -82,8 +83,10 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 				({ users }: { users: { userId: string; socketId: string }[] }) => {
 					const onlineUsersArr = users.map((item) => item.userId);
 
-					if (!_.isEqual(onlineUsers, onlineUsersArr)) setOnlineUsers(onlineUsersArr);
-					// setOnlineUsers(onlineUsersArr);
+					if (!_.isEqual(connectedUsersRef.current, onlineUsersArr)) {
+						connectedUsersRef.current = onlineUsersArr;
+						setOnlineUsers(onlineUsersArr);
+					}
 				},
 			);
 		}
@@ -302,6 +305,9 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 
 					<main className={Style['mainContent']}>
 						{React.Children.map(children, (el: any) => {
+							console.log(
+								`childrenname is ${el.type.name} and displayName is ${el.type.displayName}`,
+							);
 							if (el.type.name === 'UserChat' && el.type.displayName === 'chat') {
 								return React.cloneElement(el, {
 									usersStatusArr: usersStatusArr.filter(
@@ -309,7 +315,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 									),
 								});
 							} else {
-								return React.cloneElement(el);
+								return el;
 							}
 						})}
 					</main>

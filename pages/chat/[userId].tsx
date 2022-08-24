@@ -30,8 +30,7 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 	const router = useRouter();
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
 	const [chatUser, setChatUser] = useState<{ [name: string]: string }>();
-	const [chatList, setChatList] = useState<any>([]);
-	const [tempList, setTempList] = useState<any>({});
+	const [chatList, setChatList] = useState<any>({});
 	const conversationId = useRef();
 
 	const bottomRef = useRef<any>(null);
@@ -72,10 +71,6 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 	}, [userUID]);
 
 	useEffect(() => {
-		bottomRef.current?.scrollIntoView({ behavior: 'auto' });
-	}, [quillWrapperHeight]);
-
-	useEffect(() => {
 		if (authStore.userUID && authStore.userToken && userUID) {
 			setChatList([]);
 			axios
@@ -92,9 +87,7 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 
 					const groupsReduce = chatToDateGroup(chatListResponse);
 
-					setTempList(groupsReduce);
-
-					setChatList(response.data.chatList);
+					setChatList(groupsReduce);
 				})
 				.catch((err) => {});
 		}
@@ -102,7 +95,7 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 
 	useEffect(() => {
 		bottomRef.current?.scrollIntoView({ behavior: 'auto' });
-	}, [chatList]);
+	}, [chatList, quillWrapperHeight]);
 
 	const getPrivateChatListAxios = useCallback(() => {
 		if (authStore.userUID && authStore.userToken && userUID) {
@@ -118,7 +111,7 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 					conversationId.current = response.data.convId;
 					const groupsReduce = chatToDateGroup(response.data.chatList);
 
-					setTempList(groupsReduce);
+					setChatList(groupsReduce);
 				})
 				.catch((err) => {});
 		}
@@ -179,67 +172,73 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 							}}
 							className={Style['chatWrapperSegment']}
 						>
-							{Object.keys(tempList).map((item: string, idx: number) => {
-								return (
-									<>
-										<div
-											style={{
-												display: 'flex',
-												justifyContent: 'center',
-												border: '1px solid red',
-												padding: '15px 0px',
-												margin: '10px 0px',
-												borderLeft: '0px',
-												borderRight: '0px',
-											}}
-										>
-											<h1>{item}</h1>
-										</div>
-										{Object.keys(tempList[item]).map(
-											(item2: string, idx2: number) => {
-												return (
-													<>
-														{tempList[item][item2].map(
-															(item3: any, idx3: number) => {
-																return (
-																	<SingleChatMessage
-																		key={item3.MESSAGE_ID}
-																		value={item3.MESSAGE_TEXT}
-																		messageOwner={
-																			item3.USER_UID ===
-																			userUID
-																				? 'other'
-																				: 'mine'
-																		}
-																		bottomRef={bottomRef}
-																		linkList={
-																			item3.LINK_LIST &&
-																			!!JSON.parse(
-																				item3.LINK_LIST,
-																			).length &&
-																			JSON.parse(
-																				item3.LINK_LIST,
-																			)
-																		}
-																		sentTime={
-																			idx3 ===
-																			tempList[item][item2]
-																				.length -
-																				1
-																				? item3.SENT_DATETIME
-																				: null
-																		}
-																	/>
-																);
-															},
-														)}
-													</>
-												);
-											},
-										)}
-									</>
-								);
-							})}
+							{chatList &&
+								Object.keys(chatList).map((item: string, idx: number) => {
+									return (
+										<>
+											<div
+												style={{
+													display: 'flex',
+													justifyContent: 'center',
+													border: '2px solid papayawhip',
+													padding: '15px 0px',
+													margin: '10px 0px',
+													borderLeft: '0px',
+													borderRight: '0px',
+													borderRadius: '5px',
+													borderStyle: 'dashed',
+												}}
+											>
+												<h1>{item}</h1>
+											</div>
+											{Object.keys(chatList[item]).map(
+												(item2: string, idx2: number) => {
+													return (
+														<>
+															{chatList[item][item2].map(
+																(item3: any, idx3: number) => {
+																	return (
+																		<SingleChatMessage
+																			key={item3.MESSAGE_ID}
+																			value={
+																				item3.MESSAGE_TEXT
+																			}
+																			messageOwner={
+																				item3.USER_UID ===
+																				userUID
+																					? 'other'
+																					: 'mine'
+																			}
+																			bottomRef={bottomRef}
+																			linkList={
+																				item3.LINK_LIST &&
+																				!!JSON.parse(
+																					item3.LINK_LIST,
+																				).length &&
+																				JSON.parse(
+																					item3.LINK_LIST,
+																				)
+																			}
+																			sentTime={
+																				idx3 ===
+																				chatList[item][
+																					item2
+																				].length -
+																					1
+																					? item3.SENT_DATETIME
+																					: null
+																			}
+																		/>
+																	);
+																},
+															)}
+														</>
+													);
+												},
+											)}
+										</>
+									);
+								})}
 
 							{/* {chatList.map((item: any, idx: number) => {
 								const isSameTime =
