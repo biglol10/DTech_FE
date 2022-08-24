@@ -40,6 +40,25 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
 	const socket = authStore.userSocket;
 
+	const chatToDateGroup = (arr: any) => {
+		const groupsReduce = arr.reduce((previouseVal: any, currentVal: any) => {
+			const date = currentVal.SENT_DATETIME.split('T')[0];
+
+			const hourMin = dayjs(currentVal.SENT_DATETIME).format('HH:mm');
+
+			if (!previouseVal[date]) {
+				previouseVal[date] = {};
+			}
+			if (!previouseVal[date][hourMin]) {
+				previouseVal[date][hourMin] = [];
+			}
+			previouseVal[date][hourMin].push(currentVal);
+			return previouseVal;
+		}, {});
+
+		return groupsReduce;
+	};
+
 	useEffect(() => {
 		userUID &&
 			axios
@@ -71,23 +90,7 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 					conversationId.current = response.data.convId;
 					const chatListResponse = response.data.chatList;
 
-					const groupsReduce = chatListResponse.reduce(
-						(previouseVal: any, currentVal: any) => {
-							const date = currentVal.SENT_DATETIME.split('T')[0];
-
-							const hourMin = dayjs(currentVal.SENT_DATETIME).format('HH:mm');
-
-							if (!previouseVal[date]) {
-								previouseVal[date] = {};
-							}
-							if (!previouseVal[date][hourMin]) {
-								previouseVal[date][hourMin] = [];
-							}
-							previouseVal[date][hourMin].push(currentVal);
-							return previouseVal;
-						},
-						{},
-					);
+					const groupsReduce = chatToDateGroup(chatListResponse);
 
 					setTempList(groupsReduce);
 
@@ -112,11 +115,10 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 					},
 				)
 				.then((response) => {
-					console.log('response is ');
-					console.log(response.data);
-					setChatList([]);
 					conversationId.current = response.data.convId;
-					setChatList(response.data.chatList);
+					const groupsReduce = chatToDateGroup(response.data.chatList);
+
+					setTempList(groupsReduce);
 				})
 				.catch((err) => {});
 		}
@@ -134,7 +136,6 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 			});
 
 			socket?.on('messageSendSuccess', () => {
-				alert('SADFsaf');
 				getPrivateChatListAxios();
 			});
 		},
@@ -181,7 +182,19 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 							{Object.keys(tempList).map((item: string, idx: number) => {
 								return (
 									<>
-										<h1>{item}</h1>
+										<div
+											style={{
+												display: 'flex',
+												justifyContent: 'center',
+												border: '1px solid red',
+												padding: '15px 0px',
+												margin: '10px 0px',
+												borderLeft: '0px',
+												borderRight: '0px',
+											}}
+										>
+											<h1>{item}</h1>
+										</div>
 										{Object.keys(tempList[item]).map(
 											(item2: string, idx2: number) => {
 												return (

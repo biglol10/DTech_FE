@@ -7,6 +7,7 @@
  * 2      변지욱     2022-08-02   feature/JW/quill            텍스트 입력 + 이미지가 6개일 때 editor에 이미지가 추가되지 않게 수정
  * 3      변지욱     2022-08-16   feature/JW/quill            submit 버튼 추가 및 enter 이벤트 제어 가능토록 수정
  * 4      변지욱     2022-08-17   feature/JW/quill            setInterval로 quill height값 지속적으로 보내도록 수정 및 button disabled 추가
+ * 5      변지욱     2022-08-24   feature/JW/chat             한글입력버그 해결
  ********************************************************************************************/
 
 import React, { ComponentType, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -23,9 +24,13 @@ const ReactQuill = dynamic(
 	async () => {
 		const { default: RQ } = await import('react-quill');
 
-		return function comp({ forwardedRef, ...props }: any) {
+		const RQComp = React.memo(({ forwardedRef, ...props }: any) => {
 			return <RQ ref={forwardedRef} {...props} />;
-		};
+		});
+
+		RQComp.displayName = 'CustomQuillComponent';
+
+		return RQComp;
 	},
 	{ ssr: false },
 );
@@ -45,24 +50,17 @@ const DTechQuill = ({
 	enterSubmit?: boolean;
 	QuillSSR: ComponentType<any>;
 }) => {
-	const [quillContext, setQuillContext] = useState('<p>&nbsp;</p>');
+	const [quillContext, setQuillContext] = useState('');
 
-	const [tempQuillContext, setTempQuillContext] = useState('');
-	const [imageCounter, setImageCounter] = useState(0);
 	const quillRef = useRef<any>();
+	const inputFileRef = useRef<any>();
 
 	const [urlPreviewList, setUrlPreviewList] = useState<any>([]);
 
 	const imageHandler = useCallback(() => {
-		const input = document.createElement('input');
+		inputFileRef.current.click();
 
-		input.setAttribute('type', 'file');
-		input.setAttribute('accept', 'image/*');
-		document.body.appendChild(input);
-
-		input.click();
-
-		input.onchange = async () => {
+		inputFileRef.current.onchange = async () => {
 			// const [file] = input.files;
 
 			// // S3 Presigned URL로 업로드하고 image url 받아오기
@@ -76,37 +74,33 @@ const DTechQuill = ({
 				return;
 			}
 
-			if (input.files) {
+			if (inputFileRef.current.files) {
 				const fileType =
-					input.files[0].type.split('/')[input.files[0].type.split('/').length - 1];
+					inputFileRef.current.files[0].type.split('/')[
+						inputFileRef.current.files[0].type.split('/').length - 1
+					];
 
 				if (
 					['png', 'jpg', 'jpeg'].includes(fileType) &&
-					input.files[0].size <= 1 * 1024 * 1024
+					inputFileRef.current.files[0].size <= 1 * 1024 * 1024
 				) {
-					const mediaPreview = URL.createObjectURL(input.files[0]);
+					const mediaPreview = URL.createObjectURL(inputFileRef.current.files[0]);
 
 					setUrlPreviewList([
 						...urlPreviewList,
 						{
-							fileName: `${input.files[0].name}_${imageCounter}`,
+							fileName: `${inputFileRef.current.files[0].name}_${generateImageUID()}`,
 							filePreview: mediaPreview,
 						},
 					]);
-
-					setImageCounter(imageCounter + 1);
 				} else {
 					toast['error'](<>{'이미지 타입이나 사이즈를 체크해주세요'}</>);
 				}
 			}
 
-			const fileInput = document.body.querySelector(':scope > input');
-
-			if (fileInput !== null) {
-				fileInput.remove();
-			}
+			setQuillContext(quillRef.current.getEditor().getText());
 		};
-	}, [imageCounter, urlPreviewList]);
+	}, [urlPreviewList]);
 
 	const editorSubmitEvent = useCallback(() => {
 		if (
@@ -205,40 +199,6 @@ const DTechQuill = ({
 		'width',
 	];
 
-	// onChange에서 바로 setQuillContext하면 버그발생
-	useEffect(() => {
-		if (tempQuillContext.indexOf('<img src="') < 0) {
-			setQuillContext(tempQuillContext);
-		} else {
-			const mediaPreview = tempQuillContext.substring(
-				tempQuillContext.indexOf('<img src="') + 10,
-				tempQuillContext.indexOf('"></p>'),
-			);
-
-			const filteredString = tempQuillContext.replace(`<img src="${mediaPreview}">`, '');
-
-			if (mediaPreview && filteredString) {
-				setQuillContext(filteredString);
-				if (urlPreviewList.length >= 6) {
-					toast['error'](<>{'이미지는 최대 6개로 제한합니다'}</>);
-
-					// 이걸 해줘야 텍스트 입력 + 이미지가 6개일 때 editor에 이미지가 추가되지 않음
-					setUrlPreviewList((prev: any) => [...prev]);
-				} else {
-					setUrlPreviewList((prev: any) => [
-						...prev,
-						{
-							fileName: generateImageUID(),
-							filePreview: mediaPreview,
-						},
-					]);
-				}
-			}
-		}
-		// 다른 dependency 추가하면 버그 발생
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [tempQuillContext]);
-
 	// first load 때 height값 보내주기
 	useEffect(() => {
 		let counter = 0;
@@ -253,12 +213,6 @@ const DTechQuill = ({
 		if (counter >= 2) clearInterval(timer);
 
 		return () => clearInterval(timer);
-
-		// setTimeout(() => {
-		// 	const divQuillHeight = document.getElementById('quillWrapper')!.clientHeight;
-
-		// 	returnQuillWrapperHeight && returnQuillWrapperHeight(divQuillHeight);
-		// }, 50);
 	}, [returnQuillWrapperHeight]);
 
 	useEffect(() => {
@@ -270,12 +224,55 @@ const DTechQuill = ({
 	const changeUrlPreviewList = useCallback(
 		(fileName: string) => {
 			setUrlPreviewList(urlPreviewList.filter((item: any) => item.fileName !== fileName));
+			setQuillContext(quillRef.current.getEditor().getText());
 		},
 		[urlPreviewList],
 	);
 
+	const quillTextChange = useCallback(
+		(content: any) => {
+			if (content.indexOf('<img src="') < 0) {
+				if (quillRef.current) {
+					quillRef.current.innerHTML = content;
+				}
+			} else {
+				const mediaPreview = content.substring(
+					content.indexOf('<img src="') + 10,
+					content.indexOf('"></p>'),
+				);
+
+				const filteredString = content.replace(`<img src="${mediaPreview}">`, '');
+
+				if (mediaPreview && filteredString) {
+					setQuillContext(filteredString);
+					if (urlPreviewList.length >= 6) {
+						toast['error'](<>{'이미지는 최대 6개로 제한합니다'}</>);
+
+						// 이걸 해줘야 텍스트 입력 + 이미지가 6개일 때 editor에 이미지가 추가되지 않음
+						setUrlPreviewList((prev: any) => [...prev]);
+					} else {
+						setUrlPreviewList((prev: any) => [
+							...prev,
+							{
+								fileName: generateImageUID(),
+								filePreview: mediaPreview,
+							},
+						]);
+					}
+				}
+			}
+		},
+		[urlPreviewList.length],
+	);
+
 	return (
 		<>
+			<input
+				ref={inputFileRef}
+				type="file"
+				accept="image/*"
+				style={{ position: 'absolute', top: '-10000px' }}
+			/>
 			<div
 				id="quillWrapper"
 				className={Style['quillWrap']}
@@ -291,8 +288,8 @@ const DTechQuill = ({
 						modules={modules}
 						formats={formats}
 						value={quillContext}
-						onChange={(content: string) => {
-							setTempQuillContext(content);
+						onChange={(content: any, delta: any, source: any, editor: any) => {
+							quillTextChange(editor.getHTML());
 						}}
 					/>
 				) : (
@@ -302,8 +299,8 @@ const DTechQuill = ({
 						modules={modules}
 						formats={formats}
 						value={quillContext}
-						onChange={(content: string) => {
-							setTempQuillContext(content);
+						onChange={(content: any, delta: any, source: any, editor: any) => {
+							quillTextChange(editor.getHTML());
 						}}
 					/>
 				)}
