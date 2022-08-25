@@ -305,9 +305,6 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 
 					<main className={Style['mainContent']}>
 						{React.Children.map(children, (el: any) => {
-							console.log(
-								`childrenname is ${el.type.name} and displayName is ${el.type.displayName}`,
-							);
 							if (el.type.name === 'UserChat' && el.type.displayName === 'chat') {
 								return React.cloneElement(el, {
 									usersStatusArr: usersStatusArr.filter(

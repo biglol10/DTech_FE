@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
 /** ****************************************************************************************
  * @설명 : Quill component
  ********************************************************************************************
@@ -10,6 +8,7 @@
  * 3      변지욱     2022-08-16   feature/JW/quill            submit 버튼 추가 및 enter 이벤트 제어 가능토록 수정
  * 4      변지욱     2022-08-17   feature/JW/quill            setInterval로 quill height값 지속적으로 보내도록 수정 및 button disabled 추가
  * 5      변지욱     2022-08-24   feature/JW/chat             한글입력버그 해결
+ * 6      변지욱     2022-08-25   feature/JW/chat             onchange시 notifyTextChange 이벤트 발생
  ********************************************************************************************/
 
 import React, { ComponentType, useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -44,6 +43,7 @@ const DTechQuill = ({
 	returnQuillWrapperHeight = null,
 	enterSubmit = true,
 	QuillSSR,
+	notifyTextChange = null,
 }: {
 	handleSubmit?: any;
 	returnQuillWrapperHeight?: any;
@@ -51,6 +51,7 @@ const DTechQuill = ({
 	quillMaxHeight?: number;
 	enterSubmit?: boolean;
 	QuillSSR: ComponentType<any>;
+	notifyTextChange?: Function | null;
 }) => {
 	const [quillContext, setQuillContext] = useState('');
 
@@ -232,43 +233,49 @@ const DTechQuill = ({
 		[urlPreviewList],
 	);
 
-	const quillTextChange = useCallback((content: any) => {
-		if (content.indexOf('<img src="') < 0) {
-			if (quillRef.current) {
-				quillRef.current.innerHTML = content;
-				setQuillContext(content);
-			}
-		} else {
-			const mediaPreview = content.substring(
-				content.indexOf('<img src="') + 10,
-				content.indexOf('"></p>'),
-			);
+	const quillTextChange = useCallback(
+		(content: any) => {
+			if (content.indexOf('<img src="') < 0) {
+				if (quillRef.current) {
+					quillRef.current.innerHTML = content;
+					setQuillContext(content);
+				}
+			} else {
+				const mediaPreview = content.substring(
+					content.indexOf('<img src="') + 10,
+					content.indexOf('"></p>'),
+				);
 
-			const filteredString = quillRef.current
-				.getEditor()
-				.getText()
-				.replace(`<img src="${mediaPreview}">`, '');
+				const filteredString = quillRef.current
+					.getEditor()
+					.getText()
+					.replace(`<img src="${mediaPreview}">`, '');
 
-			if (mediaPreview && filteredString) {
-				setQuillContext(filteredString);
-				quillRef.current.getEditor().setText(filteredString);
-				if (urlPreviewList.length >= 6) {
-					toast['error'](<>{'이미지는 최대 6개로 제한합니다'}</>);
+				if (mediaPreview && filteredString) {
+					setQuillContext(filteredString);
+					quillRef.current.getEditor().setText(filteredString);
+					if (urlPreviewList.length >= 6) {
+						toast['error'](<>{'이미지는 최대 6개로 제한합니다'}</>);
 
-					// 이걸 해줘야 텍스트 입력 + 이미지가 6개일 때 editor에 이미지가 추가되지 않음
-					setUrlPreviewList((prev: any) => [...prev]);
-				} else {
-					setUrlPreviewList((prev: any) => [
-						...prev,
-						{
-							fileName: generateImageUID(),
-							filePreview: mediaPreview,
-						},
-					]);
+						// 이걸 해줘야 텍스트 입력 + 이미지가 6개일 때 editor에 이미지가 추가되지 않음
+						setUrlPreviewList((prev: any) => [...prev]);
+					} else {
+						setUrlPreviewList((prev: any) => [
+							...prev,
+							{
+								fileName: generateImageUID(),
+								filePreview: mediaPreview,
+							},
+						]);
+					}
 				}
 			}
-		}
-	}, []);
+
+			notifyTextChange && notifyTextChange();
+		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[notifyTextChange],
+	);
 
 	return (
 		<>

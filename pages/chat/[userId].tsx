@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-key */
-
 /** ****************************************************************************************
  * @설명 : 채팅 페이지
  ********************************************************************************************
@@ -9,7 +7,7 @@
  ********************************************************************************************/
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Avatar, Box, DTechQuill, SharpDivider } from '@components/index';
+import { Avatar, Box, DTechQuill, SharpDivider, TextWithDotAnimation } from '@components/index';
 import { MainLayoutTemplate, SingleChatMessage } from '@components/customs';
 import { useRouter } from 'next/router';
 import { Container, Segment } from 'semantic-ui-react';
@@ -51,9 +49,12 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
 	const [chatUser, setChatUser] = useState<{ [name: string]: string }>();
 	const [chatList, setChatList] = useState<any>({});
+	const [textChangeNotification, setTextChangeNotification] = useState(false);
+	const [sendingUserState, setSendingUserState] = useState<string>('');
 	const conversationId = useRef();
 
 	const bottomRef = useRef<any>(null);
+
 	const { userId: userUID } = router.query; // UID in here
 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
@@ -95,7 +96,6 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 	const getPrivateChatListFunction = useCallback(
 		(successCallback: Function, errorCallback: Function) => {
 			if (authStore.userUID && authStore.userToken && userUID) {
-				// setChatList([]);
 				axios
 					.post(
 						'http://localhost:3066/api/chat/getPrivateChatList',
@@ -123,25 +123,6 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 				toast['error'](<>{'채팅정보를 가져오지 못했습니다'}</>);
 			},
 		);
-		// if (authStore.userUID && authStore.userToken && userUID) {
-		// 	axios
-		// 		.post(
-		// 			'http://localhost:3066/api/chat/getPrivateChatList',
-		// 			{ fromUID: authStore.userUID, toUID: userUID },
-		// 			{
-		// 				headers: { Authorization: authStore.userToken },
-		// 			},
-		// 		)
-		// 		.then((response) => {
-		// 			conversationId.current = response.data.convId;
-		// 			const groupsReduce = chatToDateGroup(response.data.chatList);
-
-		// 			setChatList(groupsReduce);
-		// 		})
-		// 		.catch((err) => {
-		// 			toast['error'](<>{'채팅정보를 가져오지 못했습니다'}</>);
-		// 		});
-		// }
 	}, [getPrivateChatListFunction]);
 
 	useEffect(() => {
@@ -174,7 +155,25 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 		socket?.on('newMessageReceived', () => {
 			getPrivateChatListAxios();
 		});
+		socket?.on('textChangeNotification', (sendingUser: string) => {
+			setSendingUserState(sendingUser);
+			setTextChangeNotification(true);
+		});
 	}, [authStore.userToken, authStore.userUID, getPrivateChatListAxios, socket, userUID]);
+
+	const notifyTextChange = useCallback(() => {
+		if (authStore.userName) {
+			socket?.emit('textChangeNotification', {
+				sendingUser: `${authStore.userName} (${authStore.userTitle || '사용자'})`,
+			});
+		}
+	}, [authStore.userName, authStore.userTitle, socket]);
+
+	useEffect(() => {
+		setTimeout(() => {
+			if (textChangeNotification) setTextChangeNotification(false);
+		}, 3500);
+	}, [textChangeNotification]);
 
 	return (
 		<>
@@ -203,7 +202,7 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 					{quillWrapperHeight ? (
 						<Segment
 							style={{
-								height: `calc(100% - ${quillWrapperHeight}px)`,
+								height: `calc(100% - ${quillWrapperHeight}px - 20px)`,
 							}}
 							className={Style['chatWrapperSegment']}
 						>
@@ -270,15 +269,7 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 					) : (
 						<p></p>
 					)}
-					<div
-						style={{
-							height: 'auto',
-							backgroundColor: 'white',
-							position: 'absolute',
-							bottom: '0%',
-							width: '100%',
-						}}
-					>
+					<div className={Style['quillWrapperDiv']}>
 						<DTechQuill
 							quillMaxHeight={250}
 							returnQuillWrapperHeight={(heightValue: number) => {
@@ -289,6 +280,13 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 								sendMessageFunction(content);
 							}}
 							QuillSSR={ReactQuill}
+							notifyTextChange={notifyTextChange}
+						/>
+						<TextWithDotAnimation
+							content={`${sendingUserState}님이 입력중입니다`}
+							marginLeftValue={20}
+							dotSize={8}
+							hide={!textChangeNotification}
 						/>
 					</div>
 				</Container>

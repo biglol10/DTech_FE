@@ -182,3 +182,13 @@ export interface IAvatar {
 	imageSize?: 'mini' | 'small' | 'large' | 'big' | 'huge' | 'massive';
 	labelSize?: 'mini' | 'small' | 'large' | 'big' | 'huge' | 'massive';
 }
+
+export interface ITextWithDotAnimation {
+	content?: string;
+	color?: string;
+	uiType?: 'dot-flashing' | 'dot-elastic' | 'dot-pulse' | 'dot-carousel';
+	marginLeftValue?: number;
+	dotSize?: number;
+	className?: '';
+	hide?: boolean;
+}
