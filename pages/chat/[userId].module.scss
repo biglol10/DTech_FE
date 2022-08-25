@@ -35,12 +35,23 @@
 			padding-bottom: 20px;
 			display: flex;
 			flex-direction: column;
+		}
+	}
 
-			// & > div {
-			// 	max-width: 70%;
-			// 	position: relative;
-			// 	margin: 5px 0px;
-			// }
+	.quillWrapperDiv {
+		height: auto;
+		background-color: white;
+		position: absolute;
+		bottom: 0%;
+		width: 100%;
+
+		& > div:last-child {
+			background-color: #d1d2d3;
+			padding-left: 10px;
+			height: 20px;
+			& > span {
+				font-size: 10px;
+			}
 		}
 	}
 }

@@ -1,6 +1,13 @@
-/* eslint-disable react/jsx-key */
+/** ****************************************************************************************
+ * @설명 : 채팅 페이지
+ ********************************************************************************************
+ * 번호    작업자     작업일         브랜치                   변경내용
+ *-------------------------------------------------------------------------------------------
+ * 1      변지욱     2022-08-25      feature/JW/chat         최초작성
+ ********************************************************************************************/
+
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Avatar, Box, DTechQuill, SharpDivider } from '@components/index';
+import { Avatar, Box, DTechQuill, SharpDivider, TextWithDotAnimation } from '@components/index';
 import { MainLayoutTemplate, SingleChatMessage } from '@components/customs';
 import { useRouter } from 'next/router';
 import { Container, Segment } from 'semantic-ui-react';
@@ -9,11 +16,22 @@ import dynamic from 'next/dynamic';
 import { ChatList, IUsersStatusArr, IAuth } from '@utils/types/commAndStoreTypes';
 import OnlineSvg from '@styles/svg/online.svg';
 import OfflineSvg from '@styles/svg/offline.svg';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
+import { toast } from 'react-toastify';
 
 import Style from './[userId].module.scss';
+
+const dayOfWeek: { [val: string]: string } = {
+	'0': '월요일',
+	'1': '화요일',
+	'2': '수요일',
+	'3': '목요일',
+	'4': '금요일',
+	'5': '토요일',
+	'6': '일요일',
+};
 
 const ReactQuill = dynamic(
 	async () => {
@@ -31,9 +49,12 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
 	const [chatUser, setChatUser] = useState<{ [name: string]: string }>();
 	const [chatList, setChatList] = useState<any>({});
+	const [textChangeNotification, setTextChangeNotification] = useState(false);
+	const [sendingUserState, setSendingUserState] = useState<string>('');
 	const conversationId = useRef();
 
 	const bottomRef = useRef<any>(null);
+
 	const { userId: userUID } = router.query; // UID in here
 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
@@ -67,55 +88,50 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 				.then((response) => {
 					setChatUser(response.data.usersInfo[0]);
 				})
-				.catch((err) => {});
+				.catch(() => {
+					toast['error'](<>{'유저정보를 가져오지 못했습니다'}</>);
+				});
 	}, [userUID]);
 
+	const getPrivateChatListFunction = useCallback(
+		(successCallback: Function, errorCallback: Function) => {
+			if (authStore.userUID && authStore.userToken && userUID) {
+				axios
+					.post(
+						'http://localhost:3066/api/chat/getPrivateChatList',
+						{ fromUID: authStore.userUID, toUID: userUID },
+						{
+							headers: { Authorization: authStore.userToken },
+						},
+					)
+					.then((response) => successCallback(response))
+					.catch((err) => errorCallback(err));
+			}
+		},
+		[authStore.userToken, authStore.userUID, userUID],
+	);
+
+	const getPrivateChatListAxios = useCallback(() => {
+		getPrivateChatListFunction(
+			(response: AxiosResponse<any, any>) => {
+				conversationId.current = response.data.convId;
+				const groupsReduce = chatToDateGroup(response.data.chatList);
+
+				setChatList(groupsReduce);
+			},
+			(err: any) => {
+				toast['error'](<>{'채팅정보를 가져오지 못했습니다'}</>);
+			},
+		);
+	}, [getPrivateChatListFunction]);
+
 	useEffect(() => {
-		if (authStore.userUID && authStore.userToken && userUID) {
-			setChatList([]);
-			axios
-				.post(
-					'http://localhost:3066/api/chat/getPrivateChatList',
-					{ fromUID: authStore.userUID, toUID: userUID },
-					{
-						headers: { Authorization: authStore.userToken },
-					},
-				)
-				.then((response) => {
-					conversationId.current = response.data.convId;
-					const chatListResponse = response.data.chatList;
-
-					const groupsReduce = chatToDateGroup(chatListResponse);
-
-					setChatList(groupsReduce);
-				})
-				.catch((err) => {});
-		}
-	}, [authStore.userToken, authStore.userUID, userUID]);
+		getPrivateChatListAxios();
+	}, [getPrivateChatListAxios]);
 
 	useEffect(() => {
 		bottomRef.current?.scrollIntoView({ behavior: 'auto' });
 	}, [chatList, quillWrapperHeight]);
-
-	const getPrivateChatListAxios = useCallback(() => {
-		if (authStore.userUID && authStore.userToken && userUID) {
-			axios
-				.post(
-					'http://localhost:3066/api/chat/getPrivateChatList',
-					{ fromUID: authStore.userUID, toUID: userUID },
-					{
-						headers: { Authorization: authStore.userToken },
-					},
-				)
-				.then((response) => {
-					conversationId.current = response.data.convId;
-					const groupsReduce = chatToDateGroup(response.data.chatList);
-
-					setChatList(groupsReduce);
-				})
-				.catch((err) => {});
-		}
-	}, [authStore.userToken, authStore.userUID, userUID]);
 
 	const sendMessageFunction = useCallback(
 		(content: ChatList) => {
@@ -139,7 +155,25 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 		socket?.on('newMessageReceived', () => {
 			getPrivateChatListAxios();
 		});
+		socket?.on('textChangeNotification', (sendingUser: string) => {
+			setSendingUserState(sendingUser);
+			setTextChangeNotification(true);
+		});
 	}, [authStore.userToken, authStore.userUID, getPrivateChatListAxios, socket, userUID]);
+
+	const notifyTextChange = useCallback(() => {
+		if (authStore.userName) {
+			socket?.emit('textChangeNotification', {
+				sendingUser: `${authStore.userName} (${authStore.userTitle || '사용자'})`,
+			});
+		}
+	}, [authStore.userName, authStore.userTitle, socket]);
+
+	useEffect(() => {
+		setTimeout(() => {
+			if (textChangeNotification) setTextChangeNotification(false);
+		}, 3500);
+	}, [textChangeNotification]);
 
 	return (
 		<>
@@ -168,7 +202,7 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 					{quillWrapperHeight ? (
 						<Segment
 							style={{
-								height: `calc(100% - ${quillWrapperHeight}px)`,
+								height: `calc(100% - ${quillWrapperHeight}px - 20px)`,
 							}}
 							className={Style['chatWrapperSegment']}
 						>
@@ -176,22 +210,12 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 								Object.keys(chatList).map((item: string, idx: number) => {
 									return (
 										<>
-											{/* <div
-												style={{
-													display: 'flex',
-													justifyContent: 'center',
-													border: '2px solid papayawhip',
-													padding: '15px 0px',
-													margin: '10px 0px',
-													borderLeft: '0px',
-													borderRight: '0px',
-													borderRadius: '5px',
-													borderStyle: 'dashed',
-												}}
-											>
-												<h1>{item}</h1>
-											</div> */}
-											<SharpDivider content={item} />
+											<SharpDivider
+												content={`${item} (${
+													dayOfWeek[dayjs(item).day().toString()]
+												})`}
+												className={Style['dateDivider']}
+											/>
 											{Object.keys(chatList[item]).map(
 												(item2: string, idx2: number) => {
 													return (
@@ -240,44 +264,12 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 										</>
 									);
 								})}
-
-							{/* {chatList.map((item: any, idx: number) => {
-								const isSameTime =
-									idx < chatList.length - 1 &&
-									dayjs(item.SENT_DATETIME).format('YYYY-MM-DD HH:mm') ===
-										dayjs(chatList[idx + 1].SENT_DATETIME).format(
-											'YYYY-MM-DD HH:mm',
-										);
-
-								return (
-									<SingleChatMessage
-										key={item.MESSAGE_ID}
-										value={item.MESSAGE_TEXT}
-										messageOwner={item.USER_UID === userUID ? 'other' : 'mine'}
-										bottomRef={bottomRef}
-										linkList={
-											item.LINK_LIST &&
-											!!JSON.parse(item.LINK_LIST).length &&
-											JSON.parse(item.LINK_LIST)
-										}
-										sentTime={isSameTime ? null : item.SENT_DATETIME}
-									/>
-								);
-							})} */}
 							<div ref={bottomRef} />
 						</Segment>
 					) : (
 						<p></p>
 					)}
-					<div
-						style={{
-							height: 'auto',
-							backgroundColor: 'white',
-							position: 'absolute',
-							bottom: '0%',
-							width: '100%',
-						}}
-					>
+					<div className={Style['quillWrapperDiv']}>
 						<DTechQuill
 							quillMaxHeight={250}
 							returnQuillWrapperHeight={(heightValue: number) => {
@@ -288,6 +280,13 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 								sendMessageFunction(content);
 							}}
 							QuillSSR={ReactQuill}
+							notifyTextChange={notifyTextChange}
+						/>
+						<TextWithDotAnimation
+							content={`${sendingUserState}님이 입력중입니다`}
+							marginLeftValue={20}
+							dotSize={8}
+							hide={!textChangeNotification}
 						/>
 					</div>
 				</Container>

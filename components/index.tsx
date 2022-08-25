@@ -22,6 +22,7 @@ import AvatarGroup from './avatar/AvatarGroup';
 import SharpDivider from './sharpDivider/SharpDivider';
 import DTechQuill from './quill/DTechQuill';
 import TextArea from './textarea/TextArea';
+import TextWithDotAnimation from './textWithDotAnimation/TextWithDotAnimation';
 
 export {
 	Accordion,
@@ -52,4 +53,5 @@ export {
 	SharpDivider,
 	DTechQuill,
 	TextArea,
+	TextWithDotAnimation,
 };
