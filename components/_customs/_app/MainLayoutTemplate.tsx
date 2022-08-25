@@ -6,6 +6,7 @@
  * 1      변지욱     2022-07-13   feature/JW/layout           최초작성
  * 2      변지욱     2022-07-14   feature/JW/layoutchange     세팅팝업 추가 및 세팅영역 밖 클릭 시 세팅팝업 숨김처리
  * 3      변지욱     2022-08-18   feature/JW/socket           Socket으로 온라인 오프라인 유저 표시
+ * 4      변지욱     2022-08-18   feature/JW/socket           온라인 유저 props로 전달
  ********************************************************************************************/
 
 import React, { useState, useEffect, useRef } from 'react';
