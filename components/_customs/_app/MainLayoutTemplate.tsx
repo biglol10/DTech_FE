@@ -306,7 +306,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 
 					<main className={Style['mainContent']}>
 						{React.Children.map(children, (el: any) => {
-							if (el.type.name === 'UserChat' && el.type.displayName === 'chat') {
+							if (el.type.displayName === 'chatPage') {
 								return React.cloneElement(el, {
 									usersStatusArr: usersStatusArr.filter(
 										(item) => item.ONLINE_STATUS === 'ONLINE',
