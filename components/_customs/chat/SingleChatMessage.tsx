@@ -1,5 +1,5 @@
 /* eslint-disable no-control-regex */
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Avatar, Button } from '@components/index';
 import { techImage } from '@utils/constants/techs';
 import { Label } from 'semantic-ui-react';
@@ -8,7 +8,6 @@ import { useModal } from '@utils/hooks/customHooks';
 import { modalUISize } from '@utils/constants/uiConstants';
 import Image from 'next/image';
 import { ChatList } from '@utils/types/commAndStoreTypes';
-import axios from 'axios';
 import dayjs from 'dayjs';
 
 import Style from './SingleChatMessage.module.scss';
@@ -29,12 +28,6 @@ const SingleChatMessage = ({
 }: ChatListExtends) => {
 	const [showCopyButton, setShowCopyButton] = useState(false);
 	const [copyButtonClicked, setCopyButtonClicked] = useState(false);
-	const [linkMetadata, setLinkMetadata] = useState<any>([]);
-
-	// console.log('linkMetadata is');
-	// console.log(linkMetadata);
-	// console.log('bottomReef is');
-	// console.log(bottomRef);
 
 	const { handleModal } = useModal();
 
@@ -60,31 +53,6 @@ const SingleChatMessage = ({
 	};
 
 	const cx = classNames.bind(Style);
-
-	useEffect(() => {
-		linkList &&
-			axios
-				.get('http://localhost:3066/api/utils/getMetadata', {
-					params: { linkList },
-				})
-				.then((response) => {
-					const { metadataArr } = response.data;
-
-					setLinkMetadata(metadataArr);
-
-					setTimeout(() => {
-						bottomRef?.current?.scrollIntoView({ behavior: 'auto' });
-					}, 100);
-				})
-				.catch((err) => {
-					return null;
-				});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	// useEffect(() => {
-	// 	bottomRef?.current?.scrollIntoView({ behavior: 'auto' });
-	// }, [bottomRef, linkMetadata]);
 
 	return (
 		<>
@@ -192,14 +160,14 @@ const SingleChatMessage = ({
 					</div>
 				)}
 
-				{!!linkMetadata.length && (
+				{linkList && !!linkList.length && (
 					<div className={Style['linkListDiv']}>
 						<>
 							{messageOwner !== 'other' &&
-								Array(6 - linkMetadata.length - 1)
+								Array(6 - linkList.length - 1)
 									.fill(0)
 									.map((item: null, idx) => <div key={`emptyA_${idx}`}></div>)}
-							{linkMetadata.map((item: { [name: string]: string }, idx: number) => {
+							{linkList.map((item: { [name: string]: string }, idx: number) => {
 								return (
 									<a
 										key={`ahref_${item.url}_${idx}`}

@@ -114,6 +114,8 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 	const getPrivateChatListAxios = useCallback(() => {
 		getPrivateChatListFunction(
 			(response: AxiosResponse<any, any>) => {
+				console.log('check the response !!!!!');
+				console.log(response.data);
 				conversationId.current = response.data.convId;
 				const groupsReduce = chatToDateGroup(response.data.chatList);
 
@@ -236,13 +238,7 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 																			}
 																			bottomRef={bottomRef}
 																			linkList={
-																				item3.LINK_LIST &&
-																				!!JSON.parse(
-																					item3.LINK_LIST,
-																				).length &&
-																				JSON.parse(
-																					item3.LINK_LIST,
-																				)
+																				item3.LINK_LIST
 																			}
 																			sentTime={
 																				idx3 ===
