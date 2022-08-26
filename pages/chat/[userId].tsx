@@ -9,7 +9,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Avatar, Box, DTechQuill, SharpDivider, TextWithDotAnimation } from '@components/index';
 import { MainLayoutTemplate, SingleChatMessage } from '@components/customs';
-import { useRouter } from 'next/router';
 import { Container, Segment } from 'semantic-ui-react';
 import dynamic from 'next/dynamic';
 
@@ -44,8 +43,13 @@ const ReactQuill = dynamic(
 	{ ssr: false },
 );
 
-const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => {
-	const router = useRouter();
+const UserChat = ({
+	usersStatusArr,
+	queryObj,
+}: {
+	usersStatusArr: IUsersStatusArr[];
+	queryObj: any;
+}) => {
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
 	const [chatUser, setChatUser] = useState<{ [name: string]: string }>();
 	const [chatList, setChatList] = useState<any>({});
@@ -55,7 +59,7 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 
 	const bottomRef = useRef<any>(null);
 
-	const { userId: userUID } = router.query; // UID in here
+	const { userId: userUID } = queryObj; // UID in here
 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
 	const socket = authStore.userSocket;
@@ -236,13 +240,7 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 																			}
 																			bottomRef={bottomRef}
 																			linkList={
-																				item3.LINK_LIST &&
-																				!!JSON.parse(
-																					item3.LINK_LIST,
-																				).length &&
-																				JSON.parse(
-																					item3.LINK_LIST,
-																				)
+																				item3.LINK_LIST
 																			}
 																			sentTime={
 																				idx3 ===
@@ -296,6 +294,10 @@ const UserChat = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[] }) => 
 };
 
 UserChat.PageLayout = MainLayoutTemplate;
-UserChat.displayName = 'chat';
+UserChat.displayName = 'chatPage';
+
+export const getServerSideProps = async (context: any) => {
+	return { props: { queryObj: context.query } };
+};
 
 export default UserChat;
