@@ -1,12 +1,10 @@
 import { MainLayoutTemplate } from '@components/customs';
-import { InputDefault, DTechQuill, Button } from '@components/index';
-import { useState, useRef } from 'react';
-import { sendUserImgRequest } from '@utils/api/register/sendUserImgRequest';
-import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
+import { InputDefault, DTechQuill, InputDropdown, Button, InputLayout } from '@components/index';
+import { useDispatch } from 'react-redux';
+import { useState, useRef, useEffect } from 'react';
+import { ChatList } from '@utils/types/commAndStoreTypes';
 import dynamic from 'next/dynamic';
 
-import profileImg from '@public/images/profile.png';
-import Image from 'next/image';
 import Style from './board.module.scss';
 
 const ReactQuill = dynamic(
@@ -23,6 +21,10 @@ const ReactQuill = dynamic(
 const Submit = () => {
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
 	const [image, setImage] = useState({ previewURL: '', imageFile: null });
+	const [chatList, setChatList] = useState<any>({});
+	const [techList, setTechList] = useState([]);
+	const [selectedTech, setSelectedTech] = useState('');
+	const dispatch = useDispatch();
 	const imgRef = useRef<any>();
 	const saveImage = (e: any) => {
 		e.preventDefault();
@@ -37,91 +39,79 @@ const Submit = () => {
 			}));
 		}
 	};
-	// const sendImage = () => {
-	// 	URL.revokeObjectURL(image.previewURL);
-	// 	setImage({ ...image, imageFile: null, previewURL: '' });
-	// };
+	const submitBoard = (content: ChatList) => {
+		dispatch({
+			type: 'SUBMIT_BOARD',
+			content,
+		});
+	};
 
-	// const sendImage = () => {
-	// 	console.log('sendImage');
-	// 	if (image.imageFile !== null) {
-	// 		const fileName = 'test';
-	// 		const fileExtName = 'png';
-	// 		const formData = new FormData();
+	useEffect(() => {
+		dispatch({
+			type: 'BOARD_TECH_LIST',
+			setTechList,
+		});
+	}, []);
 
-	// 		// formData.append('img', image.imageFile, `${fileName}.${fileExtName}`);
-	// 		formData.append('img', image.imageFile);
-
-	// 		console.log(image);
-	// 		sendUserImgRequest(formData);
-	// 	}
-	// };
+	const submitClick = () => {
+		console.log('submitClick');
+	};
 
 	return (
 		<>
 			<div className={Style['boardLayout']}>
 				<div className={Style['boardMain']}>
-					<InputDefault
-						id="title"
+					<InputLayout
+						error={false}
+						errorMsg="제목을 입력하세요."
 						stretch={true}
-						placeholder="제목"
-						className={Style['boardTitle']}
+						// inputLabel="이메일*"
+						// inputLabelSize={labelSize}
+						// showInputLabel={true}
+						autoFitErrorLabel={true}
+						spacing={40}
+					>
+						<InputDefault
+							id="title"
+							stretch={true}
+							placeholder="제목"
+							className={Style['boardTitle']}
+						/>
+					</InputLayout>
+					<InputDropdown
+						id="inputId"
+						placeholder="기술 선택"
+						options={techList}
+						// value={techList.teamSelectValue}
+						onChange={(obj: { value: string }) => {
+							console.log(obj);
+							setSelectedTech(obj.value);
+						}}
+						className={Style['inputIdField']}
 					/>
 					<DTechQuill
 						QuillSSR={ReactQuill}
-						enterSubmit={true}
+						enterSubmit={false}
 						quillMinHeight={300}
 						returnQuillWrapperHeight={(heightValue: number) => {
 							setQuillWrapperHeight(heightValue);
 						}}
-						// handleSubmit={(content: ChatList) => {
-						// 	// 이미지 S3 되면 올리고 setChatList 호출
-						// 	setChatList((prev: ChatList[]) => [
-						// 		...prev,
-						// 		{
-						// 			value: content.value,
-						// 			imgList: content.imgList,
-						// 			linkList: content.linkList.map((item: any) => item.insert),
-						// 		},
-						// 	]);
-						// }}
+						handleSubmit={(content: ChatList) => {
+							// 이미지 S3 되면 올리고 setChatList 호출
+							// console.log('handleSubmit');
+							// console.log(content);
+							submitBoard(content);
+						}}
 					/>
 
-					{/* <div className={Style['uploader-wrapper']}>
-						<input
-							type="file"
-							accept="image/*"
-							ref={imgRef}
-							onChange={saveImage}
-							style={{ display: 'none' }}
-						/>
-						<div className={Style['img-wrapper']}>
-							{image.imageFile !== null ? (
-								// <img src={image.previewURL} />
-								<Image src={image.previewURL} width={200} height={200} />
-							) : (
-								<Image src={profileImg} width={200} height={200} />
-							)}
-						</div>
-						<div className={Style['upload-button']}>
-							<Button
-								className={Style['registerButton']}
-								content="업로드"
-								size="large"
-								color="grey"
-								buttonType="none"
-								onClick={() => imgRef.current.click()}
-							/>
-							<Button
-								className={Style['registerButton']}
-								content="보내기"
-								size="large"
-								color="grey"
-								buttonType="none"
-								onClick={sendImage}
-							/>
-						</div>
-					</div> */}
+					<Button
+						className={Style['registerButton']}
+						content="보내기"
+						size="large"
+						color="grey"
+						buttonType="none"
+						onClick={submitClick}
+					/>
 				</div>
 			</div>
 		</>

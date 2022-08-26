@@ -92,6 +92,7 @@ const DTechQuill = ({
 					setUrlPreviewList([
 						...urlPreviewList,
 						{
+							imageFile: inputFileRef.current.files[0],
 							fileName: `${inputFileRef.current.files[0].name}_${generateImageUID()}`,
 							filePreview: mediaPreview,
 						},
