@@ -32,10 +32,10 @@
 		flex-direction: column;
 
 		&.other {
-			align-self: self-start;
+			align-self: flex-start;
 		}
 		&.mine {
-			align-self: self-end;
+			align-self: flex-end;
 		}
 
 		& > div:first-child {

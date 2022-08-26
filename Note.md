@@ -31,3 +31,5 @@
 <p>https://stackoverflow.com/questions/67364073/typescript-show-error-for-mdx-extension-file-in-nextjs</p>
 <br/>
 <p>Storybook SASS LOADER 적용 & '@storybook/preset-scss' 제거 => https://issuehunt.io/r/storybookjs/storybook/issues/12464 의 @ericrinaldo 답변</p>
+<br/>
+<p>https://ppsu.tistory.com/63  => pre-redering, npm run dev 관련 건</p>
