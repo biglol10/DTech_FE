@@ -18,7 +18,7 @@ import classNames from 'classnames/bind';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import cookie from 'js-cookie';
-import { useSocket } from '@utils/appRelated/authUser';
+import { useSocket } from '@utils/hooks/customHooks';
 import axios from 'axios';
 import { IAuth, IAppCommon, IUsersStatusArr } from '@utils/types/commAndStoreTypes';
 import _ from 'lodash';

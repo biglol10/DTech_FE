@@ -16,7 +16,7 @@ import Head from 'next/head';
 import { useSelector, useDispatch } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import cookie from 'js-cookie';
-import { useSocket } from '@utils/appRelated/authUser';
+import { useSocket } from '@utils/hooks/customHooks';
 
 import '@styles/globals.scss';
 import 'semantic-ui-css/semantic.min.css';
