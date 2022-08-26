@@ -6,6 +6,7 @@
  * 1      변지욱     2022-07-13   feature/JW/layout           최초작성
  * 2      변지욱     2022-07-14   feature/JW/layoutchange     세팅팝업 추가 및 세팅영역 밖 클릭 시 세팅팝업 숨김처리
  * 3      변지욱     2022-08-18   feature/JW/socket           Socket으로 온라인 오프라인 유저 표시
+ * 4      변지욱     2022-08-18   feature/JW/socket           온라인 유저 props로 전달
  ********************************************************************************************/
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -20,7 +21,7 @@ import cookie from 'js-cookie';
 import { useSocket } from '@utils/appRelated/authUser';
 import axios from 'axios';
 import { IAuth, IAppCommon, IUsersStatusArr } from '@utils/types/commAndStoreTypes';
-import * as RCONST from '@utils/constants/reducerConstants';
+import _ from 'lodash';
 
 import IndividualChatUser from './IndividualChatUser';
 import Style from './MainLayoutTemplate.module.scss';
@@ -42,6 +43,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	const [usersStatusArr, setUsersStatusArr] = useState<IUsersStatusArr[]>([]);
 
 	const wrapperRef = useRef<HTMLDivElement>(null);
+	const connectedUsersRef = useRef<any>([]);
 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
 	const appCommon = useSelector((state: { appCommon: IAppCommon }) => state.appCommon);
@@ -82,7 +84,10 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 				({ users }: { users: { userId: string; socketId: string }[] }) => {
 					const onlineUsersArr = users.map((item) => item.userId);
 
-					setOnlineUsers(onlineUsersArr);
+					if (!_.isEqual(connectedUsersRef.current, onlineUsersArr)) {
+						connectedUsersRef.current = onlineUsersArr;
+						setOnlineUsers(onlineUsersArr);
+					}
 				},
 			);
 		}
@@ -97,7 +102,6 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 				// headers: { Authorization: authStore.userToken },
 			})
 			.then((response) => {
-				dispatch({ type: RCONST.SET_USERS_OVERVIEW, users: response.data.usersStatus });
 				setUsersStatusArr(response.data.usersStatus);
 			})
 			.catch((err) => {});
@@ -296,7 +300,19 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 						</div>
 					)}
 
-					<main className={Style['mainContent']}>{children}</main>
+					<main className={Style['mainContent']}>
+						{React.Children.map(children, (el: any) => {
+							if (el.type.name === 'UserChat' && el.type.displayName === 'chat') {
+								return React.cloneElement(el, {
+									usersStatusArr: usersStatusArr.filter(
+										(item) => item.ONLINE_STATUS === 'ONLINE',
+									),
+								});
+							} else {
+								return el;
+							}
+						})}
+					</main>
 				</div>
 			</div>
 		</>

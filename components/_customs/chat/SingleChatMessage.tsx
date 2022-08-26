@@ -1,5 +1,5 @@
 /* eslint-disable no-control-regex */
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Avatar, Button } from '@components/index';
 import { techImage } from '@utils/constants/techs';
 import { Label } from 'semantic-ui-react';
@@ -9,11 +9,14 @@ import { modalUISize } from '@utils/constants/uiConstants';
 import Image from 'next/image';
 import { ChatList } from '@utils/types/commAndStoreTypes';
 import axios from 'axios';
+import dayjs from 'dayjs';
+
 import Style from './SingleChatMessage.module.scss';
 
 interface ChatListExtends extends ChatList {
 	messageOwner: 'other' | 'mine';
 	bottomRef: any;
+	sentTime: string | null | undefined;
 }
 
 const SingleChatMessage = ({
@@ -22,12 +25,20 @@ const SingleChatMessage = ({
 	imgList,
 	linkList,
 	bottomRef,
+	sentTime,
 }: ChatListExtends) => {
 	const [showCopyButton, setShowCopyButton] = useState(false);
 	const [copyButtonClicked, setCopyButtonClicked] = useState(false);
 	const [linkMetadata, setLinkMetadata] = useState<any>([]);
 
+	// console.log('linkMetadata is');
+	// console.log(linkMetadata);
+	// console.log('bottomReef is');
+	// console.log(bottomRef);
+
 	const { handleModal } = useModal();
+
+	const sentTimeRef = useRef(sentTime ? dayjs(sentTime).format('HH:mm') : null);
 
 	const openImageModal = (imgSrc: string) => {
 		handleModal({
@@ -51,8 +62,8 @@ const SingleChatMessage = ({
 	const cx = classNames.bind(Style);
 
 	useEffect(() => {
-		const result = async () => {
-			await axios
+		linkList &&
+			axios
 				.get('http://localhost:3066/api/utils/getMetadata', {
 					params: { linkList },
 				})
@@ -60,18 +71,20 @@ const SingleChatMessage = ({
 					const { metadataArr } = response.data;
 
 					setLinkMetadata(metadataArr);
+
+					setTimeout(() => {
+						bottomRef?.current?.scrollIntoView({ behavior: 'auto' });
+					}, 100);
 				})
 				.catch((err) => {
 					return null;
 				});
-		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
-		if (linkList.length) result();
-	}, [linkList]);
-
-	useEffect(() => {
-		bottomRef?.current?.scrollIntoView({ behavior: 'auto' });
-	}, [bottomRef, linkMetadata]);
+	// useEffect(() => {
+	// 	bottomRef?.current?.scrollIntoView({ behavior: 'auto' });
+	// }, [bottomRef, linkMetadata]);
 
 	return (
 		<>
@@ -97,17 +110,47 @@ const SingleChatMessage = ({
 					</Label>
 
 					{value && (
-						<Label
-							basic
-							pointing={`${messageOwner === 'other' ? 'left' : 'right'}`}
-							className={cx('messageLabel', messageOwner)}
-						>
-							{/* <pre>{value}</pre> */}
-							<pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre>
-						</Label>
+						<>
+							<div
+								style={{
+									display: 'flex',
+									justifyContent: `${messageOwner === 'mine' ? 'right' : 'left'}`,
+								}}
+							>
+								{messageOwner === 'other' ? (
+									<>
+										<Label
+											basic
+											pointing={'left'}
+											className={cx('messageLabel', messageOwner)}
+										>
+											{/* <pre>{value}</pre> */}
+											<pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre>
+										</Label>
+										<span style={{ alignSelf: 'flex-end' }}>
+											{sentTimeRef.current}
+										</span>
+									</>
+								) : (
+									<>
+										<span style={{ alignSelf: 'self-end' }}>
+											{sentTimeRef.current}
+										</span>
+										<Label
+											basic
+											pointing={'right'}
+											className={cx('messageLabel', messageOwner)}
+										>
+											{/* <pre>{value}</pre> */}
+											<pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre>
+										</Label>
+									</>
+								)}
+							</div>
+						</>
 					)}
 
-					{imgList?.length > 0 && (
+					{imgList && imgList.length > 0 && (
 						<div className={cx('imageListDiv', messageOwner)}>
 							{imgList.map((item: { fileName: string; filePreview: string }, idx) => (
 								<Image

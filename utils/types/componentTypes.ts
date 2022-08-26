@@ -199,3 +199,13 @@ export interface ICard {
 	userTitle?: string;
 	images?: Array<any>;
 }
+
+export interface ITextWithDotAnimation {
+	content?: string;
+	color?: string;
+	uiType?: 'dot-flashing' | 'dot-elastic' | 'dot-pulse' | 'dot-carousel';
+	marginLeftValue?: number;
+	dotSize?: number;
+	className?: '';
+	hide?: boolean;
+}

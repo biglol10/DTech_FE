@@ -41,6 +41,7 @@ const fireLoginRequest = async (props: authObjParamSetting) => {
 					userId: responseData.userId,
 					time: responseData.time,
 					userToken: responseData.token,
+					userUID: responseData.userUID,
 					result: 'success',
 				};
 			} else {
