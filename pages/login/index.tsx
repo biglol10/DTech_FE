@@ -179,6 +179,8 @@ const Login = () => {
 							inputIcon={<Icon name="user" />}
 							onEnter={() => userPwRef.current && userPwRef.current.focus()}
 							loading={loading}
+							iconPosition="left"
+							iconClick={() => null}
 						/>
 					</InputLayout>
 
@@ -208,6 +210,8 @@ const Login = () => {
 							type="password"
 							onEnter={() => userLogin()}
 							loading={loading}
+							iconPosition="left"
+							iconClick={() => null}
 						/>
 					</InputLayout>
 					<Button

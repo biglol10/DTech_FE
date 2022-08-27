@@ -17,6 +17,7 @@ import { toast } from 'react-toastify';
 import { generateImageUID } from '@utils/appRelated/helperFunctions';
 import { customStyleObj } from '@utils/styleRelated/stylehelper';
 import SendSvg from '@styles/svg/sendSvg.svg';
+import lodash from 'lodash';
 
 import PrevieImageComp from './PreviewImageComp';
 import Style from './DTechQuill.module.scss';
@@ -271,10 +272,13 @@ const DTechQuill = ({
 				}
 			}
 
-			notifyTextChange && notifyTextChange();
+			if (notifyTextChange) {
+				const newNotifyFunction = lodash.debounce(() => notifyTextChange(), 1000);
+
+				newNotifyFunction();
+			}
 		},
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[notifyTextChange],
+		[notifyTextChange, urlPreviewList.length],
 	);
 
 	return (

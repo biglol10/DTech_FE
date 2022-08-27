@@ -1,10 +1,11 @@
 /** ****************************************************************************************
  * @설명 : Input With Icon
  ********************************************************************************************
- * 번호    작업자     작업일         브랜치                       변경내용
+ * 번호    작업자     작업일         브랜치                           변경내용
  *-------------------------------------------------------------------------------------------
  * 1      변지욱      2022-06-16     feature/JW/input            최초작성
  * 2      변지욱      2022-07-10     feature/JW/loginValidation  onChange to useCallback
+ * 3      변지욱      2022-08-27     feature/JW/inputwithicon    더 많은 variation 다루기 가능하도록 수정
  ********************************************************************************************/
 
 import React, { ChangeEvent, forwardRef, useCallback, useState } from 'react';
@@ -66,29 +67,40 @@ const InputWithIcon = forwardRef<any, IInputWithIcon>(
 				id={id}
 				className={className}
 				loading={loading}
-				placeholder={placeholder}
-				ref={ref}
-				// value={inputValue}
 				size={size}
 				error={error}
-				type={`${type === 'default' ? '' : type}`}
-				readOnly={readOnly}
-				disabled={disabled}
-				maxLength={maxLength}
 				icon
-				// icon={IconClone}
-				iconPosition={iconPosition} // type이 'left' | undefined이지만 right가 먹히기 때문에 ts-nocheck 설정
+				iconPosition={iconPosition}
 				style={stretch ? { width: '100%' } : {}}
-				onKeyUp={(evt: KeyboardEvent) => evt.key === 'Enter' && onEnter && onEnter()}
 			>
 				{iconPosition === 'left' ? (
 					<>
 						{IconClone}
-						<input value={inputValue} onChange={onChangeFn} />
+						<input
+							ref={ref}
+							value={inputValue}
+							onChange={onChangeFn}
+							type={`${type === 'default' ? '' : type}`}
+							placeholder={placeholder}
+							readOnly={readOnly}
+							disabled={disabled}
+							maxLength={maxLength}
+							onKeyUp={(evt: any) => evt.key === 'Enter' && onEnter && onEnter()}
+						/>
 					</>
 				) : (
 					<>
-						<input value={inputValue} onChange={onChangeFn} />
+						<input
+							ref={ref}
+							value={inputValue}
+							onChange={onChangeFn}
+							type={`${type === 'default' ? '' : type}`}
+							placeholder={placeholder}
+							readOnly={readOnly}
+							disabled={disabled}
+							maxLength={maxLength}
+							onKeyUp={(evt: any) => evt.key === 'Enter' && onEnter && onEnter()}
+						/>
 						{IconClone}
 					</>
 				)}
