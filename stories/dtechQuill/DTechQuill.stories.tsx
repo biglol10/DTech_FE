@@ -1,5 +1,5 @@
-import DTechQuillStorybook from '@components/quill/DTechQuillStorybook';
 import dynamic from 'next/dynamic';
+import DTechQuillStorybook from '../../components/quill/DTechQuillStorybook';
 
 import { Doc } from './DTechQuill.stories.mdx';
 
