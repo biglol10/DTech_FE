@@ -43,54 +43,54 @@
 			}
 		}
 
-		.showSidebar {
-			width: 250px;
-			border-right: 1px solid #34495e;
-		}
+		// .showSidebar {
+		// 	width: 250px;
+		// 	border-right: 1px solid #34495e;
+		// }
 
-		.hideSidebar {
-			width: 0px;
-			border-right: none;
-		}
+		// .hideSidebar {
+		// 	width: 0px;
+		// 	border-right: none;
+		// }
 
-		.sidebarChat {
-			height: 100%;
-			background-color: #424949;
-			// border-right: 1px solid #34495e;
-			position: relative;
-			transition: width 0.1s ease;
+		// .sidebarChat {
+		// 	height: 100%;
+		// 	background-color: #424949;
+		// 	// border-right: 1px solid #34495e;
+		// 	position: relative;
+		// 	transition: width 0.1s ease;
 
-			.chatLogo {
-				display: flex;
-				align-items: center;
-				font-size: 1.7rem;
-				color: white;
-				padding-left: 5%;
-				height: 7vh;
-				font-weight: bold;
-			}
+		// 	.chatLogo {
+		// 		display: flex;
+		// 		align-items: center;
+		// 		font-size: 1.7rem;
+		// 		color: white;
+		// 		padding-left: 5%;
+		// 		height: 7vh;
+		// 		font-weight: bold;
+		// 	}
 
-			.chatArea {
-				height: 87vh;
-				overflow-y: auto;
-				position: relative;
+		// 	.chatArea {
+		// 		height: 87vh;
+		// 		overflow-y: auto;
+		// 		position: relative;
 
-				.userSearch {
-					width: 100%;
-					padding: 0 5%;
+		// 		.userSearch {
+		// 			width: 100%;
+		// 			padding: 0 5%;
 
-					h5 {
-						color: #e7fefe;
-					}
-				}
+		// 			h5 {
+		// 				color: #e7fefe;
+		// 			}
+		// 		}
 
-				.usersOnline,
-				.usersOffline {
-					margin: 0 5%;
-					color: white;
-				}
-			}
-		}
+		// 		.usersOnline,
+		// 		.usersOffline {
+		// 			margin: 0 5%;
+		// 			color: white;
+		// 		}
+		// 	}
+		// }
 	}
 
 	.right {
