@@ -9,6 +9,7 @@
  * 4      변지욱     2022-08-17   feature/JW/quill            setInterval로 quill height값 지속적으로 보내도록 수정 및 button disabled 추가
  * 5      변지욱     2022-08-24   feature/JW/chat             한글입력버그 해결
  * 6      변지욱     2022-08-25   feature/JW/chat             onchange시 notifyTextChange 이벤트 발생
+ * 7      변지욱     2022-08-27   feature/JW/inputwithicon    lodash 이용해 notifyTextChange 제어
  ********************************************************************************************/
 
 import React, { ComponentType, useCallback, useEffect, useMemo, useRef, useState } from 'react';
