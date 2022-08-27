@@ -8,18 +8,25 @@ module.exports = {
 	basePath: process.env.NODE_ENV === 'production' ? '/dtech' : '',
 	// assetPrefix: process.env.NODE_ENV === 'production' ? '/dtech' : '',
 	async redirects() {
-		// Url/react 이렇게 붙여서 load해주는 것
+		// Url/react 이렇게 붙여서 load해주는 것... 로그인 시 / 쪽에 redirect하기로 되어있는데 자동으로 dashboard 컴포넌트 랜더링 (url은 변경되지 않음... 예시: localhost:3065/ 이지만 실제로 랜더링되는 컴포넌트는 dashboard)
 		if (process.env.NODE_ENV === 'production') {
 			return [
 				{
 					source: '/',
-					destination: '/dtech',
+					destination: '/dtech/dashboard',
 					basePath: false,
 					permanent: false, // true 일 경우 uses the 308 status code which instructs the browser to cache the redirect (즉 캐싱으로 계속 남아있어서 이거 해제해도 /react로 날라감)
 				},
 			];
 		} else {
-			return [];
+			return [
+				{
+					source: '/',
+					destination: '/dashboard',
+					basePath: false,
+					permanent: false, // true 일 경우 uses the 308 status code which instructs the browser to cache the redirect (즉 캐싱으로 계속 남아있어서 이거 해제해도 /react로 날라감)
+				},
+			];
 		}
 	},
 	webpack(config) {

@@ -10,7 +10,7 @@
  ********************************************************************************************/
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Avatar, InputLayout, InputDefault, SharpDivider } from '@components/index';
+import { Avatar, InputLayout, SharpDivider, InputWithIcon } from '@components/index';
 import Image from 'next/image';
 import DLogo from '@public/images/DLogo2.png';
 import { Icon } from 'semantic-ui-react';
@@ -169,7 +169,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 											showInputLabel={true}
 											spacing={32}
 										>
-											<InputDefault
+											<InputWithIcon
 												id="userSearchInput"
 												placeholder="사용자 검색"
 												value={userSearch}
@@ -177,7 +177,9 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 												onChange={(obj: { value: string }) => {
 													setUserSearch(obj.value);
 												}}
-												className="userSearchInput"
+												// iconPosition="right"
+												// iconPosition={'left'}
+												inputIcon={<Icon name="delete" />}
 											/>
 										</InputLayout>
 									</div>
@@ -186,39 +188,47 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 										<SharpDivider content="온라인" />
 
 										<div className={Style['usersOnline']}>
-											{usersStatusArr.map(
-												(item, idx: number) =>
-													item.USER_ID !== authStore.userId &&
-													item.ONLINE_STATUS === 'ONLINE' && (
-														<IndividualChatUser
-															key={`online_${idx}`}
-															onlineStatus="ONLINE"
-															userUID={item.USER_UID}
-															userName={item.NAME}
-															userTitle={item.TITLE}
-															userImg={item.IMG_URL}
-														/>
-													),
-											)}
+											{usersStatusArr
+												.filter((obj) =>
+													obj.NAME.includes(userSearch || ''),
+												)
+												.map(
+													(item, idx: number) =>
+														item.USER_ID !== authStore.userId &&
+														item.ONLINE_STATUS === 'ONLINE' && (
+															<IndividualChatUser
+																key={`online_${idx}`}
+																onlineStatus="ONLINE"
+																userUID={item.USER_UID}
+																userName={item.NAME}
+																userTitle={item.TITLE}
+																userImg={item.IMG_URL}
+															/>
+														),
+												)}
 										</div>
 
 										<SharpDivider content="오프라인" />
 
 										<div className={Style['usersOffline']}>
-											{usersStatusArr.map(
-												(item, idx) =>
-													item.USER_ID !== authStore.userId &&
-													item.ONLINE_STATUS === 'OFFLINE' && (
-														<IndividualChatUser
-															key={`offline_${idx}`}
-															onlineStatus="OFFLINE"
-															userUID={item.USER_UID}
-															userName={item.NAME}
-															userTitle={item.TITLE}
-															userImg={item.IMG_URL}
-														/>
-													),
-											)}
+											{usersStatusArr
+												.filter((obj) =>
+													obj.NAME.includes(userSearch || ''),
+												)
+												.map(
+													(item, idx) =>
+														item.USER_ID !== authStore.userId &&
+														item.ONLINE_STATUS === 'OFFLINE' && (
+															<IndividualChatUser
+																key={`offline_${idx}`}
+																onlineStatus="OFFLINE"
+																userUID={item.USER_UID}
+																userName={item.NAME}
+																userTitle={item.TITLE}
+																userImg={item.IMG_URL}
+															/>
+														),
+												)}
 										</div>
 									</div>
 								</div>

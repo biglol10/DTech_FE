@@ -24,7 +24,7 @@ import {
 import { MainLayoutTemplate } from '@components/customs';
 import dynamic from 'next/dynamic';
 
-import Style from './examplePage/examplePage.module.scss';
+import Style from './examplePage.module.scss';
 
 const options = [
 	{ key: 'angular', text: 'Angular', value: 'angular' },

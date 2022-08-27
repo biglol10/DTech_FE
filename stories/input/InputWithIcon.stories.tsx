@@ -39,7 +39,8 @@ export const WithIcon = (args: any) => {
 					size={args.size}
 					type={args.type}
 					loading={args.loading}
-					inputIcon={<Icon name="users" />}
+					// inputIcon={<Icon name="users" />}
+					iconPosition={args.iconPosition}
 					onEnter={() => alert('input Entered')}
 				/>
 			</InputLayout>
