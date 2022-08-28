@@ -150,7 +150,9 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 							</li>
 							<li
 								className={
-									Style[`${appCommon.route.currentRoute === 'chat' && 'active'}`]
+									Style[
+										`${appCommon.route.currentRoute === 'chatPage' && 'active'}`
+									]
 								}
 								onClick={() => router.push('/chat/sdafadsf')}
 							>

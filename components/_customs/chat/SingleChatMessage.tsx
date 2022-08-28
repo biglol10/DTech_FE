@@ -16,6 +16,7 @@ interface ChatListExtends extends ChatList {
 	messageOwner: 'other' | 'mine';
 	bottomRef: any;
 	sentTime: string | null | undefined;
+	userName: string;
 }
 
 const SingleChatMessage = ({
@@ -25,6 +26,7 @@ const SingleChatMessage = ({
 	linkList,
 	bottomRef,
 	sentTime,
+	userName,
 }: ChatListExtends) => {
 	const [showCopyButton, setShowCopyButton] = useState(false);
 	const [copyButtonClicked, setCopyButtonClicked] = useState(false);
