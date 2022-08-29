@@ -178,11 +178,13 @@ export interface IAvatar {
 	id?: string;
 	src?: any;
 	content: string | JSX.Element;
-	color?: string;
+	fontColor?: string;
 	spacing?: number;
 	avatar?: boolean;
 	imageSize?: 'mini' | 'small' | 'large' | 'big' | 'huge' | 'massive';
 	labelSize?: 'mini' | 'small' | 'large' | 'big' | 'huge' | 'massive';
+	svgColor?: string;
+	restrictColor?: boolean;
 }
 
 export interface ITextWithDotAnimation {

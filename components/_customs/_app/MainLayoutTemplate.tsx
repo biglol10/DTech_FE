@@ -50,6 +50,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	useEffect(() => {
 		if (wrapperRef) {
 			const clickSettingOutside = (event: any) => {
+				console.log(event.target);
 				if (
 					wrapperRef.current &&
 					!wrapperRef.current.contains(event.target) &&
@@ -61,9 +62,9 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 				}
 			};
 
-			document.addEventListener('mousedown', clickSettingOutside);
+			document.addEventListener('mousedown', clickSettingOutside, { capture: true });
 			return () => {
-				document.removeEventListener('mousedown', clickSettingOutside);
+				document.removeEventListener('mousedown', clickSettingOutside, { capture: true });
 			};
 		}
 	}, []);
@@ -190,10 +191,11 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 							>
 								<Avatar
 									id="userSettingArea"
-									color="white"
+									fontColor="white"
 									content={authStore.userName}
-									imageSize="mini"
+									imageSize="big"
 									labelSize="big"
+									svgColor="white"
 								/>
 							</li>
 						</ul>

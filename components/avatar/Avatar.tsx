@@ -18,11 +18,12 @@ const Avatar = ({
 	id = '',
 	src = null,
 	content = '',
-	color = 'black',
+	fontColor = 'black',
 	spacing = 0,
 	avatar = true,
 	imageSize = 'mini',
 	labelSize = 'big',
+	svgColor = '',
 }: IAvatar) => {
 	const imageSrc =
 		src || `${process.env.NODE_ENV === 'production' ? '/dtech' : ''}/images/no_profile.png`;
@@ -47,7 +48,7 @@ const Avatar = ({
 			<div
 				id={id}
 				className={Style['avatarDiv']}
-				style={{ color, ...inputElCommStyle(spacing) }}
+				style={{ fontColor, ...inputElCommStyle(spacing) }}
 			>
 				{src ? (
 					<SemanticUIImage src={imageSrc} avatar={avatar} size={imageSize} />
@@ -55,7 +56,7 @@ const Avatar = ({
 					<SemanticUIImage
 						avatar={avatar}
 						size={imageSize}
-						style={{ width: 'auto', fill: lodash.sample(avatarColor) }}
+						style={{ width: 'auto', fill: svgColor || lodash.sample(avatarColor) }}
 					>
 						<SVGR />
 					</SemanticUIImage>
@@ -65,7 +66,7 @@ const Avatar = ({
 					<SVGR />
 				</SemanticUIImage> */}
 				{/* <SVGR /> */}
-				<Label content={content} color={color} size={labelSize} paddingNone />
+				<Label content={content} color={fontColor} size={labelSize} paddingNone />
 			</div>
 		</>
 	);
