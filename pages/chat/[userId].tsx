@@ -5,6 +5,7 @@
  *-------------------------------------------------------------------------------------------
  * 1      변지욱     2022-08-25   feature/JW/chat        최초작성
  * 2      변지욱     2022-08-29   feature/JW/chat        유저명 표시하도록 변경, socket에서 직접 채팅리스트 가져오도록 변경
+ * 3      변지욱     2022-08-29   feature/JW/layoutchat  최초작성
  ********************************************************************************************/
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -79,6 +80,7 @@ const UserChat = ({
 	const conversationId = useRef<string>();
 
 	const bottomRef = useRef<any>(null);
+	const firstLoadRef = useRef<boolean>(true);
 
 	const { userId: userUID } = queryObj; // UID in here
 
@@ -200,10 +202,14 @@ const UserChat = ({
 	}, [authStore.userToken, authStore.userUID, getPrivateChatListAxios, socket, userUID]);
 
 	const notifyTextChange = useCallback(() => {
-		if (authStore.userName) {
-			socket?.emit('textChangeNotification', {
-				sendingUser: `${authStore.userName} (${authStore.userTitle || '사용자'})`,
-			});
+		if (!firstLoadRef.current) {
+			if (authStore.userName) {
+				socket?.emit('textChangeNotification', {
+					sendingUser: `${authStore.userName} (${authStore.userTitle || '사용자'})`,
+				});
+			}
+		} else {
+			firstLoadRef.current = false;
 		}
 	}, [authStore.userName, authStore.userTitle, socket]);
 

@@ -8,9 +8,10 @@
  * 3      변지욱     2022-08-18   feature/JW/socket           Socket으로 온라인 오프라인 유저 표시
  * 4      변지욱     2022-08-18   feature/JW/socket           온라인 유저 props로 전달
  * 5      변지욱     2022-08-27   feature/JW/layout           text변경에 따른 리랜더링 이상현상 해결
+ * 6      변지욱     2022-08-29   feature/JW/layoutchat       신규로 가입한 사람이 있을 경우 socket event 받도록 함
  ********************************************************************************************/
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Avatar } from '@components/index';
 import { Icon } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
@@ -84,12 +85,14 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 					}
 				},
 			);
+
+			socket.on('newUserCreated', () => getUsersStatus());
 		}
 		// 다른 dependency 추가하면 connectedUsers가 여러번 찍힘... 딱히 문제는 없지만 최소한으로 작동하는게 목적
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [authStore]);
 
-	useEffect(() => {
+	const getUsersStatus = useCallback(() => {
 		axios
 			.get('http://localhost:3066/api/auth/getUsersStatus', {
 				params: { onlineUsers: onlineUsers.length > 0 ? onlineUsers : ['none'] },
@@ -99,7 +102,11 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 				setUsersStatusArr(response.data.usersStatus);
 			})
 			.catch((err) => {});
-	}, [dispatch, onlineUsers]);
+	}, [onlineUsers]);
+
+	useEffect(() => {
+		getUsersStatus();
+	}, [getUsersStatus]);
 
 	const logout = () => {
 		disconnect();
