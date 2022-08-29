@@ -69,11 +69,13 @@ const Submit = () => {
 						stretch={true}
 						placeholder="제목"
 						className={Style['boardTitle']}
+						value={boardTitle}
 						onChange={(obj: { value: string }) => {
 							// console.log(obj);
 							setBoardTitle(obj.value);
 						}}
 					/>
+
 					<InputDropdown
 						id="inputId"
 						placeholder="기술 선택"
@@ -96,6 +98,7 @@ const Submit = () => {
 							// console.log('handleSubmit');
 							// console.log(content);
 							submitBoard(content);
+							console.log('TEMP : 등록되었습니다.');
 						}}
 					/>
 

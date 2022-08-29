@@ -51,6 +51,8 @@ const techListFunction = function* ({ setTechList }: any) {
 			return { key: tech.TECH_CD, value: tech.TECH_CD, name: tech.NAME, text: tech.NAME };
 		});
 
+		console.log('BOTEMP');
+		console.log(newTempArr);
 		setTechList(newTempArr);
 	} else {
 		console.error(techListResult.errMessage);
