@@ -1,12 +1,9 @@
 import axios from 'axios';
 
-// TODO: console.log 제거
 const teamListRequest = async (props: any) => {
-	console.log('teamListRequest');
 	const teamListResult = await axios
 		.post('http://localhost:3066/api/auth/getTeamList')
 		.then((res: any) => {
-			console.log(res);
 			if (res.data.resultData.status === 'success') {
 				return {
 					result: res.data.resultData.status,
@@ -25,7 +22,6 @@ const teamListRequest = async (props: any) => {
 			};
 		});
 
-	console.log(teamListResult);
 	return teamListResult;
 };
 

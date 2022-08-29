@@ -15,3 +15,11 @@
 	-webkit-user-select: none;
 	-ms-user-select: none;
 }
+
+@mixin lineClamp($lineSize) {
+	display: -webkit-box;
+	-webkit-line-clamp: $lineSize;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}

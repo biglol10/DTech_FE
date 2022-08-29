@@ -1,10 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { IAuth } from '@utils/types/commAndStoreTypes';
 
-interface IInitialState {
-	[name: string]: null | string;
-}
-
-const initialState: IInitialState = {
+const initialState: IAuth = {
+	userUID: '',
 	userId: '',
 	userName: '',
 	userTeamCD: '',
@@ -17,6 +15,7 @@ const initialState: IInitialState = {
 	userProject: '',
 	userEmail: '',
 	userToken: '',
+	userSocket: null,
 };
 
 const authSlice = createSlice({
@@ -24,6 +23,7 @@ const authSlice = createSlice({
 	initialState,
 	reducers: {
 		authSetting(state, action) {
+			state.userUID = action.payload.userUID || '';
 			state.userId = action.payload.userId || '';
 			state.userName = action.payload.userName || '';
 			state.userTeamCD = action.payload.userTeamCD || '';
@@ -38,6 +38,7 @@ const authSlice = createSlice({
 			state.userToken = action.payload.userToken || '';
 		},
 		authReset(state) {
+			state.userUID = '';
 			state.userId = '';
 			state.userName = '';
 			state.userTeamCD = '';
@@ -51,8 +52,11 @@ const authSlice = createSlice({
 			state.userEmail = '';
 			state.userToken = '';
 		},
+		authSocket(state, action) {
+			state.userSocket = action.payload || null;
+		},
 	},
 });
 
-export const { authSetting, authReset } = authSlice.actions;
+export const { authSetting, authReset, authSocket } = authSlice.actions;
 export default authSlice.reducer;

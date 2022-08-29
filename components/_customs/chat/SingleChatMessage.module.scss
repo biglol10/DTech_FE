@@ -1,0 +1,143 @@
+@import '@styles/_mixinCollection.scss';
+
+.chatWrapper {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	// margin-top: 1px;
+
+	.avatarLabel {
+		border-radius: 10px !important;
+		img {
+			height: 15px !important;
+			width: 15px !important;
+			border-radius: 50%;
+		}
+	}
+
+	&:hover {
+		background-color: #f8f8f8;
+
+		.linkListDiv {
+			background-color: snow;
+		}
+	}
+
+	.singleChatDiv {
+		max-width: 75%;
+		position: relative;
+		margin: 5px 0px;
+		display: flex;
+		flex-direction: column;
+
+		&.other {
+			align-self: flex-start;
+		}
+		&.mine {
+			align-self: flex-end;
+		}
+
+		& > div:first-child {
+			padding: 5px 10px !important;
+			width: max-content;
+		}
+
+		.messageLabel {
+			max-width: 90%;
+			color: black !important;
+
+			&.other {
+				border-color: darkorange;
+				align-self: self-start;
+			}
+			&.mine {
+				border-color: darkmagenta;
+				align-self: self-end;
+			}
+
+			pre {
+				white-space: pre-wrap; /* css-3 */
+				white-space: -moz-pre-wrap; /* Mozilla */
+				white-space: -pre-wrap; /* Opera 4-6 */
+				white-space: -o-pre-wrap; /* Opera 7 */
+				word-wrap: break-word; /* Internet Explorer 5.5+ */
+			}
+		}
+
+		.imageListDiv {
+			display: flex;
+			gap: 8px;
+			margin-top: 10px;
+			border: 1px solid #ffdfca;
+			border-radius: 5px;
+			padding: 1%;
+
+			img {
+				cursor: pointer;
+			}
+
+			&.other {
+				align-self: self-start;
+			}
+			&.mine {
+				align-self: self-end;
+			}
+		}
+	}
+
+	.linkListDiv {
+		width: 100%;
+		height: auto;
+		// background-color: snow;
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		gap: 20px;
+		padding: 10px;
+
+		& > a {
+			color: black;
+			opacity: 0.6;
+			cursor: zoom-in;
+			// @include lineClamp(1);
+
+			&:hover {
+				opacity: 1;
+			}
+
+			p {
+				font-weight: bold;
+			}
+
+			h4,
+			p {
+				@include lineClamp(1);
+			}
+
+			img {
+				height: 120px;
+				width: 120px;
+				border-radius: 5px;
+			}
+		}
+
+		& > a > div > div {
+			@include lineClamp(2);
+		}
+	}
+}
+
+.copyButton {
+	position: absolute;
+	top: 0.5%;
+	left: 50%;
+	transform: translate(-50%, 0);
+	z-index: 1;
+
+	button {
+		height: 25px;
+		display: flex !important;
+		align-items: center;
+		padding: 2px 10px !important;
+	}
+}

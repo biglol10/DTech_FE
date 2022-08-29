@@ -6,8 +6,8 @@
  * 1      변지욱     2022-06-16                              최초작성
  ********************************************************************************************/
 
-import { ReactNode, JSXElementConstructor as JSX } from 'react';
-import { ButtonProps, StrictLabelProps } from 'semantic-ui-react';
+import React, { ReactNode, JSXElementConstructor as JSX } from 'react';
+import { ButtonProps, StrictLabelProps, SemanticICONS } from 'semantic-ui-react';
 
 export interface IInputLayout {
 	id?: string;
@@ -47,7 +47,9 @@ export interface IInputSearch extends IInputDefault {
 }
 
 export interface IInputWithIcon extends IInputDefault {
-	inputIcon?: ReactNode;
+	inputIcon?: React.ReactElement;
+	iconPosition?: 'left' | undefined;
+	iconClick?: Function;
 }
 
 export interface IInputPhone extends IInputDefault {}
@@ -181,4 +183,14 @@ export interface IAvatar {
 	avatar?: boolean;
 	imageSize?: 'mini' | 'small' | 'large' | 'big' | 'huge' | 'massive';
 	labelSize?: 'mini' | 'small' | 'large' | 'big' | 'huge' | 'massive';
+}
+
+export interface ITextWithDotAnimation {
+	content?: string;
+	color?: string;
+	uiType?: 'dot-flashing' | 'dot-elastic' | 'dot-pulse' | 'dot-carousel';
+	marginLeftValue?: number;
+	dotSize?: number;
+	className?: '';
+	hide?: boolean;
 }

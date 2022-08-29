@@ -1,5 +1,5 @@
 import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
-import { authSetting, authReset } from '@store/authSlice';
+import { authSetting, authReset, authSocket } from '@store/authSlice';
 import * as RCONST from '@utils/constants/reducerConstants';
 import { fireLoginRequest, fireTokenRequest } from '@utils/api/auth/loginRequest';
 
@@ -16,15 +16,15 @@ interface authObjParam {
 	type: string;
 }
 
-interface ILoginResult {
-	name: string | undefined;
-	userId: string | undefined;
-	time: any;
-	token: string | undefined;
-	result: string;
-	errMessage?: string | undefined;
-	errObj?: any | undefined;
-}
+// interface ILoginResult {
+// 	name: string | undefined;
+// 	userId: string | undefined;
+// 	time: any;
+// 	token: string | undefined;
+// 	result: string;
+// 	errMessage?: string | undefined;
+// 	errObj?: any | undefined;
+// }
 
 const setAuthFunction = function* ({
 	userSetting,
@@ -45,7 +45,15 @@ const setAuthFunction = function* ({
 		return;
 	}
 
-	const loginResult: ILoginResult = yield call(fireLoginRequest, userSetting);
+	const loginResult: {
+		result: string;
+		errMessage?: any;
+		userUID?: string;
+		userId?: string;
+		userName?: string;
+		time?: any;
+		userToken?: string;
+	} = yield call(fireLoginRequest, userSetting);
 
 	if (loginResult.result === 'success') {
 		yield put(authSetting(loginResult));
@@ -56,6 +64,7 @@ const setAuthFunction = function* ({
 };
 
 interface ITokenUser {
+	USER_UID: string;
 	USER_ID: string;
 	NAME: string;
 	TEAM_CD: string;
@@ -68,7 +77,7 @@ interface ITokenResult {
 	user: ITokenUser;
 }
 
-const getAuthFunction = function* ({ token }: any) {
+const getAuthFunction = function* ({ token, callbackFn }: any) {
 	const tokenResult: ITokenResult = yield call(fireTokenRequest, token);
 
 	if (tokenResult.success) {
@@ -76,16 +85,27 @@ const getAuthFunction = function* ({ token }: any) {
 			userName: tokenResult.user.NAME,
 			userId: tokenResult.user.USER_ID,
 			userToken: token,
+			userUID: tokenResult.user.USER_UID,
 		};
 
 		yield put(authSetting(loginResult));
+		yield call(callbackFn, loginResult.userId);
 	} else {
 		yield put(authReset());
+		yield call(callbackFn, '');
 	}
 };
 
 const resetAuthFunction = function* () {
 	yield put(authReset());
+};
+
+const setUserSocketFunction = function* ({ socketRef }: any) {
+	yield put(authSocket(socketRef));
+};
+
+const resetUserSocketFunction = function* () {
+	yield put(authSocket(null));
 };
 
 const setAuth = function* () {
@@ -100,6 +120,20 @@ const getAuthByToken = function* () {
 	yield takeLatest(RCONST.AUTH_SETTING_BY_TOKEN, getAuthFunction);
 };
 
+const setUserSocket = function* () {
+	yield takeLatest(RCONST.AUTH_USERSOCKET, setUserSocketFunction);
+};
+
+const resetUserSocket = function* () {
+	yield takeLatest(RCONST.AUTH_USERSOCKET_RESET, resetUserSocketFunction);
+};
+
 export default function* authSaga() {
-	yield all([fork(setAuth), fork(resetAuth), fork(getAuthByToken)]);
+	yield all([
+		fork(setAuth),
+		fork(resetAuth),
+		fork(getAuthByToken),
+		fork(setUserSocket),
+		fork(resetUserSocket),
+	]);
 }

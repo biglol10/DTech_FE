@@ -44,15 +44,15 @@ module.exports = {
 			],
 		});
 
-		// 20220801 SVG as component
-		const assetRule = config.module.rules.find(({ test }) => test.test('.svg'));
-		assetRule.exclude = /\.svg$/;
+		// // 20220801 SVG as component
+		// const assetRule = config.module.rules.find(({ test }) => test.test('.svg'));
+		// assetRule.exclude = /\.svg$/;
 
-		config.module.rules.push({
-			test: /\.svg$/,
-			include: path.resolve(__dirname, '../'),
-			use: ['@svgr/webpack'],
-		});
+		// config.module.rules.push({
+		// 	test: /\.svg$/,
+		// 	include: path.resolve(__dirname, '../'),
+		// 	use: ['@svgr/webpack'],
+		// });
 
 		return config;
 	},

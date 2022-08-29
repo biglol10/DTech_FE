@@ -6,20 +6,27 @@ module.exports = {
 	reactStrictMode: false, // react strict mode가 설정되어 있을 때, React가 side effects를 찾아내기 위해 의도적으로 hook을 이중 호출할 수 있는데 그걸 끔
 	distDir: '.next',
 	basePath: process.env.NODE_ENV === 'production' ? '/dtech' : '',
-	assetPrefix: process.env.NODE_ENV === 'production' ? '/dtech' : '',
+	// assetPrefix: process.env.NODE_ENV === 'production' ? '/dtech' : '',
 	async redirects() {
-		// Url/react 이렇게 붙여서 load해주는 것
+		// Url/react 이렇게 붙여서 load해주는 것... 로그인 시 / 쪽에 redirect하기로 되어있는데 자동으로 dashboard 컴포넌트 랜더링 (url은 변경되지 않음... 예시: localhost:3065/ 이지만 실제로 랜더링되는 컴포넌트는 dashboard)
 		if (process.env.NODE_ENV === 'production') {
 			return [
 				{
 					source: '/',
-					destination: '/dtech',
+					destination: '/dtech/dashboard',
 					basePath: false,
 					permanent: false, // true 일 경우 uses the 308 status code which instructs the browser to cache the redirect (즉 캐싱으로 계속 남아있어서 이거 해제해도 /react로 날라감)
 				},
 			];
 		} else {
-			return [];
+			return [
+				{
+					source: '/',
+					destination: '/dashboard',
+					basePath: false,
+					permanent: false, // true 일 경우 uses the 308 status code which instructs the browser to cache the redirect (즉 캐싱으로 계속 남아있어서 이거 해제해도 /react로 날라감)
+				},
+			];
 		}
 	},
 	webpack(config) {
@@ -31,7 +38,7 @@ module.exports = {
 		// SVG를 컴포넌트로 사용하기 위해 필요
 		config.module.rules.push({
 			test: /\.svg$/,
-			use: ["@svgr/webpack"]
+			use: ['@svgr/webpack'],
 		});
 
 		// ? 절대경로 설정 (만약에 tsconfig에 정의되어 있지 않거나 .js파일에서 절대경로 쓰고 싶을 경우 여기에 정의하면 된다)
@@ -48,7 +55,7 @@ module.exports = {
 		return {
 			...config,
 			mode: prod ? 'production' : 'development',
-			devtool: 'eval',
+			devtool: prod ? false : 'eval',
 		};
 	},
 	env: {
