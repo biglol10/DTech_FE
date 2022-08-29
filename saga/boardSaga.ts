@@ -3,9 +3,8 @@ import * as RCONST from '@utils/constants/reducerConstants';
 import { boardListRequest } from '@utils/api/board/getBoardList';
 import { boardLikeRequest } from '@utils/api/board/setBoardLikeRequest';
 import { submitBoardRequest } from '@utils/api/board/setSubmitBoardRequest';
+import { sendBoardImgRequest } from '@utils/api/board/setBoardImgRequest';
 import { techListRequest } from '@utils/api/register/getTechListRequest';
-
-import { ChatList } from '@utils/types/commAndStoreTypes';
 
 interface IBoardList {
 	result: string;
@@ -24,8 +23,8 @@ interface ITechList {
 }
 interface ISubmitBoard {
 	result: string;
-	boardList: any | undefined;
-	errMessage: string | undefined;
+	resultData: any | undefined;
+	errMessage?: string | undefined;
 }
 
 const boardListFunction = function* ({ setBoardList }: any) {
@@ -36,25 +35,16 @@ const boardListFunction = function* ({ setBoardList }: any) {
 	} else {
 		console.error(boardListResult.errMessage);
 	}
-	// console.log(boardListResult);
 	yield;
 };
 
 const boardLikeFunction = function* ({ id, userId, like }: any) {
-	console.log('boardLikeFunction');
-	console.log(id, userId, like);
-	const boardLikeResult: IBoardLike = yield call(boardLikeRequest, { id, userId, like });
-
-	console.log(boardLikeResult);
-	yield;
+	yield call(boardLikeRequest, { id, userId, like });
 };
 
 const techListFunction = function* ({ setTechList }: any) {
-	console.log('techListFunction');
 	const techListResult: ITechList = yield call(techListRequest, {});
 
-	// setTechList(techListResult.techList);
-	console.log(techListResult);
 	if (techListResult.result === 'success') {
 		const tempArr = techListResult.techList;
 		const newTempArr = tempArr.map((tech: any) => {
@@ -68,18 +58,33 @@ const techListFunction = function* ({ setTechList }: any) {
 	yield;
 };
 
-const submitBoardFunction = function* ({ content }: any) {
-	console.log('submitBoardFunction');
-	console.log(content);
-	// const submitBoardResult: ISubmitBoard = yield call(submitBoardRequest, { content });
+const submitBoardFunction = function* ({ content, uuid, selectedTech, boardTitle }: any) {
 	const formData = new FormData();
 
-	for (let i = 0; i < content.imgList.length; i++) {
-		formData.append('imgs', content.imgList[i]);
-	}
-	const submitBoardResult: ISubmitBoard = yield call(submitBoardRequest, formData);
+	const submitBoardResult: ISubmitBoard = yield call(submitBoardRequest, {
+		type: 'BOARD_SUBMIT',
+		title: boardTitle,
+		uuid,
+		tech: selectedTech,
+		content: content.value,
+	});
 
-	console.log(submitBoardResult);
+	if (submitBoardResult.result === 'success') {
+		for (let i = 0; i < content.imgList.length; i++) {
+			formData.append(
+				'img',
+				content.imgList[i].imageFile,
+				`${content.imgList[i].imageFile.name}`,
+			);
+		}
+
+		formData.append('img', `{boardId:${submitBoardResult.resultData.BOARD_CD}}`);
+
+		yield call(sendBoardImgRequest, formData);
+	} else {
+		console.log('error');
+	}
+
 	yield;
 };
 

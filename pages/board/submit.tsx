@@ -1,6 +1,6 @@
 import { MainLayoutTemplate } from '@components/customs';
 import { InputDefault, DTechQuill, InputDropdown, Button, InputLayout } from '@components/index';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useState, useRef, useEffect } from 'react';
 import { ChatList } from '@utils/types/commAndStoreTypes';
 import dynamic from 'next/dynamic';
@@ -20,29 +20,20 @@ const ReactQuill = dynamic(
 
 const Submit = () => {
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
-	const [image, setImage] = useState({ previewURL: '', imageFile: null });
-	const [chatList, setChatList] = useState<any>({});
-	const [techList, setTechList] = useState([]);
-	const [selectedTech, setSelectedTech] = useState('');
-	const dispatch = useDispatch();
-	const imgRef = useRef<any>();
-	const saveImage = (e: any) => {
-		e.preventDefault();
-		if (e.target.files[0]) {
-			URL.revokeObjectURL(image.previewURL);
-			const previewURL = URL.createObjectURL(e.target.files[0]);
 
-			setImage((prev: any) => ({
-				...prev,
-				imageFile: e.target.files[0],
-				previewURL,
-			}));
-		}
-	};
+	const [techList, setTechList] = useState([]);
+	const [boardTitle, setBoardTitle] = useState('');
+	const [selectedTech, setSelectedTech] = useState('');
+	const uuid = useSelector((state: any) => state.auth.userUID);
+	const dispatch = useDispatch();
+
 	const submitBoard = (content: ChatList) => {
 		dispatch({
 			type: 'SUBMIT_BOARD',
 			content,
+			uuid,
+			selectedTech,
+			boardTitle,
 		});
 	};
 
@@ -54,14 +45,14 @@ const Submit = () => {
 	}, []);
 
 	const submitClick = () => {
-		console.log('submitClick');
+		// console.log('submitClick');
 	};
 
 	return (
 		<>
 			<div className={Style['boardLayout']}>
 				<div className={Style['boardMain']}>
-					<InputLayout
+					{/* <InputLayout
 						error={false}
 						errorMsg="제목을 입력하세요."
 						stretch={true}
@@ -71,20 +62,24 @@ const Submit = () => {
 						autoFitErrorLabel={true}
 						spacing={40}
 					>
-						<InputDefault
-							id="title"
-							stretch={true}
-							placeholder="제목"
-							className={Style['boardTitle']}
-						/>
-					</InputLayout>
+						
+					</InputLayout> */}
+					<InputDefault
+						id="title"
+						stretch={true}
+						placeholder="제목"
+						className={Style['boardTitle']}
+						onChange={(obj: { value: string }) => {
+							// console.log(obj);
+							setBoardTitle(obj.value);
+						}}
+					/>
 					<InputDropdown
 						id="inputId"
 						placeholder="기술 선택"
 						options={techList}
 						// value={techList.teamSelectValue}
 						onChange={(obj: { value: string }) => {
-							console.log(obj);
 							setSelectedTech(obj.value);
 						}}
 						className={Style['inputIdField']}

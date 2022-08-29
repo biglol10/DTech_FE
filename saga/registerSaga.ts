@@ -89,8 +89,6 @@ const teamListFunction = function* ({ setTeamList }: any) {
 const techListFunction = function* ({ setTechSelectedList }: any) {
 	const techListResult: ITechList = yield call(techListRequest, {});
 
-	console.log('techListFunction');
-	console.log(techListResult);
 	if (techListResult.result === 'success') {
 		const tempArr = techListResult.techList;
 		const newTempArr = tempArr.map((tech: any) => {
@@ -262,17 +260,17 @@ const registerUserFunction = function* ({ registerData, propFunction }: any) {
 
 	if (registerData.image.imageFile) {
 		const fileName = registerResult.result.uuid;
-		const fileExtName = registerData.image.imageFile.name.split('.')[1];
+		const fileExtName = registerData.image.imageFile.name.split('.').reverse()[0];
 
 		// console.log(fileName, fileExtName);
 		const formData = new FormData();
 
 		formData.append('img', registerData.image.imageFile, `${fileName}.${fileExtName}`);
-		console.log('goNext1');
+
 		yield call(sendUserImgRequest, formData);
-		console.log('goNext2');
+		// console.log('goNext2');
 	}
-	console.log('goNext3');
+
 	propFunction({ goNext: true, registerResult });
 	yield put(registerReset());
 };

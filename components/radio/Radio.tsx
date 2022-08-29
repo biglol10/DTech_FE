@@ -32,10 +32,6 @@ const Radio = ({
 		}
 	}, [onChange, itemList]);
 
-	useEffect(() => {
-		console.log(itemList);
-	}, []);
-
 	const onChangeFn = useCallback((e: any) => {
 		setItemList((prevList) =>
 			prevList.map((item) => {
