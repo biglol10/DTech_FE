@@ -35,7 +35,7 @@ const PersonCard = ({
 	return (
 		<div>
 			<div className={Style['userAvatarArea']} onClick={() => setPopupView(!popupView)}>
-				<Avatar content={username} src={profileUrl} />
+				<Avatar content={username} src={profileUrl} imageSize={'large'} />
 				{popupView && (
 					<div className={Style['userClickPopup']}>
 						<div onClick={() => alert('visit profile')}>

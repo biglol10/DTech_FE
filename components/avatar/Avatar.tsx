@@ -10,6 +10,8 @@ import { Image as SemanticUIImage } from 'semantic-ui-react';
 import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
 import { IAvatar } from '@utils/types/componentTypes';
 import { Label } from '@components/index';
+import lodash from 'lodash';
+import SVGR from '@styles/svg/no_profile.svg';
 import Style from './Avatar.module.scss';
 
 const Avatar = ({
@@ -25,6 +27,16 @@ const Avatar = ({
 	const imageSrc =
 		src || `${process.env.NODE_ENV === 'production' ? '/dtech' : ''}/images/no_profile.png`;
 
+	const avatarColor = [
+		'#E01E5A',
+		'#007A5A',
+		'#552655',
+		'#36C4F0',
+		'#868686',
+		'#0CD4C4',
+		'#E8912D',
+	];
+
 	return (
 		<>
 			<div
@@ -32,7 +44,22 @@ const Avatar = ({
 				className={Style['avatarDiv']}
 				style={{ color, ...inputElCommStyle(spacing) }}
 			>
-				<SemanticUIImage src={imageSrc} avatar={avatar} size={imageSize} />
+				{src ? (
+					<SemanticUIImage src={imageSrc} avatar={avatar} size={imageSize} />
+				) : (
+					<SemanticUIImage
+						avatar={avatar}
+						size={imageSize}
+						style={{ width: 'auto', fill: lodash.sample(avatarColor) }}
+					>
+						<SVGR />
+					</SemanticUIImage>
+				)}
+				{/* <SemanticUIImage src={imageSrc} avatar={avatar} size={imageSize} />
+				<SemanticUIImage avatar={avatar} size={'mini'}>
+					<SVGR />
+				</SemanticUIImage> */}
+				{/* <SVGR /> */}
 				<Label content={content} color={color} size={labelSize} paddingNone />
 			</div>
 		</>
