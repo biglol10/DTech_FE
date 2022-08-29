@@ -3,7 +3,8 @@
  ********************************************************************************************
  * 번호    작업자     작업일         브랜치                   변경내용
  *-------------------------------------------------------------------------------------------
- * 1      변지욱     2022-08-25      feature/JW/chat         최초작성
+ * 1      변지욱     2022-08-25   feature/JW/chat        최초작성
+ * 2      변지욱     2022-08-29   feature/JW/chat        유저명 표시하도록 변경, socket에서 직접 채팅리스트 가져오도록 변경
  ********************************************************************************************/
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -19,8 +20,28 @@ import axios, { AxiosResponse } from 'axios';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
+import lodash from 'lodash';
 
 import Style from './[userId].module.scss';
+
+interface IChatList {
+	MESSAGE_ID: string;
+	TO_USERNAME: string;
+	MESSAGE_TEXT: string;
+	IMG_LIST: string;
+	LINK_LIST: string[];
+	SENT_DATETIME: string;
+	USER_UID: string;
+	NAME: string;
+	TITLE: string;
+	CONVERSATION_ID: string;
+}
+
+interface ChatDateReduce {
+	[val: string]: {
+		[val2: string]: IChatList[];
+	};
+}
 
 const dayOfWeek: { [val: string]: string } = {
 	'0': '월요일',
@@ -52,10 +73,10 @@ const UserChat = ({
 }) => {
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
 	const [chatUser, setChatUser] = useState<{ [name: string]: string }>();
-	const [chatList, setChatList] = useState<any>({});
+	const [chatList, setChatList] = useState<ChatDateReduce>({});
 	const [textChangeNotification, setTextChangeNotification] = useState(false);
 	const [sendingUserState, setSendingUserState] = useState<string>('');
-	const conversationId = useRef();
+	const conversationId = useRef<string>();
 
 	const bottomRef = useRef<any>(null);
 
@@ -115,19 +136,32 @@ const UserChat = ({
 		[authStore.userToken, authStore.userUID, userUID],
 	);
 
-	const getPrivateChatListAxios = useCallback(() => {
-		getPrivateChatListFunction(
-			(response: AxiosResponse<any, any>) => {
-				conversationId.current = response.data.convId;
-				const groupsReduce = chatToDateGroup(response.data.chatList);
+	const getPrivateChatListAxios = useCallback(
+		(chatListSocket: any = null, convIdSocket: string = '') => {
+			if (
+				lodash.isEmpty(chatListSocket) ||
+				(lodash.isArray(chatListSocket) && chatListSocket.length === 0)
+			) {
+				getPrivateChatListFunction(
+					(response: AxiosResponse<any, any>) => {
+						conversationId.current = response.data.convId;
+						const groupsReduce = chatToDateGroup(response.data.chatList);
+
+						setChatList(groupsReduce);
+					},
+					(err: any) => {
+						toast['error'](<>{'채팅정보를 가져오지 못했습니다'}</>);
+					},
+				);
+			} else {
+				conversationId.current = convIdSocket;
+				const groupsReduce = chatToDateGroup(chatListSocket);
 
 				setChatList(groupsReduce);
-			},
-			(err: any) => {
-				toast['error'](<>{'채팅정보를 가져오지 못했습니다'}</>);
-			},
-		);
-	}, [getPrivateChatListFunction]);
+			}
+		},
+		[getPrivateChatListFunction],
+	);
 
 	useEffect(() => {
 		getPrivateChatListAxios();
@@ -148,16 +182,16 @@ const UserChat = ({
 				toUserId: chatUser && chatUser.USER_ID,
 			});
 
-			socket?.on('messageSendSuccess', () => {
-				getPrivateChatListAxios();
+			socket?.on('messageSendSuccess', ({ chatListSocket, convIdSocket }: any) => {
+				getPrivateChatListAxios(chatListSocket, convIdSocket);
 			});
 		},
 		[authStore.userUID, chatUser, getPrivateChatListAxios, socket],
 	);
 
 	useEffect(() => {
-		socket?.on('newMessageReceived', () => {
-			getPrivateChatListAxios();
+		socket?.on('newMessageReceived', ({ chatListSocket, convIdSocket }: any) => {
+			getPrivateChatListAxios(chatListSocket, convIdSocket);
 		});
 		socket?.on('textChangeNotification', (sendingUser: string) => {
 			setSendingUserState(sendingUser);
@@ -225,7 +259,10 @@ const UserChat = ({
 													return (
 														<>
 															{chatList[item][item2].map(
-																(item3: any, idx3: number) => {
+																(
+																	item3: IChatList,
+																	idx3: number,
+																) => {
 																	return (
 																		<SingleChatMessage
 																			key={item3.MESSAGE_ID}
@@ -251,6 +288,7 @@ const UserChat = ({
 																					? item3.SENT_DATETIME
 																					: null
 																			}
+																			userName={`${item3.NAME} (${item3.TITLE})`}
 																		/>
 																	);
 																},

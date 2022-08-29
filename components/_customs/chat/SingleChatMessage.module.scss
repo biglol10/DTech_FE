@@ -40,8 +40,7 @@
 
 		& > div:first-child {
 			padding: 5px 10px !important;
-			min-width: 95px;
-			max-width: 95px;
+			width: max-content;
 		}
 
 		.messageLabel {

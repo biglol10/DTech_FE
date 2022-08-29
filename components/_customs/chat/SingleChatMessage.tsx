@@ -75,7 +75,7 @@ const SingleChatMessage = ({
 							labelSize="mini"
 							src={techImage['React']}
 							color="black"
-							content={'username1'}
+							content={userName}
 						/>
 					</Label>
 
