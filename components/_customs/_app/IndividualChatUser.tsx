@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import { Router, useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 
 import Style from './IndividualChatUser.module.scss';
 

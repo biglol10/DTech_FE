@@ -1,5 +1,5 @@
-import { DTechQuill } from '@components/index';
 import dynamic from 'next/dynamic';
+import DTechQuillStorybook from '../../components/quill/DTechQuillStorybook';
 
 import { Doc } from './DTechQuill.stories.mdx';
 
@@ -11,7 +11,7 @@ export default {
 			page: Doc,
 		},
 	},
-	component: DTechQuill,
+	component: DTechQuillStorybook,
 	argTypes: {
 		enterSubmit: {
 			defaultValue: true,
@@ -36,7 +36,7 @@ export const QuillSample = (args: any) => {
 	);
 
 	return (
-		<DTechQuill
+		<DTechQuillStorybook
 			quillMinHeight={args.quillMinHeight}
 			quillMaxHeight={args.quillMaxHeight}
 			handleSubmit={(obj: any) => null}

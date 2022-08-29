@@ -9,18 +9,14 @@
  * 4      변지욱     2022-08-17   feature/JW/quill            setInterval로 quill height값 지속적으로 보내도록 수정 및 button disabled 추가
  * 5      변지욱     2022-08-24   feature/JW/chat             한글입력버그 해결
  * 6      변지욱     2022-08-25   feature/JW/chat             onchange시 notifyTextChange 이벤트 발생
- * 7      변지욱     2022-08-27   feature/JW/inputwithicon    lodash 이용해 notifyTextChange 제어
  ********************************************************************************************/
 
 import React, { ComponentType, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { toast } from 'react-toastify';
-import { generateImageUID } from '@utils/appRelated/helperFunctions';
 import { customStyleObj } from '@utils/styleRelated/stylehelper';
-import SendSvg from '@styles/svg/sendSvg.svg';
-import lodash from 'lodash';
 
-import PrevieImageComp from './PreviewImageComp';
+import PreviewImageCompStorybook from './PreviewImageCompStorybook';
 import Style from './DTechQuill.module.scss';
 
 const ReactQuill = dynamic(
@@ -38,7 +34,7 @@ const ReactQuill = dynamic(
 	{ ssr: false },
 );
 
-const DTechQuill = ({
+const DTechQuillStorybook = ({
 	handleSubmit = null,
 	quillMinHeight = 80,
 	quillMaxHeight = 200,
@@ -56,6 +52,7 @@ const DTechQuill = ({
 	notifyTextChange?: Function | null;
 }) => {
 	const [quillContext, setQuillContext] = useState('');
+	const [imageCounter, setImageCounter] = useState(0);
 
 	const quillRef = useRef<any>();
 	const inputFileRef = useRef<any>();
@@ -94,11 +91,11 @@ const DTechQuill = ({
 					setUrlPreviewList([
 						...urlPreviewList,
 						{
-							imageFile: inputFileRef.current.files[0],
-							fileName: `${inputFileRef.current.files[0].name}_${generateImageUID()}`,
+							fileName: `${inputFileRef.current.files[0].name}_${imageCounter}`,
 							filePreview: mediaPreview,
 						},
 					]);
+					setImageCounter(imageCounter + 1);
 				} else {
 					toast['error'](<>{'이미지 타입이나 사이즈를 체크해주세요'}</>);
 				}
@@ -106,7 +103,7 @@ const DTechQuill = ({
 
 			setQuillContext(quillRef.current.getEditor().getText());
 		};
-	}, [urlPreviewList]);
+	}, [imageCounter, urlPreviewList]);
 
 	const editorSubmitEvent = useCallback(() => {
 		if (
@@ -266,21 +263,20 @@ const DTechQuill = ({
 						setUrlPreviewList((prev: any) => [
 							...prev,
 							{
-								fileName: generateImageUID(),
+								fileName: `${'sampleImage'}_${imageCounter}`,
 								filePreview: mediaPreview,
 							},
 						]);
+
+						setImageCounter(imageCounter + 1);
 					}
 				}
 			}
 
-			if (notifyTextChange) {
-				const newNotifyFunction = lodash.debounce(() => notifyTextChange(), 1000);
-
-				newNotifyFunction();
-			}
+			notifyTextChange && notifyTextChange();
 		},
-		[notifyTextChange, urlPreviewList.length],
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[notifyTextChange],
 	);
 
 	return (
@@ -327,7 +323,7 @@ const DTechQuill = ({
 					<div className={Style['imageListArea']} style={{ gridColumn: 'span 1' }}>
 						{urlPreviewList.map((item: any, idx: number) => {
 							return (
-								<PrevieImageComp
+								<PreviewImageCompStorybook
 									key={item.fileName}
 									fileName={item.fileName}
 									filePreview={item.filePreview}
@@ -348,7 +344,22 @@ const DTechQuill = ({
 					}
 					onClick={() => editorSubmitEvent()}
 				>
-					<SendSvg />
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						version="1.0"
+						width="20.000000pt"
+						height="20.000000pt"
+						viewBox="0 0 30.000000 30.000000"
+						preserveAspectRatio="xMidYMid meet"
+					>
+						<g
+							transform="translate(0.000000,30.000000) scale(0.100000,-0.100000)"
+							fill="#FBFCFC"
+							stroke="none"
+						>
+							<path d="M138 233 c-60 -20 -108 -39 -108 -42 0 -3 16 -19 36 -34 l35 -29 62 49 62 48 -48 -62 -49 -62 29 -35 c15 -20 31 -36 34 -36 5 0 79 218 79 234 0 10 -21 5 -132 -31z" />
+						</g>
+					</svg>
 					<span>submit</span>
 				</button>
 			</div>
@@ -356,4 +367,4 @@ const DTechQuill = ({
 	);
 };
 
-export default DTechQuill;
+export default DTechQuillStorybook;

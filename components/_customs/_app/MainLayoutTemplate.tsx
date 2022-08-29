@@ -7,14 +7,13 @@
  * 2      변지욱     2022-07-14   feature/JW/layoutchange     세팅팝업 추가 및 세팅영역 밖 클릭 시 세팅팝업 숨김처리
  * 3      변지욱     2022-08-18   feature/JW/socket           Socket으로 온라인 오프라인 유저 표시
  * 4      변지욱     2022-08-18   feature/JW/socket           온라인 유저 props로 전달
+ * 5      변지욱     2022-08-27   feature/JW/layout           text변경에 따른 리랜더링 이상현상 해결
+ * 6      변지욱     2022-08-29   feature/JW/layoutchat       신규로 가입한 사람이 있을 경우 socket event 받도록 함
  ********************************************************************************************/
 
-import React, { useState, useEffect, useRef } from 'react';
-import { Avatar, InputLayout, InputDefault, SharpDivider } from '@components/index';
-import Image from 'next/image';
-import DLogo from '@public/images/DLogo2.png';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Avatar } from '@components/index';
 import { Icon } from 'semantic-ui-react';
-import classNames from 'classnames/bind';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import cookie from 'js-cookie';
@@ -23,7 +22,7 @@ import axios from 'axios';
 import { IAuth, IAppCommon, IUsersStatusArr } from '@utils/types/commAndStoreTypes';
 import _ from 'lodash';
 
-import IndividualChatUser from './IndividualChatUser';
+import UserSidebar from './UserSidebar';
 import Style from './MainLayoutTemplate.module.scss';
 
 interface LayoutProps {
@@ -31,12 +30,8 @@ interface LayoutProps {
 }
 
 const MainLayoutTemplate = ({ children }: LayoutProps) => {
-	const cx = classNames.bind(Style);
-
 	const router = useRouter();
 
-	const [userSearch, setUserSearch] = useState('');
-	const [isLogoBorderBottom, setIsLogoBorderBottom] = useState(false);
 	const [iconLeft, setIconLeft] = useState(true);
 	const [settingOpen, setSettingOpen] = useState(false);
 	const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
@@ -90,12 +85,14 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 					}
 				},
 			);
+
+			socket.on('newUserCreated', () => getUsersStatus());
 		}
 		// 다른 dependency 추가하면 connectedUsers가 여러번 찍힘... 딱히 문제는 없지만 최소한으로 작동하는게 목적
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [authStore]);
 
-	useEffect(() => {
+	const getUsersStatus = useCallback(() => {
 		axios
 			.get('http://localhost:3066/api/auth/getUsersStatus', {
 				params: { onlineUsers: onlineUsers.length > 0 ? onlineUsers : ['none'] },
@@ -105,7 +102,11 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 				setUsersStatusArr(response.data.usersStatus);
 			})
 			.catch((err) => {});
-	}, [dispatch, onlineUsers]);
+	}, [onlineUsers]);
+
+	useEffect(() => {
+		getUsersStatus();
+	}, [getUsersStatus]);
 
 	const logout = () => {
 		disconnect();
@@ -137,94 +138,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 							<img src="https://i.ibb.co/zGtDpcp/map.png" />
 						</div>
 					</nav>
-					<div
-						className={cx('sidebarChat', `${iconLeft ? 'showSidebar' : 'hideSidebar'}`)}
-					>
-						{iconLeft && (
-							<>
-								<div
-									className={Style['chatLogo']}
-									style={{
-										borderBottom: `${
-											isLogoBorderBottom ? '1px solid #999999' : 'none'
-										}`,
-										cursor: 'pointer',
-									}}
-									onClick={() => router.push('/')}
-								>
-									<Image src={DLogo} width={48} height={48} /> Dtech App
-								</div>
-
-								<div
-									className={Style['chatArea']}
-									onScroll={(e: any) =>
-										setIsLogoBorderBottom(e.target.scrollTop > 20)
-									}
-								>
-									<div className={Style['userSearch']}>
-										<InputLayout
-											stretch={true}
-											inputLabel="사용자 검색"
-											inputLabelSize="h5"
-											showInputLabel={true}
-											spacing={32}
-										>
-											<InputDefault
-												id="userSearchInput"
-												placeholder="사용자 검색"
-												value={userSearch}
-												size="small"
-												onChange={(obj: { value: string }) => {
-													setUserSearch(obj.value);
-												}}
-												className="userSearchInput"
-											/>
-										</InputLayout>
-									</div>
-
-									<div className={Style['usersInfo']}>
-										<SharpDivider content="온라인" />
-
-										<div className={Style['usersOnline']}>
-											{usersStatusArr.map(
-												(item, idx: number) =>
-													item.USER_ID !== authStore.userId &&
-													item.ONLINE_STATUS === 'ONLINE' && (
-														<IndividualChatUser
-															key={`online_${idx}`}
-															onlineStatus="ONLINE"
-															userUID={item.USER_UID}
-															userName={item.NAME}
-															userTitle={item.TITLE}
-															userImg={item.IMG_URL}
-														/>
-													),
-											)}
-										</div>
-
-										<SharpDivider content="오프라인" />
-
-										<div className={Style['usersOffline']}>
-											{usersStatusArr.map(
-												(item, idx) =>
-													item.USER_ID !== authStore.userId &&
-													item.ONLINE_STATUS === 'OFFLINE' && (
-														<IndividualChatUser
-															key={`offline_${idx}`}
-															onlineStatus="OFFLINE"
-															userUID={item.USER_UID}
-															userName={item.NAME}
-															userTitle={item.TITLE}
-															userImg={item.IMG_URL}
-														/>
-													),
-											)}
-										</div>
-									</div>
-								</div>
-							</>
-						)}
-					</div>
+					<UserSidebar iconLeft={iconLeft} usersStatusArr={usersStatusArr} />
 				</div>
 				<div className={Style['right']}>
 					<nav className={Style['navHeader']}>
@@ -243,7 +157,9 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 							</li>
 							<li
 								className={
-									Style[`${appCommon.route.currentRoute === 'chat' && 'active'}`]
+									Style[
+										`${appCommon.route.currentRoute === 'chatPage' && 'active'}`
+									]
 								}
 								onClick={() => router.push('/chat/sdafadsf')}
 							>

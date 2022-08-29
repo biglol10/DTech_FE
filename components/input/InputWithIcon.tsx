@@ -1,13 +1,14 @@
 /** ****************************************************************************************
  * @설명 : Input With Icon
  ********************************************************************************************
- * 번호    작업자     작업일         브랜치                       변경내용
+ * 번호    작업자     작업일         브랜치                           변경내용
  *-------------------------------------------------------------------------------------------
  * 1      변지욱      2022-06-16     feature/JW/input            최초작성
  * 2      변지욱      2022-07-10     feature/JW/loginValidation  onChange to useCallback
+ * 3      변지욱      2022-08-27     feature/JW/inputwithicon    더 많은 variation 다루기 가능하도록 수정
  ********************************************************************************************/
 
-import { ChangeEvent, forwardRef, useCallback, useState } from 'react';
+import React, { ChangeEvent, forwardRef, useCallback, useState } from 'react';
 import { Icon, Input } from 'semantic-ui-react';
 import { IInputWithIcon } from '@utils/types/componentTypes';
 
@@ -26,9 +27,11 @@ const InputWithIcon = forwardRef<any, IInputWithIcon>(
 			readOnly = false,
 			disabled = false,
 			maxLength = undefined,
-			inputIcon = <Icon name="at" />,
+			inputIcon = <Icon name="search" />,
 			stretch = false,
 			onEnter = null,
+			iconPosition = undefined,
+			iconClick = null,
 		},
 		ref,
 	) => {
@@ -44,27 +47,63 @@ const InputWithIcon = forwardRef<any, IInputWithIcon>(
 			[onChange],
 		);
 
+		const removeText = () => {
+			setInputValue('');
+			onChange &&
+				onChange({
+					value: '',
+				});
+		};
+
+		const IconClone = React.cloneElement(inputIcon as React.ReactElement, {
+			link: true,
+			onClick: () => {
+				iconClick ? iconClick() : removeText();
+			},
+		});
+
 		return (
 			<Input
 				id={id}
 				className={className}
-				iconPosition="left"
 				loading={loading}
-				placeholder={placeholder}
-				ref={ref}
-				value={inputValue}
-				onChange={onChangeFn}
 				size={size}
 				error={error}
-				type={`${type === 'default' ? '' : type}`}
-				readOnly={readOnly}
-				disabled={disabled}
-				maxLength={maxLength}
+				icon
+				iconPosition={iconPosition}
 				style={stretch ? { width: '100%' } : {}}
-				onKeyUp={(evt: KeyboardEvent) => evt.key === 'Enter' && onEnter && onEnter()}
 			>
-				{inputIcon}
-				<input />
+				{iconPosition === 'left' ? (
+					<>
+						{IconClone}
+						<input
+							ref={ref}
+							value={inputValue}
+							onChange={onChangeFn}
+							type={`${type === 'default' ? '' : type}`}
+							placeholder={placeholder}
+							readOnly={readOnly}
+							disabled={disabled}
+							maxLength={maxLength}
+							onKeyUp={(evt: any) => evt.key === 'Enter' && onEnter && onEnter()}
+						/>
+					</>
+				) : (
+					<>
+						<input
+							ref={ref}
+							value={inputValue}
+							onChange={onChangeFn}
+							type={`${type === 'default' ? '' : type}`}
+							placeholder={placeholder}
+							readOnly={readOnly}
+							disabled={disabled}
+							maxLength={maxLength}
+							onKeyUp={(evt: any) => evt.key === 'Enter' && onEnter && onEnter()}
+						/>
+						{IconClone}
+					</>
+				)}
 			</Input>
 		);
 	},
