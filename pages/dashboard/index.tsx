@@ -32,6 +32,32 @@ interface ITeamSkillData {
 	count: number;
 }
 
+interface ITeamSkillDashboard {
+	COUNT: number;
+	DETAIL: string;
+	NAME: string;
+	PAGE_URL: string;
+	TECH_CD: string;
+}
+
+interface IUserDashboard {
+	[id: string]: {
+		DETAIL: string | null;
+		DOMAIN: string | null;
+		EMAIL: string | null;
+		GITHUB_URL: string | null;
+		IMG_URL: string | null;
+		PHONENUM: string | null;
+		PRJ_DETAIL: string | null;
+		TEAM_CD: string;
+		TECH_ARR: string[];
+		TITLE: string;
+		USER_ID: string;
+		USER_NAME: string;
+		USER_UID: string;
+	};
+}
+
 const fullData = [
 	{
 		username: '김민준',
@@ -127,15 +153,30 @@ const fullData = [
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aProp: string }) => {
+const Index = ({
+	teamSkillData,
+	aProp,
+	teamSkillDashboard,
+	userDashboard,
+}: {
+	teamSkillData: ITeamSkillData[];
+	aProp: string;
+	teamSkillDashboard: ITeamSkillDashboard[];
+	userDashboard: IUserDashboard;
+}) => {
 	const router = useRouter();
 
+	console.log('teamSkillDashboard is');
+	console.log(teamSkillDashboard);
+	console.log('userDashboard is');
+	console.log(userDashboard);
+
 	const data = {
-		labels: teamSkillData.map((item) => item.subject),
+		labels: teamSkillDashboard.map((item) => item.NAME),
 		datasets: [
 			{
 				label: 'asdf',
-				data: teamSkillData.map((item) => item.count),
+				data: teamSkillDashboard.map((item) => item.COUNT),
 				backgroundColor: [
 					'rgba(255, 99, 132, 0.2)',
 					'rgba(54, 162, 235, 0.2)',
@@ -327,7 +368,23 @@ const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aPro
 				</div>
 				<SharpDivider content="" />
 				<div className={Style['peopleCardArea']}>
-					{userListData.map((item, idx) => (
+					{Object.keys(userDashboard).map((item, idx) => {
+						const singleUser = userDashboard[item];
+
+						return (
+							<PersonCard
+								key={`personCard_${singleUser.USER_ID}`}
+								username={singleUser.USER_NAME}
+								profileUrl={singleUser.IMG_URL}
+								rank={singleUser.TITLE}
+								skills={singleUser.TECH_ARR.join()}
+								domains={singleUser.DOMAIN || ''}
+								githubUrl={singleUser.GITHUB_URL || ''}
+								detail={singleUser.DETAIL || ''}
+							/>
+						);
+					})}
+					{/* {userListData.map((item, idx) => (
 						<PersonCard
 							key={`personcard_${idx}`}
 							username={item.username}
@@ -338,7 +395,7 @@ const Index = ({ teamSkillData, aProp }: { teamSkillData: ITeamSkillData[]; aPro
 							githubUrl={item.githubUrl}
 							detail={item.detail}
 						/>
-					))}
+					))} */}
 				</div>
 			</div>
 		</>
@@ -353,7 +410,7 @@ export const getServerSideProps = async (context: any) => {
 			headers: { Authorization: token },
 		})
 		.then((response) => {
-			return response.data.teamSkillData;
+			return response.data;
 		})
 		.catch((err) => {
 			return [];
@@ -361,7 +418,9 @@ export const getServerSideProps = async (context: any) => {
 
 	return {
 		props: {
-			teamSkillData: axiosData,
+			teamSkillData: axiosData.teamSkillData,
+			teamSkillDashboard: axiosData.teamSkillDashboard,
+			userDashboard: axiosData.userDashboard,
 			aProp: process.env.S3_URL,
 		},
 	};
