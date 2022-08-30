@@ -7,6 +7,7 @@ import authSaga from './authSaga';
 import registerSaga from './registerSaga';
 import toastSaga from './toastSaga';
 import appCommonSaga from './appCommonSaga';
+import boardSaga from './boardSaga';
 import usersSaga from './usersSaga';
 
 export default function* rootSaga() {
@@ -18,6 +19,7 @@ export default function* rootSaga() {
 		fork(registerSaga),
 		fork(toastSaga),
 		fork(appCommonSaga),
+		fork(boardSaga),
 		fork(usersSaga),
 	]);
 }

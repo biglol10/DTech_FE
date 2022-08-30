@@ -167,13 +167,9 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 							</li>
 							<li
 								className={
-									Style[
-										`${
-											appCommon.route.currentRoute === 'examplePage' &&
-											'active'
-										}`
-									]
+									Style[`${appCommon.route.currentRoute === 'board' && 'active'}`]
 								}
+								onClick={() => router.push('/board')}
 							>
 								<a>게시판</a>
 							</li>

@@ -6,6 +6,7 @@ import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
 import Style from './Checkbox.module.scss';
 
 const CheckboxDefault = ({
+	className = '',
 	id = '',
 	disabled = false,
 	checked = false,
@@ -36,7 +37,10 @@ const CheckboxDefault = ({
 	return (
 		<>
 			{labelPosition === 'top' && (
-				<div className={Style['checkBoxLabelTop']} style={inputElCommStyle(spacing)}>
+				<div
+					className={`${Style['checkBoxLabelTop']} ${className}`}
+					style={inputElCommStyle(spacing)}
+				>
 					<div>
 						<Label content={label} color={fontColor} />
 					</div>

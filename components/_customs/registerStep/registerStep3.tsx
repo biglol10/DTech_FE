@@ -7,11 +7,11 @@
  ********************************************************************************************/
 
 import { useState } from 'react';
-import { TextArea } from 'semantic-ui-react';
+// import { TextArea } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
-import { Button, InputLayout } from '@components/index';
+import { Button, InputLayout, TextArea } from '@components/index';
 
 import classNames from 'classnames/bind';
 import Style from './RegisterComp.module.scss';
@@ -50,7 +50,7 @@ const RegisterStep3 = (props: any) => {
 						placeholder="관심 기술, 경험 프로젝트 등(1000자 이하)"
 						className={cx('registerTextarea')}
 						value={userDetailValue.userDetailValue}
-						onChange={(e, { value }: any) => {
+						onChange={({ value }: any) => {
 							let userDetailError = false;
 
 							if (value.length > 1000) {

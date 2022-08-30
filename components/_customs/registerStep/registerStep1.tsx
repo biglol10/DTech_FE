@@ -41,6 +41,8 @@ const RegisterStep1 = (props: any) => {
 
 	const userIdRef = useRef<any>();
 	const userPwRef = useRef<any>();
+	const userPw2Ref = useRef<any>();
+	const userNameRef = useRef<any>();
 
 	const clickNext = () => {
 		dispatch({
@@ -108,7 +110,7 @@ const RegisterStep1 = (props: any) => {
 						}}
 						className={Style['inputIdField']}
 						inputIcon={<Icon name="user" />}
-						onEnter={() => userPwRef.current && userPwRef.current.focus()}
+						onEnter={() => userNameRef.current && userNameRef.current.focus()}
 					/>
 					<Button
 						className={cx('idCheckBtn')}
@@ -137,7 +139,7 @@ const RegisterStep1 = (props: any) => {
 			>
 				<InputWithIcon
 					id="inputId"
-					ref={userIdRef}
+					ref={userNameRef}
 					placeholder="이름을 입력해주세요."
 					value={nameInputValue.nameInputValue}
 					size="large"
@@ -211,6 +213,7 @@ const RegisterStep1 = (props: any) => {
 					className={Style['inputPwField']}
 					inputIcon={<Icon name="lock" />}
 					type="password"
+					onEnter={() => userPw2Ref.current && userPw2Ref.current.focus()}
 				/>
 			</InputLayout>
 			<InputLayout
@@ -225,7 +228,7 @@ const RegisterStep1 = (props: any) => {
 			>
 				<InputWithIcon
 					id="inputPw2Confirm"
-					ref={userPwRef}
+					ref={userPw2Ref}
 					placeholder="비밀번호를 입력해주세요"
 					value={pwInput2Value.pwInput2Value}
 					size="large"

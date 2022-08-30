@@ -12,7 +12,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
 import { Button, Label } from '@components/index';
 
-import classNames from 'classnames/bind';
 import Style from './RegisterComp.module.scss';
 
 const RegisterStep4 = (props: any) => {

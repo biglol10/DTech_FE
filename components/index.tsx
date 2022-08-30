@@ -22,6 +22,7 @@ import AvatarGroup from './avatar/AvatarGroup';
 import SharpDivider from './sharpDivider/SharpDivider';
 import DTechQuill from './quill/DTechQuill';
 import TextArea from './textarea/TextArea';
+import BoardCard from './card/BoardCard';
 import TextWithDotAnimation from './textWithDotAnimation/TextWithDotAnimation';
 
 export {
@@ -53,5 +54,6 @@ export {
 	SharpDivider,
 	DTechQuill,
 	TextArea,
+	BoardCard,
 	TextWithDotAnimation,
 };
