@@ -229,9 +229,12 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 									usersStatusArr: usersStatusArr.filter(
 										(item) => item.ONLINE_STATUS === 'ONLINE',
 									),
+									userToken: authStore.userToken,
 								});
 							} else {
-								return el;
+								return React.cloneElement(el, {
+									userToken: authStore.userToken,
+								});
 							}
 						})}
 					</main>
