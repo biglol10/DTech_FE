@@ -9,6 +9,7 @@
 import { Avatar } from '@components/index';
 import { useState } from 'react';
 import { Icon } from 'semantic-ui-react';
+import { useRouter } from 'next/router';
 import Style from './PersonCard.module.scss';
 
 interface PersonDefail {
@@ -19,6 +20,7 @@ interface PersonDefail {
 	domains: string;
 	githubUrl: string;
 	detail: string;
+	userUID: string;
 }
 
 const PersonCard = ({
@@ -29,7 +31,9 @@ const PersonCard = ({
 	domains,
 	githubUrl,
 	detail,
+	userUID,
 }: PersonDefail) => {
+	const router = useRouter();
 	const [popupView, setPopupView] = useState(false);
 
 	return (
@@ -43,7 +47,7 @@ const PersonCard = ({
 							프로필 보기
 						</div>
 						<hr className={Style['menu-separator']} />
-						<div onClick={() => alert('go to chat')}>
+						<div onClick={() => router.push(`/chat/${userUID}`)}>
 							<Icon name="chat" />
 							채팅
 						</div>
