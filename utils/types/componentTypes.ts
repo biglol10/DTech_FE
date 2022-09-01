@@ -68,6 +68,7 @@ export interface IButton {
 }
 
 export interface ICheckboxDefault {
+	className?: string;
 	id: string;
 	disabled?: boolean;
 	checked?: boolean;
@@ -136,6 +137,7 @@ export interface IToggle {
 }
 
 export interface IRadio {
+	className?: string;
 	id?: string;
 	name?: string;
 	onChange?: any;
@@ -146,6 +148,7 @@ export interface IRadio {
 }
 
 export interface IThumbnail {
+	className?: string;
 	id?: string;
 	spacing?: number;
 	name?: string;
@@ -185,6 +188,20 @@ export interface IAvatar {
 	labelSize?: 'mini' | 'small' | 'large' | 'big' | 'huge' | 'massive';
 	svgColor?: string;
 	restrictColor?: boolean;
+}
+
+export interface ICard {
+	id?: string;
+	key?: string;
+	className?: string;
+	title?: string;
+	content?: string;
+	likeCnt?: number;
+	commentCnt?: number;
+	date?: Date;
+	userName?: string;
+	userTitle?: string;
+	images?: Array<any>;
 }
 
 export interface ITextWithDotAnimation {

@@ -1,0 +1,35 @@
+.boardLayout{
+	// background-color: red;
+	.boardMain {
+		background-color: white;
+		width:60%;
+		margin:auto;
+		border-radius: 10px;
+		padding:20px;
+		margin-top: 20px;
+
+		.boardTitle{
+			margin-bottom: 20px;
+		}
+	}
+}
+
+.boardPage{
+	display: flex;
+	flex-direction: column;
+	.boardList{
+		margin:auto;
+	}
+	.boardFilter{
+		background-color: white;
+		border-radius: 0.285714rem;
+		width:600px;
+		height:40px;
+		margin:auto;
+		align-items: center;
+		margin
+		.FilterBtn{
+			margin-left:20px;
+		}
+	}
+}

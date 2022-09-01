@@ -36,7 +36,12 @@ interface ITechList {
 }
 
 interface IRegisterUser {
-	result: string;
+	result: {
+		uuid: string;
+		title: string;
+		name: string;
+		user_id: string;
+	};
 	errMessage: string | undefined;
 }
 const idCheckFunction = function* ({ idInputValue, setIdInputValue }: IIdCheckParam) {
@@ -251,17 +256,20 @@ const validStep3Function = function* ({
 	yield put(registerStep3({ userDetailValue }));
 };
 const registerUserFunction = function* ({ registerData, propFunction }: any) {
+	const registerResult: IRegisterUser = yield call(registerRequest, registerData);
+
 	if (registerData.image.imageFile) {
-		const fileName = registerData.idInputValue.idInputValue.split('@')[0];
-		const fileExtName = registerData.image.imageFile.name.split('.')[1];
+		const fileName = registerResult.result.uuid;
+		const fileExtName = registerData.image.imageFile.name.split('.').reverse()[0];
+
+		// console.log(fileName, fileExtName);
 		const formData = new FormData();
 
 		formData.append('img', registerData.image.imageFile, `${fileName}.${fileExtName}`);
 
 		yield call(sendUserImgRequest, formData);
+		// console.log('goNext2');
 	}
-
-	const registerResult: IRegisterUser = yield call(registerRequest, registerData);
 
 	propFunction({ goNext: true, registerResult });
 	yield put(registerReset());

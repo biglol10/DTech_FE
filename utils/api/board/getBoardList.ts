@@ -1,15 +1,13 @@
 import axios from 'axios';
 
-const techListRequest = async (props: any) => {
-	const techListResult = await axios
-		.post('http://localhost:3066/api/auth/getTechList')
+const boardListRequest = async (props: any) => {
+	const boardListResult = await axios
+		.post('http://localhost:3066/api/board/getBoardList')
 		.then((res: any) => {
 			if (res.data.resultData.status === 'success') {
-				console.log('techListRequest');
-				console.log(res.data);
 				return {
 					result: res.data.resultData.status,
-					techList: res.data.resultData.queryResult,
+					boardList: res.data.resultData.queryResult,
 				};
 			} else {
 				return {
@@ -24,7 +22,7 @@ const techListRequest = async (props: any) => {
 			};
 		});
 
-	return techListResult;
+	return boardListResult;
 };
 
-export { techListRequest };
+export { boardListRequest };
