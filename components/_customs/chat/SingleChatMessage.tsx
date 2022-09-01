@@ -14,7 +14,6 @@ import Style from './SingleChatMessage.module.scss';
 
 interface ChatListExtends extends ChatList {
 	messageOwner: 'other' | 'mine';
-	bottomRef: any;
 	sentTime: string | null | undefined;
 	userName: string;
 }
@@ -24,7 +23,6 @@ const SingleChatMessage = ({
 	value,
 	imgList,
 	linkList,
-	bottomRef,
 	sentTime,
 	userName,
 }: ChatListExtends) => {
@@ -74,7 +72,7 @@ const SingleChatMessage = ({
 						<Avatar
 							labelSize="mini"
 							src={techImage['React']}
-							color="black"
+							fontColor="black"
 							content={userName}
 						/>
 					</Label>

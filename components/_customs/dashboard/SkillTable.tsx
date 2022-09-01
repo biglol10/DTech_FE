@@ -12,12 +12,18 @@ import { Table, Pagination } from 'semantic-ui-react';
 import { Avatar, AvatarGroup } from '@components/index';
 import Style from './SkillTable.module.scss';
 
-interface ITeamSkillData {
-	subject: string;
-	count: number;
+interface ITeamSkillCountArr {
+	SKILL_NM: string;
+	USER_NM: string;
+	USER_UID: string;
+	TEAM_CD: string;
+	TITLE: string;
+	IMG_URL: string;
+	SKILL_CNT: number;
 }
 
-const SkillTable = ({ teamSkillData }: { teamSkillData: ITeamSkillData[] }) => {
+const SkillTable = ({ teamSkillData }: { teamSkillData: ITeamSkillCountArr[] }) => {
+	console.log(teamSkillData);
 	const [activePage, setActivePage] = useState<number>(1);
 
 	const imageList = [
@@ -46,15 +52,15 @@ const SkillTable = ({ teamSkillData }: { teamSkillData: ITeamSkillData[] }) => {
 					{teamSkillData
 						.slice(pageSize * (activePage - 1), pageSize * activePage)
 						.map((item, idx) => {
-							const itemSubject = item.subject as keyof typeof techImage;
+							const itemSubject = item.SKILL_NM as keyof typeof techImage;
 
 							return (
-								<Table.Row key={`${item.subject}_${idx}`}>
+								<Table.Row key={`${item.USER_NM}_${idx}`}>
 									<Table.Cell>
 										<Avatar
 											labelSize="large"
 											src={techImage[itemSubject]}
-											color="black"
+											fontColor="black"
 											content={itemSubject}
 										/>
 									</Table.Cell>

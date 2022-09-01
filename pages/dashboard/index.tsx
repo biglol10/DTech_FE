@@ -28,9 +28,14 @@ import { toast } from 'react-toastify';
 
 import Style from './dashboard.module.scss';
 
-interface ITeamSkillData {
-	subject: string;
-	count: number;
+interface ITeamSkillCountArr {
+	SKILL_NM: string;
+	USER_NM: string;
+	USER_UID: string;
+	TEAM_CD: string;
+	TITLE: string;
+	IMG_URL: string;
+	SKILL_CNT: number;
 }
 
 interface ITeamSkillDashboard {
@@ -60,16 +65,16 @@ interface IUserDashboard {
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const Index = ({
-	teamSkillData,
 	aProp,
 	teamSkillDashboard,
 	userDashboard,
+	teamSkillCountArr,
 	userToken,
 }: {
-	teamSkillData: ITeamSkillData[];
 	aProp: string;
 	teamSkillDashboard: ITeamSkillDashboard[];
 	userDashboard: IUserDashboard[];
+	teamSkillCountArr: ITeamSkillCountArr[];
 	userToken: string;
 }) => {
 	const router = useRouter();
@@ -195,7 +200,7 @@ const Index = ({
 					<Bar options={options} data={data} />
 				</div>
 				<div className={Style['skillOverviewTable']}>
-					<SkillTable teamSkillData={teamSkillData} />
+					<SkillTable teamSkillData={teamSkillCountArr} />
 				</div>
 			</div>
 			<div className={Style['dashboardBottomMain']}>
@@ -308,17 +313,17 @@ export const getServerSideProps = async (context: any) => {
 		})
 		.catch((err) => {
 			return {
-				teamSkillData: null,
 				teamSkillDashboard: null,
+				teamSkillCountArr: [],
 				userDashboard: [],
 			};
 		});
 
 	return {
 		props: {
-			teamSkillData: axiosData.teamSkillData,
 			teamSkillDashboard: axiosData.teamSkillDashboard,
 			userDashboard: axiosData.userDashboard,
+			teamSkillCountArr: axiosData.teamSkillCountArr,
 			aProp: process.env.S3_URL,
 		},
 	};
