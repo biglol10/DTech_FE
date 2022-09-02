@@ -97,3 +97,40 @@
 !   @경로 : utils/types/commAndStoreTypes
 !   @설명 : 공통 컴포넌트를 제외한 컴포넌트들의 typescript 타입 모음
 ```
+
+```diff
+!   @경로 : utils/api/auth/register
+!   @설명 : 회원가입 관련 함수 모음
+```
+
+---
+
+> [함수명] => getTechListRequest.ts  
+> [parameter] => { }  
+> [기능] => 기술 리스트 return
+
+<br/>
+
+> [함수명] => idCheckRequest.ts  
+> [parameter] => {userId:string}  
+> [기능] => userId값이 존재하는지 확인
+
+<br/>
+
+> [함수명] => registerRequest.ts  
+> [parameter] => {userId:string, name:string, passwd:string, team:string, title:string, phonenum:string, detail : string, tech_list:string}  
+> [기능] => 회원가입 정보 등록
+
+<br/>
+
+> [함수명] => teamListRequest.ts  
+> [parameter] => {}  
+> [기능] => 팀 리스트 return
+
+<br/>
+
+> [함수명] => sendUserImgRequest.ts  
+> [parameter] => {formData}  
+> [기능] => 프로필 이미지 s3등록
+
+<br/><br/>

@@ -37,8 +37,8 @@ const Index = () => {
 					<BoardCard
 						key={card.BOARD_CD}
 						id={card.BOARD_CD}
-						title={card.TITLE}
-						content={card.CONTENT}
+						title={card.BOARD_TITLE}
+						content={card.BOARD_CONTENT}
 						likeCnt={card.LIKES_CNT}
 						commentCnt={card.COMMENTS_CNT}
 						images={card.IMG_LIST}

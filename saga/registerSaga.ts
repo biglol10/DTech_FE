@@ -76,7 +76,7 @@ const teamListFunction = function* ({ setTeamList }: any) {
 	if (teamListResult.result === 'success') {
 		const tempArr = teamListResult.teamList;
 		const newTempArr = tempArr.map((team: any) => {
-			return { key: team.TEAM_CD, value: team.TEAM_CD, text: team.NAME };
+			return { key: team.TEAM_CD, value: team.TEAM_CD, text: team.TEAM_NM };
 		});
 
 		setTeamList(newTempArr);
@@ -92,7 +92,7 @@ const techListFunction = function* ({ setTechSelectedList }: any) {
 	if (techListResult.result === 'success') {
 		const tempArr = techListResult.techList;
 		const newTempArr = tempArr.map((tech: any) => {
-			return { key: tech.TECH_CD, value: false, name: tech.NAME };
+			return { key: tech.TECH_CD, value: false, name: tech.TECH_NM };
 		});
 
 		setTechSelectedList(newTempArr);
@@ -256,13 +256,24 @@ const validStep3Function = function* ({
 	yield put(registerStep3({ userDetailValue }));
 };
 const registerUserFunction = function* ({ registerData, propFunction }: any) {
-	const registerResult: IRegisterUser = yield call(registerRequest, registerData);
+	const postData = {
+		user_id: registerData.idInputValue.idInputValue,
+		name: registerData.nameInputValue.nameInputValue,
+		passwd: registerData.pwInputValue.pwInputValue,
+		team: registerData.teamSelectValue.teamSelectValue,
+		title: registerData.titleSelectValue.titleSelectValue,
+		phonenum: registerData.phoneNumValue.phoneNumValue,
+		detail: registerData.userDetailValue.userDetailValue,
+		tech_list: registerData.techSelectValue
+			.filter((tech: any) => tech.value === true)
+			.map((tech: any) => tech.key),
+	};
+	const registerResult: IRegisterUser = yield call(registerRequest, postData);
 
 	if (registerData.image.imageFile) {
 		const fileName = registerResult.result.uuid;
 		const fileExtName = registerData.image.imageFile.name.split('.').reverse()[0];
 
-		// console.log(fileName, fileExtName);
 		const formData = new FormData();
 
 		formData.append('img', registerData.image.imageFile, `${fileName}.${fileExtName}`);
