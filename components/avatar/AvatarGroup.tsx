@@ -76,27 +76,27 @@ const AvatarGroup = ({
 				onMouseLeave={() => setShowTooltip(false)}
 			>
 				{imageList.slice(0, 5).map((imgSrc, idx) => (
-					<SemanticUIImage
-						key={`avatarUserImg_${idx}`}
-						avatar={true}
-						size={'mini'}
-						style={{
-							width: 'auto',
-							fill: lodash.sample(avatarColor),
-							zIndex: `${imageList.length > 5 ? 5 : imageList.length - idx}`,
-						}}
-						className={Style['userImage']}
-					>
-						<SVGR />
-					</SemanticUIImage>
-					// <img
+					// <SemanticUIImage
 					// 	key={`avatarUserImg_${idx}`}
-					// 	src={imgSrc}
-					// 	className={Style['userImage']}
+					// 	avatar={true}
+					// 	size={'mini'}
 					// 	style={{
+					// 		width: 'auto',
+					// 		fill: lodash.sample(avatarColor),
 					// 		zIndex: `${imageList.length > 5 ? 5 : imageList.length - idx}`,
 					// 	}}
-					// />
+					// 	className={Style['userImage']}
+					// >
+					// 	<SVGR />
+					// </SemanticUIImage>
+					<img
+						key={`avatarUserImg_${idx}`}
+						src={imgSrc}
+						className={Style['userImage']}
+						style={{
+							zIndex: `${imageList.length > 5 ? 5 : imageList.length - idx}`,
+						}}
+					/>
 				))}
 			</div>
 
