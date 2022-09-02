@@ -6,24 +6,27 @@
  * 1      변지욱     2022-07-27   feature/JW/dashboard       최초작성
  ********************************************************************************************/
 
-import { useState } from 'react';
-import { techImage } from '@utils/constants/techs';
+import React, { useState } from 'react';
+import { techImage } from '@utils/constants/imageConstants';
 import { Table, Pagination } from 'semantic-ui-react';
 import { Avatar, AvatarGroup } from '@components/index';
 import Style from './SkillTable.module.scss';
 
-interface ITeamSkillCountArr {
-	SKILL_NM: string;
-	USER_NM: string;
-	USER_UID: string;
-	TEAM_CD: string;
-	TITLE: string;
-	IMG_URL: string;
-	SKILL_CNT: number;
+interface ITeamSkillCountObj {
+	[val: string]: {
+		SKILL_NM: string;
+		SKILL_CNT: number;
+		USER_INFO: {
+			USER_NM: string[];
+			USER_UID: string[];
+			IMG_URL: string[];
+			TEAM_CD: string[];
+			USER_TITLE: string[];
+		};
+	};
 }
 
-const SkillTable = ({ teamSkillData }: { teamSkillData: ITeamSkillCountArr[] }) => {
-	console.log(teamSkillData);
+const SkillTable = ({ teamSkillData }: { teamSkillData: ITeamSkillCountObj }) => {
 	const [activePage, setActivePage] = useState<number>(1);
 
 	const imageList = [
@@ -49,23 +52,35 @@ const SkillTable = ({ teamSkillData }: { teamSkillData: ITeamSkillCountArr[] }) 
 				</Table.Header>
 
 				<Table.Body className={Style['skillTableBody']}>
-					{teamSkillData
+					{Object.keys(teamSkillData)
 						.slice(pageSize * (activePage - 1), pageSize * activePage)
 						.map((item, idx) => {
-							const itemSubject = item.SKILL_NM as keyof typeof techImage;
+							const tempSkillObj = teamSkillData[item];
+							// const itemSubject = item.SKILL_NM as keyof typeof techImage;
 
 							return (
-								<Table.Row key={`${item.USER_NM}_${idx}`}>
+								<Table.Row key={`${tempSkillObj.SKILL_NM}_${idx}`}>
 									<Table.Cell>
 										<Avatar
 											labelSize="large"
-											src={techImage[itemSubject]}
+											src={
+												techImage[
+													tempSkillObj.SKILL_NM.replace(
+														'.',
+														'',
+													) as keyof typeof techImage
+												]
+											}
 											fontColor="black"
-											content={itemSubject}
+											content={tempSkillObj.SKILL_NM}
 										/>
 									</Table.Cell>
 									<Table.Cell>
-										<AvatarGroup imageList={imageList} divHeight={20} />
+										<AvatarGroup
+											imageList={imageList}
+											divHeight={20}
+											totalCount={tempSkillObj.SKILL_CNT}
+										/>
 									</Table.Cell>
 								</Table.Row>
 							);
@@ -79,7 +94,7 @@ const SkillTable = ({ teamSkillData }: { teamSkillData: ITeamSkillCountArr[] }) 
 					lastItem={null}
 					pointing
 					secondary
-					totalPages={Math.floor(teamSkillData.length / pageSize) + 1}
+					totalPages={Math.floor(Object.keys(teamSkillData).length / pageSize) + 1}
 					onPageChange={(event, data) => {
 						setActivePage(data.activePage as number);
 					}}

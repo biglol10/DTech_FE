@@ -1,7 +1,7 @@
 /* eslint-disable no-control-regex */
 import { useRef, useState } from 'react';
 import { Avatar, Button } from '@components/index';
-import { techImage } from '@utils/constants/techs';
+import { techImage } from '@utils/constants/imageConstants';
 import { Label } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import { useModal } from '@utils/hooks/customHooks';

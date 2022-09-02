@@ -27,7 +27,7 @@ const Avatar = ({
 	labelSize = 'big',
 	svgColor = '',
 }: IAvatar) => {
-	const imageSrc =
+	const imageSrc: string =
 		src || `${process.env.NODE_ENV === 'production' ? '/dtech' : ''}/images/no_profile.png`;
 
 	const avatarColor = [

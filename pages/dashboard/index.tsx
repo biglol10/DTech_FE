@@ -21,21 +21,26 @@ import {
 	Legend,
 } from 'chart.js';
 import { Label, InputLayout, InputDropdown, InputSearch, SharpDivider } from '@components/index';
-import { techImage } from '@utils/constants/techs';
+import { techImage } from '@utils/constants/imageConstants';
 import { SkillTable, PersonCard, MainLayoutTemplate } from '@components/customs';
 import CountUp from 'react-countup';
 import { toast } from 'react-toastify';
+import _ from 'lodash';
 
 import Style from './dashboard.module.scss';
 
-interface ITeamSkillCountArr {
-	SKILL_NM: string;
-	USER_NM: string;
-	USER_UID: string;
-	TEAM_CD: string;
-	TITLE: string;
-	IMG_URL: string;
-	SKILL_CNT: number;
+interface ITeamSkillCountObj {
+	[val: string]: {
+		SKILL_NM: string;
+		SKILL_CNT: number;
+		USER_INFO: {
+			USER_NM: string[];
+			USER_UID: string[];
+			IMG_URL: string[];
+			TEAM_CD: string[];
+			USER_TITLE: string[];
+		};
+	};
 }
 
 interface ITeamSkillDashboard {
@@ -68,17 +73,20 @@ const Index = ({
 	aProp,
 	teamSkillDashboard,
 	userDashboard,
-	teamSkillCountArr,
+	teamSkillCountObj,
 	userToken,
 }: {
 	aProp: string;
 	teamSkillDashboard: ITeamSkillDashboard[];
 	userDashboard: IUserDashboard[];
-	teamSkillCountArr: ITeamSkillCountArr[];
+	teamSkillCountObj: ITeamSkillCountObj;
 	userToken: string;
 }) => {
 	const router = useRouter();
 	const [inputLoading, setInputLoading] = useState(false);
+
+	console.log('teamSkillCountObj is');
+	console.log(teamSkillCountObj);
 
 	const data = {
 		labels: teamSkillDashboard.map((item) => item.NAME),
@@ -200,7 +208,7 @@ const Index = ({
 					<Bar options={options} data={data} />
 				</div>
 				<div className={Style['skillOverviewTable']}>
-					<SkillTable teamSkillData={teamSkillCountArr} />
+					<SkillTable teamSkillData={teamSkillCountObj} />
 				</div>
 			</div>
 			<div className={Style['dashboardBottomMain']}>
@@ -314,16 +322,45 @@ export const getServerSideProps = async (context: any) => {
 		.catch((err) => {
 			return {
 				teamSkillDashboard: null,
-				teamSkillCountArr: [],
+				teamSkillCountObj: {},
 				userDashboard: [],
 			};
 		});
+
+	const teamSkillCountObj: any = {};
+
+	if (!_.isEmpty(axiosData.teamSkillCountObj)) {
+		const tempData: any = axiosData.teamSkillCountObj;
+
+		Object.keys(tempData).map((item, idx) => {
+			const tempSkillObj = tempData[item];
+
+			teamSkillCountObj[item] = {
+				SKILL_NM: tempSkillObj[0].SKILL_NM,
+				SKILL_CNT: tempSkillObj[0].SKILL_CNT,
+				USER_INFO: tempSkillObj.reduce((previousVal: object[], currentVal: any) => {
+					const obj = {
+						USER_NM: currentVal.USER_NM,
+						USER_UID: currentVal.USER_UID,
+						IMG_URL: currentVal.IMG_URL,
+						TEAM_CD: currentVal.TEAM_CD,
+						USER_TITLE: currentVal.TITLE,
+					};
+
+					previousVal.push(obj);
+					return previousVal;
+				}, []),
+			};
+
+			return null;
+		});
+	}
 
 	return {
 		props: {
 			teamSkillDashboard: axiosData.teamSkillDashboard,
 			userDashboard: axiosData.userDashboard,
-			teamSkillCountArr: axiosData.teamSkillCountArr,
+			teamSkillCountObj,
 			aProp: process.env.S3_URL,
 		},
 	};
