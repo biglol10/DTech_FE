@@ -48,6 +48,7 @@ return (
 
 | props                    | type              | defualt value | desc                                                    |
 | ------------------------ | ----------------- | ------------- | ------------------------------------------------------- |
+| ref                      | useRef            | null          | Quill ref                                               |
 | quillMinHeight           | number            | 80            | quill editor 최소 높이                                  |
 | quillMaxHeight           | number            |               | quill editor 최대 높이                                  |
 | returnQuillWrapperHeight | number            |               | quill 내용이 변경되었을 때 받아오는 quill editor height |

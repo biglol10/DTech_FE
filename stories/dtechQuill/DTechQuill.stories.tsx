@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic';
+import { useRef } from 'react';
 import DTechQuillStorybook from '../../components/quill/DTechQuillStorybook';
 
 import { Doc } from './DTechQuill.stories.mdx';
@@ -35,11 +36,16 @@ export const QuillSample = (args: any) => {
 		{ ssr: false },
 	);
 
+	const quillRef = useRef<any>(null);
+
 	return (
 		<DTechQuillStorybook
+			ref={quillRef}
 			quillMinHeight={args.quillMinHeight}
 			quillMaxHeight={args.quillMaxHeight}
-			handleSubmit={(obj: any) => null}
+			handleSubmit={(obj: any) => {
+				console.log(console.log(quillRef.current));
+			}}
 			QuillSSR={ReactQuill}
 			enterSubmit={args.enterSubmit}
 		/>

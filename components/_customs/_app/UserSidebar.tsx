@@ -27,6 +27,8 @@ const UserSidebar = ({
 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
 
+	console.log(usersStatusArr);
+
 	return (
 		<div className={cx('sidebarChat', `${iconLeft ? 'showSidebar' : 'hideSidebar'}`)}>
 			{iconLeft && (
@@ -72,7 +74,7 @@ const UserSidebar = ({
 
 							<div className={Style['usersOnline']}>
 								{usersStatusArr
-									.filter((obj) => obj.NAME.includes(userSearch || ''))
+									.filter((obj) => obj.USER_NM.includes(userSearch || ''))
 									.map(
 										(item, idx: number) =>
 											item.USER_ID !== authStore.userId &&
@@ -81,9 +83,9 @@ const UserSidebar = ({
 													key={`online_${idx}`}
 													onlineStatus="ONLINE"
 													userUID={item.USER_UID}
-													userName={item.NAME}
-													userTitle={item.TITLE}
-													userImg={item.IMG_URL}
+													userName={item.USER_NM}
+													userTitle={item.USER_TITLE}
+													userImg={item.USER_IMG_URL}
 												/>
 											),
 									)}
@@ -93,7 +95,7 @@ const UserSidebar = ({
 
 							<div className={Style['usersOffline']}>
 								{usersStatusArr
-									.filter((obj) => obj.NAME.includes(userSearch || ''))
+									.filter((obj) => obj.USER_NM.includes(userSearch || ''))
 									.map(
 										(item, idx) =>
 											item.USER_ID !== authStore.userId &&
@@ -102,9 +104,9 @@ const UserSidebar = ({
 													key={`offline_${idx}`}
 													onlineStatus="OFFLINE"
 													userUID={item.USER_UID}
-													userName={item.NAME}
-													userTitle={item.TITLE}
-													userImg={item.IMG_URL}
+													userName={item.USER_NM}
+													userTitle={item.USER_TITLE}
+													userImg={item.USER_IMG_URL}
 												/>
 											),
 									)}

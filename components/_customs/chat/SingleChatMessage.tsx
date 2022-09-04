@@ -1,7 +1,7 @@
 /* eslint-disable no-control-regex */
 import { useRef, useState } from 'react';
 import { Avatar, Button } from '@components/index';
-import { techImage } from '@utils/constants/techs';
+import { techImage } from '@utils/constants/imageConstants';
 import { Label } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import { useModal } from '@utils/hooks/customHooks';
@@ -14,7 +14,6 @@ import Style from './SingleChatMessage.module.scss';
 
 interface ChatListExtends extends ChatList {
 	messageOwner: 'other' | 'mine';
-	bottomRef: any;
 	sentTime: string | null | undefined;
 	userName: string;
 }
@@ -24,7 +23,6 @@ const SingleChatMessage = ({
 	value,
 	imgList,
 	linkList,
-	bottomRef,
 	sentTime,
 	userName,
 }: ChatListExtends) => {
@@ -74,7 +72,7 @@ const SingleChatMessage = ({
 						<Avatar
 							labelSize="mini"
 							src={techImage['React']}
-							color="black"
+							fontColor="black"
 							content={userName}
 						/>
 					</Label>

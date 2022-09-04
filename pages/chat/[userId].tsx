@@ -5,7 +5,7 @@
  *-------------------------------------------------------------------------------------------
  * 1      변지욱     2022-08-25   feature/JW/chat        최초작성
  * 2      변지욱     2022-08-29   feature/JW/chat        유저명 표시하도록 변경, socket에서 직접 채팅리스트 가져오도록 변경
- * 3      변지욱     2022-08-29   feature/JW/layoutchat  최초작성
+ * 3      변지욱     2022-08-29   feature/JW/layoutchat  최초 로드 시엔 변경중입니다 텍스트 안 보이게 변경
  ********************************************************************************************/
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -33,8 +33,8 @@ interface IChatList {
 	LINK_LIST: string[];
 	SENT_DATETIME: string;
 	USER_UID: string;
-	NAME: string;
-	TITLE: string;
+	USER_NM: string;
+	USER_TITLE: string;
 	CONVERSATION_ID: string;
 }
 
@@ -81,6 +81,7 @@ const UserChat = ({
 
 	const bottomRef = useRef<any>(null);
 	const firstLoadRef = useRef<boolean>(true);
+	const quillRef = useRef<any>(null);
 
 	const { userId: userUID } = queryObj; // UID in here
 
@@ -236,8 +237,8 @@ const UserChat = ({
 					)}
 					<Avatar
 						id="userSettingArea"
-						color="white"
-						content={chatUser ? `${chatUser.NAME} (${chatUser.TITLE})` : ''}
+						fontColor="white"
+						content={chatUser ? `${chatUser.USER_NM} (${chatUser.USER_TITLE})` : ''}
 						imageSize="mini"
 						labelSize="mini"
 					/>
@@ -281,7 +282,6 @@ const UserChat = ({
 																					? 'other'
 																					: 'mine'
 																			}
-																			bottomRef={bottomRef}
 																			linkList={
 																				item3.LINK_LIST
 																			}
@@ -294,7 +294,7 @@ const UserChat = ({
 																					? item3.SENT_DATETIME
 																					: null
 																			}
-																			userName={`${item3.NAME} (${item3.TITLE})`}
+																			userName={`${item3.USER_NM} (${item3.USER_TITLE})`}
 																		/>
 																	);
 																},
@@ -313,12 +313,14 @@ const UserChat = ({
 					)}
 					<div className={Style['quillWrapperDiv']}>
 						<DTechQuill
+							ref={quillRef}
 							quillMaxHeight={250}
 							returnQuillWrapperHeight={(heightValue: number) => {
 								setQuillWrapperHeight(heightValue);
 							}}
 							handleSubmit={(content: ChatList) => {
 								// 이미지 S3 되면 올리고 setChatList 호출
+								console.log(quillRef.current);
 								sendMessageFunction(content);
 							}}
 							QuillSSR={ReactQuill}
