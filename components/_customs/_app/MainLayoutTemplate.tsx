@@ -240,4 +240,4 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	);
 };
 
-export default MainLayoutTemplate;
+export default React.memo(MainLayoutTemplate);

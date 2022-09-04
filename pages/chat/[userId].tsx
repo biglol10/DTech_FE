@@ -81,6 +81,7 @@ const UserChat = ({
 
 	const bottomRef = useRef<any>(null);
 	const firstLoadRef = useRef<boolean>(true);
+	const quillRef = useRef<any>(null);
 
 	const { userId: userUID } = queryObj; // UID in here
 
@@ -236,7 +237,7 @@ const UserChat = ({
 					)}
 					<Avatar
 						id="userSettingArea"
-						color="white"
+						fontColor="white"
 						content={chatUser ? `${chatUser.NAME} (${chatUser.TITLE})` : ''}
 						imageSize="mini"
 						labelSize="mini"
@@ -281,7 +282,6 @@ const UserChat = ({
 																					? 'other'
 																					: 'mine'
 																			}
-																			bottomRef={bottomRef}
 																			linkList={
 																				item3.LINK_LIST
 																			}
@@ -313,12 +313,14 @@ const UserChat = ({
 					)}
 					<div className={Style['quillWrapperDiv']}>
 						<DTechQuill
+							ref={quillRef}
 							quillMaxHeight={250}
 							returnQuillWrapperHeight={(heightValue: number) => {
 								setQuillWrapperHeight(heightValue);
 							}}
 							handleSubmit={(content: ChatList) => {
 								// 이미지 S3 되면 올리고 setChatList 호출
+								console.log(quillRef.current);
 								sendMessageFunction(content);
 							}}
 							QuillSSR={ReactQuill}
