@@ -32,10 +32,10 @@ export interface IToastState {
 export interface IUsersStatusArr {
 	USER_UID: string;
 	USER_ID: string;
-	NAME: string;
-	TITLE: string;
-	DETAIL: string;
-	IMG_URL: string;
+	USER_NM: string;
+	USER_TITLE: string;
+	USER_DETAIL: string;
+	USER_IMG_URL: string;
 	ONLINE_STATUS: 'ONLINE' | 'OFFLINE';
 }
 

@@ -44,24 +44,23 @@ interface ITeamSkillCountObj {
 }
 
 interface ITeamSkillDashboard {
-	COUNT: number;
+	TECH_CNT: number;
 	DETAIL: string;
-	NAME: string;
+	TECH_NM: string;
 	PAGE_URL: string;
 	TECH_CD: string;
 }
 
 interface IUserDashboard {
-	DETAIL: string | null;
-	DOMAIN: string | null;
-	EMAIL: string | null;
+	USER_DETAIL: string | null;
+	USER_DOMAIN: string | null;
 	GITHUB_URL: string | null;
-	IMG_URL: string | null;
-	PHONENUM: string | null;
+	USER_IMG_URL: string | null;
+	USER_PHONENUM: string | null;
 	PRJ_DETAIL: string | null;
-	TEAM_CD: string;
+	USER_TEAM_CD: string;
 	TECH_ARR: string[];
-	TITLE: string;
+	USER_TITLE: string;
 	USER_ID: string;
 	USER_NAME: string;
 	USER_UID: string;
@@ -85,15 +84,15 @@ const Index = ({
 	const router = useRouter();
 	const [inputLoading, setInputLoading] = useState(false);
 
-	console.log('teamSkillCountObj is');
-	console.log(teamSkillCountObj);
+	console.log('userDashboard is');
+	console.log(userDashboard);
 
 	const data = {
-		labels: teamSkillDashboard.map((item) => item.NAME),
+		labels: teamSkillDashboard.map((item) => item.TECH_NM),
 		datasets: [
 			{
 				label: 'asdf',
-				data: teamSkillDashboard.map((item) => item.COUNT),
+				data: teamSkillDashboard.map((item) => item.TECH_CNT),
 				backgroundColor: [
 					'rgba(255, 99, 132, 0.2)',
 					'rgba(54, 162, 235, 0.2)',
@@ -187,7 +186,7 @@ const Index = ({
 	useEffect(() => {
 		setUserListData(
 			searchCondition.rank
-				? tempArr.current.filter((item) => item.TITLE === searchCondition.rank)
+				? tempArr.current.filter((item) => item.USER_TITLE === searchCondition.rank)
 				: tempArr.current,
 		);
 	}, [searchCondition.rank]);
@@ -293,12 +292,12 @@ const Index = ({
 							<PersonCard
 								key={`personCard_${singleUser.USER_ID}`}
 								username={singleUser.USER_NAME}
-								profileUrl={singleUser.IMG_URL}
-								rank={singleUser.TITLE}
+								profileUrl={singleUser.USER_IMG_URL}
+								rank={singleUser.USER_TITLE}
 								skills={singleUser.TECH_ARR.join()}
-								domains={singleUser.DOMAIN || ''}
+								domains={singleUser.USER_DOMAIN || ''}
 								githubUrl={singleUser.GITHUB_URL || ''}
-								detail={singleUser.DETAIL || ''}
+								detail={singleUser.USER_DETAIL || ''}
 								userUID={singleUser.USER_UID}
 							/>
 						);
@@ -336,15 +335,15 @@ export const getServerSideProps = async (context: any) => {
 			const tempSkillObj = tempData[item];
 
 			teamSkillCountObj[item] = {
-				SKILL_NM: tempSkillObj[0].SKILL_NM,
-				SKILL_CNT: tempSkillObj[0].SKILL_CNT,
+				SKILL_NM: tempSkillObj[0].TECH_NM,
+				SKILL_CNT: tempSkillObj[0].TECH_CNT,
 				USER_INFO: tempSkillObj.reduce((previousVal: object[], currentVal: any) => {
 					const obj = {
 						USER_NM: currentVal.USER_NM,
 						USER_UID: currentVal.USER_UID,
-						IMG_URL: currentVal.IMG_URL,
-						TEAM_CD: currentVal.TEAM_CD,
-						USER_TITLE: currentVal.TITLE,
+						IMG_URL: currentVal.USER_IMG_URL,
+						TEAM_CD: currentVal.USER_TEAM_CD,
+						USER_TITLE: currentVal.USER_TITLE,
 					};
 
 					previousVal.push(obj);

@@ -33,8 +33,8 @@ interface IChatList {
 	LINK_LIST: string[];
 	SENT_DATETIME: string;
 	USER_UID: string;
-	NAME: string;
-	TITLE: string;
+	USER_NM: string;
+	USER_TITLE: string;
 	CONVERSATION_ID: string;
 }
 
@@ -238,7 +238,7 @@ const UserChat = ({
 					<Avatar
 						id="userSettingArea"
 						fontColor="white"
-						content={chatUser ? `${chatUser.NAME} (${chatUser.TITLE})` : ''}
+						content={chatUser ? `${chatUser.USER_NM} (${chatUser.USER_TITLE})` : ''}
 						imageSize="mini"
 						labelSize="mini"
 					/>
@@ -294,7 +294,7 @@ const UserChat = ({
 																					? item3.SENT_DATETIME
 																					: null
 																			}
-																			userName={`${item3.NAME} (${item3.TITLE})`}
+																			userName={`${item3.USER_NM} (${item3.USER_TITLE})`}
 																		/>
 																	);
 																},
