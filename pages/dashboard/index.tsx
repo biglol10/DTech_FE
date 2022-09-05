@@ -242,7 +242,7 @@ const Index = ({
 						/>
 					</InputLayout>
 					<ul>
-						{/* {['사원', '선임', '책임', '총괄'].map((stringItem, idx) => (
+						{['사원', '선임', '책임', '총괄'].map((stringItem, idx) => (
 							<li
 								key={`${stringItem}_${idx}`}
 								className={
@@ -257,51 +257,7 @@ const Index = ({
 							>
 								{stringItem}
 							</li>
-						))} */}
-						<li
-							className={searchCondition.rank === '사원' ? Style['active'] : ''}
-							onClick={() =>
-								setSearchCondition((prev) => ({
-									...prev,
-									rank: `${prev.rank === '사원' ? '' : '사원'}`,
-								}))
-							}
-						>
-							사원
-						</li>
-						<li
-							className={searchCondition.rank === '선임' ? Style['active'] : ''}
-							onClick={() =>
-								setSearchCondition((prev) => ({
-									...prev,
-									rank: `${prev.rank === '선임' ? '' : '선임'}`,
-								}))
-							}
-						>
-							선임
-						</li>
-						<li
-							className={searchCondition.rank === '책임' ? Style['active'] : ''}
-							onClick={() =>
-								setSearchCondition((prev) => ({
-									...prev,
-									rank: `${prev.rank === '책임' ? '' : '책임'}`,
-								}))
-							}
-						>
-							책임
-						</li>
-						<li
-							className={searchCondition.rank === '총괄' ? Style['active'] : ''}
-							onClick={() =>
-								setSearchCondition((prev) => ({
-									...prev,
-									rank: `${prev.rank === '총괄' ? '' : '총괄'}`,
-								}))
-							}
-						>
-							총괄
-						</li>
+						))}
 					</ul>
 					<div>
 						<h4>
