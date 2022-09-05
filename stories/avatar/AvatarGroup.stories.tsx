@@ -44,6 +44,8 @@ export const AvatarGroupSample = (args: any) => {
 			imageList={imageList}
 			divHeight={args.divHeight}
 			showCount={args.showCount}
+			usersString={'변지욱(선임), 장보영(선임), 이지은(선임)'}
+			totalCount={5}
 		/>
 	);
 };

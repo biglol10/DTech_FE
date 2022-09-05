@@ -34,12 +34,12 @@ interface ITeamSkillCountObj {
 		SKILL_NM: string;
 		SKILL_CNT: number;
 		USER_INFO: {
-			USER_NM: string[];
-			USER_UID: string[];
-			IMG_URL: string[];
-			TEAM_CD: string[];
-			USER_TITLE: string[];
-		};
+			USER_NM: string;
+			USER_UID: string;
+			IMG_URL: string;
+			TEAM_CD: string;
+			USER_TITLE: string;
+		}[];
 	};
 }
 
@@ -313,8 +313,6 @@ export const getServerSideProps = async (context: any) => {
 			headers: { Authorization: token },
 		})
 		.then((response) => {
-			console.log('responsedata is ');
-			console.log(response.data);
 			return response.data;
 		})
 		.catch((err) => {
