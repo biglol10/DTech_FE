@@ -84,9 +84,6 @@ const Index = ({
 	const router = useRouter();
 	const [inputLoading, setInputLoading] = useState(false);
 
-	console.log('userDashboard is');
-	console.log(userDashboard);
-
 	const data = {
 		labels: teamSkillDashboard.map((item) => item.TECH_NM),
 		datasets: [
@@ -316,6 +313,8 @@ export const getServerSideProps = async (context: any) => {
 			headers: { Authorization: token },
 		})
 		.then((response) => {
+			console.log('responsedata is ');
+			console.log(response.data);
 			return response.data;
 		})
 		.catch((err) => {
@@ -342,7 +341,7 @@ export const getServerSideProps = async (context: any) => {
 						USER_NM: currentVal.USER_NM,
 						USER_UID: currentVal.USER_UID,
 						IMG_URL: currentVal.USER_IMG_URL,
-						TEAM_CD: currentVal.USER_TEAM_CD,
+						TEAM_CD: currentVal.TEAM_CD,
 						USER_TITLE: currentVal.USER_TITLE,
 					};
 

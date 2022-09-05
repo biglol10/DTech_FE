@@ -15,6 +15,8 @@ const fireTokenRequest = async (token: string) => {
 			},
 		)
 		.then((response) => {
+			console.log('responseData in fireTokenRequest is ');
+			console.log(response.data);
 			return response.data;
 		})
 		.catch((err) => {
@@ -35,6 +37,8 @@ const fireLoginRequest = async (props: authObjParamSetting) => {
 			},
 		})
 		.then(({ data: responseData }) => {
+			console.log('responseData in loginResult is ');
+			console.log(responseData);
 			if (responseData.result === 'success') {
 				return {
 					userName: responseData.name,
