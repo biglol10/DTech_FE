@@ -1,6 +1,10 @@
 import axios from 'axios';
 
-const idCheckRequest = async (props: any) => {
+interface IUserId {
+	userId: string;
+}
+
+const idCheckRequest = async (props: IUserId) => {
 	const idCheckResult = await axios
 		.post('http://localhost:3066/api/auth/idCheck', props)
 		.then((res: any) => {

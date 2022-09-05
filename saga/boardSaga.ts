@@ -48,11 +48,14 @@ const techListFunction = function* ({ setTechList }: any) {
 	if (techListResult.result === 'success') {
 		const tempArr = techListResult.techList;
 		const newTempArr = tempArr.map((tech: any) => {
-			return { key: tech.TECH_CD, value: tech.TECH_CD, name: tech.NAME, text: tech.NAME };
+			return {
+				key: tech.TECH_CD,
+				value: tech.TECH_CD,
+				name: tech.TECH_NM,
+				text: tech.TECH_NM,
+			};
 		});
 
-		console.log('BOTEMP');
-		console.log(newTempArr);
 		setTechList(newTempArr);
 	} else {
 		console.error(techListResult.errMessage);
@@ -80,7 +83,7 @@ const submitBoardFunction = function* ({ content, uuid, selectedTech, boardTitle
 			);
 		}
 
-		formData.append('img', `{boardId:${submitBoardResult.resultData.BOARD_CD}}`);
+		formData.append('dir', `{boardId:${submitBoardResult.resultData.BOARD_CD}}`);
 
 		yield call(sendBoardImgRequest, formData);
 	} else {
