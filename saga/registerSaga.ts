@@ -125,7 +125,7 @@ const validStep1Function = function* ({
 
 	if (idInputValue.idConfirm === false) {
 		idInputError = true;
-		idInputErrMsg = '중복확인을 해주세요.';
+		idInputErrMsg = '중복확인을 해주세요. ';
 		isReject = true;
 	}
 
