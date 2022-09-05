@@ -74,11 +74,7 @@ const SkillTable = ({ teamSkillData }: { teamSkillData: ITeamSkillCountObj }) =>
 									if (oneUser.IMG_URL) {
 										return oneUser.IMG_URL;
 									} else {
-										return `${
-											process.env.NODE_ENV === 'production' ? 'dtech' : ''
-										}/images/AvatarBaseImage/${generateAvatarImage(
-											oneUser.USER_UID,
-										)}`;
+										return `${generateAvatarImage(oneUser.USER_UID)}`;
 									}
 								},
 							);

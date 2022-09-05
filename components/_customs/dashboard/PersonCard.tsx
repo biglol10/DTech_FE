@@ -10,6 +10,8 @@ import { Avatar } from '@components/index';
 import { useState } from 'react';
 import { Icon } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
+import { generateAvatarImage } from '@utils/appRelated/helperFunctions';
+
 import Style from './PersonCard.module.scss';
 
 interface PersonDefail {
@@ -39,7 +41,11 @@ const PersonCard = ({
 	return (
 		<div>
 			<div className={Style['userAvatarArea']} onClick={() => setPopupView(!popupView)}>
-				<Avatar content={username} src={profileUrl} imageSize={'large'} />
+				<Avatar
+					content={username}
+					src={profileUrl || generateAvatarImage(userUID)}
+					imageSize={'mini'}
+				/>
 				{popupView && (
 					<div className={Style['userClickPopup']}>
 						<div onClick={() => alert('visit profile')}>
