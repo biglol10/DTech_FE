@@ -31,7 +31,7 @@ const Submit = () => {
 		dispatch({
 			type: 'SUBMIT_BOARD',
 			content,
-			uuid,
+			uuid: '14be0513564973af12c0',
 			selectedTech,
 			boardTitle,
 		});
@@ -98,7 +98,6 @@ const Submit = () => {
 							// console.log('handleSubmit');
 							// console.log(content);
 							submitBoard(content);
-							console.log('TEMP : 등록되었습니다.');
 						}}
 					/>
 

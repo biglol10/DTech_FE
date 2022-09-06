@@ -39,7 +39,7 @@ const boardListFunction = function* ({ setBoardList }: any) {
 };
 
 const boardLikeFunction = function* ({ id, userUID, like }: any) {
-	console.log(id, userUID, like);
+	// console.log(id, userUID, like);
 	yield call(boardLikeRequest, { id, userUID, like });
 };
 
@@ -82,6 +82,8 @@ const submitBoardFunction = function* ({ content, uuid, selectedTech, boardTitle
 		content: content.value,
 	};
 
+	// console.log(jsonTemp);
+
 	formData.append('postData', JSON.stringify(jsonTemp));
 
 	for (let i = 0; i < content.imgList.length; i++) {
@@ -97,6 +99,16 @@ const submitBoardFunction = function* ({ content, uuid, selectedTech, boardTitle
 	yield call(sendBoardImgRequest, formData);
 
 	// if (submitBoardResult.result === 'success') {
+	// 	const jsonTemp: any = {
+	// 		type: 'BOARD_SUBMIT',
+	// 		title: boardTitle,
+	// 		uuid,
+	// 		tech: selectedTech,
+	// 		content: content.value,
+	// 	};
+
+	// 	formData.append('postData', JSON.stringify(jsonTemp));
+
 	// 	for (let i = 0; i < content.imgList.length; i++) {
 	// 		formData.append(
 	// 			'img',
@@ -105,14 +117,12 @@ const submitBoardFunction = function* ({ content, uuid, selectedTech, boardTitle
 	// 		);
 	// 	}
 
-	// 	formData.append('img', `{boardId:${submitBoardResult.resultData.BOARD_CD}}`);
-
 	// 	yield call(sendBoardImgRequest, formData);
 	// } else {
 	// 	console.log('error');
 	// }
 
-	yield;
+	// yield;
 };
 
 const getBoardList = function* () {
