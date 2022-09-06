@@ -21,6 +21,7 @@ import { useSocket } from '@utils/hooks/customHooks';
 import axios from 'axios';
 import { IAuth, IAppCommon, IUsersStatusArr } from '@utils/types/commAndStoreTypes';
 import _ from 'lodash';
+import { generateAvatarImage } from '@utils/appRelated/helperFunctions';
 
 import UserSidebar from './UserSidebar';
 import Style from './MainLayoutTemplate.module.scss';
@@ -189,9 +190,10 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 									id="userSettingArea"
 									fontColor="white"
 									content={authStore.userName}
-									imageSize="big"
+									imageSize="mini"
 									labelSize="big"
 									svgColor="white"
+									src={generateAvatarImage(authStore.userUID)}
 								/>
 							</li>
 						</ul>

@@ -28,7 +28,18 @@ const rootReducer = (state: any, action: any) => {
 			// console.log('HYDRATE', action);
 			// console.log(action);
 
-			return action.payload;
+			console.log('came to HYDRATE');
+
+			// // Attention! This will overwrite client state! Real apps should use proper reconciliation.
+
+			const nextState = {
+				...state, // use previous state
+				...action.payload, // apply delta from hydration
+			};
+
+			return nextState;
+
+			// return action.payload;
 		}
 		default: {
 			const combinedReducer = combineReducers({

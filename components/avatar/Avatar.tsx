@@ -52,7 +52,8 @@ const Avatar = ({
 				className={Style['avatarDiv']}
 				style={{ fontColor, ...inputElCommStyle(spacing) }}
 			>
-				{src ? (
+				<SemanticUIImage src={imageSrc} avatar={avatar} size={imageSize} />
+				{/* {src ? (
 					<SemanticUIImage src={imageSrc} avatar={avatar} size={imageSize} />
 				) : (
 					<SemanticUIImage
@@ -62,7 +63,7 @@ const Avatar = ({
 					>
 						<SVGR />
 					</SemanticUIImage>
-				)}
+				)} */}
 				{/* <SemanticUIImage src={imageSrc} avatar={avatar} size={imageSize} />
 				<SemanticUIImage avatar={avatar} size={'mini'}>
 					<SVGR />

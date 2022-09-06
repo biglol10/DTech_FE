@@ -34,12 +34,12 @@ interface ITeamSkillCountObj {
 		SKILL_NM: string;
 		SKILL_CNT: number;
 		USER_INFO: {
-			USER_NM: string[];
-			USER_UID: string[];
-			IMG_URL: string[];
-			TEAM_CD: string[];
-			USER_TITLE: string[];
-		};
+			USER_NM: string;
+			USER_UID: string;
+			IMG_URL: string;
+			TEAM_CD: string;
+			USER_TITLE: string;
+		}[];
 	};
 }
 
@@ -88,7 +88,7 @@ const Index = ({
 		labels: teamSkillDashboard.map((item) => item.TECH_NM),
 		datasets: [
 			{
-				label: 'asdf',
+				label: '인원',
 				data: teamSkillDashboard.map((item) => item.TECH_CNT),
 				backgroundColor: [
 					'rgba(255, 99, 132, 0.2)',
@@ -242,39 +242,22 @@ const Index = ({
 						/>
 					</InputLayout>
 					<ul>
-						<li
-							className={searchCondition.rank === '사원' ? Style['active'] : ''}
-							onClick={() =>
-								setSearchCondition((prev) => ({
-									...prev,
-									rank: `${prev.rank === '사원' ? '' : '사원'}`,
-								}))
-							}
-						>
-							사원
-						</li>
-						<li
-							className={searchCondition.rank === '선임' ? Style['active'] : ''}
-							onClick={() =>
-								setSearchCondition((prev) => ({
-									...prev,
-									rank: `${prev.rank === '선임' ? '' : '선임'}`,
-								}))
-							}
-						>
-							선임
-						</li>
-						<li
-							className={searchCondition.rank === '책임' ? Style['active'] : ''}
-							onClick={() =>
-								setSearchCondition((prev) => ({
-									...prev,
-									rank: `${prev.rank === '책임' ? '' : '책임'}`,
-								}))
-							}
-						>
-							책임
-						</li>
+						{['사원', '선임', '책임', '총괄'].map((stringItem, idx) => (
+							<li
+								key={`${stringItem}_${idx}`}
+								className={
+									searchCondition.rank === stringItem ? Style['active'] : ''
+								}
+								onClick={() =>
+									setSearchCondition((prev) => ({
+										...prev,
+										rank: `${prev.rank === stringItem ? '' : stringItem}`,
+									}))
+								}
+							>
+								{stringItem}
+							</li>
+						))}
 					</ul>
 					<div>
 						<h4>
@@ -313,8 +296,6 @@ export const getServerSideProps = async (context: any) => {
 			headers: { Authorization: token },
 		})
 		.then((response) => {
-			console.log('responsedata is ');
-			console.log(response.data);
 			return response.data;
 		})
 		.catch((err) => {

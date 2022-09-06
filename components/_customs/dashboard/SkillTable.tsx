@@ -10,6 +10,8 @@ import React, { useState } from 'react';
 import { techImage } from '@utils/constants/imageConstants';
 import { Table, Pagination } from 'semantic-ui-react';
 import { Avatar, AvatarGroup } from '@components/index';
+import { generateAvatarImage } from '@utils/appRelated/helperFunctions';
+
 import Style from './SkillTable.module.scss';
 
 interface ITeamSkillCountObj {
@@ -17,12 +19,12 @@ interface ITeamSkillCountObj {
 		SKILL_NM: string;
 		SKILL_CNT: number;
 		USER_INFO: {
-			USER_NM: string[];
-			USER_UID: string[];
-			IMG_URL: string[];
-			TEAM_CD: string[];
-			USER_TITLE: string[];
-		};
+			USER_NM: string;
+			USER_UID: string;
+			IMG_URL: string;
+			TEAM_CD: string;
+			USER_TITLE: string;
+		}[];
 	};
 }
 
@@ -30,6 +32,15 @@ const SkillTable = ({ teamSkillData }: { teamSkillData: ITeamSkillCountObj }) =>
 	const [activePage, setActivePage] = useState<number>(1);
 
 	const imageList = [
+		`${
+			process.env.NODE_ENV === 'production' ? 'dtech' : ''
+		}/images/AvatarBaseImage/AvatarBase_BLACK1.png`,
+		`${
+			process.env.NODE_ENV === 'production' ? 'dtech' : ''
+		}/images/AvatarBaseImage/AvatarBase_BLUE1.png`,
+		`${
+			process.env.NODE_ENV === 'production' ? 'dtech' : ''
+		}/images/AvatarBaseImage/AvatarBase_RED2.png`,
 		'https://ca.slack-edge.com/T02SCQ38A22-U039FT91QTD-g0ca8cf5c8e6-24',
 		'https://ca.slack-edge.com/T02SCQ38A22-U02U080JHC2-29078f07fef3-24',
 		'https://ca.slack-edge.com/T02SCQ38A22-USLACKBOT-sv41d8cd98f0-24',
@@ -56,7 +67,28 @@ const SkillTable = ({ teamSkillData }: { teamSkillData: ITeamSkillCountObj }) =>
 						.slice(pageSize * (activePage - 1), pageSize * activePage)
 						.map((item, idx) => {
 							const tempSkillObj = teamSkillData[item];
+
 							// const itemSubject = item.SKILL_NM as keyof typeof techImage;
+							const avatarGroupImgList = tempSkillObj.USER_INFO.map(
+								(oneUser, idx2) => {
+									if (oneUser.IMG_URL) {
+										return oneUser.IMG_URL;
+									} else {
+										return `${generateAvatarImage(oneUser.USER_UID)}`;
+									}
+								},
+							);
+
+							const avatarGroupUserList = tempSkillObj.USER_INFO.slice(0, 3).reduce(
+								(previousVal, currentVal, idx3) => {
+									if (idx3 === 0) {
+										return `${previousVal}${currentVal.USER_NM} (${currentVal.USER_TITLE})`;
+									} else {
+										return `${previousVal}, ${currentVal.USER_NM} (${currentVal.USER_TITLE})`;
+									}
+								},
+								'',
+							);
 
 							return (
 								<Table.Row key={`${tempSkillObj.SKILL_NM}_${idx}`}>
@@ -77,9 +109,10 @@ const SkillTable = ({ teamSkillData }: { teamSkillData: ITeamSkillCountObj }) =>
 									</Table.Cell>
 									<Table.Cell>
 										<AvatarGroup
-											imageList={imageList}
+											imageList={avatarGroupImgList}
 											divHeight={20}
 											totalCount={tempSkillObj.SKILL_CNT}
+											usersString={avatarGroupUserList}
 										/>
 									</Table.Cell>
 								</Table.Row>
