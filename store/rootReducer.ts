@@ -3,7 +3,8 @@
  ********************************************************************************************
  * 번호    작업자     작업일         브랜치                   변경내용
  *-------------------------------------------------------------------------------------------
- * 1      변지욱     2022-06-16                              최초작성
+ * 1      변지욱     2022-06-16                           최초작성
+ * 2      변지욱     2022-09-06   feature/JW/chatPage     Hydrate에 대한 로직 추가
  ********************************************************************************************/
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
@@ -24,12 +25,6 @@ import appCommonSlice from './appCommon';
 const rootReducer = (state: any, action: any) => {
 	switch (action.type) {
 		case HYDRATE: {
-			// getInitialProps는 이제 안쓰고 getStaticProps, getServerSideProps를 쓰니 이걸 써줘야함
-			// console.log('HYDRATE', action);
-			// console.log(action);
-
-			console.log('came to HYDRATE');
-
 			// // Attention! This will overwrite client state! Real apps should use proper reconciliation.
 
 			const nextState = {
@@ -37,9 +32,12 @@ const rootReducer = (state: any, action: any) => {
 				...action.payload, // apply delta from hydration
 			};
 
-			return nextState;
+			// 이렇게 해야 client redux랑 머지가 가능함... 안 그러면 ssr에서 redux값을 가져올 때 hydration이 적용되어 값들이 초기화 되는 현상 발생
+			if (state.auth) nextState.auth = state.auth;
+			if (state.toastInfo) nextState.toastInfo = state.toastInfo;
+			if (state.appCommon) nextState.appCommon = state.appCommon;
 
-			// return action.payload;
+			return nextState;
 		}
 		default: {
 			const combinedReducer = combineReducers({

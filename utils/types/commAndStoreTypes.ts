@@ -45,6 +45,7 @@ export interface IAppCommon {
 	route: {
 		currentRoute: string | null | undefined;
 	};
+	currentChatUser: string;
 }
 
 export interface IAuth {
