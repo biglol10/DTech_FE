@@ -74,7 +74,7 @@ const AvatarGroup = ({
 					<h6>
 						{/* 변지욱(선임), 장보영(선임), 이지은(선임){' '} */}
 						{usersString}
-						{totalCount > 3 && `외 ${totalCount}명`}
+						{totalCount > 3 && `,등 총 ${totalCount}명`}
 					</h6>
 				</div>
 			)}

@@ -88,7 +88,7 @@ const Index = ({
 		labels: teamSkillDashboard.map((item) => item.TECH_NM),
 		datasets: [
 			{
-				label: 'asdf',
+				label: '인원',
 				data: teamSkillDashboard.map((item) => item.TECH_CNT),
 				backgroundColor: [
 					'rgba(255, 99, 132, 0.2)',
