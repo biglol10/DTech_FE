@@ -38,8 +38,9 @@ const boardListFunction = function* ({ setBoardList }: any) {
 	yield;
 };
 
-const boardLikeFunction = function* ({ id, userId, like }: any) {
-	yield call(boardLikeRequest, { id, userId, like });
+const boardLikeFunction = function* ({ id, userUID, like }: any) {
+	console.log(id, userUID, like);
+	yield call(boardLikeRequest, { id, userUID, like });
 };
 
 const techListFunction = function* ({ setTechList }: any) {
@@ -66,29 +67,50 @@ const techListFunction = function* ({ setTechList }: any) {
 const submitBoardFunction = function* ({ content, uuid, selectedTech, boardTitle }: any) {
 	const formData = new FormData();
 
-	const submitBoardResult: ISubmitBoard = yield call(submitBoardRequest, {
+	// const submitBoardResult: ISubmitBoard = yield call(submitBoardRequest, {
+	// 	type: 'BOARD_SUBMIT',
+	// 	title: boardTitle,
+	// 	uuid,
+	// 	tech: selectedTech,
+	// 	content: content.value,
+	// });
+	const jsonTemp: any = {
 		type: 'BOARD_SUBMIT',
 		title: boardTitle,
 		uuid,
 		tech: selectedTech,
 		content: content.value,
-	});
+	};
 
-	if (submitBoardResult.result === 'success') {
-		for (let i = 0; i < content.imgList.length; i++) {
-			formData.append(
-				'img',
-				content.imgList[i].imageFile,
-				`${content.imgList[i].imageFile.name}`,
-			);
-		}
+	formData.append('postData', JSON.stringify(jsonTemp));
 
-		formData.append('dir', `{boardId:${submitBoardResult.resultData.BOARD_CD}}`);
-
-		yield call(sendBoardImgRequest, formData);
-	} else {
-		console.log('error');
+	for (let i = 0; i < content.imgList.length; i++) {
+		formData.append(
+			'img',
+			content.imgList[i].imageFile,
+			`${content.imgList[i].imageFile.name}`,
+		);
 	}
+
+	// formData.append('img', JSON.stringify(jsonTemp));
+
+	yield call(sendBoardImgRequest, formData);
+
+	// if (submitBoardResult.result === 'success') {
+	// 	for (let i = 0; i < content.imgList.length; i++) {
+	// 		formData.append(
+	// 			'img',
+	// 			content.imgList[i].imageFile,
+	// 			`${content.imgList[i].imageFile.name}`,
+	// 		);
+	// 	}
+
+	// 	formData.append('img', `{boardId:${submitBoardResult.resultData.BOARD_CD}}`);
+
+	// 	yield call(sendBoardImgRequest, formData);
+	// } else {
+	// 	console.log('error');
+	// }
 
 	yield;
 };

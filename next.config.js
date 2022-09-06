@@ -61,4 +61,7 @@ module.exports = {
 	env: {
 		customKey: 'my-value',
 	},
+	images: {
+		domains: ['dcx-tech.s3.ap-northeast-2.amazonaws.com'],
+	},
 };

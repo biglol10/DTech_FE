@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const boardLikeRequest = async (props: any) => {
-	console.log('boardLikeRequest');
+	// console.log('boardLikeRequest');
 	// console.log(props);
 	const postData = props;
 	const boardLikeResult = await axios

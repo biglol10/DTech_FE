@@ -26,7 +26,7 @@ const BoardCard = ({
 }: ICard) => {
 	const [like, setLike] = useState(false);
 	const [likeCount, setLikeCount] = useState(likeCnt);
-	const userId = useSelector((state: any) => state.auth.userId);
+	const userUID = useSelector((state: any) => state.auth.userUID);
 	const dispatch = useDispatch();
 	const clickLike = () => {
 		like ? setLikeCount((prev) => prev - 1) : setLikeCount((prev) => prev + 1);
@@ -34,7 +34,7 @@ const BoardCard = ({
 		dispatch({
 			type: 'BOARD_LIKE',
 			id,
-			userId,
+			userUID,
 			like: !like,
 		});
 
