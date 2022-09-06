@@ -6,6 +6,7 @@
  * 1      변지욱     2022-08-25   feature/JW/chat        최초작성
  * 2      변지욱     2022-08-29   feature/JW/chat        유저명 표시하도록 변경, socket에서 직접 채팅리스트 가져오도록 변경
  * 3      변지욱     2022-08-29   feature/JW/layoutchat  최초 로드 시엔 변경중입니다 텍스트 안 보이게 변경
+ * 4      변지욱     2022-09-06   feature/JW/chatPage    누구랑 채팅하는지 세팅
  ********************************************************************************************/
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -18,10 +19,11 @@ import { ChatList, IUsersStatusArr, IAuth } from '@utils/types/commAndStoreTypes
 import OnlineSvg from '@styles/svg/online.svg';
 import OfflineSvg from '@styles/svg/offline.svg';
 import axios, { AxiosResponse } from 'axios';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import lodash from 'lodash';
+import cookie from 'js-cookie';
 
 import Style from './[userId].module.scss';
 
@@ -84,6 +86,13 @@ const UserChat = ({
 	const quillRef = useRef<any>(null);
 
 	const { userId: userUID } = queryObj; // UID in here
+
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch({ type: 'SET_CURRENT_CHAT_USER', chatUser: userUID });
+		cookie.set('currentChatUser', userUID);
+	}, [dispatch, userUID]);
 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
 	const socket = authStore.userSocket;
@@ -341,6 +350,11 @@ const UserChat = ({
 
 UserChat.PageLayout = MainLayoutTemplate;
 UserChat.displayName = 'chatPage';
+
+// export const getServerSideProps = wrapper.getServerSideProps((store) => (context): any => {
+// 	store.dispatch({ type: 'SET_CURRENT_CHAT_USER', chatUser: context.query });
+// 	return { props: { queryObj: context.query } };
+// });
 
 export const getServerSideProps = async (context: any) => {
 	return { props: { queryObj: context.query } };

@@ -34,12 +34,12 @@ interface ITeamSkillCountObj {
 		SKILL_NM: string;
 		SKILL_CNT: number;
 		USER_INFO: {
-			USER_NM: string[];
-			USER_UID: string[];
-			IMG_URL: string[];
-			TEAM_CD: string[];
-			USER_TITLE: string[];
-		};
+			USER_NM: string;
+			USER_UID: string;
+			IMG_URL: string;
+			TEAM_CD: string;
+			USER_TITLE: string;
+		}[];
 	};
 }
 
@@ -84,14 +84,11 @@ const Index = ({
 	const router = useRouter();
 	const [inputLoading, setInputLoading] = useState(false);
 
-	console.log('userDashboard is');
-	console.log(userDashboard);
-
 	const data = {
 		labels: teamSkillDashboard.map((item) => item.TECH_NM),
 		datasets: [
 			{
-				label: 'asdf',
+				label: '인원',
 				data: teamSkillDashboard.map((item) => item.TECH_CNT),
 				backgroundColor: [
 					'rgba(255, 99, 132, 0.2)',
@@ -245,39 +242,22 @@ const Index = ({
 						/>
 					</InputLayout>
 					<ul>
-						<li
-							className={searchCondition.rank === '사원' ? Style['active'] : ''}
-							onClick={() =>
-								setSearchCondition((prev) => ({
-									...prev,
-									rank: `${prev.rank === '사원' ? '' : '사원'}`,
-								}))
-							}
-						>
-							사원
-						</li>
-						<li
-							className={searchCondition.rank === '선임' ? Style['active'] : ''}
-							onClick={() =>
-								setSearchCondition((prev) => ({
-									...prev,
-									rank: `${prev.rank === '선임' ? '' : '선임'}`,
-								}))
-							}
-						>
-							선임
-						</li>
-						<li
-							className={searchCondition.rank === '책임' ? Style['active'] : ''}
-							onClick={() =>
-								setSearchCondition((prev) => ({
-									...prev,
-									rank: `${prev.rank === '책임' ? '' : '책임'}`,
-								}))
-							}
-						>
-							책임
-						</li>
+						{['사원', '선임', '책임', '총괄'].map((stringItem, idx) => (
+							<li
+								key={`${stringItem}_${idx}`}
+								className={
+									searchCondition.rank === stringItem ? Style['active'] : ''
+								}
+								onClick={() =>
+									setSearchCondition((prev) => ({
+										...prev,
+										rank: `${prev.rank === stringItem ? '' : stringItem}`,
+									}))
+								}
+							>
+								{stringItem}
+							</li>
+						))}
 					</ul>
 					<div>
 						<h4>
@@ -342,7 +322,7 @@ export const getServerSideProps = async (context: any) => {
 						USER_NM: currentVal.USER_NM,
 						USER_UID: currentVal.USER_UID,
 						IMG_URL: currentVal.USER_IMG_URL,
-						TEAM_CD: currentVal.USER_TEAM_CD,
+						TEAM_CD: currentVal.TEAM_CD,
 						USER_TITLE: currentVal.USER_TITLE,
 					};
 

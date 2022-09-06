@@ -6,6 +6,7 @@ const initialState: IAppCommon = {
 	route: {
 		currentRoute: 'dashboard',
 	},
+	currentChatUser: '',
 };
 
 // const initialState_Metadata
@@ -17,8 +18,11 @@ const appCommonSlice = createSlice({
 		setCurrentRoute(state, action: PayloadAction<string>) {
 			state.route.currentRoute = action.payload;
 		},
+		setCurrentChatUser(state, action: PayloadAction<string>) {
+			state.currentChatUser = action.payload;
+		},
 	},
 });
 
-export const { setCurrentRoute } = appCommonSlice.actions;
+export const { setCurrentRoute, setCurrentChatUser } = appCommonSlice.actions;
 export default appCommonSlice.reducer;
