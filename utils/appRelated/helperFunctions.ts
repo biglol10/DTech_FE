@@ -32,7 +32,7 @@ const generateAvatarImage = (uid: string) => {
 
 	const baseChoice = `AvatarBase${summation % 10}` as keyof typeof baseImage;
 
-	return `${process.env.NODE_ENV === 'production' ? 'dtech' : ''}/images/AvatarBaseImage/${
+	return `${process.env.NODE_ENV === 'production' ? '/dtech' : ''}/images/AvatarBaseImage/${
 		baseImage[baseChoice]
 	}`;
 };
