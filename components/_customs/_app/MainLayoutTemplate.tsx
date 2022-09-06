@@ -40,6 +40,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 
 	const wrapperRef = useRef<HTMLDivElement>(null);
 	const connectedUsersRef = useRef<any>([]);
+	const usersStatusArrRef = useRef<any>([]);
 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
 	const appCommon = useSelector((state: { appCommon: IAppCommon }) => state.appCommon);
@@ -51,7 +52,6 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	useEffect(() => {
 		if (wrapperRef) {
 			const clickSettingOutside = (event: any) => {
-				console.log(event.target);
 				if (
 					wrapperRef.current &&
 					!wrapperRef.current.contains(event.target) &&
@@ -66,6 +66,9 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 			document.addEventListener('mousedown', clickSettingOutside, { capture: true });
 			return () => {
 				document.removeEventListener('mousedown', clickSettingOutside, { capture: true });
+
+				cookie.remove('token');
+				cookie.remove('currentChatUser');
 			};
 		}
 	}, []);
@@ -101,7 +104,13 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 				// headers: { Authorization: authStore.userToken },
 			})
 			.then((response) => {
-				setUsersStatusArr(response.data.usersStatus);
+				const stateEqual = _.isEqual(usersStatusArrRef.current, response.data.usersStatus);
+
+				if (!stateEqual) {
+					usersStatusArrRef.current = response.data.usersStatus;
+					setUsersStatusArr(response.data.usersStatus);
+				}
+				// setUsersStatusArr(response.data.usersStatus);
 			})
 			.catch((err) => {});
 	}, [onlineUsers]);
@@ -116,6 +125,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 			type: 'AUTH_RESET',
 		});
 		cookie.remove('token');
+		cookie.remove('currentChatUser');
 		router.push('/login');
 	};
 
@@ -163,7 +173,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 										`${appCommon.route.currentRoute === 'chatPage' && 'active'}`
 									]
 								}
-								onClick={() => router.push('/chat/sdafadsf')}
+								onClick={() => router.push('/chat/chatArea')}
 							>
 								<a>채팅</a>
 							</li>

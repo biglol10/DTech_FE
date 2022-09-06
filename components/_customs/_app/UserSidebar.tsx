@@ -27,8 +27,6 @@ const UserSidebar = ({
 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
 
-	console.log(usersStatusArr);
-
 	return (
 		<div className={cx('sidebarChat', `${iconLeft ? 'showSidebar' : 'hideSidebar'}`)}>
 			{iconLeft && (

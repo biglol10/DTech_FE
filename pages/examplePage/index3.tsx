@@ -24,6 +24,8 @@ const Page: NextPage<any> = (state) => {
 export const getServerSideProps = wrapper.getServerSideProps((store) => (context): any => {
 	const { token } = parseCookies(context);
 
+	// store.dispatch({ type: 'ADDBYAMOUNT', data: 1012 });
+
 	return {
 		props: {
 			propsSent: {
