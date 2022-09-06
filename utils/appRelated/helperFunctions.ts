@@ -2,13 +2,13 @@ import crypto from 'crypto';
 
 const baseImage = {
 	AvatarBase0: 'AvatarBase_BLACK1.png',
-	AvatarBase1: 'AvatarBase_BLACK2.png',
+	AvatarBase1: 'AvatarBase_SKYBLUE1.png',
 	AvatarBase2: 'AvatarBase_BLUE1.png',
 	AvatarBase3: 'AvatarBase_BLUE2.png',
 	AvatarBase4: 'AvatarBase_GREEN1.png',
 	AvatarBase5: 'AvatarBase_GREEN2.png',
 	AvatarBase6: 'AvatarBase_PURPLE1.png',
-	AvatarBase7: 'AvatarBase_PURPLE2.png',
+	AvatarBase7: 'AvatarBase_YELLOW2.png',
 	AvatarBase8: 'AvatarBase_RED1.png',
 	AvatarBase9: 'AvatarBase_RED2.png',
 };
