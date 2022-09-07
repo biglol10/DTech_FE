@@ -67,24 +67,16 @@ const techListFunction = function* ({ setTechList }: any) {
 const submitBoardFunction = function* ({ content, uuid, selectedTech, boardTitle }: any) {
 	const formData = new FormData();
 
-	// const submitBoardResult: ISubmitBoard = yield call(submitBoardRequest, {
-	// 	type: 'BOARD_SUBMIT',
-	// 	title: boardTitle,
-	// 	uuid,
-	// 	tech: selectedTech,
-	// 	content: content.value,
-	// });
-	const jsonTemp: any = {
+	const postData: any = {
 		type: 'BOARD_SUBMIT',
+		dir: 'board/',
 		title: boardTitle,
 		uuid,
 		tech: selectedTech,
 		content: content.value,
 	};
 
-	// console.log(jsonTemp);
-
-	formData.append('postData', JSON.stringify(jsonTemp));
+	formData.append('postData', JSON.stringify(postData));
 
 	for (let i = 0; i < content.imgList.length; i++) {
 		formData.append(
@@ -94,35 +86,7 @@ const submitBoardFunction = function* ({ content, uuid, selectedTech, boardTitle
 		);
 	}
 
-	// formData.append('img', JSON.stringify(jsonTemp));
-
 	yield call(sendBoardImgRequest, formData);
-
-	// if (submitBoardResult.result === 'success') {
-	// 	const jsonTemp: any = {
-	// 		type: 'BOARD_SUBMIT',
-	// 		title: boardTitle,
-	// 		uuid,
-	// 		tech: selectedTech,
-	// 		content: content.value,
-	// 	};
-
-	// 	formData.append('postData', JSON.stringify(jsonTemp));
-
-	// 	for (let i = 0; i < content.imgList.length; i++) {
-	// 		formData.append(
-	// 			'img',
-	// 			content.imgList[i].imageFile,
-	// 			`${content.imgList[i].imageFile.name}`,
-	// 		);
-	// 	}
-
-	// 	yield call(sendBoardImgRequest, formData);
-	// } else {
-	// 	console.log('error');
-	// }
-
-	// yield;
 };
 
 const getBoardList = function* () {
