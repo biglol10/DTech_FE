@@ -17,7 +17,7 @@ const Index = () => {
 	}, []);
 
 	useEffect(() => {
-		console.log(boardList);
+		// console.log(boardList);
 	}, [boardList]);
 
 	return (
