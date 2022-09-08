@@ -1,13 +1,23 @@
 import { Box, List } from '@components/index';
 import { MainLayoutTemplate } from '@components/customs';
 import { parseCookies } from 'nookies';
-import { Label } from 'semantic-ui-react';
-// import { redirectUser } from '@utils/appRelated/helperFunctions';
 
 const ChatPage = (state: any) => {
 	const items = [
 		{
-			content: 'Web editor는 React-Quill 라이브러리 사용했습니다.',
+			content: (
+				<span>
+					Web editor는{' '}
+					<a
+						href="https://github.com/zenoamaro/react-quill"
+						target="_blank"
+						rel="noreferrer"
+					>
+						React-Quill
+					</a>{' '}
+					라이브러리를 base로 커스터마이징을 마여 사용하고 있습니다.
+				</span>
+			),
 		},
 		{
 			content: '텍스트, 이미지, 링크를 전송하는 기능을 제공하고 있습니다',
@@ -21,20 +31,15 @@ const ChatPage = (state: any) => {
 				'이미지 클릭 시 풀 사이즈로 볼 수 있는 모달 사이즈가 나오며 링크 클릭 시 해당 사이트로 이동이 가능합니다.',
 		},
 		{
-			content:
-				'기본적인 붙여넣기 기능이 제공되며 이미지 또한 붙여넣기가 가능합니다. 다만 잠깐 깜빡이는 현상이 발생할 수 있습니다',
-		},
-		{
 			content: (
-				<Label as="a" color="yellow" image>
-					<img src="https://react.semantic-ui.com/images/avatar/small/christian.jpg" />
-					Christian
-					<Label.Detail>Co-worker</Label.Detail>
-				</Label>
+				<p>
+					기본적인 텍스트 붙여넣기 기능이 제공되며 이미지 또한 <u>붙여넣기가</u>{' '}
+					가능합니다.
+				</p>
 			),
 		},
 		{
-			content: <div style={{ color: 'blue' }}>al;fdjeqruopqwru</div>,
+			content: `채팅을 입력할 때마다 사용자에게 'XX님이 입력중입니다'라는 문구가 출력됩니다`,
 		},
 	];
 
@@ -63,6 +68,7 @@ const ChatPage = (state: any) => {
 	);
 };
 
+ChatPage.displayName = 'chatMainPage';
 ChatPage.PageLayout = MainLayoutTemplate;
 
 export const getServerSideProps = async (context: any) => {
