@@ -9,6 +9,7 @@
  * 4      변지욱     2022-08-18   feature/JW/socket           온라인 유저 props로 전달
  * 5      변지욱     2022-08-27   feature/JW/layout           text변경에 따른 리랜더링 이상현상 해결
  * 6      변지욱     2022-08-29   feature/JW/layoutchat       신규로 가입한 사람이 있을 경우 socket event 받도록 함
+ * 7      변지욱     2022-09-08   feature/JW/chatPage         Admin인 사람들은 따로 표시
  ********************************************************************************************/
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
@@ -67,7 +68,6 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 			return () => {
 				document.removeEventListener('mousedown', clickSettingOutside, { capture: true });
 
-				cookie.remove('token');
 				cookie.remove('currentChatUser');
 			};
 		}
@@ -82,7 +82,9 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 			socket.on(
 				'connectedUsers',
 				({ users }: { users: { userId: string; socketId: string }[] }) => {
-					const onlineUsersArr = users.map((item) => item.userId);
+					const onlineUsersArr = users
+						// .filter((item) => item.userId !== authStore.userId)
+						.map((item2) => item2.userId);
 
 					if (!_.isEqual(connectedUsersRef.current, onlineUsersArr)) {
 						connectedUsersRef.current = onlineUsersArr;
@@ -110,7 +112,6 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 					usersStatusArrRef.current = response.data.usersStatus;
 					setUsersStatusArr(response.data.usersStatus);
 				}
-				// setUsersStatusArr(response.data.usersStatus);
 			})
 			.catch((err) => {});
 	}, [onlineUsers]);
@@ -170,7 +171,11 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 							<li
 								className={
 									Style[
-										`${appCommon.route.currentRoute === 'chatPage' && 'active'}`
+										`${
+											['chatPage', 'chatMainPage'].includes(
+												appCommon.route.currentRoute as string,
+											) && 'active'
+										}`
 									]
 								}
 								onClick={() => router.push('/chat/chatArea')}

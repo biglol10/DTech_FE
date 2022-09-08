@@ -167,7 +167,7 @@ const Index = ({
 						filterSkill: searchCondition.skillset,
 						filterName: searchCondition.personname,
 					},
-					{ headers: { Authorization: userToken } },
+					{ headers: { Authorization: `Bearer ${userToken}` } },
 				)
 				.then((response) => {
 					tempArr.current = response.data.filterdUsersList;
@@ -293,7 +293,7 @@ export const getServerSideProps = async (context: any) => {
 
 	const axiosData = await axios
 		.get('http://localhost:3066/api/dashboard/getTeamSkills', {
-			headers: { Authorization: token },
+			headers: { Authorization: `Bearer ${token}` },
 		})
 		.then((response) => {
 			return response.data;

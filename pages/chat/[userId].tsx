@@ -138,7 +138,7 @@ const UserChat = ({
 						'http://localhost:3066/api/chat/getPrivateChatList',
 						{ fromUID: authStore.userUID, toUID: userUID },
 						{
-							headers: { Authorization: authStore.userToken },
+							headers: { Authorization: `Bearer ${authStore.userToken}` },
 						},
 					)
 					.then((response) => successCallback(response))

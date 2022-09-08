@@ -36,6 +36,7 @@ export interface IUsersStatusArr {
 	USER_TITLE: string;
 	USER_DETAIL: string;
 	USER_IMG_URL: string;
+	USER_ADMIN_YN: string | number;
 	ONLINE_STATUS: 'ONLINE' | 'OFFLINE';
 }
 

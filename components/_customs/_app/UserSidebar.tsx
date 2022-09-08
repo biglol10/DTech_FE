@@ -68,11 +68,33 @@ const UserSidebar = ({
 						</div>
 
 						<div className={Style['usersInfo']}>
+							<SharpDivider className={Style['adminDivider']} content="*운영자*" />
+
+							<div className={Style['usersAdmin']}>
+								{usersStatusArr
+									.filter((obj) => Number(obj.USER_ADMIN_YN))
+									.map((item, idx: number) => (
+										<IndividualChatUser
+											key={`admin_${idx}`}
+											onlineStatus={item.ONLINE_STATUS}
+											userUID={item.USER_UID}
+											userName={item.USER_NM}
+											userTitle={item.USER_TITLE}
+											userImg={item.USER_IMG_URL}
+											userAdminYN={item.USER_ADMIN_YN}
+										/>
+									))}
+							</div>
+
 							<SharpDivider content="온라인" />
 
 							<div className={Style['usersOnline']}>
 								{usersStatusArr
-									.filter((obj) => obj.USER_NM.includes(userSearch || ''))
+									.filter(
+										(obj) =>
+											obj.USER_NM.includes(userSearch || '') &&
+											!Number(obj.USER_ADMIN_YN),
+									)
 									.map(
 										(item, idx: number) =>
 											item.USER_ID !== authStore.userId &&
@@ -84,6 +106,7 @@ const UserSidebar = ({
 													userName={item.USER_NM}
 													userTitle={item.USER_TITLE}
 													userImg={item.USER_IMG_URL}
+													userAdminYN={item.USER_ADMIN_YN}
 												/>
 											),
 									)}
@@ -93,7 +116,11 @@ const UserSidebar = ({
 
 							<div className={Style['usersOffline']}>
 								{usersStatusArr
-									.filter((obj) => obj.USER_NM.includes(userSearch || ''))
+									.filter(
+										(obj) =>
+											obj.USER_NM.includes(userSearch || '') &&
+											!Number(obj.USER_ADMIN_YN),
+									)
 									.map(
 										(item, idx) =>
 											item.USER_ID !== authStore.userId &&
