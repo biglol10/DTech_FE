@@ -255,8 +255,10 @@ const validStep3Function = function* ({
 	}
 	yield put(registerStep3({ userDetailValue }));
 };
+
 const registerUserFunction = function* ({ registerData, propFunction }: any) {
 	const postData = {
+		type: 'REGISTER_USER',
 		user_id: registerData.idInputValue.idInputValue,
 		name: registerData.nameInputValue.nameInputValue,
 		passwd: registerData.pwInputValue.pwInputValue,
@@ -268,6 +270,7 @@ const registerUserFunction = function* ({ registerData, propFunction }: any) {
 			.filter((tech: any) => tech.value === true)
 			.map((tech: any) => tech.key),
 	};
+
 	const registerResult: IRegisterUser = yield call(registerRequest, postData);
 
 	if (registerData.image.imageFile) {
@@ -275,11 +278,16 @@ const registerUserFunction = function* ({ registerData, propFunction }: any) {
 		const fileExtName = registerData.image.imageFile.name.split('.').reverse()[0];
 
 		const formData = new FormData();
+		const postData2: any = {
+			type: 'REGISTER_USER',
+			dir: 'profile_img/',
+		};
+
+		formData.append('postData', JSON.stringify(postData2));
 
 		formData.append('img', registerData.image.imageFile, `${fileName}.${fileExtName}`);
 
 		yield call(sendUserImgRequest, formData);
-		// console.log('goNext2');
 	}
 
 	propFunction({ goNext: true, registerResult });

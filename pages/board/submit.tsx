@@ -31,7 +31,7 @@ const Submit = () => {
 		dispatch({
 			type: 'SUBMIT_BOARD',
 			content,
-			uuid: '14be0513564973af12c0',
+			uuid,
 			selectedTech,
 			boardTitle,
 		});
