@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
 import { Button, Label, InputLayout } from '@components/index';
+import { Label as Label2, Header } from 'semantic-ui-react';
 
 import Style from './RegisterComp.module.scss';
 
@@ -62,33 +63,41 @@ const RegisterStep4 = (props: any) => {
 	return (
 		<>
 			<div style={inputElCommStyle(0, 'left', true)}>
-				<InputLayout
-					error={techSelectedList.techSelectError}
-					errorMsg="한 개 이상 선택하세요"
-					inputLabel="보유한 기술 또는 관심분야를 선택해주세요."
-					inputLabelSize="h5"
-					showInputLabel={true}
-					autoFitErrorLabel={true}
-					spacing={2}
+				<Header
+					className={Style['inputLabelHeader']}
+					as="h4"
+					style={{ position: 'relative', left: '0%' }}
 				>
-					<div className={Style['techBtnDiv']}>
-						{techSelectedList.techSelectValue.map((tech: any) => {
-							return (
-								<Button
-									content={tech.name}
-									key={tech.key}
-									size="mini"
-									color="grey"
-									spacing={5}
-									basic={!tech.value}
-									onClick={(e: any) => {
-										handleTechClick(tech.key);
-									}}
-								/>
-							);
-						})}
-					</div>
-				</InputLayout>
+					보유한 기술 또는 관심분야를 선택해주세요.
+				</Header>
+				<div className={Style['techBtnDiv']}>
+					{techSelectedList.techSelectValue.map((tech: any) => {
+						return (
+							<Button
+								content={tech.name}
+								key={tech.key}
+								size="mini"
+								color="grey"
+								spacing={5}
+								basic={!tech.value}
+								onClick={(e: any) => {
+									handleTechClick(tech.key);
+								}}
+							/>
+						);
+					})}
+				</div>
+				<Label2
+					basic
+					color="red"
+					pointing="above"
+					size="tiny"
+					style={{
+						visibility: `${techSelectedList.techSelectError ? 'initial' : 'hidden'}`,
+					}}
+				>
+					한 개 이상 선택해주세요.
+				</Label2>
 				<br />
 
 				<div className={Style['buttonBelow']}>
