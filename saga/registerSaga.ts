@@ -12,6 +12,7 @@ import {
 	registerStep4,
 	registerReset,
 } from '@store/registerSlice';
+import PrevieImageComp from '@components/quill/PreviewImageComp';
 
 interface IIdCheckParam {
 	type: string;
@@ -86,7 +87,7 @@ const teamListFunction = function* ({ setTeamList }: any) {
 	yield;
 };
 
-const techListFunction = function* ({ setTechSelectedList }: any) {
+const techListFunction = function* ({ techSelectedList, setTechSelectedList }: any) {
 	const techListResult: ITechList = yield call(techListRequest, {});
 
 	if (techListResult.result === 'success') {
@@ -95,7 +96,7 @@ const techListFunction = function* ({ setTechSelectedList }: any) {
 			return { key: tech.TECH_CD, value: false, name: tech.TECH_NM };
 		});
 
-		setTechSelectedList(newTempArr);
+		setTechSelectedList({ ...techSelectedList, techSelectValue: newTempArr });
 	} else {
 		console.error(techListResult.errMessage);
 	}
@@ -227,14 +228,35 @@ const validStep2Function = function* ({
 	);
 };
 
-const validStep4Function = function* ({ techSelectedList, goNext, propFunction }: any) {
-	propFunction({ goNext });
+const validStep4Function = function* ({
+	setTechSelectedList,
+	techSelectedList,
+	goNext,
+	propFunction,
+}: any) {
+	if (goNext) {
+		// const selected = (tech: any) => tech.value === true;
+
+		const techSelected = techSelectedList.techSelectValue.some(
+			(tech: any) => tech.value === true,
+		);
+
+		if (techSelected) {
+			setTechSelectedList({ ...techSelectedList, techSelectError: false });
+			propFunction({ goNext });
+		} else {
+			setTechSelectedList({ ...techSelectedList, techSelectError: true });
+		}
+	} else {
+		propFunction({ goNext });
+	}
 
 	yield put(registerStep4({ techSelectValue: techSelectedList }));
 };
 const validStep3Function = function* ({
 	userDetailValue,
-	setUserDetailValue,
+	userGithubValue,
+	userDomainValue,
 	goNext,
 	propFunction,
 }: any) {
@@ -253,7 +275,7 @@ const validStep3Function = function* ({
 	} else {
 		propFunction({ goNext });
 	}
-	yield put(registerStep3({ userDetailValue }));
+	yield put(registerStep3({ userDetailValue, userGithubValue, userDomainValue }));
 };
 
 const registerUserFunction = function* ({ registerData, propFunction }: any) {
@@ -266,7 +288,9 @@ const registerUserFunction = function* ({ registerData, propFunction }: any) {
 		title: registerData.titleSelectValue.titleSelectValue,
 		phonenum: registerData.phoneNumValue.phoneNumValue,
 		detail: registerData.userDetailValue.userDetailValue,
-		tech_list: registerData.techSelectValue
+		github: registerData.userGithubValue.userGithubValue,
+		domain: registerData.userDomainValue.userDomainValue,
+		tech_list: registerData.techSelectValue.techSelectValue
 			.filter((tech: any) => tech.value === true)
 			.map((tech: any) => tech.key),
 	};
