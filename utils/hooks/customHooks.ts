@@ -1,7 +1,8 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import io, { Socket } from 'socket.io-client';
-import { IModalState } from '@utils/types/commAndStoreTypes';
+import { IModalState, IAppCommon } from '@utils/types/commAndStoreTypes';
+import lodash from 'lodash';
 
 const useModal = () => {
 	const modalState = useSelector((state: any) => state.modal);
@@ -69,4 +70,40 @@ const useSocket = () => {
 	};
 };
 
-export { useModal, useSocket };
+const useChatUtil = () => {
+	const appCommon = useSelector((state: { appCommon: IAppCommon }) => state.appCommon);
+
+	const dispatch = useDispatch();
+
+	const init = (unReadMsg: string[]) => {
+		dispatch({
+			type: 'SET_CURRENT_UNREAD_MSG',
+			unReadMsg: lodash.isEmpty(unReadMsg) ? [] : unReadMsg,
+		});
+	};
+
+	const unReadArrSlice = (uID: string) => {
+		const unReadMsg = lodash.cloneDeep(appCommon.unReadMsg);
+
+		const indexOf = unReadMsg.indexOf(uID);
+
+		indexOf > -1 && unReadMsg.splice(indexOf, 1);
+
+		dispatch({ type: 'SET_CURRENT_UNREAD_MSG', unReadMsg });
+	};
+
+	const unReadArrAdd = (uID: string) => {
+		const unReadMsg = lodash.cloneDeep(appCommon.unReadMsg);
+
+		unReadMsg.push(uID);
+		dispatch({ type: 'SET_CURRENT_UNREAD_MSG', unReadMsg });
+	};
+
+	return {
+		init,
+		unReadArrSlice,
+		unReadArrAdd,
+	};
+};
+
+export { useModal, useSocket, useChatUtil };

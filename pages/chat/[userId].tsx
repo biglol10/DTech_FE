@@ -24,6 +24,7 @@ import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import lodash from 'lodash';
 import cookie from 'js-cookie';
+import { useChatUtil } from '@utils/hooks/customHooks';
 
 import Style from './[userId].module.scss';
 
@@ -95,6 +96,7 @@ const UserChat = ({
 	}, [dispatch, userUID]);
 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
+	const { init: initUnReadChatList, unReadArrSlice, unReadArrAdd } = useChatUtil();
 	const socket = authStore.userSocket;
 
 	const chatToDateGroup = (arr: any) => {
@@ -132,6 +134,7 @@ const UserChat = ({
 
 	const getPrivateChatListFunction = useCallback(
 		(successCallback: Function, errorCallback: Function) => {
+			unReadArrSlice(userUID);
 			if (authStore.userUID && authStore.userToken && userUID) {
 				axios
 					.post(
@@ -145,6 +148,7 @@ const UserChat = ({
 					.catch((err) => errorCallback(err));
 			}
 		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[authStore.userToken, authStore.userUID, userUID],
 	);
 
@@ -202,14 +206,16 @@ const UserChat = ({
 	);
 
 	useEffect(() => {
-		socket?.on('newMessageReceived', ({ chatListSocket, convIdSocket }: any) => {
+		socket?.on('newMessageReceived', ({ chatListSocket, convIdSocket, fromUID }: any) => {
+			unReadArrAdd(fromUID);
 			getPrivateChatListAxios(chatListSocket, convIdSocket);
 		});
 		socket?.on('textChangeNotification', (sendingUser: string) => {
 			setSendingUserState(sendingUser);
 			setTextChangeNotification(true);
 		});
-	}, [authStore.userToken, authStore.userUID, getPrivateChatListAxios, socket, userUID]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [socket, unReadArrAdd]);
 
 	const notifyTextChange = useCallback(() => {
 		if (!firstLoadRef.current) {

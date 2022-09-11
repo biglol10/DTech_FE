@@ -6,9 +6,10 @@ import { Icon } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
-import { IAuth, IUsersStatusArr } from '@utils/types/commAndStoreTypes';
+import { IAuth, IUsersStatusArr, IAppCommon } from '@utils/types/commAndStoreTypes';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useChatUtil } from '@utils/hooks/customHooks';
 
 import IndividualChatUser from './IndividualChatUser';
 import Style from './UserSidebar.module.scss';
@@ -27,13 +28,15 @@ const UserSidebar = ({
 }) => {
 	const [isLogoBorderBottom, setIsLogoBorderBottom] = useState(false);
 	const [userSearch, setUserSearch] = useState('');
-	const [unReadChatListState, setUnReadChatListState] = useState<string[]>([]);
 
 	const cx = classNames.bind(Style);
 
 	const router = useRouter();
 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
+	const appCommon = useSelector((state: { appCommon: IAppCommon }) => state.appCommon);
+
+	const { init: initUnReadChatList } = useChatUtil();
 
 	useEffect(() => {
 		if (authStore && authStore.userUID) {
@@ -42,15 +45,18 @@ const UserSidebar = ({
 					params: { fromUID: authStore.userUID },
 				})
 				.then((response) => {
-					setUnReadChatListState(
-						response.data.unReadList.map((item: IUnReadChatList) => item.USER_UID),
+					const resData = response.data.unReadList.map(
+						(item: IUnReadChatList) => item.USER_UID,
 					);
+
+					initUnReadChatList(resData);
 				})
 				.catch((err) => {
-					toast['error'](<>{'이미지는 최대 6개로 제한합니다'}</>);
+					toast['error'](<>{'읽지 않은 메시지알림을 불러오지 못했습니다'}</>);
 				});
 		}
-	}, [authStore, authStore.userUID]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [authStore]);
 
 	return (
 		<div className={cx('sidebarChat', `${iconLeft ? 'showSidebar' : 'hideSidebar'}`)}>
@@ -107,6 +113,7 @@ const UserSidebar = ({
 											userTitle={item.USER_TITLE}
 											userImg={item.USER_IMG_URL}
 											userAdminYN={item.USER_ADMIN_YN}
+											newMsgNoti={appCommon.unReadMsg.includes(item.USER_UID)}
 										/>
 									))}
 							</div>
@@ -132,7 +139,7 @@ const UserSidebar = ({
 													userTitle={item.USER_TITLE}
 													userImg={item.USER_IMG_URL}
 													userAdminYN={item.USER_ADMIN_YN}
-													newMsgNoti={unReadChatListState.includes(
+													newMsgNoti={appCommon.unReadMsg.includes(
 														item.USER_UID,
 													)}
 												/>
@@ -160,7 +167,7 @@ const UserSidebar = ({
 													userName={item.USER_NM}
 													userTitle={item.USER_TITLE}
 													userImg={item.USER_IMG_URL}
-													newMsgNoti={unReadChatListState.includes(
+													newMsgNoti={appCommon.unReadMsg.includes(
 														item.USER_UID,
 													)}
 												/>
