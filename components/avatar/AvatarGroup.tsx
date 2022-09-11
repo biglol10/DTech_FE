@@ -66,13 +66,12 @@ const AvatarGroup = ({
 						color: 'white',
 						padding: '10px',
 						position: 'absolute',
-						top: '150%',
+						top: '90%',
 						right: '70%',
 						zIndex: '999',
 					}}
 				>
 					<h6>
-						{/* 변지욱(선임), 장보영(선임), 이지은(선임){' '} */}
 						{usersString}
 						{totalCount > 3 && `,등 총 ${totalCount}명`}
 					</h6>

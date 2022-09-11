@@ -57,7 +57,7 @@ export interface IAuth {
 	userTitle: string;
 	userPhoneNo: string;
 	userDetail: string;
-	userProfile: string;
+	userProfileImg: string;
 	userGitHub: string;
 	userDomain: string;
 	userProject: string;

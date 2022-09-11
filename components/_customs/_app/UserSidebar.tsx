@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { InputLayout, SharpDivider, InputWithIcon } from '@components/index';
 import Image from 'next/image';
 import DLogo from '@public/images/DLogo2.png';
@@ -7,9 +7,16 @@ import classNames from 'classnames/bind';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import { IAuth, IUsersStatusArr } from '@utils/types/commAndStoreTypes';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 import IndividualChatUser from './IndividualChatUser';
 import Style from './UserSidebar.module.scss';
+
+interface IUnReadChatList {
+	CONVERSATION_ID: string;
+	USER_UID: string;
+}
 
 const UserSidebar = ({
 	iconLeft,
@@ -20,12 +27,30 @@ const UserSidebar = ({
 }) => {
 	const [isLogoBorderBottom, setIsLogoBorderBottom] = useState(false);
 	const [userSearch, setUserSearch] = useState('');
+	const [unReadChatListState, setUnReadChatListState] = useState<string[]>([]);
 
 	const cx = classNames.bind(Style);
 
 	const router = useRouter();
 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
+
+	useEffect(() => {
+		if (authStore && authStore.userUID) {
+			axios
+				.get('http://localhost:3066/api/chat/getUnreadChatNoti', {
+					params: { fromUID: authStore.userUID },
+				})
+				.then((response) => {
+					setUnReadChatListState(
+						response.data.unReadList.map((item: IUnReadChatList) => item.USER_UID),
+					);
+				})
+				.catch((err) => {
+					toast['error'](<>{'이미지는 최대 6개로 제한합니다'}</>);
+				});
+		}
+	}, [authStore, authStore.userUID]);
 
 	return (
 		<div className={cx('sidebarChat', `${iconLeft ? 'showSidebar' : 'hideSidebar'}`)}>
@@ -107,6 +132,9 @@ const UserSidebar = ({
 													userTitle={item.USER_TITLE}
 													userImg={item.USER_IMG_URL}
 													userAdminYN={item.USER_ADMIN_YN}
+													newMsgNoti={unReadChatListState.includes(
+														item.USER_UID,
+													)}
 												/>
 											),
 									)}
@@ -132,6 +160,9 @@ const UserSidebar = ({
 													userName={item.USER_NM}
 													userTitle={item.USER_TITLE}
 													userImg={item.USER_IMG_URL}
+													newMsgNoti={unReadChatListState.includes(
+														item.USER_UID,
+													)}
 												/>
 											),
 									)}
