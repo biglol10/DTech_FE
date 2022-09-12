@@ -11,12 +11,59 @@ const Page: NextPage<any> = (state) => {
 	console.log(state); // has propsSent by getServerSideProps
 
 	return (
-		<div>
-			asfadsfsadf
-			<div>
-				asdljsadlkfj;{' '}
-				<button onClick={() => router.push('/dashboard')}>to dashboard</button>
-			</div>
+		// <div>
+		// 	asfadsfsadf
+		// 	<div>
+		// 		asdljsadlkfj;{' '}
+		// 		<button onClick={() => router.push('/dashboard')}>to dashboard</button>
+		// 	</div>
+		// </div>
+		<div
+			style={{
+				width: '400px',
+				height: '400px',
+				display: 'flex',
+				flexDirection: 'column',
+				border: '10px solid red',
+				overflow: 'auto',
+			}}
+		>
+			<div
+				style={{
+					height: '350px',
+					width: '150px',
+					backgroundColor: 'blue',
+					border: '5px solid yellow',
+					// flexShrink: '0',
+				}}
+			></div>
+			<div
+				style={{
+					height: '350px',
+					width: '150px',
+					backgroundColor: 'blue',
+					border: '5px solid yellow',
+					// flexShrink: '0',
+				}}
+			></div>
+			<div
+				style={{
+					height: '350px',
+					width: '150px',
+					backgroundColor: 'blue',
+					border: '5px solid yellow',
+					// flexShrink: '0',
+				}}
+			></div>
+			<div
+				style={{
+					height: '350px',
+					width: '150px',
+					backgroundColor: 'blue',
+					border: '5px solid yellow',
+					// flexShrink: '0',
+				}}
+			></div>
 		</div>
 	);
 };

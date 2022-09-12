@@ -36,7 +36,7 @@ const UserSidebar = ({
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
 	const appCommon = useSelector((state: { appCommon: IAppCommon }) => state.appCommon);
 
-	const { init: initUnReadChatList } = useChatUtil();
+	const { init: initUnReadChatList, unReadArrAdd, unReadArrSlice } = useChatUtil();
 
 	useEffect(() => {
 		if (authStore && authStore.userUID) {
@@ -57,6 +57,19 @@ const UserSidebar = ({
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [authStore]);
+
+	useEffect(() => {
+		const socket = authStore.userSocket;
+
+		socket?.on('newMessageReceivedSidebar', ({ fromUID }: { fromUID: string }) => {
+			if (fromUID !== appCommon.currentChatUser) {
+				unReadArrAdd(fromUID);
+			} else {
+				unReadArrSlice(fromUID);
+			}
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [appCommon.currentChatUser, authStore.userSocket]);
 
 	return (
 		<div className={cx('sidebarChat', `${iconLeft ? 'showSidebar' : 'hideSidebar'}`)}>
