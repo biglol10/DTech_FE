@@ -9,6 +9,7 @@ const Page: NextPage<any> = (state) => {
 
 	console.log('came to Page State');
 	console.log(state); // has propsSent by getServerSideProps
+	alert(JSON.stringify(state.counter));
 
 	return (
 		// <div>
@@ -71,7 +72,10 @@ const Page: NextPage<any> = (state) => {
 export const getServerSideProps = wrapper.getServerSideProps((store) => (context): any => {
 	const { token } = parseCookies(context);
 
-	// store.dispatch({ type: 'ADDBYAMOUNT', data: 1012 });
+	store.dispatch({ type: 'ADDBYAMOUNT', data: 1012 });
+
+	// console.log(`store in getServerSideProps is`);
+	// console.log(store.getState());
 
 	return {
 		props: {
@@ -84,6 +88,11 @@ export const getServerSideProps = wrapper.getServerSideProps((store) => (context
 	};
 });
 
-export default connect((state: any) => state)(Page);
+export default connect((state: any, context: any) => {
+	console.log('state in connect is');
+	console.log(state);
+	console.log(context);
+	return state;
+})(Page);
 
 // export default Page;

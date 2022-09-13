@@ -39,6 +39,17 @@
 		}
 	}
 
+	.peopleGroup {
+		width: 150px;
+		background-color: #424949;
+		color: white;
+		padding: 10px;
+		position: absolute;
+		top: 90%;
+		right: 70%;
+		z-index: 999;
+	}
+
 	.avatarUserCount {
 		color: #696969;
 		font-size: 0.875rem;

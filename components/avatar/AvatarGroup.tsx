@@ -60,16 +60,9 @@ const AvatarGroup = ({
 
 			{showTooltip && (
 				<div
-					style={{
-						width: '150px',
-						backgroundColor: '#424949',
-						color: 'white',
-						padding: '10px',
-						position: 'absolute',
-						top: '90%',
-						right: '70%',
-						zIndex: '999',
-					}}
+					className={Style['peopleGroup']}
+					onMouseEnter={() => setShowTooltip(true)}
+					onMouseLeave={() => setShowTooltip(false)}
 				>
 					<h6>
 						{usersString}

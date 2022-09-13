@@ -258,6 +258,7 @@ const Index = ({
 								{stringItem}
 							</li>
 						))}
+						{/* <li onClick={() => router.push('/examplePage/index3')}>testtest</li> */}
 					</ul>
 					<div>
 						<h4>

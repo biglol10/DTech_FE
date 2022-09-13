@@ -72,7 +72,7 @@ const PersonCard = ({
 				<tbody>
 					<tr>
 						<td>직급:</td>
-						<td>{rank}</td>
+						<td style={{ fontWeight: 'bold' }}>{rank}</td>
 					</tr>
 					<tr>
 						<td>Skill:</td>
