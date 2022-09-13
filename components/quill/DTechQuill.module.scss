@@ -105,3 +105,28 @@
 		}
 	}
 }
+
+.submitButtonOutside {
+	position: absolute;
+	right: 1%;
+	height: 34px;
+	margin: 4px 0px;
+	background: #138567;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	opacity: 1;
+
+	&:disabled {
+		opacity: 0.5;
+		cursor: auto;
+	}
+
+	span {
+		color: #fbfcfc;
+		margin-left: 2px;
+	}
+}
