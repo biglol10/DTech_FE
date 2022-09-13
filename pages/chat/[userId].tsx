@@ -92,6 +92,10 @@ const UserChat = ({
 	useEffect(() => {
 		dispatch({ type: 'SET_CURRENT_CHAT_USER', chatUser: userUID });
 		cookie.set('currentChatUser', userUID);
+
+		return () => {
+			dispatch({ type: 'SET_CURRENT_CHAT_USER', chatUser: '' });
+		};
 	}, [dispatch, userUID]);
 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
@@ -145,6 +149,7 @@ const UserChat = ({
 					.catch((err) => errorCallback(err));
 			}
 		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[authStore.userToken, authStore.userUID, userUID],
 	);
 
@@ -202,14 +207,15 @@ const UserChat = ({
 	);
 
 	useEffect(() => {
-		socket?.on('newMessageReceived', ({ chatListSocket, convIdSocket }: any) => {
+		socket?.on('newMessageReceived', ({ chatListSocket, convIdSocket, fromUID }: any) => {
 			getPrivateChatListAxios(chatListSocket, convIdSocket);
 		});
 		socket?.on('textChangeNotification', (sendingUser: string) => {
 			setSendingUserState(sendingUser);
 			setTextChangeNotification(true);
 		});
-	}, [authStore.userToken, authStore.userUID, getPrivateChatListAxios, socket, userUID]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [socket]);
 
 	const notifyTextChange = useCallback(() => {
 		if (!firstLoadRef.current) {

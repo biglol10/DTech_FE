@@ -4,7 +4,8 @@ import { useRouter } from 'next/router';
 import { generateAvatarImage } from '@utils/appRelated/helperFunctions';
 import { Icon } from 'semantic-ui-react';
 import { useSelector } from 'react-redux';
-import { IAuth, IAppCommon, IUsersStatusArr } from '@utils/types/commAndStoreTypes';
+import { IAuth } from '@utils/types/commAndStoreTypes';
+import { useChatUtil } from '@utils/hooks/customHooks';
 
 import Style from './IndividualChatUser.module.scss';
 
@@ -15,6 +16,7 @@ interface IIndividualChatUser {
 	userTitle: string;
 	userImg?: string;
 	userAdminYN?: string | number;
+	newMsgNoti?: boolean;
 }
 
 const IndividualChatUser = ({
@@ -24,9 +26,12 @@ const IndividualChatUser = ({
 	userTitle,
 	userImg = '',
 	userAdminYN = '0',
+	newMsgNoti = false,
 }: IIndividualChatUser) => {
 	const cx = classNames.bind(Style);
 	const router = useRouter();
+
+	const { unReadArrSlice } = useChatUtil();
 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
 
@@ -39,8 +44,10 @@ const IndividualChatUser = ({
 		<div
 			className={Style['folder-icons']}
 			data-uid={userUID}
-			// onClick={() => router.push({ pathname: `/chat/${userUID}` })}
-			onClick={() => isNotSameUser && router.push({ pathname: `/chat/${userUID}` })}
+			onClick={() => {
+				isNotSameUser && router.push({ pathname: `/chat/${userUID}` });
+				unReadArrSlice(userUID);
+			}}
 		>
 			<div className={cx('user-avatar', onlineStatus.toLowerCase())}>
 				<img src={userImg || generateAvatarImage(userUID)} />
@@ -48,7 +55,9 @@ const IndividualChatUser = ({
 					<Icon name="star" color="yellow" className={Style['starIcon']} />
 				)}
 			</div>
-			<div className={Style['username']}>{`${userName} (${userTitle})`}</div>
+			<div
+				className={cx('username', `${newMsgNoti ? 'newNoti' : 'noNoti'}`)}
+			>{`${userName} (${userTitle})`}</div>
 		</div>
 	);
 };

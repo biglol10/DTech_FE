@@ -47,6 +47,7 @@ export interface IAppCommon {
 		currentRoute: string | null | undefined;
 	};
 	currentChatUser: string;
+	unReadMsg: string[];
 }
 
 export interface IAuth {
@@ -57,7 +58,7 @@ export interface IAuth {
 	userTitle: string;
 	userPhoneNo: string;
 	userDetail: string;
-	userProfile: string;
+	userProfileImg: string;
 	userGitHub: string;
 	userDomain: string;
 	userProject: string;
