@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { MainLayoutTemplate } from '@components/customs';
 import Link from 'next/link';
 import { BoardCard, Button } from '@components/index';
@@ -8,11 +8,13 @@ import Style from './board.module.scss';
 const Index = () => {
 	const dispatch = useDispatch();
 	const [boardList, setBoardList] = useState([]);
+	const uuid = useSelector((state: any) => state.auth.userUID);
 
 	useEffect(() => {
 		dispatch({
 			type: 'BOARD_LIST',
 			setBoardList,
+			uuid,
 		});
 	}, []);
 
@@ -20,17 +22,51 @@ const Index = () => {
 		// console.log(boardList);
 	}, [boardList]);
 
+	const clickFilterBtn = (filterType: string) => {
+		dispatch({
+			type: 'BOARD_FILTER',
+			filterType,
+		});
+	};
+
 	return (
 		<div className={Style['boardPage']}>
-			<h2>Submit2</h2>
-			<Link href="/board/submit">
-				<a>Submit</a>
-			</Link>
 			<div className={Style['boardFilter']}>
-				<Button className={Style['FilterBtn']} content="NEW" />
-				<Button className={Style['FilterBtn']} content="BEST" buttonType="none" />
-				<Button className={Style['FilterBtn']} content="HOT" buttonType="none" />
-				<Button className={Style['FilterBtn']} content="TOP" buttonType="none" />
+				<Button
+					className={Style['filterBtn']}
+					content="NEW"
+					buttonType="primary"
+					onClick={() => {
+						clickFilterBtn('new');
+					}}
+				/>
+				<Button
+					className={Style['filterBtn']}
+					content="BEST"
+					buttonType="none"
+					onClick={() => {
+						clickFilterBtn('best');
+					}}
+				/>
+				<Button
+					className={Style['filterBtn']}
+					content="HOT"
+					buttonType="none"
+					onClick={() => {
+						clickFilterBtn('hot');
+					}}
+				/>
+				<Button
+					className={Style['filterBtn']}
+					content="TOP"
+					buttonType="none"
+					onClick={() => {
+						clickFilterBtn('top');
+					}}
+				/>
+				<Link href="/board/submit" className={Style['boardSumbitBtn']}>
+					<a>Submit</a>
+				</Link>
 			</div>
 			<div className={Style['boardList']}>
 				{boardList.map((card: any) => (
@@ -39,9 +75,10 @@ const Index = () => {
 						id={card.BOARD_CD}
 						title={card.BOARD_TITLE}
 						content={card.BOARD_CONTENT}
-						likeCnt={card.LIKES_CNT}
-						commentCnt={card.COMMENTS_CNT}
+						likeCnt={card.LIKE_CNT}
+						commentCnt={card.CMNT_CNT}
 						images={card.IMG_LIST}
+						liked={card.LIKED}
 					/>
 				))}
 			</div>

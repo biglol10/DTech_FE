@@ -28,8 +28,25 @@
 		margin:auto;
 		align-items: center;
 		margin
-		.FilterBtn{
+		.filterBtn{
 			margin-left:20px;
 		}
+		.boardSumbitBtn{
+			
+		}
+	}
+}
+.commentPage{
+	display: flex;
+	flex-direction: column;
+	
+	.cardDiv{
+		margin:auto;
+	}
+	.commentDiv{
+		height:300px;
+		background-color: white;
+		width:600px;
+		margin:auto;
 	}
 }

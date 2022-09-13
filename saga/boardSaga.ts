@@ -27,8 +27,8 @@ interface ISubmitBoard {
 	errMessage?: string | undefined;
 }
 
-const boardListFunction = function* ({ setBoardList }: any) {
-	const boardListResult: IBoardList = yield call(boardListRequest, {});
+const boardListFunction = function* ({ setBoardList, uuid }: any) {
+	const boardListResult: IBoardList = yield call(boardListRequest, { uuid });
 
 	if (boardListResult.result === 'success') {
 		setBoardList(boardListResult.boardList);
@@ -89,6 +89,15 @@ const submitBoardFunction = function* ({ content, uuid, selectedTech, boardTitle
 	yield call(sendBoardImgRequest, formData);
 };
 
+const boardDetailFunction = function* ({ brdId, uuid, card, setCard }: any) {
+	// console.log('boardDetailFunction');
+	const boardListResult: IBoardList = yield call(boardListRequest, { uuid, brdId });
+
+	// console.log(boardListResult.boardList);
+	setCard([boardListResult.boardList]);
+	yield;
+};
+
 const getBoardList = function* () {
 	yield takeLatest(RCONST.BOARD_LIST, boardListFunction);
 };
@@ -105,6 +114,16 @@ const getTechList = function* () {
 	yield takeLatest(RCONST.BOARD_TECH_LIST, techListFunction);
 };
 
+const getBoardDetail = function* () {
+	yield takeLatest(RCONST.BOARD_DETAIL, boardDetailFunction);
+};
+
 export default function* boardSaga() {
-	yield all([fork(getBoardList), fork(setBoardLike), fork(setSubmitBoard), fork(getTechList)]);
+	yield all([
+		fork(getBoardList),
+		fork(setBoardLike),
+		fork(setSubmitBoard),
+		fork(getTechList),
+		fork(getBoardDetail),
+	]);
 }

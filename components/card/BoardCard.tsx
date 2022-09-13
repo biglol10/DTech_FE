@@ -1,5 +1,6 @@
 import { ICard } from '@utils/types/componentTypes';
 import { useDispatch, useSelector } from 'react-redux';
+import Link from 'next/link';
 import { Card, Icon, Image } from 'semantic-ui-react';
 import SimpleImageSlider from 'react-simple-image-slider';
 import { useState, useEffect } from 'react';
@@ -23,8 +24,9 @@ const BoardCard = ({
 	userName = '장보영',
 	userTitle = '선임',
 	images = [],
+	liked = 0,
 }: ICard) => {
-	const [like, setLike] = useState(false);
+	const [like, setLike] = useState(liked !== 0);
 	const [likeCount, setLikeCount] = useState(likeCnt);
 	const userUID = useSelector((state: any) => state.auth.userUID);
 	const dispatch = useDispatch();
@@ -77,10 +79,15 @@ const BoardCard = ({
 							)}
 
 							<Card.Content extra className={Style['comments']}>
-								<a>
-									<Icon name="comment alternate outline" />
-									{commentCnt} comments
-								</a>
+								<Link
+									href={{ pathname: '/board/comment', query: { brd: id } }}
+									className={Style['boardSumbitBtn']}
+								>
+									<a>
+										<Icon name="comment alternate outline" />
+										{commentCnt} comments
+									</a>
+								</Link>
 							</Card.Content>
 						</Card.Content>
 					</Card>
