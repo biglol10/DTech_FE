@@ -37,7 +37,7 @@ $sectionWidth: 60%;
 }
 
 .registerTextarea {
-	min-height: 300px !important;
+	min-height: 200px !important;
 	width: -webkit-fill-available !important;
 }
 
@@ -92,5 +92,9 @@ $sectionWidth: 60%;
 }
 
 .techBtnDiv {
-	margin-bottom: 20px;
+	margin-bottom: 2px;
+}
+
+.inputLabelHeader{
+	margin-top:10px;
 }

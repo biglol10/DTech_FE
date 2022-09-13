@@ -8,9 +8,11 @@
  * 3      변지욱     2022-08-18   feature/JW/socket           Socket으로 온라인 오프라인 유저 표시
  * 4      변지욱     2022-08-18   feature/JW/socket           온라인 유저 props로 전달
  * 5      변지욱     2022-08-27   feature/JW/layout           text변경에 따른 리랜더링 이상현상 해결
+ * 6      변지욱     2022-08-29   feature/JW/layoutchat       신규로 가입한 사람이 있을 경우 socket event 받도록 함
+ * 7      변지욱     2022-09-08   feature/JW/chatPage         Admin인 사람들은 따로 표시
  ********************************************************************************************/
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Avatar } from '@components/index';
 import { Icon } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
@@ -20,6 +22,7 @@ import { useSocket } from '@utils/hooks/customHooks';
 import axios from 'axios';
 import { IAuth, IAppCommon, IUsersStatusArr } from '@utils/types/commAndStoreTypes';
 import _ from 'lodash';
+import { generateAvatarImage } from '@utils/appRelated/helperFunctions';
 
 import UserSidebar from './UserSidebar';
 import Style from './MainLayoutTemplate.module.scss';
@@ -38,6 +41,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 
 	const wrapperRef = useRef<HTMLDivElement>(null);
 	const connectedUsersRef = useRef<any>([]);
+	const usersStatusArrRef = useRef<any>([]);
 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
 	const appCommon = useSelector((state: { appCommon: IAppCommon }) => state.appCommon);
@@ -60,9 +64,11 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 				}
 			};
 
-			document.addEventListener('mousedown', clickSettingOutside);
+			document.addEventListener('mousedown', clickSettingOutside, { capture: true });
 			return () => {
-				document.removeEventListener('mousedown', clickSettingOutside);
+				document.removeEventListener('mousedown', clickSettingOutside, { capture: true });
+
+				cookie.remove('currentChatUser');
 			};
 		}
 	}, []);
@@ -76,7 +82,9 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 			socket.on(
 				'connectedUsers',
 				({ users }: { users: { userId: string; socketId: string }[] }) => {
-					const onlineUsersArr = users.map((item) => item.userId);
+					const onlineUsersArr = users
+						// .filter((item) => item.userId !== authStore.userId)
+						.map((item2) => item2.userId);
 
 					if (!_.isEqual(connectedUsersRef.current, onlineUsersArr)) {
 						connectedUsersRef.current = onlineUsersArr;
@@ -84,22 +92,33 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 					}
 				},
 			);
+
+			socket.on('newUserCreated', () => getUsersStatus());
 		}
 		// 다른 dependency 추가하면 connectedUsers가 여러번 찍힘... 딱히 문제는 없지만 최소한으로 작동하는게 목적
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [authStore]);
 
-	useEffect(() => {
+	const getUsersStatus = useCallback(() => {
 		axios
 			.get('http://localhost:3066/api/auth/getUsersStatus', {
 				params: { onlineUsers: onlineUsers.length > 0 ? onlineUsers : ['none'] },
 				// headers: { Authorization: authStore.userToken },
 			})
 			.then((response) => {
-				setUsersStatusArr(response.data.usersStatus);
+				const stateEqual = _.isEqual(usersStatusArrRef.current, response.data.usersStatus);
+
+				if (!stateEqual) {
+					usersStatusArrRef.current = response.data.usersStatus;
+					setUsersStatusArr(response.data.usersStatus);
+				}
 			})
 			.catch((err) => {});
-	}, [dispatch, onlineUsers]);
+	}, [onlineUsers]);
+
+	useEffect(() => {
+		getUsersStatus();
+	}, [getUsersStatus]);
 
 	const logout = () => {
 		disconnect();
@@ -107,6 +126,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 			type: 'AUTH_RESET',
 		});
 		cookie.remove('token');
+		cookie.remove('currentChatUser');
 		router.push('/login');
 	};
 
@@ -151,22 +171,22 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 							<li
 								className={
 									Style[
-										`${appCommon.route.currentRoute === 'chatPage' && 'active'}`
+										`${
+											['chatPage', 'chatMainPage'].includes(
+												appCommon.route.currentRoute as string,
+											) && 'active'
+										}`
 									]
 								}
-								onClick={() => router.push('/chat/sdafadsf')}
+								onClick={() => router.push('/chat/chatArea')}
 							>
 								<a>채팅</a>
 							</li>
 							<li
 								className={
-									Style[
-										`${
-											appCommon.route.currentRoute === 'examplePage' &&
-											'active'
-										}`
-									]
+									Style[`${appCommon.route.currentRoute === 'board' && 'active'}`]
 								}
+								onClick={() => router.push('/board')}
 							>
 								<a>게시판</a>
 							</li>
@@ -183,10 +203,15 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 							>
 								<Avatar
 									id="userSettingArea"
-									color="white"
+									fontColor="white"
 									content={authStore.userName}
 									imageSize="mini"
 									labelSize="big"
+									svgColor="white"
+									src={
+										authStore.userProfileImg ||
+										generateAvatarImage(authStore.userUID)
+									}
 								/>
 							</li>
 						</ul>
@@ -220,9 +245,12 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 									usersStatusArr: usersStatusArr.filter(
 										(item) => item.ONLINE_STATUS === 'ONLINE',
 									),
+									userToken: authStore.userToken,
 								});
 							} else {
-								return el;
+								return React.cloneElement(el, {
+									userToken: authStore.userToken,
+								});
 							}
 						})}
 					</main>
@@ -232,4 +260,4 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	);
 };
 
-export default MainLayoutTemplate;
+export default React.memo(MainLayoutTemplate);

@@ -8,6 +8,8 @@
 		display: unset;
 		position: relative;
 		border: 1px solid white;
+		min-width: 90px;
+		text-align: start;
 
 		&.showBorder {
 			border: 1px solid #bdc3c7;
@@ -35,6 +37,17 @@
 		.userImage:last-child {
 			margin-right: 0px;
 		}
+	}
+
+	.peopleGroup {
+		width: 150px;
+		background-color: #424949;
+		color: white;
+		padding: 10px;
+		position: absolute;
+		top: 90%;
+		right: 70%;
+		z-index: 999;
 	}
 
 	.avatarUserCount {

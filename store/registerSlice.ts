@@ -37,7 +37,18 @@ const initialState = {
 		userDetailValue: '',
 		userDetailError: false,
 	},
-	techSelectValue: [],
+	userGithubValue: {
+		userGithubValue: '',
+		userGithubError: false,
+	},
+	userDomainValue: {
+		userDomainValue: '',
+		userDomainError: false,
+	},
+	techSelectValue: {
+		techSelectValue: [],
+		techSelectError: false,
+	},
 
 	userProfileImage: {
 		imageFile: null,
@@ -62,6 +73,8 @@ const registerSlice = createSlice({
 		},
 		registerStep3(state, action) {
 			state.userDetailValue = action.payload.userDetailValue;
+			state.userGithubValue = action.payload.userGithubValue;
+			state.userDomainValue = action.payload.userDomainValue;
 		},
 		registerStep4(state, action) {
 			state.techSelectValue = action.payload.techSelectValue;
@@ -103,7 +116,18 @@ const registerSlice = createSlice({
 				userDetailValue: '',
 				userDetailError: false,
 			};
-			state.techSelectValue = [];
+			state.userGithubValue = {
+				userGithubValue: '',
+				userGithubError: false,
+			};
+			state.userDomainValue = {
+				userDomainValue: '',
+				userDomainError: false,
+			};
+			state.techSelectValue = {
+				techSelectValue: [],
+				techSelectError: false,
+			};
 
 			state.userProfileImage = {
 				imageFile: null,

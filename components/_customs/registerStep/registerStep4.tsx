@@ -10,9 +10,9 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
-import { Button, Label } from '@components/index';
+import { Button, Label, InputLayout } from '@components/index';
+import { Label as Label2, Header } from 'semantic-ui-react';
 
-import classNames from 'classnames/bind';
 import Style from './RegisterComp.module.scss';
 
 const RegisterStep4 = (props: any) => {
@@ -23,9 +23,12 @@ const RegisterStep4 = (props: any) => {
 	);
 
 	useEffect(() => {
-		if (techSelectedList.filter((tech: any) => tech.value === true).length === 0) {
+		if (
+			techSelectedList.techSelectValue.filter((tech: any) => tech.value === true).length === 0
+		) {
 			dispatch({
 				type: 'TECH_LIST',
+				techSelectedList,
 				setTechSelectedList,
 			});
 		}
@@ -34,6 +37,7 @@ const RegisterStep4 = (props: any) => {
 	const clickNext = (goNext: boolean) => {
 		dispatch({
 			type: 'VALID_STEP4',
+			setTechSelectedList,
 			techSelectedList,
 			goNext,
 			propFunction: props.propFunction,
@@ -41,23 +45,33 @@ const RegisterStep4 = (props: any) => {
 	};
 
 	const handleTechClick = (key: any) => {
-		const findIndex = techSelectedList.findIndex((element: any) => element.key === key);
+		const findIndex = techSelectedList.techSelectValue.findIndex(
+			(element: any) => element.key === key,
+		);
 
 		if (findIndex !== -1) {
-			setTechSelectedList(
-				techSelectedList.map((tech: any) =>
+			setTechSelectedList({
+				...techSelectedList,
+				techSelectValue: techSelectedList.techSelectValue.map((tech: any) =>
 					tech.key === key ? { ...tech, value: !tech.value } : tech,
 				),
-			);
+				techSelectError: false,
+			});
 		}
 	};
 
 	return (
 		<>
 			<div style={inputElCommStyle(0, 'left', true)}>
-				<Label content="보유한 기술 또는 관심분야를 선택해주세요." size="large"></Label>
+				<Header
+					className={Style['inputLabelHeader']}
+					as="h4"
+					style={{ position: 'relative', left: '0%' }}
+				>
+					보유한 기술 또는 관심분야를 선택해주세요.
+				</Header>
 				<div className={Style['techBtnDiv']}>
-					{techSelectedList.map((tech: any) => {
+					{techSelectedList.techSelectValue.map((tech: any) => {
 						return (
 							<Button
 								content={tech.name}
@@ -73,6 +87,18 @@ const RegisterStep4 = (props: any) => {
 						);
 					})}
 				</div>
+				<Label2
+					basic
+					color="red"
+					pointing="above"
+					size="tiny"
+					style={{
+						visibility: `${techSelectedList.techSelectError ? 'initial' : 'hidden'}`,
+					}}
+				>
+					한 개 이상 선택해주세요.
+				</Label2>
+				<br />
 
 				<div className={Style['buttonBelow']}>
 					<Button

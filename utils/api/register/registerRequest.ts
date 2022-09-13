@@ -1,20 +1,19 @@
 import axios from 'axios';
 
-const registerRequest = async (props: any) => {
-	const postData = {
-		user_id: props.idInputValue.idInputValue,
-		name: props.nameInputValue.nameInputValue,
-		passwd: props.pwInputValue.pwInputValue,
-		team: props.teamSelectValue.teamSelectValue,
-		title: props.titleSelectValue.titleSelectValue,
-		phonenum: props.phoneNumValue.phoneNumValue,
-		detail: props.userDetailValue.userDetailValue,
-		tech_list: props.techSelectValue
-			.filter((tech: any) => tech.value === true)
-			.map((tech: any) => tech.key),
-	};
+interface IRegisterUser {
+	user_id: string;
+	name: string;
+	passwd: string;
+	team: string;
+	title: string;
+	phonenum: string;
+	detail: string;
+	tech_list: string;
+}
+
+const registerRequest = async (props: IRegisterUser) => {
 	const registerResult = await axios
-		.post('http://localhost:3066/api/auth/registerUser', postData)
+		.post('http://localhost:3066/api/auth/registerUser', props)
 		.then((res: any) => {
 			return {
 				result: res.data,

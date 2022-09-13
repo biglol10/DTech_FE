@@ -5,6 +5,8 @@
  *-------------------------------------------------------------------------------------------
  * 1      변지욱     2022-08-25   feature/JW/chat        최초작성
  * 2      변지욱     2022-08-29   feature/JW/chat        유저명 표시하도록 변경, socket에서 직접 채팅리스트 가져오도록 변경
+ * 3      변지욱     2022-08-29   feature/JW/layoutchat  최초 로드 시엔 변경중입니다 텍스트 안 보이게 변경
+ * 4      변지욱     2022-09-06   feature/JW/chatPage    누구랑 채팅하는지 세팅
  ********************************************************************************************/
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -17,10 +19,11 @@ import { ChatList, IUsersStatusArr, IAuth } from '@utils/types/commAndStoreTypes
 import OnlineSvg from '@styles/svg/online.svg';
 import OfflineSvg from '@styles/svg/offline.svg';
 import axios, { AxiosResponse } from 'axios';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import lodash from 'lodash';
+import cookie from 'js-cookie';
 
 import Style from './[userId].module.scss';
 
@@ -32,8 +35,8 @@ interface IChatList {
 	LINK_LIST: string[];
 	SENT_DATETIME: string;
 	USER_UID: string;
-	NAME: string;
-	TITLE: string;
+	USER_NM: string;
+	USER_TITLE: string;
 	CONVERSATION_ID: string;
 }
 
@@ -79,8 +82,21 @@ const UserChat = ({
 	const conversationId = useRef<string>();
 
 	const bottomRef = useRef<any>(null);
+	const firstLoadRef = useRef<boolean>(true);
+	const quillRef = useRef<any>(null);
 
 	const { userId: userUID } = queryObj; // UID in here
+
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch({ type: 'SET_CURRENT_CHAT_USER', chatUser: userUID });
+		cookie.set('currentChatUser', userUID);
+
+		return () => {
+			dispatch({ type: 'SET_CURRENT_CHAT_USER', chatUser: '' });
+		};
+	}, [dispatch, userUID]);
 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
 	const socket = authStore.userSocket;
@@ -126,13 +142,14 @@ const UserChat = ({
 						'http://localhost:3066/api/chat/getPrivateChatList',
 						{ fromUID: authStore.userUID, toUID: userUID },
 						{
-							headers: { Authorization: authStore.userToken },
+							headers: { Authorization: `Bearer ${authStore.userToken}` },
 						},
 					)
 					.then((response) => successCallback(response))
 					.catch((err) => errorCallback(err));
 			}
 		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[authStore.userToken, authStore.userUID, userUID],
 	);
 
@@ -190,20 +207,25 @@ const UserChat = ({
 	);
 
 	useEffect(() => {
-		socket?.on('newMessageReceived', ({ chatListSocket, convIdSocket }: any) => {
+		socket?.on('newMessageReceived', ({ chatListSocket, convIdSocket, fromUID }: any) => {
 			getPrivateChatListAxios(chatListSocket, convIdSocket);
 		});
 		socket?.on('textChangeNotification', (sendingUser: string) => {
 			setSendingUserState(sendingUser);
 			setTextChangeNotification(true);
 		});
-	}, [authStore.userToken, authStore.userUID, getPrivateChatListAxios, socket, userUID]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [socket]);
 
 	const notifyTextChange = useCallback(() => {
-		if (authStore.userName) {
-			socket?.emit('textChangeNotification', {
-				sendingUser: `${authStore.userName} (${authStore.userTitle || '사용자'})`,
-			});
+		if (!firstLoadRef.current) {
+			if (authStore.userName) {
+				socket?.emit('textChangeNotification', {
+					sendingUser: `${authStore.userName} (${authStore.userTitle || '사용자'})`,
+				});
+			}
+		} else {
+			firstLoadRef.current = false;
 		}
 	}, [authStore.userName, authStore.userTitle, socket]);
 
@@ -230,8 +252,8 @@ const UserChat = ({
 					)}
 					<Avatar
 						id="userSettingArea"
-						color="white"
-						content={chatUser ? `${chatUser.NAME} (${chatUser.TITLE})` : ''}
+						fontColor="white"
+						content={chatUser ? `${chatUser.USER_NM} (${chatUser.USER_TITLE})` : ''}
 						imageSize="mini"
 						labelSize="mini"
 					/>
@@ -275,7 +297,6 @@ const UserChat = ({
 																					? 'other'
 																					: 'mine'
 																			}
-																			bottomRef={bottomRef}
 																			linkList={
 																				item3.LINK_LIST
 																			}
@@ -288,7 +309,7 @@ const UserChat = ({
 																					? item3.SENT_DATETIME
 																					: null
 																			}
-																			userName={`${item3.NAME} (${item3.TITLE})`}
+																			userName={`${item3.USER_NM} (${item3.USER_TITLE})`}
 																		/>
 																	);
 																},
@@ -307,12 +328,14 @@ const UserChat = ({
 					)}
 					<div className={Style['quillWrapperDiv']}>
 						<DTechQuill
+							ref={quillRef}
 							quillMaxHeight={250}
 							returnQuillWrapperHeight={(heightValue: number) => {
 								setQuillWrapperHeight(heightValue);
 							}}
 							handleSubmit={(content: ChatList) => {
 								// 이미지 S3 되면 올리고 setChatList 호출
+								console.log(quillRef.current);
 								sendMessageFunction(content);
 							}}
 							QuillSSR={ReactQuill}
@@ -333,6 +356,11 @@ const UserChat = ({
 
 UserChat.PageLayout = MainLayoutTemplate;
 UserChat.displayName = 'chatPage';
+
+// export const getServerSideProps = wrapper.getServerSideProps((store) => (context): any => {
+// 	store.dispatch({ type: 'SET_CURRENT_CHAT_USER', chatUser: context.query });
+// 	return { props: { queryObj: context.query } };
+// });
 
 export const getServerSideProps = async (context: any) => {
 	return { props: { queryObj: context.query } };

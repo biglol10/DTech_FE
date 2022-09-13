@@ -12,6 +12,7 @@ import {
 	registerStep4,
 	registerReset,
 } from '@store/registerSlice';
+import PrevieImageComp from '@components/quill/PreviewImageComp';
 
 interface IIdCheckParam {
 	type: string;
@@ -36,7 +37,12 @@ interface ITechList {
 }
 
 interface IRegisterUser {
-	result: string;
+	result: {
+		uuid: string;
+		title: string;
+		name: string;
+		user_id: string;
+	};
 	errMessage: string | undefined;
 }
 const idCheckFunction = function* ({ idInputValue, setIdInputValue }: IIdCheckParam) {
@@ -71,7 +77,7 @@ const teamListFunction = function* ({ setTeamList }: any) {
 	if (teamListResult.result === 'success') {
 		const tempArr = teamListResult.teamList;
 		const newTempArr = tempArr.map((team: any) => {
-			return { key: team.TEAM_CD, value: team.TEAM_CD, text: team.NAME };
+			return { key: team.TEAM_CD, value: team.TEAM_CD, text: team.TEAM_NM };
 		});
 
 		setTeamList(newTempArr);
@@ -81,16 +87,16 @@ const teamListFunction = function* ({ setTeamList }: any) {
 	yield;
 };
 
-const techListFunction = function* ({ setTechSelectedList }: any) {
+const techListFunction = function* ({ techSelectedList, setTechSelectedList }: any) {
 	const techListResult: ITechList = yield call(techListRequest, {});
 
 	if (techListResult.result === 'success') {
 		const tempArr = techListResult.techList;
 		const newTempArr = tempArr.map((tech: any) => {
-			return { key: tech.TECH_CD, value: false, name: tech.NAME };
+			return { key: tech.TECH_CD, value: false, name: tech.TECH_NM };
 		});
 
-		setTechSelectedList(newTempArr);
+		setTechSelectedList({ ...techSelectedList, techSelectValue: newTempArr });
 	} else {
 		console.error(techListResult.errMessage);
 	}
@@ -120,7 +126,7 @@ const validStep1Function = function* ({
 
 	if (idInputValue.idConfirm === false) {
 		idInputError = true;
-		idInputErrMsg = '중복확인을 해주세요.';
+		idInputErrMsg = '중복확인을 해주세요. ';
 		isReject = true;
 	}
 
@@ -222,14 +228,35 @@ const validStep2Function = function* ({
 	);
 };
 
-const validStep4Function = function* ({ techSelectedList, goNext, propFunction }: any) {
-	propFunction({ goNext });
+const validStep4Function = function* ({
+	setTechSelectedList,
+	techSelectedList,
+	goNext,
+	propFunction,
+}: any) {
+	if (goNext) {
+		// const selected = (tech: any) => tech.value === true;
+
+		const techSelected = techSelectedList.techSelectValue.some(
+			(tech: any) => tech.value === true,
+		);
+
+		if (techSelected) {
+			setTechSelectedList({ ...techSelectedList, techSelectError: false });
+			propFunction({ goNext });
+		} else {
+			setTechSelectedList({ ...techSelectedList, techSelectError: true });
+		}
+	} else {
+		propFunction({ goNext });
+	}
 
 	yield put(registerStep4({ techSelectValue: techSelectedList }));
 };
 const validStep3Function = function* ({
 	userDetailValue,
-	setUserDetailValue,
+	userGithubValue,
+	userDomainValue,
 	goNext,
 	propFunction,
 }: any) {
@@ -248,20 +275,44 @@ const validStep3Function = function* ({
 	} else {
 		propFunction({ goNext });
 	}
-	yield put(registerStep3({ userDetailValue }));
+	yield put(registerStep3({ userDetailValue, userGithubValue, userDomainValue }));
 };
+
 const registerUserFunction = function* ({ registerData, propFunction }: any) {
+	const postData = {
+		type: 'REGISTER_USER',
+		user_id: registerData.idInputValue.idInputValue,
+		name: registerData.nameInputValue.nameInputValue,
+		passwd: registerData.pwInputValue.pwInputValue,
+		team: registerData.teamSelectValue.teamSelectValue,
+		title: registerData.titleSelectValue.titleSelectValue,
+		phonenum: registerData.phoneNumValue.phoneNumValue,
+		detail: registerData.userDetailValue.userDetailValue,
+		github: registerData.userGithubValue.userGithubValue,
+		domain: registerData.userDomainValue.userDomainValue,
+		tech_list: registerData.techSelectValue.techSelectValue
+			.filter((tech: any) => tech.value === true)
+			.map((tech: any) => tech.key),
+	};
+
+	const registerResult: IRegisterUser = yield call(registerRequest, postData);
+
 	if (registerData.image.imageFile) {
-		const fileName = registerData.idInputValue.idInputValue.split('@')[0];
-		const fileExtName = registerData.image.imageFile.name.split('.')[1];
+		const fileName = registerResult.result.uuid;
+		const fileExtName = registerData.image.imageFile.name.split('.').reverse()[0];
+
 		const formData = new FormData();
+		const postData2: any = {
+			type: 'REGISTER_USER',
+			dir: 'profile_img/',
+		};
+
+		formData.append('postData', JSON.stringify(postData2));
 
 		formData.append('img', registerData.image.imageFile, `${fileName}.${fileExtName}`);
 
 		yield call(sendUserImgRequest, formData);
 	}
-
-	const registerResult: IRegisterUser = yield call(registerRequest, registerData);
 
 	propFunction({ goNext: true, registerResult });
 	yield put(registerReset());

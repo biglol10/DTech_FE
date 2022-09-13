@@ -32,10 +32,11 @@ export interface IToastState {
 export interface IUsersStatusArr {
 	USER_UID: string;
 	USER_ID: string;
-	NAME: string;
-	TITLE: string;
-	DETAIL: string;
-	IMG_URL: string;
+	USER_NM: string;
+	USER_TITLE: string;
+	USER_DETAIL: string;
+	USER_IMG_URL: string;
+	USER_ADMIN_YN: string | number;
 	ONLINE_STATUS: 'ONLINE' | 'OFFLINE';
 }
 
@@ -45,6 +46,8 @@ export interface IAppCommon {
 	route: {
 		currentRoute: string | null | undefined;
 	};
+	currentChatUser: string;
+	unReadMsg: string[];
 }
 
 export interface IAuth {
@@ -55,7 +58,7 @@ export interface IAuth {
 	userTitle: string;
 	userPhoneNo: string;
 	userDetail: string;
-	userProfile: string;
+	userProfileImg: string;
 	userGitHub: string;
 	userDomain: string;
 	userProject: string;

@@ -37,11 +37,23 @@
 				background-color: #fe4663;
 			}
 		}
+
+		.starIcon {
+			position: absolute;
+			top: -8px;
+			left: -5px;
+			width: 8px;
+			height: 8px;
+		}
 	}
 
 	.username {
 		margin-left: 10px;
-		font-weight: bold;
+		font-weight: lighter;
 		font-size: 15px;
+
+		&.newNoti {
+			font-weight: bold;
+		}
 	}
 }

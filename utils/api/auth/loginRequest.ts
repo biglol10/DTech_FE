@@ -11,7 +11,7 @@ const fireTokenRequest = async (token: string) => {
 			'http://localhost:3066/api/auth/getLoggedInUserInfo',
 			{},
 			{
-				headers: { Authorization: token },
+				headers: { Authorization: `Bearer ${token}` },
 			},
 		)
 		.then((response) => {
@@ -42,6 +42,7 @@ const fireLoginRequest = async (props: authObjParamSetting) => {
 					time: responseData.time,
 					userToken: responseData.token,
 					userUID: responseData.userUID,
+					userProfileImg: responseData.userProfileImg,
 					result: 'success',
 				};
 			} else {

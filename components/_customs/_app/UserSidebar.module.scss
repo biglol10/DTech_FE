@@ -39,10 +39,17 @@
 			}
 		}
 
+		.usersAdmin,
 		.usersOnline,
 		.usersOffline {
 			margin: 0 5%;
 			color: white;
+		}
+
+		.adminDivider {
+			& > span:nth-child(2) {
+				color: yellow !important;
+			}
 		}
 	}
 }
