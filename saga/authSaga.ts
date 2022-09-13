@@ -53,6 +53,7 @@ const setAuthFunction = function* ({
 		userName?: string;
 		time?: any;
 		userToken?: string;
+		userProfileImg?: string;
 	} = yield call(fireLoginRequest, userSetting);
 
 	if (loginResult.result === 'success') {
@@ -70,6 +71,7 @@ interface ITokenUser {
 	TEAM_CD: string;
 	USER_TITLE: string;
 	USER_ADMIN_YN: number;
+	USER_IMG_URL: string;
 }
 
 interface ITokenResult {
@@ -87,6 +89,7 @@ const getAuthFunction = function* ({ token, callbackFn }: any) {
 			userToken: token,
 			userUID: tokenResult.user.USER_UID,
 			userTitle: tokenResult.user.USER_TITLE,
+			userProfileImg: tokenResult.user.USER_IMG_URL,
 		};
 
 		yield put(authSetting(loginResult));

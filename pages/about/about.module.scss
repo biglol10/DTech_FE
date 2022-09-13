@@ -1,0 +1,8 @@
+$backgroundUrl: url(~@public/background/AboutBackground2.png);
+
+.aboutMain {
+	background-image: $backgroundUrl;
+	background-size: cover;
+	width: 100vw;
+	height: 100vh;
+}

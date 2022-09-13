@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 /** ****************************************************************************************
  * @설명 : Quill component
  ********************************************************************************************
@@ -38,6 +40,7 @@ interface IDTechQuill {
 	enterSubmit?: boolean;
 	QuillSSR: ComponentType<any>;
 	notifyTextChange?: Function | null;
+	submitButtonOutside?: boolean;
 }
 
 const ReactQuill = dynamic(
@@ -65,6 +68,7 @@ const DTechQuillStorybook = forwardRef<any, IDTechQuill>(
 			enterSubmit = true,
 			QuillSSR,
 			notifyTextChange = null,
+			submitButtonOutside = false,
 		},
 		ref,
 	) => {
@@ -80,14 +84,6 @@ const DTechQuillStorybook = forwardRef<any, IDTechQuill>(
 			inputFileRef.current.click();
 
 			inputFileRef.current.onchange = async () => {
-				// const [file] = input.files;
-
-				// // S3 Presigned URL로 업로드하고 image url 받아오기
-				// const { preSignedPutUrl: presignedURL, readObjectUrl: imageURL } = (
-				// 	await getS3PresignedURL(file.name)
-				// ).data;
-				// await uploadImage(presignedURL, file);
-
 				if (urlPreviewList.length >= 6) {
 					toast['error'](<>{'이미지는 최대 6개로 제한합니다'}</>);
 					return;
@@ -108,6 +104,7 @@ const DTechQuillStorybook = forwardRef<any, IDTechQuill>(
 						setUrlPreviewList([
 							...urlPreviewList,
 							{
+								imageFile: inputFileRef.current.files[0],
 								fileName: `${inputFileRef.current.files[0].name}_${imageCounter}`,
 								filePreview: mediaPreview,
 							},
@@ -120,6 +117,7 @@ const DTechQuillStorybook = forwardRef<any, IDTechQuill>(
 
 				setQuillContext(quillRef.current.getEditor().getText());
 			};
+			// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, [urlPreviewList]);
 
 		const editorSubmitEvent = useCallback(() => {
@@ -155,7 +153,6 @@ const DTechQuillStorybook = forwardRef<any, IDTechQuill>(
 					.filter((item: any) => item.attributes?.link)
 					.map((item2: any) => item2.insert),
 			}),
-			// eslint-disable-next-line react-hooks/exhaustive-deps
 			[urlPreviewList, quillContext],
 		);
 
@@ -316,6 +313,40 @@ const DTechQuillStorybook = forwardRef<any, IDTechQuill>(
 			[notifyTextChange, urlPreviewList.length],
 		);
 
+		const submitButtonMemo = useMemo(() => {
+			return (
+				<button
+					type="button"
+					disabled={
+						quillContext.trim() === '<p>&nbsp;</p>' ||
+						quillContext.trim() === '<p></p>' ||
+						quillContext.trim().length === 0 ||
+						quillContext.trim() === '<p><br></p>'
+					}
+					onClick={() => editorSubmitEvent()}
+					className={Style[`${submitButtonOutside && 'submitButtonOutside'}`]}
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						version="1.0"
+						width="20.000000pt"
+						height="20.000000pt"
+						viewBox="0 0 30.000000 30.000000"
+						preserveAspectRatio="xMidYMid meet"
+					>
+						<g
+							transform="translate(0.000000,30.000000) scale(0.100000,-0.100000)"
+							fill="#FBFCFC"
+							stroke="none"
+						>
+							<path d="M138 233 c-60 -20 -108 -39 -108 -42 0 -3 16 -19 36 -34 l35 -29 62 49 62 48 -48 -62 -49 -62 29 -35 c15 -20 31 -36 34 -36 5 0 79 218 79 234 0 10 -21 5 -132 -31z" />
+						</g>
+					</svg>
+					<span>submit</span>
+				</button>
+			);
+		}, [editorSubmitEvent, quillContext, submitButtonOutside]);
+
 		return (
 			<>
 				<input
@@ -370,36 +401,9 @@ const DTechQuillStorybook = forwardRef<any, IDTechQuill>(
 							})}
 						</div>
 					)}
-
-					<button
-						type="button"
-						disabled={
-							quillContext.trim() === '<p>&nbsp;</p>' ||
-							quillContext.trim() === '<p></p>' ||
-							quillContext.trim().length === 0 ||
-							quillContext.trim() === '<p><br></p>'
-						}
-						onClick={() => editorSubmitEvent()}
-					>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							version="1.0"
-							width="20.000000pt"
-							height="20.000000pt"
-							viewBox="0 0 30.000000 30.000000"
-							preserveAspectRatio="xMidYMid meet"
-						>
-							<g
-								transform="translate(0.000000,30.000000) scale(0.100000,-0.100000)"
-								fill="#FBFCFC"
-								stroke="none"
-							>
-								<path d="M138 233 c-60 -20 -108 -39 -108 -42 0 -3 16 -19 36 -34 l35 -29 62 49 62 48 -48 -62 -49 -62 29 -35 c15 -20 31 -36 34 -36 5 0 79 218 79 234 0 10 -21 5 -132 -31z" />
-							</g>
-						</svg>
-						<span>submit</span>
-					</button>
+					{!submitButtonOutside && submitButtonMemo}
 				</div>
+				{submitButtonOutside && submitButtonMemo}
 			</>
 		);
 	},

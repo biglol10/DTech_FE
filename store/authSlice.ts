@@ -9,7 +9,7 @@ const initialState: IAuth = {
 	userTitle: '',
 	userPhoneNo: '',
 	userDetail: '',
-	userProfile: '',
+	userProfileImg: '',
 	userGitHub: '',
 	userDomain: '',
 	userProject: '',
@@ -30,7 +30,7 @@ const authSlice = createSlice({
 			state.userTitle = action.payload.userTitle || '';
 			state.userPhoneNo = action.payload.userPhoneNo || '';
 			state.userDetail = action.payload.userDetail || '';
-			state.userProfile = action.payload.userProfile || '';
+			state.userProfileImg = action.payload.userProfileImg || '';
 			state.userGitHub = action.payload.userGitHub || '';
 			state.userDomain = action.payload.userDomain || '';
 			state.userProject = action.payload.userProject || '';
@@ -45,7 +45,7 @@ const authSlice = createSlice({
 			state.userTitle = '';
 			state.userPhoneNo = '';
 			state.userDetail = '';
-			state.userProfile = '';
+			state.userProfileImg = '';
 			state.userGitHub = '';
 			state.userDomain = '';
 			state.userProject = '';

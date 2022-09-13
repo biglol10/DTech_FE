@@ -10,6 +10,7 @@
  * 5      변지욱     2022-08-24   feature/JW/chat             한글입력버그 해결
  * 6      변지욱     2022-08-25   feature/JW/chat             onchange시 notifyTextChange 이벤트 발생
  * 7      변지욱     2022-08-27   feature/JW/inputwithicon    lodash 이용해 notifyTextChange 제어
+ * 8      변지욱     2022-09-13   feature/JW/quillButton      Send 버튼 위치 제어 가능토록 수정
  ********************************************************************************************/
 
 import React, {
@@ -40,6 +41,7 @@ interface IDTechQuill {
 	enterSubmit?: boolean;
 	QuillSSR: ComponentType<any>;
 	notifyTextChange?: Function | null;
+	submitButtonOutside?: boolean;
 }
 
 const ReactQuill = dynamic(
@@ -67,6 +69,7 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 			enterSubmit = true,
 			QuillSSR,
 			notifyTextChange = null,
+			submitButtonOutside = false,
 		},
 		ref,
 	) => {
@@ -291,6 +294,25 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 			[notifyTextChange, urlPreviewList.length],
 		);
 
+		const submitButtonMemo = useMemo(() => {
+			return (
+				<button
+					type="button"
+					disabled={
+						quillContext.trim() === '<p>&nbsp;</p>' ||
+						quillContext.trim() === '<p></p>' ||
+						quillContext.trim().length === 0 ||
+						quillContext.trim() === '<p><br></p>'
+					}
+					onClick={() => editorSubmitEvent()}
+					className={Style[`${submitButtonOutside && 'submitButtonOutside'}`]}
+				>
+					<SendSvg />
+					<span>submit</span>
+				</button>
+			);
+		}, [editorSubmitEvent, quillContext, submitButtonOutside]);
+
 		return (
 			<>
 				<input
@@ -346,20 +368,9 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 						</div>
 					)}
 
-					<button
-						type="button"
-						disabled={
-							quillContext.trim() === '<p>&nbsp;</p>' ||
-							quillContext.trim() === '<p></p>' ||
-							quillContext.trim().length === 0 ||
-							quillContext.trim() === '<p><br></p>'
-						}
-						onClick={() => editorSubmitEvent()}
-					>
-						<SendSvg />
-						<span>submit</span>
-					</button>
+					{!submitButtonOutside && submitButtonMemo}
 				</div>
+				{submitButtonOutside && submitButtonMemo}
 			</>
 		);
 	},

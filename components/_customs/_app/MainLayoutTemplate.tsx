@@ -208,7 +208,10 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 									imageSize="mini"
 									labelSize="big"
 									svgColor="white"
-									src={generateAvatarImage(authStore.userUID)}
+									src={
+										authStore.userProfileImg ||
+										generateAvatarImage(authStore.userUID)
+									}
 								/>
 							</li>
 						</ul>

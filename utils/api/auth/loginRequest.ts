@@ -42,6 +42,7 @@ const fireLoginRequest = async (props: authObjParamSetting) => {
 					time: responseData.time,
 					userToken: responseData.token,
 					userUID: responseData.userUID,
+					userProfileImg: responseData.userProfileImg,
 					result: 'success',
 				};
 			} else {
