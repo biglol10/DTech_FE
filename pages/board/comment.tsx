@@ -4,17 +4,36 @@ import { BoardCard } from '@components/index';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { Button, TextArea } from 'semantic-ui-react';
+
 import Style from './board.module.scss';
 
 const Comment = ({ brd }: any) => {
 	const dispatch = useDispatch();
 	const router = useRouter();
+	const [commentArea, setCommentArea] = useState('');
+	const [commentList, setCommentList] = useState([]);
 	const uuid = useSelector((state: any) => state.auth.userUID);
 	const [card, setCard] = useState([]);
 
 	useEffect(() => {
 		dispatch({ type: 'BOARD_DETAIL', brdId: router.query.brd, uuid, card, setCard });
+		dispatch({ type: 'COMMENT_LIST', brdId: router.query.brd, setCommentList });
 	}, []);
+	// useEffect(() => {
+	//   console.log()
+	// 	dispatch({ type: 'COMMENT_LIST', brdId: router.query.brd });
+	// }, []);
+
+	const sendComment = () => {
+		dispatch({
+			type: 'SEND_COMMENT',
+			commentArea,
+			brdId: router.query.brd,
+			uuid,
+			setCommentList,
+		});
+	};
 
 	return (
 		<>
@@ -33,7 +52,27 @@ const Comment = ({ brd }: any) => {
 						/>
 					))}
 				</div>
-				<div className={Style['commentDiv']}>Hello</div>
+				<div className={Style['commentDiv']}>
+					<div className={Style['commentArea']}>
+						<TextArea
+							onChange={(event: any) => {
+								setCommentArea(event.target.value);
+							}}
+						/>
+						<Button
+							onClick={() => {
+								sendComment();
+							}}
+						>
+							전송
+						</Button>
+					</div>
+					<div className={Style['commentList']}>
+						{commentList.map((cmnt: any) => (
+							<div key={cmnt.CMNT_CD}>{cmnt.BOARD_CMNT}</div>
+						))}
+					</div>
+				</div>
 			</div>
 		</>
 	);

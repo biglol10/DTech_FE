@@ -5,6 +5,9 @@ import { boardLikeRequest } from '@utils/api/board/setBoardLikeRequest';
 import { submitBoardRequest } from '@utils/api/board/setSubmitBoardRequest';
 import { sendBoardImgRequest } from '@utils/api/board/setBoardImgRequest';
 import { techListRequest } from '@utils/api/register/getTechListRequest';
+import { commentListRequest } from '@utils/api/board/getCommentListRequest';
+import { commentRequest } from '@utils/api/board/setCommentRequest';
+import { useDispatch } from 'react-redux';
 
 interface IBoardList {
 	result: string;
@@ -21,9 +24,9 @@ interface ITechList {
 	techList: any | undefined;
 	errMessage: string | undefined;
 }
-interface ISubmitBoard {
+interface ICommentList {
 	result: string;
-	resultData: any | undefined;
+	commentList: any | undefined;
 	errMessage?: string | undefined;
 }
 
@@ -98,6 +101,27 @@ const boardDetailFunction = function* ({ brdId, uuid, card, setCard }: any) {
 	yield;
 };
 
+const setCommentFunction = function* ({ commentArea, brdId, uuid, setCommentList }: any) {
+	console.log('setCommentFunction');
+	const commentListResult: ICommentList = yield call(commentRequest, {
+		commentArea,
+		brdId,
+		uuid,
+	});
+
+	console.log(commentListResult.commentList);
+
+	setCommentList(commentListResult.commentList);
+};
+
+const getCommentListFunction = function* ({ brdId, setCommentList }: any) {
+	// console.log('getCommentList');
+	const commentListResult: ICommentList = yield call(commentListRequest, { brdId });
+
+	// console.log(commentListResult.commentList);
+	setCommentList(commentListResult.commentList);
+};
+
 const getBoardList = function* () {
 	yield takeLatest(RCONST.BOARD_LIST, boardListFunction);
 };
@@ -118,6 +142,14 @@ const getBoardDetail = function* () {
 	yield takeLatest(RCONST.BOARD_DETAIL, boardDetailFunction);
 };
 
+const setComment = function* () {
+	yield takeLatest(RCONST.SEND_COMMENT, setCommentFunction);
+};
+
+const getCommentList = function* () {
+	yield takeLatest(RCONST.COMMENT_LIST, getCommentListFunction);
+};
+
 export default function* boardSaga() {
 	yield all([
 		fork(getBoardList),
@@ -125,5 +157,7 @@ export default function* boardSaga() {
 		fork(setSubmitBoard),
 		fork(getTechList),
 		fork(getBoardDetail),
+		fork(setComment),
+		fork(getCommentList),
 	]);
 }

@@ -5,7 +5,7 @@
 		width:60%;
 		margin:auto;
 		border-radius: 10px;
-		padding:20px;
+		padding:20px 20px 60px 20px;
 		margin-top: 20px;
 
 		.boardTitle{
@@ -48,5 +48,9 @@
 		background-color: white;
 		width:600px;
 		margin:auto;
+		padding: 20px;
+		.commentArea{
+			display: flex;
+		}
 	}
 }

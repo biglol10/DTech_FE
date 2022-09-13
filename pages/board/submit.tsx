@@ -99,15 +99,7 @@ const Submit = () => {
 							// console.log(content);
 							submitBoard(content);
 						}}
-					/>
-
-					<Button
-						className={Style['registerButton']}
-						content="보내기"
-						size="large"
-						color="grey"
-						buttonType="none"
-						onClick={submitClick}
+						submitButtonOutside={true}
 					/>
 				</div>
 			</div>
