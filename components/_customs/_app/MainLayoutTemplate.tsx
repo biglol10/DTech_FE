@@ -194,6 +194,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 								className={
 									Style[`${appCommon.route.currentRoute === 'about' && 'active'}`]
 								}
+								onClick={() => router.push('/about')}
 							>
 								<a>About</a>
 							</li>
