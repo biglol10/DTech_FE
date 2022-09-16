@@ -13,7 +13,7 @@ export interface IModalState {
 
 export interface ChatList {
 	value: string;
-	imgList?: { fileName: string; filePreview: string }[] | never[];
+	imgList?: string[];
 	linkList?: any;
 }
 

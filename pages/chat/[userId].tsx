@@ -31,7 +31,7 @@ interface IChatList {
 	MESSAGE_ID: string;
 	TO_USERNAME: string;
 	MESSAGE_TEXT: string;
-	IMG_LIST: string;
+	IMG_LIST: string[];
 	LINK_LIST: string[];
 	SENT_DATETIME: string;
 	USER_UID: string;
@@ -310,6 +310,7 @@ const UserChat = ({
 																					: null
 																			}
 																			userName={`${item3.USER_NM} (${item3.USER_TITLE})`}
+																			imgList={item3.IMG_LIST}
 																		/>
 																	);
 																},

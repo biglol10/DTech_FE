@@ -31,6 +31,17 @@ const SingleChatMessage = ({
 
 	const { handleModal } = useModal();
 
+	// console.log('imgimgimgimg');
+	// console.log(imgList);
+	// console.log(typeof imgList);
+	// console.log(JSON.parse(imgList));
+	// console.log(typeof JSON.parse(JSON.parse(JSON.stringify(`${imgList}`))));
+
+	// console.log('linklinklink');
+	// console.log(linkList);
+	// console.log(typeof linkList);
+	// console.log(typeof JSON.parse(JSON.stringify(`${linkList}`)));
+
 	const sentTimeRef = useRef(sentTime ? dayjs(sentTime).format('HH:mm') : null);
 
 	const openImageModal = (imgSrc: string) => {
@@ -117,10 +128,20 @@ const SingleChatMessage = ({
 							</div>
 						</>
 					)}
-
+					{/* <span>{imgList}</span> */}
 					{imgList && imgList.length > 0 && (
 						<div className={cx('imageListDiv', messageOwner)}>
-							{imgList.map((item: { fileName: string; filePreview: string }, idx) => (
+							{imgList.map((itemUrl: string, idx: number) => {
+								return (
+									<img
+										style={{ height: '50px', width: '50px' }}
+										key={`asdf_${idx}`}
+										src={itemUrl}
+										onClick={() => openImageModal(itemUrl)}
+									/>
+								);
+							})}
+							{/* {imgList.map((item: { fileName: string; filePreview: string }, idx) => (
 								<Image
 									key={`asdf_${idx}`}
 									src={item.filePreview} // 아직 이미지 S3에 올리는 작업을 하지 않았으니 미리보기 적용
@@ -128,7 +149,7 @@ const SingleChatMessage = ({
 									width={50}
 									onClick={() => openImageModal(item.filePreview)}
 								/>
-							))}
+							))} */}
 						</div>
 					)}
 				</div>
