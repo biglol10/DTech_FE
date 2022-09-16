@@ -1,4 +1,4 @@
-import { useCallback, useRef, useEffect } from 'react';
+import { useCallback, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import io, { Socket } from 'socket.io-client';
 import { IModalState, IAppCommon } from '@utils/types/commAndStoreTypes';

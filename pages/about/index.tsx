@@ -1,5 +1,5 @@
 import { MainLayoutTemplate } from '@components/customs';
-import { Button, Card, Image as SemanticImage, Table, Header } from 'semantic-ui-react';
+import { Card, Table, Header } from 'semantic-ui-react';
 import Image from 'next/image';
 
 import DLogo from '@public/images/DLogo2.png';
@@ -10,6 +10,7 @@ import PresentationSvg from '@styles/svg/presentation.svg';
 import CheckSvg from '@styles/svg/check.svg';
 import PeopleSvg from '@styles/svg/people.svg';
 import UserRoleSvg from '@styles/svg/userRole.svg';
+import GithubSvg from '@styles/svg/github.svg';
 
 import Style from './about.module.scss';
 
@@ -20,6 +21,7 @@ const About = () => {
 		<div className={Style['aboutMain']}>
 			<div style={{ width: '50%', margin: '0 auto', paddingTop: '50px' }}>
 				<Card.Group>
+					{/* 프로젝트 정보 */}
 					<Card fluid>
 						<Card.Content className={Style['cardContent']}>
 							<Image src={DLogo} width={35} height={35} />
@@ -119,8 +121,8 @@ const About = () => {
 											</Table.Cell>
 											<Table.Cell>
 												팀 스킬 현황, 유저검색, 스킬 별 인원 통계, 실시간
-												채팅, 이미지 업로드, 링크 메타데이터 제공, 질의응답
-												게시판, 댓글/좋아요
+												채팅, 읽지않은 메시지, 이미지 업로드, 링크
+												메타데이터 제공, 질의응답 게시판, 댓글/좋아요
 											</Table.Cell>
 										</Table.Row>
 										<Table.Row>
@@ -150,6 +152,8 @@ const About = () => {
 							</Card.Description>
 						</Card.Content>
 					</Card>
+
+					{/* 변지욱 선임 정보 */}
 					<Card fluid>
 						<Card.Content className={Style['cardContent']}>
 							<Image src={Person1} width={35} height={35} />
@@ -175,7 +179,9 @@ const About = () => {
 													</Header.Content>
 												</Header>
 											</Table.Cell>
-											<Table.Cell>Main developer, FE + BE 개발자</Table.Cell>
+											<Table.Cell>
+												Main developer, FE &#38; BE 메인 개발
+											</Table.Cell>
 										</Table.Row>
 										<Table.Row>
 											<Table.Cell>
@@ -185,11 +191,11 @@ const About = () => {
 															className={Style['subTitleDivWithSVG']}
 														>
 															<SkillListSvg />
-															Features
+															Contribution
 														</div>
 
 														<Header.Subheader>
-															개발한 기능목록
+															기여한 부분
 														</Header.Subheader>
 													</Header.Content>
 												</Header>
@@ -202,7 +208,10 @@ const About = () => {
 												<b>[BE]</b> 백엔드 환경설정 (AsyncHandler,
 												ErrorHandler, MYSQL연결, Socket IO),
 												로그인/채팅/대시보드 관련 api 개발, 메타데이터
-												fetch기능 개발,
+												fetch기능 개발
+												<br />
+												<b>[기타]</b> 프로젝트 기획, 디자인, 개발환경 및 툴
+												수립
 											</Table.Cell>
 										</Table.Row>
 										<Table.Row>
@@ -212,64 +221,30 @@ const About = () => {
 														<div
 															className={Style['subTitleDivWithSVG']}
 														>
-															<PresentationSvg />
-															Value
-														</div>
-
-														<Header.Subheader>의의</Header.Subheader>
-													</Header.Content>
-												</Header>
-											</Table.Cell>
-											<Table.Cell>
-												팀이 나뉘고 새로운 인원들이 들어오면서 서로에 대해
-												잘 모르며 질문이 있을 때 누구에게 여쭤봐야 하는지
-												모르는 경우가 많았을 겁니다. DTech App은 이런 문제를
-												조금이라도 해결하기를 기대하며 만들었습니다.
-											</Table.Cell>
-										</Table.Row>
-										<Table.Row>
-											<Table.Cell>
-												<Header as="h4" image>
-													<Header.Content>
-														<div
-															className={Style['subTitleDivWithSVG']}
-														>
-															<CheckSvg />
-															Features
+															<GithubSvg />
+															Github, <br /> 연락처
 														</div>
 
 														<Header.Subheader>
-															제공하는 기능
+															Github &#38; Email
 														</Header.Subheader>
 													</Header.Content>
 												</Header>
 											</Table.Cell>
 											<Table.Cell>
-												팀 스킬 현황, 유저검색, 스킬 별 인원 통계, 실시간
-												채팅, 이미지 업로드, 링크 메타데이터 제공, 질의응답
-												게시판, 댓글/좋아요
-											</Table.Cell>
-										</Table.Row>
-										<Table.Row>
-											<Table.Cell>
-												<Header as="h4" image>
-													<Header.Content>
-														<div
-															className={Style['subTitleDivWithSVG']}
-														>
-															<PeopleSvg />
-															Creators
-														</div>
-
-														<Header.Subheader>
-															개발 인원
-														</Header.Subheader>
-													</Header.Content>
-												</Header>
-											</Table.Cell>
-											<Table.Cell>
-												변지욱 선임 (Frontend developer), 장보영 선임
-												(Frontend developer)
+												<a
+													href={'https://github.com/biglol10'}
+													target="_blank"
+													rel="noopener noreferrer"
+												>
+													https://github.com/biglol10
+												</a>
+												<span
+													style={{ margin: '0 10px', fontWeight: 'bold' }}
+												>
+													/
+												</span>
+												<span>jiwookbyun@lgcns.com</span>
 											</Table.Cell>
 										</Table.Row>
 									</Table.Body>
