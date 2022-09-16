@@ -36,6 +36,17 @@
 				width: 100%;
 				align-items: center;
 
+				svg {
+					cursor: pointer;
+					margin-top: 50px;
+					height: 30px !important;
+					width: 30px !important;
+
+					// path {
+					// 	fill: #f0e4ff;
+					// }
+				}
+
 				img {
 					margin-top: 50px;
 					cursor: pointer;

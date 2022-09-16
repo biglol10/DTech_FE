@@ -24,6 +24,12 @@ import { IAuth, IAppCommon, IUsersStatusArr } from '@utils/types/commAndStoreTyp
 import _ from 'lodash';
 import { generateAvatarImage } from '@utils/appRelated/helperFunctions';
 
+import GraphSvg from '@styles/svg/graph.svg';
+import ChatSvg from '@styles/svg/chat.svg';
+import CodingSvg from '@styles/svg/coding.svg';
+import AboutSvg from '@styles/svg/about.svg';
+import ProfileSvg from '@styles/svg/profile.svg';
+
 import UserSidebar from './UserSidebar';
 import Style from './MainLayoutTemplate.module.scss';
 
@@ -143,12 +149,17 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 							/>
 						</div>
 						<div className={Style['wrapper']}>
-							<img src="https://i.ibb.co/L8D5T60/light.png" />
+							<GraphSvg onClick={() => router.push('/dashboard')} />
+							<ChatSvg onClick={() => router.push('/chat/chatArea')} />
+							<CodingSvg onClick={() => router.push('/board')} />
+							<AboutSvg onClick={() => router.push('/about')} />
+							<ProfileSvg />
+							{/* <img src="https://i.ibb.co/L8D5T60/light.png" />
 							<img src="https://i.ibb.co/zmDbMVZ/diamond.png" />
 							<img src="https://i.ibb.co/W5QZ9Fk/envelope.png" />
 							<img src="https://i.ibb.co/CnKDBxC/flask.png" />
 							<img src="https://i.ibb.co/MGs4Fyn/sent-mail.png" />
-							<img src="https://i.ibb.co/zGtDpcp/map.png" />
+							<img src="https://i.ibb.co/zGtDpcp/map.png" /> */}
 						</div>
 					</nav>
 					<UserSidebar iconLeft={iconLeft} usersStatusArr={usersStatusArr} />
@@ -194,6 +205,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 								className={
 									Style[`${appCommon.route.currentRoute === 'about' && 'active'}`]
 								}
+								onClick={() => router.push('/about')}
 							>
 								<a>About</a>
 							</li>
