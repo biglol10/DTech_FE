@@ -1,8 +1,27 @@
-$backgroundUrl: url(~@public/background/AboutBackground2.png);
+$backgroundUrl: url(~@public/background/AboutBackground6.png);
 
 .aboutMain {
 	background-image: $backgroundUrl;
-	background-size: cover;
-	width: 100vw;
-	height: 100vh;
+	background-size: 100% 100%;
+	width: 100%;
+	height: 100%;
+	overflow-y: auto;
+
+	.cardContent {
+		& > span:first-child {
+			float: left;
+			margin-right: 20px !important;
+		}
+	}
+}
+
+.subTitleDivWithSVG {
+	display: flex;
+	line-height: 23px;
+
+	& > svg {
+		height: 20px !important;
+		width: 20px !important;
+		margin-right: 10px;
+	}
 }
