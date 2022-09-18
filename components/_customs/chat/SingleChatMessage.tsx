@@ -31,6 +31,10 @@ const SingleChatMessage = ({
 
 	const { handleModal } = useModal();
 
+	console.log('imgList is ');
+	console.log(imgList);
+	console.log(typeof imgList);
+
 	// console.log('imgimgimgimg');
 	// console.log(imgList);
 	// console.log(typeof imgList);
@@ -131,7 +135,7 @@ const SingleChatMessage = ({
 					{/* <span>{imgList}</span> */}
 					{imgList && imgList.length > 0 && (
 						<div className={cx('imageListDiv', messageOwner)}>
-							{imgList.map((itemUrl: string, idx: number) => {
+							{imgList.map((itemUrl: any, idx: number) => {
 								return (
 									<img
 										style={{ height: '50px', width: '50px' }}
