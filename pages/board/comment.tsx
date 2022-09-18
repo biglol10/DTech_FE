@@ -1,6 +1,8 @@
 import { MainLayoutTemplate } from '@components/customs';
 import { useRouter } from 'next/router';
 import { BoardCard } from '@components/index';
+import CommentCard from '@components/_customs/commentCard/CommentCard';
+
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -32,6 +34,9 @@ const Comment = ({ brd }: any) => {
 			brdId: router.query.brd,
 			uuid,
 			setCommentList,
+			callbackFn: () => {
+				dispatch({ type: 'BOARD_DETAIL', brdId: router.query.brd, uuid, card, setCard });
+			},
 		});
 	};
 
@@ -55,21 +60,31 @@ const Comment = ({ brd }: any) => {
 				<div className={Style['commentDiv']}>
 					<div className={Style['commentArea']}>
 						<TextArea
+							className={Style['commentTextArea']}
 							onChange={(event: any) => {
 								setCommentArea(event.target.value);
 							}}
 						/>
 						<Button
+							className={Style['commentBtn']}
 							onClick={() => {
 								sendComment();
 							}}
 						>
-							전송
+							SEND
 						</Button>
 					</div>
 					<div className={Style['commentList']}>
 						{commentList.map((cmnt: any) => (
-							<div key={cmnt.CMNT_CD}>{cmnt.BOARD_CMNT}</div>
+							// <div key={cmnt.CMNT_CD}>{cmnt.BOARD_CMNT}</div>
+							<CommentCard
+								key={cmnt.CMNT_CD}
+								content={cmnt.BOARD_CMNT}
+								cmntCd={cmnt.CMNT_CD}
+								cmntUser={cmnt.USER_NM}
+								cmntUserTitle={cmnt.USER_TITLE}
+								cmntDate={new Date(cmnt.CMNT_DATE)}
+							/>
 						))}
 					</div>
 				</div>

@@ -5,8 +5,6 @@ const techListRequest = async (props: any) => {
 		.post('http://localhost:3066/api/auth/getTechList')
 		.then((res: any) => {
 			if (res.data.resultData.status === 'success') {
-				console.log('techListRequest');
-				console.log(res.data);
 				return {
 					result: res.data.resultData.status,
 					techList: res.data.resultData.queryResult,

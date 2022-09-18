@@ -1,9 +1,11 @@
 import { MainLayoutTemplate } from '@components/customs';
 import { InputDefault, DTechQuill, InputDropdown, Button, InputLayout } from '@components/index';
 import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 import { useState, useRef, useEffect } from 'react';
 import { ChatList } from '@utils/types/commAndStoreTypes';
 import dynamic from 'next/dynamic';
+import { toast } from 'react-toastify';
 
 import Style from './board.module.scss';
 
@@ -19,6 +21,7 @@ const ReactQuill = dynamic(
 );
 
 const Submit = () => {
+	const router = useRouter();
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
 
 	const [techList, setTechList] = useState([]);
@@ -28,12 +31,21 @@ const Submit = () => {
 	const dispatch = useDispatch();
 
 	const submitBoard = (content: ChatList) => {
+		console.log(content);
 		dispatch({
 			type: 'SUBMIT_BOARD',
 			content,
 			uuid,
 			selectedTech,
 			boardTitle,
+			callbackFn: (data: any) => {
+				console.log('submitBoardClick!!');
+				if (data.result === 'success') {
+					router.push('/board');
+				} else {
+					toast['error'](<>{'submit failed'}</>);
+				}
+			},
 		});
 	};
 
@@ -43,10 +55,6 @@ const Submit = () => {
 			setTechList,
 		});
 	}, []);
-
-	const submitClick = () => {
-		// console.log('submitClick');
-	};
 
 	return (
 		<>

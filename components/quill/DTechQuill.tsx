@@ -315,62 +315,67 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 
 		return (
 			<>
-				<input
-					ref={inputFileRef}
-					type="file"
-					accept="image/*"
-					style={{ position: 'absolute', top: '-10000px' }}
-				/>
-				<div
-					id="quillWrapper"
-					className={Style['quillWrap']}
-					style={customStyleObj(0, [
-						{ name: 'quillMinHeight', value: quillMinHeight },
-						{ name: 'quillMaxHeight', value: quillMaxHeight },
-					])}
-				>
-					{QuillSSR ? (
-						<QuillSSR
-							forwardedRef={quillRef}
-							placeholder="내용을 입력하세요"
-							modules={modules}
-							formats={formats}
-							// value={quillContext}
-							onChange={(content: any, delta: any, source: any, editor: any) => {
-								quillTextChange(editor.getHTML());
-							}}
-						/>
-					) : (
-						<ReactQuill
-							forwardedRef={quillRef}
-							placeholder="내용을 입력하세요"
-							modules={modules}
-							formats={formats}
-							// value={quillContext}
-							onChange={(content: any, delta: any, source: any, editor: any) => {
-								quillTextChange(editor.getHTML());
-							}}
-						/>
-					)}
+				<div style={{ position: 'relative' }}>
+					<input
+						ref={inputFileRef}
+						type="file"
+						accept="image/*"
+						style={{ position: 'absolute', top: '-10000px' }}
+					/>
+					<div
+						id="quillWrapper"
+						className={Style['quillWrap']}
+						style={customStyleObj(0, [
+							{ name: 'quillMinHeight', value: quillMinHeight },
+							{ name: 'quillMaxHeight', value: quillMaxHeight },
+						])}
+					>
+						{QuillSSR ? (
+							<QuillSSR
+								forwardedRef={quillRef}
+								placeholder="내용을 입력하세요"
+								modules={modules}
+								formats={formats}
+								// value={quillContext}
+								onChange={(content: any, delta: any, source: any, editor: any) => {
+									quillTextChange(editor.getHTML());
+								}}
+							/>
+						) : (
+							<ReactQuill
+								forwardedRef={quillRef}
+								placeholder="내용을 입력하세요"
+								modules={modules}
+								formats={formats}
+								// value={quillContext}
+								onChange={(content: any, delta: any, source: any, editor: any) => {
+									quillTextChange(editor.getHTML());
+								}}
+							/>
+						)}
 
-					{!!urlPreviewList.length && (
-						<div className={Style['imageListArea']} style={{ gridColumn: 'span 1' }}>
-							{urlPreviewList.map((item: any, idx: number) => {
-								return (
-									<PrevieImageComp
-										key={item.fileName}
-										fileName={item.fileName}
-										filePreview={item.filePreview}
-										changeUrlPreviewList={changeUrlPreviewList}
-									/>
-								);
-							})}
-						</div>
-					)}
+						{!!urlPreviewList.length && (
+							<div
+								className={Style['imageListArea']}
+								style={{ gridColumn: 'span 1' }}
+							>
+								{urlPreviewList.map((item: any, idx: number) => {
+									return (
+										<PrevieImageComp
+											key={item.fileName}
+											fileName={item.fileName}
+											filePreview={item.filePreview}
+											changeUrlPreviewList={changeUrlPreviewList}
+										/>
+									);
+								})}
+							</div>
+						)}
 
-					{!submitButtonOutside && submitButtonMemo}
+						{!submitButtonOutside && submitButtonMemo}
+					</div>
+					{submitButtonOutside && submitButtonMemo}
 				</div>
-				{submitButtonOutside && submitButtonMemo}
 			</>
 		);
 	},

@@ -65,7 +65,7 @@ const BoardCard = ({
 								<span>{date.toDateString()}</span>
 							</Card.Meta>
 							<Card.Description>
-								<span>{content}</span>
+								<pre>{content}</pre>
 							</Card.Description>
 							{images.length > 0 && (
 								<SimpleImageSlider

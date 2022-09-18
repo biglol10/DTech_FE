@@ -1,0 +1,37 @@
+.cmnt_card{
+  display: flex;
+  .cmnt_line{
+    background-color: black;
+    width:2px;
+    margin: 2px 5px;
+  }
+  .cmnt_content{
+    width:100%;
+    padding-right: 20px;
+    .cmnt_title{
+      display: flex;
+      justify-content: space-between;
+      color:gray;
+      width:100%;
+    }
+    .commentArea{
+      display: flex;
+      margin-bottom: 10px;
+      .commentTextArea{
+        width:100%;
+        height:40px
+
+      }
+      .commentBtn{
+        width:80px;
+        .cmnt_btn_str{
+          color:blue
+        }
+      }
+    }
+    .cmnt_btn{
+  
+    }
+  }
+  
+}

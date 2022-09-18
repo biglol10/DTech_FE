@@ -30,8 +30,14 @@ interface ICommentList {
 	errMessage?: string | undefined;
 }
 
-const boardListFunction = function* ({ setBoardList, uuid }: any) {
-	const boardListResult: IBoardList = yield call(boardListRequest, { uuid });
+interface ISubmitBoard {
+	result: string;
+	resultData: any | undefined;
+	errMessage?: string | undefined;
+}
+
+const boardListFunction = function* ({ setBoardList, uuid, orderType }: any) {
+	const boardListResult: IBoardList = yield call(boardListRequest, { uuid, orderType });
 
 	if (boardListResult.result === 'success') {
 		setBoardList(boardListResult.boardList);
@@ -67,7 +73,13 @@ const techListFunction = function* ({ setTechList }: any) {
 	yield;
 };
 
-const submitBoardFunction = function* ({ content, uuid, selectedTech, boardTitle }: any) {
+const submitBoardFunction = function* ({
+	content,
+	uuid,
+	selectedTech,
+	boardTitle,
+	callbackFn,
+}: any) {
 	const formData = new FormData();
 
 	const postData: any = {
@@ -89,7 +101,11 @@ const submitBoardFunction = function* ({ content, uuid, selectedTech, boardTitle
 		);
 	}
 
-	yield call(sendBoardImgRequest, formData);
+	const sendBoardResult: ISubmitBoard = yield call(sendBoardImgRequest, formData);
+
+	// console.log('submitBoardFunction');
+	// console.log(sendBoardResult);
+	yield call(callbackFn, sendBoardResult);
 };
 
 const boardDetailFunction = function* ({ brdId, uuid, card, setCard }: any) {
@@ -97,11 +113,17 @@ const boardDetailFunction = function* ({ brdId, uuid, card, setCard }: any) {
 	const boardListResult: IBoardList = yield call(boardListRequest, { uuid, brdId });
 
 	// console.log(boardListResult.boardList);
-	setCard([boardListResult.boardList]);
+	setCard(boardListResult.boardList);
 	yield;
 };
 
-const setCommentFunction = function* ({ commentArea, brdId, uuid, setCommentList }: any) {
+const setCommentFunction = function* ({
+	commentArea,
+	brdId,
+	uuid,
+	setCommentList,
+	callbackFn,
+}: any) {
 	console.log('setCommentFunction');
 	const commentListResult: ICommentList = yield call(commentRequest, {
 		commentArea,
@@ -112,12 +134,15 @@ const setCommentFunction = function* ({ commentArea, brdId, uuid, setCommentList
 	console.log(commentListResult.commentList);
 
 	setCommentList(commentListResult.commentList);
+
+	yield call(callbackFn);
 };
 
 const getCommentListFunction = function* ({ brdId, setCommentList }: any) {
 	// console.log('getCommentList');
 	const commentListResult: ICommentList = yield call(commentListRequest, { brdId });
 
+	console.log(commentListResult);
 	// console.log(commentListResult.commentList);
 	setCommentList(commentListResult.commentList);
 };

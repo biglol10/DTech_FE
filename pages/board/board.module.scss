@@ -44,13 +44,24 @@
 		margin:auto;
 	}
 	.commentDiv{
-		height:300px;
 		background-color: white;
 		width:600px;
 		margin:auto;
 		padding: 20px;
 		.commentArea{
 			display: flex;
+			margin-bottom: 30px;
+			.commentTextArea{
+				width:100%;
+				height:40px
+
+			}
+			.commentBtn{
+				width:80px;
+				.cmnt_btn_str{
+					color:blue
+				}
+			}
 		}
 	}
 }

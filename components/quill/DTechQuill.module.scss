@@ -107,10 +107,8 @@
 }
 
 .submitButtonOutside {
-	position: relative;
-	// align:
-	// right: 0px;
-	float:right;
+	position: absolute;
+	right: 0px;
 	height: 34px;
 	margin: 10px 0px;
 	background: #138567;

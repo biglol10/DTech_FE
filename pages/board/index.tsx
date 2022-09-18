@@ -15,6 +15,7 @@ const Index = () => {
 			type: 'BOARD_LIST',
 			setBoardList,
 			uuid,
+			orderType: 'new',
 		});
 	}, []);
 
@@ -22,10 +23,12 @@ const Index = () => {
 		// console.log(boardList);
 	}, [boardList]);
 
-	const clickFilterBtn = (filterType: string) => {
+	const clickFilterBtn = (orderType: string) => {
 		dispatch({
-			type: 'BOARD_FILTER',
-			filterType,
+			type: 'BOARD_LIST',
+			setBoardList,
+			uuid,
+			orderType,
 		});
 	};
 
@@ -56,14 +59,6 @@ const Index = () => {
 						clickFilterBtn('hot');
 					}}
 				/>
-				<Button
-					className={Style['filterBtn']}
-					content="TOP"
-					buttonType="none"
-					onClick={() => {
-						clickFilterBtn('top');
-					}}
-				/>
 				<Link href="/board/submit" className={Style['boardSumbitBtn']}>
 					<a>Submit</a>
 				</Link>
@@ -79,6 +74,7 @@ const Index = () => {
 						commentCnt={card.CMNT_CNT}
 						images={card.IMG_LIST}
 						liked={card.LIKED}
+						date={new Date(card.BOARD_DATE)}
 					/>
 				))}
 			</div>
