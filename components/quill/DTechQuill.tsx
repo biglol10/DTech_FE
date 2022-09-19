@@ -11,6 +11,7 @@
  * 6      변지욱     2022-08-25   feature/JW/chat             onchange시 notifyTextChange 이벤트 발생
  * 7      변지욱     2022-08-27   feature/JW/inputwithicon    lodash 이용해 notifyTextChange 제어
  * 8      변지욱     2022-09-13   feature/JW/quillButton      Send 버튼 위치 제어 가능토록 수정
+ * 9      변지욱     2022-09-19   feature/JW/imageBlob        이미지 붙여먹기 시 blob객체로 변환 후 File
  ********************************************************************************************/
 
 import React, {
@@ -60,6 +61,12 @@ const ReactQuill = dynamic(
 );
 
 // https://kamsi76.tistory.com/entry/Base64-Image-%EC%A0%95%EB%B3%B4%EB%A5%BC-Blob%ED%98%95%ED%83%9C%EB%A1%9C-%EB%B3%80%ED%99%98
+// https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
+// const block = mediaPreview.split(';');
+// const contentType = block[0].split(':')[1];
+// const realData = block[1].split(',')[1];
+
+// const blob = b64toBlob(realData, contentType);
 const b64toBlob = (b64Data: any, contentTypeParam: any, sliceSizeParam: any = 0) => {
 	if (b64Data === '' || b64Data === undefined) return null;
 
@@ -272,7 +279,7 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 		);
 
 		const quillTextChange = useCallback(
-			(content: any) => {
+			async (content: any) => {
 				if (content.indexOf('<img src="') < 0) {
 					if (quillRef.current) {
 						quillRef.current.innerHTML = content;
@@ -300,14 +307,16 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 						} else {
 							const newName = `${generateImageUID()}.png`;
 
-							const block = mediaPreview.split(';');
-							const contentType = block[0].split(':')[1];
-							const realData = block[1].split(',')[1];
+							let blobObj = null;
 
-							const blob = b64toBlob(realData, contentType);
+							await fetch(mediaPreview)
+								.then((res) => res.blob())
+								.then((obj) => {
+									blobObj = obj;
+								});
 
-							if (blob) {
-								const imageFileObject = new File([blob], newName);
+							if (blobObj) {
+								const imageFileObject = new File([blobObj], newName);
 
 								setUrlPreviewList((prev: any) => [
 									...prev,
