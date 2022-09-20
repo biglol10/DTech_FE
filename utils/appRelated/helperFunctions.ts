@@ -11,6 +11,7 @@ const baseImage = {
 	AvatarBase7: 'AvatarBase_YELLOW2.png',
 	AvatarBase8: 'AvatarBase_RED1.png',
 	AvatarBase9: 'AvatarBase_RED2.png',
+	AvatarBaseErr: 'AvatarBase_RED2.png',
 };
 
 const generateUID = () => {
@@ -22,19 +23,25 @@ const generateImageUID = () => {
 };
 
 const generateAvatarImage = (uid: string) => {
-	const extractNumbers = uid.replace(/\D/g, '');
+	try {
+		const extractNumbers = uid.replace(/\D/g, '');
 
-	let summation = 0;
+		let summation = 0;
 
-	for (let index = 0; index < extractNumbers.length; index++) {
-		summation += parseInt(extractNumbers[index], 10);
+		for (let index = 0; index < extractNumbers.length; index++) {
+			summation += parseInt(extractNumbers[index], 10);
+		}
+
+		const baseChoice = `AvatarBase${summation % 10}` as keyof typeof baseImage;
+
+		return `${process.env.NODE_ENV === 'production' ? '/dtech' : ''}/images/AvatarBaseImage/${
+			baseImage[baseChoice]
+		}`;
+	} catch {
+		return `${process.env.NODE_ENV === 'production' ? '/dtech' : ''}/images/AvatarBaseImage/${
+			baseImage['AvatarBaseErr']
+		}`;
 	}
-
-	const baseChoice = `AvatarBase${summation % 10}` as keyof typeof baseImage;
-
-	return `${process.env.NODE_ENV === 'production' ? '/dtech' : ''}/images/AvatarBaseImage/${
-		baseImage[baseChoice]
-	}`;
 };
 
 export { generateUID, generateImageUID, generateAvatarImage };

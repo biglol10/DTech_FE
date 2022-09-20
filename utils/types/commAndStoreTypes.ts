@@ -13,8 +13,8 @@ export interface IModalState {
 
 export interface ChatList {
 	value: string;
-	imgList?: { fileName: string; filePreview: string }[] | never[];
-	linkList?: any;
+	imgList: { fileName: string; filePreview: string; imageFile: File }[];
+	linkList: any;
 }
 
 export interface IToastState {

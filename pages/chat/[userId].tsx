@@ -31,7 +31,7 @@ interface IChatList {
 	MESSAGE_ID: string;
 	TO_USERNAME: string;
 	MESSAGE_TEXT: string;
-	IMG_LIST: string;
+	IMG_LIST: string[];
 	LINK_LIST: string[];
 	SENT_DATETIME: string;
 	USER_UID: string;
@@ -189,15 +189,44 @@ const UserChat = ({
 	}, [chatList, quillWrapperHeight]);
 
 	const sendMessageFunction = useCallback(
-		(content: ChatList) => {
-			socket?.emit('sendPrivateMessage', {
-				chatMessage: content.value,
-				userUID: authStore.userUID,
-				convId: conversationId.current,
-				imgList: JSON.stringify(content.imgList),
-				linkList: JSON.stringify(content.linkList),
-				toUserId: chatUser && chatUser.USER_ID,
-			});
+		async (content: ChatList) => {
+			const formData = new FormData();
+			const postData = {
+				dir: 'chat/',
+			};
+
+			formData.append('postData', JSON.stringify(postData));
+
+			for (let i = 0; i < content.imgList.length; i++) {
+				formData.append(
+					'img',
+					content.imgList[i].imageFile,
+					`${content.imgList[i].fileName}`,
+				);
+			}
+
+			await axios
+				.post('http://localhost:3066/api/chat/uploadChatImg', formData)
+				.then((response) => {
+					socket?.emit('sendPrivateMessage', {
+						chatMessage: content.value,
+						userUID: authStore.userUID,
+						convId: conversationId.current,
+						imgList: JSON.stringify(
+							content.imgList.length !== 0
+								? response.data.bodyObj.imgArr.map(
+										(urlString: string) =>
+											`${process.env.NEXT_PUBLIC_IMG_S3}${urlString}`,
+								  )
+								: [],
+						),
+						linkList: JSON.stringify(content.linkList),
+						toUserId: chatUser && chatUser.USER_ID,
+					});
+				})
+				.catch(() => {
+					console.log('image S3 error');
+				});
 
 			socket?.on('messageSendSuccess', ({ chatListSocket, convIdSocket }: any) => {
 				getPrivateChatListAxios(chatListSocket, convIdSocket);
@@ -310,6 +339,14 @@ const UserChat = ({
 																					: null
 																			}
 																			userName={`${item3.USER_NM} (${item3.USER_TITLE})`}
+																			imgList={
+																				typeof item3.IMG_LIST ===
+																				'string'
+																					? JSON.parse(
+																							item3.IMG_LIST,
+																					  )
+																					: item3.IMG_LIST
+																			}
 																		/>
 																	);
 																},
@@ -336,6 +373,7 @@ const UserChat = ({
 							handleSubmit={(content: ChatList) => {
 								// 이미지 S3 되면 올리고 setChatList 호출
 								console.log(quillRef.current);
+								console.log(content);
 								sendMessageFunction(content);
 							}}
 							QuillSSR={ReactQuill}
