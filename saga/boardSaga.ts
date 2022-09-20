@@ -118,6 +118,7 @@ const boardDetailFunction = function* ({ brdId, uuid, card, setCard }: any) {
 };
 
 const setCommentFunction = function* ({
+	setCommentArea,
 	commentArea,
 	brdId,
 	uuid,
@@ -136,6 +137,7 @@ const setCommentFunction = function* ({
 	setCommentList(commentListResult.commentList);
 
 	yield call(callbackFn);
+	setCommentArea('');
 };
 
 const getCommentListFunction = function* ({ brdId, setCommentList }: any) {

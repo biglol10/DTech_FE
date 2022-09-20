@@ -30,6 +30,7 @@ const Comment = ({ brd }: any) => {
 	const sendComment = () => {
 		dispatch({
 			type: 'SEND_COMMENT',
+			setCommentArea,
 			commentArea,
 			brdId: router.query.brd,
 			uuid,
@@ -61,6 +62,7 @@ const Comment = ({ brd }: any) => {
 					<div className={Style['commentArea']}>
 						<TextArea
 							className={Style['commentTextArea']}
+							value={commentArea}
 							onChange={(event: any) => {
 								setCommentArea(event.target.value);
 							}}
@@ -84,6 +86,22 @@ const Comment = ({ brd }: any) => {
 								cmntUser={cmnt.USER_NM}
 								cmntUserTitle={cmnt.USER_TITLE}
 								cmntDate={new Date(cmnt.CMNT_DATE)}
+								cmntUid={cmnt.USER_UID}
+								boardCd={cmnt.BOARD_CD}
+								cbFunc={() => {
+									dispatch({
+										type: 'COMMENT_LIST',
+										brdId: router.query.brd,
+										setCommentList,
+									});
+									dispatch({
+										type: 'BOARD_DETAIL',
+										brdId: router.query.brd,
+										uuid,
+										card,
+										setCard,
+									});
+								}}
 							/>
 						))}
 					</div>

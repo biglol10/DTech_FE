@@ -1,11 +1,12 @@
 .cmnt_card{
   display: flex;
+  margin:10px 0px;
   .cmnt_line{
     background-color: black;
     width:2px;
     margin: 2px 5px;
   }
-  .cmnt_content{
+  .cmnt_main{
     width:100%;
     padding-right: 20px;
     .cmnt_title{
@@ -13,6 +14,10 @@
       justify-content: space-between;
       color:gray;
       width:100%;
+    }
+    .cmnt_below{
+      display:flex;
+      justify-content: space-between;
     }
     .commentArea{
       display: flex;

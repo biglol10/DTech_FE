@@ -7,17 +7,20 @@
  ********************************************************************************************/
 
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Icon, TextArea, Button } from 'semantic-ui-react';
+import axios, { AxiosResponse } from 'axios';
 import Style from './CommentCard.module.scss';
 
 interface ICommentCard {
 	cmntCd: string;
 	content: string;
-	likeCnt?: number;
 	cmntUser: string;
 	cmntUserTitle: string;
 	cmntDate: Date;
+	cmntUid: string;
+	boardCd: string;
+	cbFunc: Function;
 }
 
 const CommentCard = ({
@@ -26,11 +29,14 @@ const CommentCard = ({
 	cmntUser,
 	cmntUserTitle,
 	cmntDate,
-	likeCnt,
+	cmntUid,
+	boardCd,
+	cbFunc,
 }: ICommentCard) => {
 	const dispatch = useDispatch();
 	const [clickedCmnt, setClickedCmnt] = useState(false);
 	const [commentArea, setCommentArea] = useState('');
+	const uuid = useSelector((state: any) => state.auth.userUID);
 	const clickCmnt = () => {
 		console.log('clickCmnt');
 		setClickedCmnt(!clickedCmnt);
@@ -41,21 +47,40 @@ const CommentCard = ({
 		});
 	};
 
+	const deleteCmnt = () => {
+		console.log('delete');
+		axios
+			.post('http://localhost:3066/api/board/deleteCmnt', {
+				params: { cmntCd, boardCd },
+			})
+			.then((response) => {
+				// setChatUser(response.data.usersInfo[0]);
+				cbFunc();
+			})
+			.catch(() => {
+				// toast['error'](<>{'유저정보를 가져오지 못했습니다'}</>);
+			});
+	};
+
 	return (
 		<div className={Style['cmnt_card']}>
 			<div className={Style['cmnt_line']}></div>
-			<div className={Style['cmnt_content']}>
+			<div className={Style['cmnt_main']}>
 				<div className={Style['cmnt_title']}>
 					<div>
 						{cmntUser} {cmntUserTitle}
 					</div>
 					<div>{cmntDate.toDateString()}</div>
 				</div>
-				<div className={Style['cmnt_content']}>{content}</div>
-				<div className={Style['cmnt_btn']} onClick={clickCmnt}>
-					<Icon name="comment alternate outline" color="blue" />
-					<span className={Style['cmnt_btn_str']}>Reply</span>
+				<div className={Style['cmnt_below']}>
+					<div className={Style['cmnt_content']}>{content}</div>
+					<div>
+						{cmntUid === uuid && (
+							<Icon name="trash alternate outline" onClick={deleteCmnt} />
+						)}
+					</div>
 				</div>
+
 				{clickedCmnt && (
 					<div className={Style['commentArea']}>
 						<TextArea
@@ -74,6 +99,17 @@ const CommentCard = ({
 						</Button>
 					</div>
 				)}
+				{/* {!isEnd && (
+					<CommentCard
+						key="a"
+						content="content"
+						cmntCd="a"
+						cmntUser="a"
+						cmntUserTitle="title"
+						cmntDate={new Date()}
+						isEnd={true}
+					/>
+				)} */}
 			</div>
 		</div>
 	);

@@ -17,9 +17,7 @@
 .boardPage{
 	display: flex;
 	flex-direction: column;
-	.boardList{
-		margin:auto;
-	}
+	
 	.boardFilter{
 		background-color: white;
 		border-radius: 0.285714rem;
@@ -27,13 +25,19 @@
 		height:40px;
 		margin:auto;
 		align-items: center;
-		margin
-		.filterBtn{
-			margin-left:20px;
+		display: flex;
+		
+		.boardFilterBtns{
+			.filterBtn{
+				margin-left:20px;
+			}
 		}
 		.boardSumbitBtn{
-			
+			right:0px;
 		}
+	}
+	.boardList{
+		margin:auto;
 	}
 }
 .commentPage{

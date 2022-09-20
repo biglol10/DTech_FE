@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MainLayoutTemplate } from '@components/customs';
 import Link from 'next/link';
+import { Button as BTN } from 'semantic-ui-react';
 import { BoardCard, Button } from '@components/index';
 import Style from './board.module.scss';
 
@@ -35,33 +36,42 @@ const Index = () => {
 	return (
 		<div className={Style['boardPage']}>
 			<div className={Style['boardFilter']}>
-				<Button
-					className={Style['filterBtn']}
-					content="NEW"
-					buttonType="primary"
-					onClick={() => {
-						clickFilterBtn('new');
-					}}
-				/>
-				<Button
-					className={Style['filterBtn']}
-					content="BEST"
-					buttonType="none"
-					onClick={() => {
-						clickFilterBtn('best');
-					}}
-				/>
-				<Button
-					className={Style['filterBtn']}
-					content="HOT"
-					buttonType="none"
-					onClick={() => {
-						clickFilterBtn('hot');
-					}}
-				/>
-				<Link href="/board/submit" className={Style['boardSumbitBtn']}>
-					<a>Submit</a>
-				</Link>
+				<div className={Style['boardFilterBtns']}>
+					<Button
+						className={Style['filterBtn']}
+						content="NEW"
+						buttonType="primary"
+						onClick={() => {
+							clickFilterBtn('new');
+						}}
+					/>
+					<Button
+						className={Style['filterBtn']}
+						content="BEST"
+						buttonType="none"
+						onClick={() => {
+							clickFilterBtn('best');
+						}}
+					/>
+					<Button
+						className={Style['filterBtn']}
+						content="HOT"
+						buttonType="none"
+						onClick={() => {
+							clickFilterBtn('hot');
+						}}
+					/>
+				</div>
+				<div className={Style['boardSumbitBtn']}>
+					<Link href="/board/submit">
+						{/* <a>Submit</a> */}
+						<BTN
+							className={Style['filterBtn']}
+							content="게시글 등록"
+							buttonType="none"
+						/>
+					</Link>
+				</div>
 			</div>
 			<div className={Style['boardList']}>
 				{boardList.map((card: any) => (
