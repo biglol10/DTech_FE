@@ -25,7 +25,6 @@ import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import cookie from 'js-cookie';
 import lodash from 'lodash';
-import { parseCookies } from 'nookies';
 
 import Style from './[userId].module.scss';
 
@@ -80,15 +79,13 @@ const chatToDateGroup = (arr: any) => {
 const UserChat = ({
 	usersStatusArr,
 	queryObj,
-	chatListSSR,
 }: {
 	usersStatusArr: IUsersStatusArr[];
 	queryObj: any;
-	chatListSSR: any;
 }) => {
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
 	const [chatUser, setChatUser] = useState<{ [name: string]: string }>();
-	const [chatList, setChatList] = useState<ChatDateReduce>(chatListSSR);
+	const [chatList, setChatList] = useState<ChatDateReduce>({});
 	const [textChangeNotification, setTextChangeNotification] = useState(false);
 	const [sendingUserState, setSendingUserState] = useState<string>('');
 	const conversationId = useRef<string>();
@@ -133,6 +130,32 @@ const UserChat = ({
 				});
 		}
 	}, [appCommon, userUID]);
+
+	const getPrivateChatListCallback = useCallback(() => {
+		if (cookie.get('currentChatUser') !== userUID) return;
+		const { currentChatUser } = appCommon;
+
+		if (currentChatUser && authStore.userUID && authStore.userToken) {
+			axios
+				.post(
+					'http://localhost:3066/api/chat/getPrivateChatList',
+					{ fromUID: authStore.userUID, toUID: userUID },
+					{
+						headers: { Authorization: `Bearer ${authStore.userToken}` },
+					},
+				)
+				.then((response) => {
+					conversationId.current = response.data.convId;
+					const chatGroupReduce = chatToDateGroup(response.data.chatList);
+
+					setChatList((prev) => chatGroupReduce);
+				});
+		}
+	}, [appCommon, authStore.userToken, authStore.userUID, userUID]);
+
+	useEffect(() => {
+		getPrivateChatListCallback();
+	}, [getPrivateChatListCallback]);
 
 	useEffect(() => {
 		bottomRef.current?.scrollIntoView({ behavior: 'auto' });
@@ -207,28 +230,21 @@ const UserChat = ({
 	useEffect(() => {
 		socket?.on('messageSendSuccess', ({ chatListSocket, convIdSocket, toUserUID }: any) => {
 			if (appCommon.currentChatUser === toUserUID) {
-				// alert(
-				// 	`messageSendSuccess and currentChatUser is ${appCommon.currentChatUser} and toUserUID is ${toUserUID}`,
-				// );
-
 				const cloneObjReduce = chatToDateGroup(lodash.cloneDeep(chatListSocket));
 
-				// setChatList((prev) => cloneObjReduce);
+				setChatList((prev) => cloneObjReduce);
 			}
 		});
 
 		socket?.on('newMessageReceived', ({ chatListSocket, convIdSocket, fromUID }: any) => {
-			if (userUID === fromUID) {
-				console.log(`current is ${appCommon.currentChatUser} and fromUID is ${fromUID}`);
-				// getPrivateChatListCallback();
-			}
+			if (userUID === fromUID) getPrivateChatListCallback();
 		});
 
-		// socket?.on('textChangeNotification', (sendingUser: string) => {
-		// 	setSendingUserState(sendingUser);
-		// 	setTextChangeNotification(true);
-		// });
-	}, [socket, appCommon.currentChatUser, userUID]);
+		socket?.on('textChangeNotification', (sendingUser: string) => {
+			setSendingUserState(sendingUser);
+			setTextChangeNotification(true);
+		});
+	}, [socket, appCommon.currentChatUser, userUID, getPrivateChatListCallback]);
 
 	return (
 		<>
@@ -367,23 +383,7 @@ UserChat.displayName = 'chatPage';
 // });
 
 export const getServerSideProps = async (context: any) => {
-	const { token, currentChatUser } = parseCookies(context);
-
-	const axiosData = await axios
-		.post(
-			'http://localhost:3066/api/chat/getPrivateChatList2',
-			{ toUID: currentChatUser },
-			{
-				headers: { Authorization: `Bearer ${token}` },
-			},
-		)
-		.then((response) => {
-			const chatGroupReduce = chatToDateGroup(response.data.chatList);
-
-			return chatGroupReduce;
-		});
-
-	return { props: { queryObj: context.query, chatListSSR: axiosData } };
+	return { props: { queryObj: context.query } };
 };
 
 export default UserChat;
