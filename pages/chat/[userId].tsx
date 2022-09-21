@@ -7,14 +7,13 @@
  * 2      변지욱     2022-08-29   feature/JW/chat        유저명 표시하도록 변경, socket에서 직접 채팅리스트 가져오도록 변경
  * 3      변지욱     2022-08-29   feature/JW/layoutchat  최초 로드 시엔 변경중입니다 텍스트 안 보이게 변경
  * 4      변지욱     2022-09-06   feature/JW/chatPage    누구랑 채팅하는지 세팅
- * 5      변지욱     2022-09-21
+ * 5      변지욱     2022-09-21   feature/JW/chatPageBug 채팅 제대로 표시 안되는 버그 픽스
  ********************************************************************************************/
 
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { Avatar, Box, DTechQuill, SharpDivider, TextWithDotAnimation } from '@components/index';
 import { MainLayoutTemplate, SingleChatMessage } from '@components/customs';
 import { Container, Segment } from 'semantic-ui-react';
-import dynamic from 'next/dynamic';
 
 import { ChatList, IUsersStatusArr, IAuth, IAppCommon } from '@utils/types/commAndStoreTypes';
 import OnlineSvg from '@styles/svg/online.svg';
