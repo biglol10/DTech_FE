@@ -40,7 +40,7 @@ interface IDTechQuill {
 	quillMinHeight?: number;
 	quillMaxHeight?: number;
 	enterSubmit?: boolean;
-	QuillSSR: ComponentType<any>;
+	QuillSSR?: ComponentType<any>;
 	notifyTextChange?: Function | null;
 	submitButtonOutside?: boolean;
 }
