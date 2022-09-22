@@ -41,7 +41,7 @@ const UserSidebar = ({
 	useEffect(() => {
 		if (authStore && authStore.userUID) {
 			axios
-				.get('http://localhost:3066/api/chat/getUnreadChatNoti', {
+				.get(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getUnreadChatNoti`, {
 					params: { fromUID: authStore.userUID },
 				})
 				.then((response) => {

@@ -10,8 +10,6 @@ const initialState: IAppCommon = {
 	unReadMsg: [],
 };
 
-// const initialState_Metadata
-
 const appCommonSlice = createSlice({
 	name: 'appCommon',
 	initialState,
