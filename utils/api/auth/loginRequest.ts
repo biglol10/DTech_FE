@@ -8,7 +8,7 @@ interface authObjParamSetting {
 const fireTokenRequest = async (token: string) => {
 	const authResult = await axios
 		.post(
-			'http://localhost:3066/api/auth/getLoggedInUserInfo',
+			`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/getLoggedInUserInfo`,
 			{},
 			{
 				headers: { Authorization: `Bearer ${token}` },
@@ -29,7 +29,7 @@ const fireTokenRequest = async (token: string) => {
 
 const fireLoginRequest = async (props: authObjParamSetting) => {
 	const loginResult = await axios
-		.post('http://localhost:3066/api/auth/loginUser', props, {
+		.post(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/loginUser`, props, {
 			headers: {
 				'Content-Type': 'application/json',
 			},

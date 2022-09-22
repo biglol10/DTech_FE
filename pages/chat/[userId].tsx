@@ -24,6 +24,7 @@ import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import cookie from 'js-cookie';
 import lodash from 'lodash';
+import * as RCONST from '@utils/constants/reducerConstants';
 
 import Style from './[userId].module.scss';
 
@@ -106,10 +107,10 @@ const UserChat = ({
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		dispatch({ type: 'SET_CURRENT_CHAT_USER', chatUser: userUID });
+		dispatch({ type: RCONST.SET_CURRENT_CHAT_USER, chatUser: userUID });
 
 		return () => {
-			dispatch({ type: 'SET_CURRENT_CHAT_USER', chatUser: '' });
+			dispatch({ type: RCONST.SET_CURRENT_CHAT_USER, chatUser: '' });
 		};
 	}, [dispatch, userUID]);
 
@@ -118,7 +119,7 @@ const UserChat = ({
 
 		if (currentChatUser) {
 			axios
-				.get('http://localhost:3066/api/auth/getUsersInfo', {
+				.get(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/getUsersInfo`, {
 					params: { usersParam: [userUID] },
 				})
 				.then((response) => {
@@ -137,7 +138,7 @@ const UserChat = ({
 		if (currentChatUser && authStore.userUID && authStore.userToken) {
 			axios
 				.post(
-					'http://localhost:3066/api/chat/getPrivateChatList',
+					`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getPrivateChatList`,
 					{ fromUID: authStore.userUID, toUID: userUID },
 					{
 						headers: { Authorization: `Bearer ${authStore.userToken}` },
@@ -214,7 +215,7 @@ const UserChat = ({
 			}
 
 			await axios
-				.post('http://localhost:3066/api/chat/uploadChatImg', formData)
+				.post(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/uploadChatImg`, formData)
 				.then((response) => {
 					sendPrivateMessageSocket(content, response.data.bodyObj.imgArr);
 				})
@@ -375,11 +376,6 @@ const UserChat = ({
 
 UserChat.PageLayout = MainLayoutTemplate;
 UserChat.displayName = 'chatPage';
-
-// export const getServerSideProps = wrapper.getServerSideProps((store) => (context): any => {
-// 	store.dispatch({ type: 'SET_CURRENT_CHAT_USER', chatUser: context.query });
-// 	return { props: { queryObj: context.query } };
-// });
 
 export const getServerSideProps = async (context: any) => {
 	return { props: { queryObj: context.query } };

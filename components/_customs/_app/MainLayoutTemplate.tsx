@@ -23,6 +23,7 @@ import axios from 'axios';
 import { IAuth, IAppCommon, IUsersStatusArr } from '@utils/types/commAndStoreTypes';
 import _ from 'lodash';
 import { generateAvatarImage } from '@utils/appRelated/helperFunctions';
+import * as RCONST from '@utils/constants/reducerConstants';
 
 import GraphSvg from '@styles/svg/graph.svg';
 import ChatSvg from '@styles/svg/chat.svg';
@@ -107,7 +108,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 
 	const getUsersStatus = useCallback(() => {
 		axios
-			.get('http://localhost:3066/api/auth/getUsersStatus', {
+			.get(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/getUsersStatus`, {
 				params: { onlineUsers: onlineUsers.length > 0 ? onlineUsers : ['none'] },
 				// headers: { Authorization: authStore.userToken },
 			})
@@ -129,7 +130,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	const logout = () => {
 		disconnect();
 		dispatch({
-			type: 'AUTH_RESET',
+			type: RCONST.AUTH_RESET,
 		});
 		cookie.remove('token');
 		cookie.remove('currentChatUser');

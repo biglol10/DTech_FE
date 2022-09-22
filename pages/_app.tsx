@@ -87,58 +87,8 @@ const MyApp = ({ Component, pageProps }: ComponentWithPageLayout) => {
 					{toastMemo}
 				</>
 			)}
-			{/* {pageProps.isWithMainLayout ? (
-				 <>
-					 <MainLayoutTemplate>
-						 <Component {...pageProps} />
-					 </MainLayoutTemplate>
-					 <ModalPopup />
-					 {toastMemo}
-				 </>
-			 ) : (
-				 <>
-					 <Component {...pageProps} />
-					 <ModalPopup />
-					 {toastMemo}
-				 </>
-			 )} */}
 		</>
 	);
 };
 
-// MyApp.getInitialProps = async ({ Component, ctx }: any) => {
-// 	const { token } = parseCookies(ctx); // token because you set [token] in authUser.js
-// 	let pageProps: any = {};
-
-// 	// ['/'] check for homepage, if user is trying to access proectedRoutes
-// 	const protectedRoutesArray = [
-// 		'/',
-// 		'/[username]',
-// 		'/notifications',
-// 		'/post/[postId]',
-// 		'/messages',
-// 		'/search',
-// 		'/dashboard',
-// 	];
-
-// 	const protectedRoutes = protectedRoutesArray.includes(ctx.pathname);
-
-// 	const withMainLayoutArray = ['/', '/_error', '/apiTestPage', '/anotherPage', '/dashboard']; // 새로고침 시 ctx.pathname이 /_error로 됨 이유는 모르겠음
-
-// 	const isWithMainLayout = withMainLayoutArray.includes(ctx.pathname);
-
-// 	if (!token) {
-// 		protectedRoutes && redirectUser(ctx, '/login');
-// 	} else {
-// 		pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
-// 		pageProps.isWithMainLayout = isWithMainLayout;
-// 		pageProps.pathname = ctx.pathname;
-// 		pageProps.token = token;
-// 	}
-
-// 	return { pageProps };
-// };
-
 export default wrapper.withRedux(MyApp);
-// high order component (=wrapper.withRedux) enables us to wrap all
-// of our page components with redux

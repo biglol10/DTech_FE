@@ -10,6 +10,7 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { Modal } from 'semantic-ui-react';
 import { modalUISize } from '@utils/constants/uiConstants';
+import * as RCONST from '@utils/constants/reducerConstants';
 
 const ModalPopup = () => {
 	const dispatch = useDispatch();
@@ -21,7 +22,7 @@ const ModalPopup = () => {
 	const isBasic = modalState.modalIsBasic || false;
 
 	const handleClose = () => {
-		dispatch({ type: 'MODALCONTROL', modalOpen: false });
+		dispatch({ type: RCONST.MODALCONTROL, modalOpen: false });
 	};
 
 	return (

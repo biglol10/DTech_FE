@@ -20,6 +20,7 @@ import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import cookie from 'js-cookie';
 import { toast } from 'react-toastify';
+import * as RCONST from '@utils/constants/reducerConstants';
 
 import LeftBackground1 from '@public/background/loginLeft.png';
 import LeftBackground2 from '@public/background/loginLeft2.png';
@@ -56,7 +57,7 @@ const Login = () => {
 	const userLogin = () => {
 		setLoading(true);
 		dispatch({
-			type: 'AUTH_SETTING',
+			type: RCONST.AUTH_SETTING,
 			setIdInputError,
 			setPwInputError,
 			userSetting: {
@@ -70,7 +71,7 @@ const Login = () => {
 					router.push('/');
 				} else {
 					dispatch({
-						type: 'TOAST_SETTING',
+						type: RCONST.TOASTSETTING,
 						position: 'bottom-left',
 					});
 					toast['error'](<>{'login failed'}</>);
