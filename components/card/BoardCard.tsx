@@ -25,6 +25,7 @@ const BoardCard = ({
 	userTitle = '선임',
 	images = [],
 	liked = 0,
+	techNm = '전체',
 }: ICard) => {
 	const [like, setLike] = useState(liked !== 0);
 	const [likeCount, setLikeCount] = useState(likeCnt);
@@ -57,7 +58,12 @@ const BoardCard = ({
 				<div className={Style['card']}>
 					<Card fluid={true}>
 						<Card.Content className={Style['cardContent']}>
-							<Card.Header>{title}</Card.Header>
+							<Card.Header>
+								<div className={Style['cardHeader']}>
+									<div>{title}</div>
+									<div className={Style['cardTechNm']}>{techNm}</div>
+								</div>
+							</Card.Header>
 							<Card.Meta className={Style['cardMeta']}>
 								<span>
 									{userName} {userTitle}

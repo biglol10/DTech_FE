@@ -85,6 +85,7 @@ const Index = () => {
 						images={card.IMG_LIST}
 						liked={card.LIKED}
 						date={new Date(card.BOARD_DATE)}
+						techNm={card.TECH_NM}
 					/>
 				))}
 			</div>

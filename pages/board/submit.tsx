@@ -23,15 +23,15 @@ const ReactQuill = dynamic(
 const Submit = () => {
 	const router = useRouter();
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
-
 	const [techList, setTechList] = useState([]);
 	const [boardTitle, setBoardTitle] = useState('');
 	const [selectedTech, setSelectedTech] = useState('');
 	const uuid = useSelector((state: any) => state.auth.userUID);
 	const dispatch = useDispatch();
+	const inputRef = useRef<any>();
 
 	const submitBoard = (content: ChatList) => {
-		console.log(content);
+		// console.log(content);
 		dispatch({
 			type: 'SUBMIT_BOARD',
 			content,
@@ -39,7 +39,7 @@ const Submit = () => {
 			selectedTech,
 			boardTitle,
 			callbackFn: (data: any) => {
-				console.log('submitBoardClick!!');
+				// console.log('submitBoardClick!!');
 				if (data.result === 'success') {
 					router.push('/board');
 				} else {
@@ -48,6 +48,10 @@ const Submit = () => {
 			},
 		});
 	};
+
+	useEffect(() => {
+		inputRef.current.focus();
+	}, [boardTitle]);
 
 	useEffect(() => {
 		dispatch({
@@ -72,18 +76,6 @@ const Submit = () => {
 					>
 						
 					</InputLayout> */}
-					<InputDefault
-						id="title"
-						stretch={true}
-						placeholder="제목"
-						className={Style['boardTitle']}
-						value={boardTitle}
-						onChange={(obj: { value: string }) => {
-							// console.log(obj);
-							setBoardTitle(obj.value);
-						}}
-					/>
-
 					<InputDropdown
 						id="inputId"
 						placeholder="기술 선택"
@@ -94,6 +86,22 @@ const Submit = () => {
 						}}
 						className={Style['inputIdField']}
 					/>
+					<InputDefault
+						key="key"
+						id="title"
+						stretch={true}
+						placeholder="제목"
+						className={Style['boardTitle']}
+						onChange={(obj: { value: string }) => {
+							setBoardTitle(obj.value);
+						}}
+						// onChange={(e: any) => {
+						// 	console.log(e);
+						// 	// setBoardTitle(obj.value);
+						// }}
+						ref={inputRef}
+					/>
+
 					<DTechQuill
 						QuillSSR={ReactQuill}
 						enterSubmit={false}
@@ -103,8 +111,6 @@ const Submit = () => {
 						}}
 						handleSubmit={(content: ChatList) => {
 							// 이미지 S3 되면 올리고 setChatList 호출
-							// console.log('handleSubmit');
-							// console.log(content);
 							submitBoard(content);
 						}}
 						submitButtonOutside={true}

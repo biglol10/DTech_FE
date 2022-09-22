@@ -11,6 +11,9 @@
 		.boardTitle{
 			margin-bottom: 20px;
 		}
+		.inputIdField{
+			margin-bottom: 20px;
+		}
 	}
 }
 
@@ -26,14 +29,17 @@
 		margin:auto;
 		align-items: center;
 		display: flex;
+		align-content: space-between;
 		
 		.boardFilterBtns{
+			width:100%;
 			.filterBtn{
 				margin-left:20px;
 			}
 		}
 		.boardSumbitBtn{
 			right:0px;
+			width:150px;
 		}
 	}
 	.boardList{

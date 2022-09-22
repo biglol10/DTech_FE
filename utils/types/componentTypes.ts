@@ -203,6 +203,7 @@ export interface ICard {
 	userTitle?: string;
 	images?: Array<any>;
 	liked?: number;
+	techNm?: string;
 }
 
 export interface ITextWithDotAnimation {
