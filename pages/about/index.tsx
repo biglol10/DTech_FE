@@ -91,7 +91,9 @@ const About = () => {
 															Value
 														</div>
 
-														<Header.Subheader>의의</Header.Subheader>
+														<Header.Subheader>
+															개발목적
+														</Header.Subheader>
 													</Header.Content>
 												</Header>
 											</Table.Cell>
