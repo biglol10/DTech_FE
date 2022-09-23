@@ -1,19 +1,51 @@
+
+
+@-webkit-keyframes AnimationName {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+@-moz-keyframes AnimationName {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+@-o-keyframes AnimationName {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+@keyframes AnimationName { 
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+
 .boardLayout{
 	// background-color: red;
+	.inputIdFieldDiv{
+		width:60%;
+		margin:auto;
+		display: flex;
+		// flex-direction: row-reverse;
+		.inputIdField{
+			margin-top: 10px;
+			border-radius: 8px;
+			// width:50px;
+		}
+	}
 	.boardMain {
 		background-color: white;
 		width:60%;
 		margin:auto;
 		border-radius: 10px;
 		padding:20px 20px 60px 20px;
-		margin-top: 20px;
+		margin-top: 10px;
 
 		.boardTitle{
-			margin-bottom: 20px;
+			margin-bottom: 10px;
 		}
-		.inputIdField{
-			margin-bottom: 20px;
-		}
+		
 	}
 }
 
@@ -23,23 +55,31 @@
 	
 	.boardFilter{
 		background-color: white;
-		border-radius: 0.285714rem;
+		border-radius: 5px;
 		width:600px;
-		height:40px;
 		margin:auto;
 		align-items: center;
 		display: flex;
 		align-content: space-between;
 		
 		.boardFilterBtns{
-			width:100%;
+			width:80%;
 			.filterBtn{
 				margin-left:20px;
 			}
 		}
 		.boardSumbitBtn{
-			right:0px;
-			width:150px;
+			// right:0px;
+			width:20%;
+			.filterBtn{
+				border-radius: 0px 5px 5px 0px;
+				width: 100%;
+				height:100%;
+				background-color: #767676;
+				color:white;
+				// background: linear-gradient(-90deg, #FFBB25, #FB3820, #8236CA, #29BAE4);
+				// animation: AnimationName 15s ease infinite;
+			}
 		}
 	}
 	.boardList{

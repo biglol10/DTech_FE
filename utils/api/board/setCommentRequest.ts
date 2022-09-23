@@ -6,7 +6,7 @@ const commentRequest = async (props: any) => {
 	// console.log('commentRequest');
 	// console.log(postData);
 	const commentListResult = await axios
-		.post('http://localhost:3066/api/board/setComment', postData)
+		.post(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/board/setComment`, postData)
 		.then((res: any) => {
 			// console.log(res.data);
 			if (res.data.resultData.status === 'success') {

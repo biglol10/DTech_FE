@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const sendBoardImgRequest = async (props: any) => {
 	const sendBoardImgResult = await axios
-		.post('http://localhost:3066/api/board/uploadBoard', props)
+		.post(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/board/uploadBoard`, props)
 		.then((res: any) => {
 			// console.log('sendBoardImg');
 			// console.log(res.data);

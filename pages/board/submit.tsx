@@ -63,6 +63,18 @@ const Submit = () => {
 	return (
 		<>
 			<div className={Style['boardLayout']}>
+				<div className={Style['inputIdFieldDiv']}>
+					<InputDropdown
+						id="inputId"
+						placeholder="기술 선택"
+						options={techList}
+						// value={techList.teamSelectValue}
+						onChange={(obj: { value: string }) => {
+							setSelectedTech(obj.value);
+						}}
+						className={Style['inputIdField']}
+					/>
+				</div>
 				<div className={Style['boardMain']}>
 					{/* <InputLayout
 						error={false}
@@ -76,16 +88,7 @@ const Submit = () => {
 					>
 						
 					</InputLayout> */}
-					<InputDropdown
-						id="inputId"
-						placeholder="기술 선택"
-						options={techList}
-						// value={techList.teamSelectValue}
-						onChange={(obj: { value: string }) => {
-							setSelectedTech(obj.value);
-						}}
-						className={Style['inputIdField']}
-					/>
+
 					<InputDefault
 						key="key"
 						id="title"

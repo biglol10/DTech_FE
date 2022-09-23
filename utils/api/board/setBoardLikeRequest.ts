@@ -5,7 +5,7 @@ const boardLikeRequest = async (props: any) => {
 	// console.log(props);
 	const postData = props;
 	const boardLikeResult = await axios
-		.post('http://localhost:3066/api/board/setBoardLike', postData)
+		.post(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/board/setBoardLike`, postData)
 		.then((res: any) => {
 			if (res.data.resultData.status === 'success') {
 				return {

@@ -61,7 +61,11 @@ const BoardCard = ({
 							<Card.Header>
 								<div className={Style['cardHeader']}>
 									<div>{title}</div>
-									<div className={Style['cardTechNm']}>{techNm}</div>
+									{techNm !== null ? (
+										<div className={Style['cardTechNm']}>{techNm}</div>
+									) : (
+										<div></div>
+									)}
 								</div>
 							</Card.Header>
 							<Card.Meta className={Style['cardMeta']}>
@@ -74,14 +78,19 @@ const BoardCard = ({
 								<pre>{content}</pre>
 							</Card.Description>
 							{images.length > 0 && (
-								<SimpleImageSlider
-									width={400}
-									height={300}
-									images={images}
-									showBullets={true}
-									showNavs={true}
-									useGPURender={true}
-								/>
+								<div className={Style['imageSlider']}>
+									<SimpleImageSlider
+										width={400}
+										height={300}
+										images={images}
+										showBullets={true}
+										showNavs={true}
+										useGPURender={true}
+										onClick={(idx) => {
+											window.open(images[idx].url, '_blank');
+										}}
+									/>
+								</div>
 							)}
 
 							<Card.Content extra className={Style['comments']}>

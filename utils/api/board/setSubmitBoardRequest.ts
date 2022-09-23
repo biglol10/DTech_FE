@@ -3,7 +3,7 @@ import axios from 'axios';
 const submitBoardRequest = async (props: any) => {
 	const postData = props;
 	const submitBoardResult = await axios
-		.post('http://localhost:3066/api/board/setSubmitBoard', postData)
+		.post(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/board/setSubmitBoard`, postData)
 		.then((res: any) => {
 			if (res.data.resultData.status === 'success') {
 				return {

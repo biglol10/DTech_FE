@@ -66,6 +66,8 @@ const techListFunction = function* ({ setTechList }: any) {
 			};
 		});
 
+		newTempArr.unshift({ key: 'null', value: null, name: '선택 없음', text: '선택 없음' });
+
 		setTechList(newTempArr);
 	} else {
 		console.error(techListResult.errMessage);

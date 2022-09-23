@@ -9,6 +9,7 @@ import Style from './board.module.scss';
 const Index = () => {
 	const dispatch = useDispatch();
 	const [boardList, setBoardList] = useState([]);
+	const [filterBtn, setFilterBtn] = useState('new');
 	const uuid = useSelector((state: any) => state.auth.userUID);
 
 	useEffect(() => {
@@ -21,7 +22,7 @@ const Index = () => {
 	}, []);
 
 	useEffect(() => {
-		// console.log(boardList);
+		console.log(boardList);
 	}, [boardList]);
 
 	const clickFilterBtn = (orderType: string) => {
@@ -40,25 +41,28 @@ const Index = () => {
 					<Button
 						className={Style['filterBtn']}
 						content="NEW"
-						buttonType="primary"
+						buttonType={filterBtn === 'new' ? 'primary' : 'none'}
 						onClick={() => {
 							clickFilterBtn('new');
+							setFilterBtn('new');
 						}}
 					/>
 					<Button
 						className={Style['filterBtn']}
 						content="BEST"
-						buttonType="none"
+						buttonType={filterBtn === 'best' ? 'primary' : 'none'}
 						onClick={() => {
 							clickFilterBtn('best');
+							setFilterBtn('best');
 						}}
 					/>
 					<Button
 						className={Style['filterBtn']}
 						content="HOT"
-						buttonType="none"
+						buttonType={filterBtn === 'hot' ? 'primary' : 'none'}
 						onClick={() => {
 							clickFilterBtn('hot');
+							setFilterBtn('hot');
 						}}
 					/>
 				</div>

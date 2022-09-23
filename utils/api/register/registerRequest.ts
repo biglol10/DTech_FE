@@ -13,7 +13,7 @@ interface IRegisterUser {
 
 const registerRequest = async (props: IRegisterUser) => {
 	const registerResult = await axios
-		.post('http://localhost:3066/api/auth/registerUser', props)
+		.post(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/registerUser`, props)
 		.then((res: any) => {
 			return {
 				result: res.data,
