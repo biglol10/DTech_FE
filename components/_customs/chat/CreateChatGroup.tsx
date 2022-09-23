@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { InputLayout, InputWithIcon, InputDefault, Avatar } from '@components/index';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { InputLayout, InputWithIcon, InputDefault, Avatar, Button } from '@components/index';
 import {
 	Segment,
 	Label as SemanticLabel,
@@ -10,6 +10,7 @@ import {
 } from 'semantic-ui-react';
 import { IUsersStatusArr } from '@utils/types/commAndStoreTypes';
 import { generateAvatarImage } from '@utils/appRelated/helperFunctions';
+import { useModal } from '@utils/hooks/customHooks';
 import lodash from 'lodash';
 
 import ChatSvg from '@styles/svg/chat.svg';
@@ -27,6 +28,7 @@ const CreateChatGroup = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[]
 	const [userCollection, setUserCollection] = useState<IUsersStatusArr[]>([]);
 	const [chatRoomName, setChatRoomName] = useState('');
 	const [userSearchText, setUserSearchText] = useState('');
+	const { handleModal } = useModal();
 
 	const addUserCollection = (userObj: IUsersStatusArr) => {
 		setAllUsersArr(allUsersArr.filter((user) => user.USER_UID !== userObj.USER_UID));
@@ -61,12 +63,24 @@ const CreateChatGroup = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[]
 		});
 	}, [userCollection, userSearchText, usersStatusArrClone]);
 
+	const createChatGroupFunc = useCallback(() => {
+		handleModal({
+			modalOpen: false,
+		});
+	}, [handleModal]);
+
 	return (
 		<Segment placeholder>
 			<Header as="h2" className={Style['channelHeader']}>
-				<ChatSvg style={{ height: '30px', width: '30px', marginRight: '20px' }} />
-				채널 생성
-				<span>safasdf</span>
+				<ChatSvg style={{ height: '30px', width: '30px', marginRight: '10px' }} />
+				<span>채널 생성</span>
+				<Button
+					content="생성"
+					color="red"
+					buttonType="none"
+					size="small"
+					onClick={createChatGroupFunc}
+				/>
 			</Header>
 
 			<div style={{ width: '300px' }}>
@@ -140,8 +154,6 @@ const CreateChatGroup = ({ usersStatusArr }: { usersStatusArr: IUsersStatusArr[]
 						})}
 				</ul>
 			</Segment.Group>
-
-			<br />
 
 			<Segment.Group className={Style['userCollectionSegment']}>
 				{userCollection.map((user, idx) => {

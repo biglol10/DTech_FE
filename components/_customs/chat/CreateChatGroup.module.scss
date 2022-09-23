@@ -1,13 +1,18 @@
 .channelHeader {
 	display: flex;
 	align-items: center;
+
+	& > button {
+		margin-right: 0px !important;
+		margin-left: auto !important;
+	}
 }
 
 .userArrUl {
 	list-style: none;
 	display: block;
 
-	height: 400px;
+	height: 300px;
 	overflow-y: auto;
 
 	& > li:first-child {
@@ -21,8 +26,6 @@
 		padding-left: 0px;
 		padding-right: 13px;
 		border-radius: 5px;
-		// padding-top: 5px;
-		// padding-bottom: 5px;
 	}
 
 	.divider {
