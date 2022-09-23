@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { InputLayout, SharpDivider, InputWithIcon } from '@components/index';
 import Image from 'next/image';
 import DLogo from '@public/images/DLogo2.png';
@@ -9,7 +9,11 @@ import { useSelector } from 'react-redux';
 import { IAuth, IUsersStatusArr, IAppCommon } from '@utils/types/commAndStoreTypes';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { useChatUtil } from '@utils/hooks/customHooks';
+import { useChatUtil, useModal } from '@utils/hooks/customHooks';
+import { modalUISize } from '@utils/constants/uiConstants';
+import CreateChatGroup from '@components/_customs/chat/CreateChatGroup';
+
+import ChatSvg from '@styles/svg/chat.svg';
 
 import IndividualChatUser from './IndividualChatUser';
 import Style from './UserSidebar.module.scss';
@@ -28,6 +32,7 @@ const UserSidebar = ({
 }) => {
 	const [isLogoBorderBottom, setIsLogoBorderBottom] = useState(false);
 	const [userSearch, setUserSearch] = useState('');
+	const { handleModal } = useModal();
 
 	const cx = classNames.bind(Style);
 
@@ -70,6 +75,15 @@ const UserSidebar = ({
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [appCommon.currentChatUser, authStore.userSocket]);
+
+	const createChatRoom = useCallback(() => {
+		handleModal({
+			modalOpen: true,
+			modalContent: <CreateChatGroup usersStatusArr={usersStatusArr} />,
+			modalSize: modalUISize.SMALL,
+			modalIsBasic: false,
+		});
+	}, [handleModal, usersStatusArr]);
 
 	return (
 		<div className={cx('sidebarChat', `${iconLeft ? 'showSidebar' : 'hideSidebar'}`)}>
@@ -188,6 +202,10 @@ const UserSidebar = ({
 									)}
 							</div>
 						</div>
+					</div>
+					<div className={Style['createChatRoom']}>
+						<ChatSvg />
+						<span onClick={createChatRoom}>대화방 만들기</span>
 					</div>
 				</>
 			)}

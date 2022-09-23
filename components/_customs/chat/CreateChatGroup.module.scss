@@ -1,0 +1,36 @@
+.channelHeader {
+	display: flex;
+	align-items: center;
+}
+
+.userArrUl {
+	list-style: none;
+	display: block;
+
+	height: 400px;
+	overflow-y: auto;
+
+	& > li:first-child {
+		padding-top: 10px;
+	}
+
+	li {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding-left: 0px;
+		padding-right: 13px;
+		border-radius: 5px;
+		// padding-top: 5px;
+		// padding-bottom: 5px;
+	}
+
+	.divider {
+		margin: 7px 0px !important;
+	}
+}
+
+.userCollectionSegment {
+	height: 50px;
+	overflow-y: auto;
+}
