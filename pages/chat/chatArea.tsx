@@ -2,7 +2,7 @@ import { Box, List } from '@components/index';
 import { MainLayoutTemplate } from '@components/customs';
 import { parseCookies } from 'nookies';
 
-const ChatPage = (state: any) => {
+const ChatPage = () => {
 	const items = [
 		{
 			content: (
@@ -15,7 +15,7 @@ const ChatPage = (state: any) => {
 					>
 						React-Quill
 					</a>{' '}
-					라이브러리를 base로 커스터마이징을 마여 사용하고 있습니다.
+					라이브러리를 base로 커스터마이징해서 사용하고 있습니다.
 				</span>
 			),
 		},
@@ -28,18 +28,21 @@ const ChatPage = (state: any) => {
 		},
 		{
 			content:
-				'이미지 클릭 시 풀 사이즈로 볼 수 있는 모달 사이즈가 나오며 링크 클릭 시 해당 사이트로 이동이 가능합니다.',
+				'이미지 클릭 시 풀 사이즈로 볼 수 있는 모달이 나오며 링크 클릭 시 해당 사이트로 이동이 가능합니다.',
 		},
 		{
 			content: (
 				<p>
-					기본적인 텍스트 붙여넣기 기능이 제공되며 이미지 또한 <u>붙여넣기가</u>{' '}
+					기본적인 텍스트 붙여넣기 기능이 제공되며 <u>이미지 또한 붙여넣기가</u>{' '}
 					가능합니다.
 				</p>
 			),
 		},
 		{
 			content: `채팅을 입력할 때마다 사용자에게 'XX님이 입력중입니다'라는 문구가 출력됩니다`,
+		},
+		{
+			content: `읽지 않은 메시지가 있을 경우 상대방의 이름이 bold로 나타나며 해당 정보를 실시간으로 가져올 수 있습니다`,
 		},
 	];
 

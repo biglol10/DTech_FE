@@ -26,6 +26,7 @@ interface PersonDefail {
 	githubUrl: string;
 	detail: string;
 	userUID: string;
+	profileDetailModal: Function | null;
 }
 
 const PersonCard = ({
@@ -37,6 +38,7 @@ const PersonCard = ({
 	githubUrl,
 	detail,
 	userUID,
+	profileDetailModal = null,
 }: PersonDefail) => {
 	const router = useRouter();
 	const [popupView, setPopupView] = useState(false);
@@ -50,9 +52,9 @@ const PersonCard = ({
 					src={profileUrl || generateAvatarImage(userUID)}
 					imageSize={'mini'}
 				/>
-				{popupView && (
+				{profileDetailModal && popupView && (
 					<div className={Style['userClickPopup']}>
-						<div onClick={() => alert('visit profile')}>
+						<div onClick={() => profileDetailModal && profileDetailModal()}>
 							<Icon name="user circle" />
 							프로필 보기
 						</div>

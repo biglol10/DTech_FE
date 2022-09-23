@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const techListRequest = async (props: any) => {
 	const techListResult = await axios
-		.post('http://localhost:3066/api/auth/getTechList')
+		.post(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/getTechList`)
 		.then((res: any) => {
 			if (res.data.resultData.status === 'success') {
 				return {

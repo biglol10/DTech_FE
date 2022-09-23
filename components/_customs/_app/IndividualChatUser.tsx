@@ -6,6 +6,7 @@ import { Icon } from 'semantic-ui-react';
 import { useSelector } from 'react-redux';
 import { IAuth } from '@utils/types/commAndStoreTypes';
 import { useChatUtil } from '@utils/hooks/customHooks';
+import cookie from 'js-cookie';
 
 import Style from './IndividualChatUser.module.scss';
 
@@ -45,6 +46,7 @@ const IndividualChatUser = ({
 			className={Style['folder-icons']}
 			data-uid={userUID}
 			onClick={() => {
+				cookie.set('currentChatUser', userUID);
 				isNotSameUser && router.push({ pathname: `/chat/${userUID}` });
 				unReadArrSlice(userUID);
 			}}

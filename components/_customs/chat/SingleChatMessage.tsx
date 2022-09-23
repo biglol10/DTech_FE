@@ -28,24 +28,7 @@ const SingleChatMessage = ({
 }: ChatListExtends) => {
 	const [showCopyButton, setShowCopyButton] = useState(false);
 	const [copyButtonClicked, setCopyButtonClicked] = useState(false);
-
 	const { handleModal } = useModal();
-
-	console.log('imgList is ');
-	console.log(imgList);
-	console.log(typeof imgList);
-
-	// console.log('imgimgimgimg');
-	// console.log(imgList);
-	// console.log(typeof imgList);
-	// console.log(JSON.parse(imgList));
-	// console.log(typeof JSON.parse(JSON.parse(JSON.stringify(`${imgList}`))));
-
-	// console.log('linklinklink');
-	// console.log(linkList);
-	// console.log(typeof linkList);
-	// console.log(typeof JSON.parse(JSON.stringify(`${linkList}`)));
-
 	const sentTimeRef = useRef(sentTime ? dayjs(sentTime).format('HH:mm') : null);
 
 	const openImageModal = (imgSrc: string) => {
