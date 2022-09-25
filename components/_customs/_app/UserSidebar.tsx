@@ -73,17 +73,25 @@ const UserSidebar = ({
 				unReadArrSlice(fromUID);
 			}
 		});
+
+		socket?.on(
+			'chatGroupCreateSuccess',
+			({ chatGroupUID, chatGroupName }: { chatGroupUID: string; chatGroupName: string }) => {
+				alert('create success');
+				alert(JSON.stringify(chatGroupUID));
+			},
+		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [appCommon.currentChatUser, authStore.userSocket]);
 
 	const createChatRoom = useCallback(() => {
 		handleModal({
 			modalOpen: true,
-			modalContent: <CreateChatGroup usersStatusArr={usersStatusArr} />,
+			modalContent: <CreateChatGroup usersStatusArr={usersStatusArr} authStore={authStore} />,
 			modalSize: modalUISize.SMALL,
 			modalIsBasic: false,
 		});
-	}, [handleModal, usersStatusArr]);
+	}, [authStore, handleModal, usersStatusArr]);
 
 	return (
 		<div className={cx('sidebarChat', `${iconLeft ? 'showSidebar' : 'hideSidebar'}`)}>

@@ -45,10 +45,14 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	const [settingOpen, setSettingOpen] = useState(false);
 	const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
 	const [usersStatusArr, setUsersStatusArr] = useState<IUsersStatusArr[]>([]);
+	const [groupChatArr, setGroupChatArr] = useState<
+		{ chatGroupName: string; chatGroupUID: string }[]
+	>([]);
 
 	const wrapperRef = useRef<HTMLDivElement>(null);
 	const connectedUsersRef = useRef<any>([]);
 	const usersStatusArrRef = useRef<any>([]);
+	const chatGroupsArrRef = useRef<any>([]);
 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
 	const appCommon = useSelector((state: { appCommon: IAppCommon }) => state.appCommon);
@@ -123,9 +127,30 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 			.catch((err) => {});
 	}, [onlineUsers]);
 
+	const getGroupChatArr = useCallback(() => {
+		if (authStore.userUID) {
+			axios
+				.get(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getChatGroups`, {
+					params: { currentUser: authStore.userUID },
+				})
+				.then((response) => {
+					const stateEqual = _.isEqual(
+						chatGroupsArrRef.current,
+						response.data.chatGroups,
+					);
+
+					if (!stateEqual) {
+						chatGroupsArrRef.current = response.data.chatGroups;
+						setGroupChatArr(response.data.chatGroups);
+					}
+				});
+		}
+	}, [authStore.userUID]);
+
 	useEffect(() => {
 		getUsersStatus();
-	}, [getUsersStatus]);
+		getGroupChatArr();
+	}, [getGroupChatArr, getUsersStatus]);
 
 	const logout = () => {
 		disconnect();
