@@ -1,6 +1,7 @@
 import { ICard } from '@utils/types/componentTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
+import axios from 'axios';
 import { Card, Icon, Image } from 'semantic-ui-react';
 import SimpleImageSlider from 'react-simple-image-slider';
 import { useState, useEffect } from 'react';
@@ -23,9 +24,11 @@ const BoardCard = ({
 	date = new Date(),
 	userName = '장보영',
 	userTitle = '선임',
+	boardUid = '',
 	images = [],
 	liked = 0,
 	techNm = '전체',
+	cb = undefined,
 }: ICard) => {
 	const [like, setLike] = useState(liked !== 0);
 	const [likeCount, setLikeCount] = useState(likeCnt);
@@ -42,6 +45,31 @@ const BoardCard = ({
 		});
 
 		setLike((prev) => !prev);
+	};
+
+	const deleteBrd = async () => {
+		console.log(id);
+		const axiosData = await axios
+			.post(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/board/deleteBoard`, {
+				brdId: id,
+			})
+			.then((response) => {
+				console.log(response);
+				if (cb !== undefined) {
+					cb();
+				}
+				// return response.data;
+			})
+			.catch((err) => {
+				console.log(err);
+				// return {
+				// 	teamSkillDashboard: null,
+				// 	teamSkillCountObj: {},
+				// 	userDashboard: [],
+				// };
+			});
+
+		console.log(axiosData);
 	};
 
 	return (
@@ -103,6 +131,15 @@ const BoardCard = ({
 										{commentCnt} comments
 									</a>
 								</Link>
+								{boardUid === userUID ? (
+									<div>
+										<Icon
+											name="trash alternate outline"
+											onClick={deleteBrd}
+											color="blue"
+										/>
+									</div>
+								) : null}
 							</Card.Content>
 						</Card.Content>
 					</Card>

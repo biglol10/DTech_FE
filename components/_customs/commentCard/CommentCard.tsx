@@ -76,7 +76,11 @@ const CommentCard = ({
 					<div className={Style['cmnt_content']}>{content}</div>
 					<div>
 						{cmntUid === uuid && (
-							<Icon name="trash alternate outline" onClick={deleteCmnt} />
+							<Icon
+								name="trash alternate outline"
+								onClick={deleteCmnt}
+								color="blue"
+							/>
 						)}
 					</div>
 				</div>

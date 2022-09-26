@@ -62,14 +62,11 @@ const RegisterStep4 = (props: any) => {
 
 	return (
 		<>
-			<div style={inputElCommStyle(0, 'left', true)}>
-				<Header
-					className={Style['inputLabelHeader']}
-					as="h4"
-					style={{ position: 'relative', left: '0%' }}
-				>
-					보유한 기술 또는 관심분야를 선택해주세요.
-				</Header>
+			<div className={Style['stepDiv']}>
+				<div className={Style['inputLabelHeader']}>
+					<Header as="h3">보유한 기술 또는 관심있는 기술을 선택해주세요.</Header>
+				</div>
+
 				<div className={Style['techBtnDiv']}>
 					{techSelectedList.techSelectValue.map((tech: any) => {
 						return (
@@ -78,7 +75,7 @@ const RegisterStep4 = (props: any) => {
 								key={tech.key}
 								size="mini"
 								color="grey"
-								spacing={5}
+								spacing={8}
 								basic={!tech.value}
 								onClick={(e: any) => {
 									handleTechClick(tech.key);

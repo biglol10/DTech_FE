@@ -111,10 +111,15 @@ const submitBoardFunction = function* ({
 };
 
 const boardDetailFunction = function* ({ brdId, uuid, card, setCard }: any) {
-	// console.log('boardDetailFunction');
-	const boardListResult: IBoardList = yield call(boardListRequest, { uuid, brdId });
+	console.log('boardDetailFunction');
+	console.log(brdId);
+	console.log(uuid);
+	const boardListResult: IBoardList = yield call(boardListRequest, {
+		uuid,
+		brdId,
+	});
 
-	// console.log(boardListResult.boardList);
+	console.log(boardListResult);
 	setCard(boardListResult.boardList);
 	yield;
 };

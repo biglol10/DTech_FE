@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MainLayoutTemplate } from '@components/customs';
 import Link from 'next/link';
-import { Button as BTN } from 'semantic-ui-react';
+import { Button as BTN, Icon } from 'semantic-ui-react';
 import { BoardCard, Button } from '@components/index';
 import Style from './board.module.scss';
 
@@ -11,6 +11,15 @@ const Index = () => {
 	const [boardList, setBoardList] = useState([]);
 	const [filterBtn, setFilterBtn] = useState('new');
 	const uuid = useSelector((state: any) => state.auth.userUID);
+
+	const deleteCb = () => {
+		dispatch({
+			type: 'BOARD_LIST',
+			setBoardList,
+			uuid,
+			orderType: 'new',
+		});
+	};
 
 	useEffect(() => {
 		dispatch({
@@ -39,8 +48,14 @@ const Index = () => {
 			<div className={Style['boardFilter']}>
 				<div className={Style['boardFilterBtns']}>
 					<Button
+						basic={true}
 						className={Style['filterBtn']}
-						content="NEW"
+						content={
+							<div>
+								<Icon name="paw" />
+								<b>NEW</b>
+							</div>
+						}
 						buttonType={filterBtn === 'new' ? 'primary' : 'none'}
 						onClick={() => {
 							clickFilterBtn('new');
@@ -48,8 +63,14 @@ const Index = () => {
 						}}
 					/>
 					<Button
+						basic={true}
 						className={Style['filterBtn']}
-						content="BEST"
+						content={
+							<div>
+								<Icon name="rocket" />
+								<b>BEST</b>
+							</div>
+						}
 						buttonType={filterBtn === 'best' ? 'primary' : 'none'}
 						onClick={() => {
 							clickFilterBtn('best');
@@ -57,8 +78,14 @@ const Index = () => {
 						}}
 					/>
 					<Button
+						basic={true}
 						className={Style['filterBtn']}
-						content="HOT"
+						content={
+							<div>
+								<Icon name="fire" />
+								<b>HOT</b>
+							</div>
+						}
 						buttonType={filterBtn === 'hot' ? 'primary' : 'none'}
 						onClick={() => {
 							clickFilterBtn('hot');
@@ -90,6 +117,8 @@ const Index = () => {
 						liked={card.LIKED}
 						date={new Date(card.BOARD_DATE)}
 						techNm={card.TECH_NM}
+						boardUid={card.USER_UID}
+						cb={deleteCb}
 					/>
 				))}
 			</div>
