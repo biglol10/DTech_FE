@@ -21,6 +21,7 @@ import Style from './UserSidebar.module.scss';
 interface IUnReadChatList {
 	CONVERSATION_ID: string;
 	USER_UID: string;
+	GUBUN: 'private' | 'group';
 }
 
 const UserSidebar = ({
@@ -52,9 +53,13 @@ const UserSidebar = ({
 					params: { fromUID: authStore.userUID },
 				})
 				.then((response) => {
-					const resData = response.data.unReadList.map(
-						(item: IUnReadChatList) => item.USER_UID,
-					);
+					const resData = response.data.unReadList.map((item: IUnReadChatList) => {
+						if (item.GUBUN === 'private') {
+							return item.USER_UID;
+						} else {
+							return item.CONVERSATION_ID;
+						}
+					});
 
 					initUnReadChatList(resData);
 				})
@@ -69,6 +74,15 @@ const UserSidebar = ({
 		const socket = authStore.userSocket;
 
 		socket?.on('newMessageReceivedSidebar', ({ fromUID }: { fromUID: string }) => {
+			if (fromUID !== appCommon.currentChatUser) {
+				unReadArrAdd(fromUID);
+			} else {
+				unReadArrSlice(fromUID);
+			}
+		});
+
+		// TODO change the logic
+		socket?.on('newMessageGroupReceivedSidebar', ({ fromUID }: { fromUID: string }) => {
 			if (fromUID !== appCommon.currentChatUser) {
 				unReadArrAdd(fromUID);
 			} else {

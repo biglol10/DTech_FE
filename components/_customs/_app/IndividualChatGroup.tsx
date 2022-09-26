@@ -3,6 +3,7 @@ import { generateAvatarImage } from '@utils/appRelated/helperFunctions';
 import { customStyleObj } from '@utils/styleRelated/stylehelper';
 import classNames from 'classnames/bind';
 import cookie from 'js-cookie';
+import { useChatUtil } from '@utils/hooks/customHooks';
 
 import Style from './IndividualChatGroup.module.scss';
 
@@ -21,14 +22,16 @@ const IndividualChatGroup = ({
 }: IIndividualChatGroup) => {
 	const cx = classNames.bind(Style);
 	const router = useRouter();
+	const { unReadArrSlice } = useChatUtil();
 
 	return (
 		<div
 			className={Style['folder-icons']}
 			data-uid={chatUID}
 			onClick={() => {
-				cookie.set('currentChatRoom', chatUID);
+				cookie.set('currentChatRoom', JSON.stringify({ chatUID, chatName }));
 				router.push(`/chat/room/${chatUID}`);
+				unReadArrSlice(chatUID);
 			}}
 		>
 			<div

@@ -25,6 +25,7 @@ import { toast } from 'react-toastify';
 import cookie from 'js-cookie';
 import lodash from 'lodash';
 import * as RCONST from '@utils/constants/reducerConstants';
+import { chatToDateGroup } from '@utils/appRelated/helperFunctions';
 
 import Style from './[userId].module.scss';
 
@@ -55,25 +56,6 @@ const dayOfWeek: { [val: string]: string } = {
 	'4': '금요일',
 	'5': '토요일',
 	'6': '일요일',
-};
-
-const chatToDateGroup = (arr: any) => {
-	const groupsReduce = arr.reduce((previouseVal: any, currentVal: any) => {
-		const date = currentVal.SENT_DATETIME.split('T')[0];
-
-		const hourMin = dayjs(currentVal.SENT_DATETIME).format('HH:mm');
-
-		if (!previouseVal[date]) {
-			previouseVal[date] = {};
-		}
-		if (!previouseVal[date][hourMin]) {
-			previouseVal[date][hourMin] = [];
-		}
-		previouseVal[date][hourMin].push(currentVal);
-		return previouseVal;
-	}, {});
-
-	return groupsReduce;
 };
 
 const UserChat = ({
@@ -353,9 +335,6 @@ const UserChat = ({
 								setQuillWrapperHeight(heightValue);
 							}}
 							handleSubmit={(content: ChatList) => {
-								// 이미지 S3 되면 올리고 setChatList 호출
-								console.log(quillRef.current);
-								console.log(content);
 								sendMessageFunction(content);
 							}}
 							// QuillSSR={ReactQuill}
