@@ -158,6 +158,9 @@ const UserSidebar = ({
 											chatUID={item.CONVERSATION_ID}
 											chatName={item.CONVERSATION_NAME}
 											cnt={item.CNT}
+											newMsgNoti={appCommon.unReadMsg.includes(
+												item.CONVERSATION_ID,
+											)}
 										/>
 									);
 								})}
