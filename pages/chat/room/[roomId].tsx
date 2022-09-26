@@ -16,7 +16,7 @@ import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
-import cookie from 'js-cookie';
+import { parseCookies } from 'nookies';
 import lodash from 'lodash';
 import { chatToDateGroup } from '@utils/appRelated/helperFunctions';
 import * as RCONST from '@utils/constants/reducerConstants';
@@ -55,9 +55,11 @@ const dayOfWeek: { [val: string]: string } = {
 const RoomChat = ({
 	usersStatusArr,
 	queryObj,
+	currentChatRoomName,
 }: {
 	usersStatusArr: IUsersStatusArr[];
 	queryObj: { roomId: string };
+	currentChatRoomName: string;
 }) => {
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
 	const socket = authStore.userSocket;
@@ -219,7 +221,7 @@ const RoomChat = ({
 						// 		? JSON.parse(cookie.get('currentChatRoom')!).chatName
 						// 		: '그룹 채팅'
 						// }
-						content="asdf"
+						content={currentChatRoomName}
 						iconOrImage="icon"
 						icon={<Icon name="rocketchat" />}
 						color="green"
@@ -333,7 +335,14 @@ RoomChat.PageLayout = MainLayoutTemplate;
 RoomChat.displayName = 'chatPage';
 
 export const getServerSideProps = async (context: any) => {
-	return { props: { queryObj: context.query } };
+	const { currentChatRoom } = parseCookies(context);
+
+	return {
+		props: {
+			queryObj: context.query,
+			currentChatRoomName: JSON.parse(currentChatRoom).chatName,
+		},
+	};
 };
 
 export default RoomChat;
