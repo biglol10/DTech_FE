@@ -83,7 +83,7 @@ const UserSidebar = ({
 
 		// TODO change the logic
 		socket?.on('newMessageGroupReceivedSidebar', ({ fromUID }: { fromUID: string }) => {
-			if (fromUID !== appCommon.currentChatUser) {
+			if (fromUID !== appCommon.currentChatGroup) {
 				unReadArrAdd(fromUID);
 			} else {
 				unReadArrSlice(fromUID);

@@ -13,12 +13,13 @@ import { Container, Segment, Icon } from 'semantic-ui-react';
 
 import { ChatList, IUsersStatusArr, IAuth } from '@utils/types/commAndStoreTypes';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import cookie from 'js-cookie';
 import lodash from 'lodash';
 import { chatToDateGroup } from '@utils/appRelated/helperFunctions';
+import * as RCONST from '@utils/constants/reducerConstants';
 
 import Style from './[roomId].module.scss';
 
@@ -73,6 +74,16 @@ const RoomChat = ({
 	const roomID = useMemo(() => {
 		return queryObj.roomId;
 	}, [queryObj.roomId]);
+
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch({ type: RCONST.SET_CURRENT_CHAT_GROUP, chatGroup: roomID });
+
+		return () => {
+			dispatch({ type: RCONST.SET_CURRENT_CHAT_GROUP, chatGroup: '' });
+		};
+	}, [dispatch, roomID]);
 
 	const getGroupChatListCallback = useCallback(() => {
 		axios
@@ -203,11 +214,12 @@ const RoomChat = ({
 				>
 					<Label
 						basic
-						content={
-							cookie.get('currentChatRoom')
-								? JSON.parse(cookie.get('currentChatRoom')!).chatName
-								: '그룹 채팅'
-						}
+						// content={
+						// 	cookie.get('currentChatRoom')
+						// 		? JSON.parse(cookie.get('currentChatRoom')!).chatName
+						// 		: '그룹 채팅'
+						// }
+						content="asdf"
 						iconOrImage="icon"
 						icon={<Icon name="rocketchat" />}
 						color="green"
