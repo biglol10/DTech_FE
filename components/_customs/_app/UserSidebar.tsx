@@ -11,7 +11,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useChatUtil, useModal } from '@utils/hooks/customHooks';
 import { modalUISize } from '@utils/constants/uiConstants';
-import CreateChatGroup from '@components/_customs/chat/CreateChatGroup';
+import { CreateChatGroup, IndividualChatGroup } from '@components/customs';
 
 import ChatSvg from '@styles/svg/chat.svg';
 
@@ -26,9 +26,11 @@ interface IUnReadChatList {
 const UserSidebar = ({
 	iconLeft,
 	usersStatusArr,
+	groupChatArr,
 }: {
 	iconLeft: boolean;
 	usersStatusArr: IUsersStatusArr[];
+	groupChatArr: { CONVERSATION_ID: string; CONVERSATION_NAME: string; CNT: number }[];
 }) => {
 	const [isLogoBorderBottom, setIsLogoBorderBottom] = useState(false);
 	const [userSearch, setUserSearch] = useState('');
@@ -74,13 +76,6 @@ const UserSidebar = ({
 			}
 		});
 
-		socket?.on(
-			'chatGroupCreateSuccess',
-			({ chatGroupUID, chatGroupName }: { chatGroupUID: string; chatGroupName: string }) => {
-				alert('create success');
-				alert(JSON.stringify(chatGroupUID));
-			},
-		);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [appCommon.currentChatUser, authStore.userSocket]);
 
@@ -151,6 +146,21 @@ const UserSidebar = ({
 											newMsgNoti={appCommon.unReadMsg.includes(item.USER_UID)}
 										/>
 									))}
+							</div>
+
+							<SharpDivider content="그룹채팅" />
+
+							<div className={Style['groupChat']}>
+								{groupChatArr.map((item, idx) => {
+									return (
+										<IndividualChatGroup
+											key={`IndividualChatGroup_${idx}`}
+											chatUID={item.CONVERSATION_ID}
+											chatName={item.CONVERSATION_NAME}
+											cnt={item.CNT}
+										/>
+									);
+								})}
 							</div>
 
 							<SharpDivider content="온라인" />

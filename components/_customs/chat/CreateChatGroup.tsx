@@ -134,7 +134,7 @@ const CreateChatGroup = ({
 			return;
 		}
 
-		router.push(`/${chatGroupFunc.chatGroupUID}`);
+		router.push(`/chat/room/${chatGroupFunc.chatGroupUID}`);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [chatRoomName, handleModal, userCollection, authStore, regExp]);

@@ -9,6 +9,8 @@ import RegisterResult from './_customs/registerStep/registerResult';
 import SkillTable from './_customs/dashboard/SkillTable';
 import PersonCard from './_customs/dashboard/PersonCard';
 import SingleChatMessage from './_customs/chat/SingleChatMessage';
+import IndividualChatGroup from './_customs/_app/IndividualChatGroup';
+import CreateChatGroup from './_customs/chat/CreateChatGroup';
 
 export {
 	MainLayoutTemplate,
@@ -22,4 +24,6 @@ export {
 	SkillTable,
 	PersonCard,
 	SingleChatMessage,
+	IndividualChatGroup,
+	CreateChatGroup,
 };

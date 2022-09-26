@@ -46,7 +46,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
 	const [usersStatusArr, setUsersStatusArr] = useState<IUsersStatusArr[]>([]);
 	const [groupChatArr, setGroupChatArr] = useState<
-		{ chatGroupName: string; chatGroupUID: string }[]
+		{ CONVERSATION_ID: string; CONVERSATION_NAME: string; CNT: number }[]
 	>([]);
 
 	const wrapperRef = useRef<HTMLDivElement>(null);
@@ -105,6 +105,10 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 			);
 
 			socket.on('newUserCreated', () => getUsersStatus());
+
+			socket?.on('chatGroupCreateSuccess', () => {
+				getGroupChatArr();
+			});
 		}
 		// 다른 dependency 추가하면 connectedUsers가 여러번 찍힘... 딱히 문제는 없지만 최소한으로 작동하는게 목적
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -188,7 +192,11 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 							<img src="https://i.ibb.co/zGtDpcp/map.png" /> */}
 						</div>
 					</nav>
-					<UserSidebar iconLeft={iconLeft} usersStatusArr={usersStatusArr} />
+					<UserSidebar
+						iconLeft={iconLeft}
+						usersStatusArr={usersStatusArr}
+						groupChatArr={groupChatArr}
+					/>
 				</div>
 				<div className={Style['right']}>
 					<nav className={Style['navHeader']}>
