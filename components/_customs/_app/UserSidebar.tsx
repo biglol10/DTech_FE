@@ -74,7 +74,7 @@ const UserSidebar = ({
 		const socket = authStore.userSocket;
 
 		socket?.on('newMessageReceivedSidebar', ({ fromUID }: { fromUID: string }) => {
-			if (fromUID !== appCommon.currentChatUser) {
+			if (fromUID !== appCommon.currentChatUser && fromUID) {
 				unReadArrAdd(fromUID);
 			} else {
 				unReadArrSlice(fromUID);
@@ -83,7 +83,7 @@ const UserSidebar = ({
 
 		// TODO change the logic
 		socket?.on('newMessageGroupReceivedSidebar', ({ fromUID }: { fromUID: string }) => {
-			if (fromUID !== appCommon.currentChatGroup) {
+			if (fromUID !== appCommon.currentChatGroup && fromUID) {
 				unReadArrAdd(fromUID);
 			} else {
 				unReadArrSlice(fromUID);
