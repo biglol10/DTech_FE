@@ -36,8 +36,13 @@ interface ISubmitBoard {
 	errMessage?: string | undefined;
 }
 
-const boardListFunction = function* ({ setBoardList, uuid, orderType }: any) {
-	const boardListResult: IBoardList = yield call(boardListRequest, { uuid, orderType });
+const boardListFunction = function* ({ setBoardList, uuid, orderType, filterType }: any) {
+	console.log(filterType);
+	const boardListResult: IBoardList = yield call(boardListRequest, {
+		uuid,
+		orderType,
+		filterType,
+	});
 
 	if (boardListResult.result === 'success') {
 		setBoardList(boardListResult.boardList);

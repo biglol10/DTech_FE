@@ -55,6 +55,7 @@ const Comment = ({ brd }: any) => {
 							commentCnt={detail.CMNT_CNT}
 							images={detail.IMG_LIST}
 							liked={detail.LIKED}
+							techNm={detail.TECH_NM}
 						/>
 					))}
 				</div>
@@ -70,7 +71,9 @@ const Comment = ({ brd }: any) => {
 						<Button
 							className={Style['commentBtn']}
 							onClick={() => {
-								sendComment();
+								if (commentArea !== '') {
+									sendComment();
+								}
 							}}
 						>
 							SEND

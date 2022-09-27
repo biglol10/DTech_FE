@@ -1,5 +1,12 @@
 import { MainLayoutTemplate } from '@components/customs';
-import { InputDefault, DTechQuill, InputDropdown, Button, InputLayout } from '@components/index';
+import {
+	InputDefault,
+	DTechQuill,
+	InputDropdown,
+	Button,
+	InputLayout,
+	QuillBox,
+} from '@components/index';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { useState, useRef, useEffect } from 'react';
@@ -49,9 +56,9 @@ const Submit = () => {
 		});
 	};
 
-	useEffect(() => {
-		inputRef.current.focus();
-	}, [boardTitle]);
+	// useEffect(() => {
+	// 	inputRef.current.focus();
+	// }, [boardTitle]);
 
 	useEffect(() => {
 		dispatch({
@@ -76,19 +83,6 @@ const Submit = () => {
 					/>
 				</div>
 				<div className={Style['boardMain']}>
-					{/* <InputLayout
-						error={false}
-						errorMsg="제목을 입력하세요."
-						stretch={true}
-						// inputLabel="이메일*"
-						// inputLabelSize={labelSize}
-						// showInputLabel={true}
-						autoFitErrorLabel={true}
-						spacing={40}
-					>
-						
-					</InputLayout> */}
-
 					<InputDefault
 						key="key"
 						id="title"
@@ -98,15 +92,11 @@ const Submit = () => {
 						onChange={(obj: { value: string }) => {
 							setBoardTitle(obj.value);
 						}}
-						// onChange={(e: any) => {
-						// 	console.log(e);
-						// 	// setBoardTitle(obj.value);
-						// }}
-						ref={inputRef}
+						// ref={inputRef}
 					/>
-
+					{/* <QuillBox selectedTech={selectedTech} boardTitle={boardTitle} /> */}
 					<DTechQuill
-						QuillSSR={ReactQuill}
+						// QuillSSR={ReactQuill}
 						enterSubmit={false}
 						quillMinHeight={300}
 						returnQuillWrapperHeight={(heightValue: number) => {

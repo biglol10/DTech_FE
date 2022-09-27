@@ -2,13 +2,16 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { MainLayoutTemplate } from '@components/customs';
 import Link from 'next/link';
-import { Button as BTN, Icon } from 'semantic-ui-react';
-import { BoardCard, Button } from '@components/index';
+import { Button as BTN, Dropdown, Icon } from 'semantic-ui-react';
+import { BoardCard, Button, InputDropdown } from '@components/index';
 import Style from './board.module.scss';
 
 const Index = () => {
 	const dispatch = useDispatch();
 	const [boardList, setBoardList] = useState([]);
+	const [techList, setTechList] = useState([]);
+	const [orderType, setOrderType] = useState('');
+	const [selectedTech, setSelectedTech] = useState('');
 	const [filterBtn, setFilterBtn] = useState('new');
 	const uuid = useSelector((state: any) => state.auth.userUID);
 
@@ -23,6 +26,13 @@ const Index = () => {
 
 	useEffect(() => {
 		dispatch({
+			type: 'BOARD_TECH_LIST',
+			setTechList,
+		});
+	}, []);
+
+	useEffect(() => {
+		dispatch({
 			type: 'BOARD_LIST',
 			setBoardList,
 			uuid,
@@ -34,12 +44,25 @@ const Index = () => {
 		console.log(boardList);
 	}, [boardList]);
 
-	const clickFilterBtn = (orderType: string) => {
+	const clickFilterBtn = (oType: string) => {
+		setOrderType(oType);
+		dispatch({
+			type: 'BOARD_LIST',
+			setBoardList,
+			uuid,
+			orderType: oType,
+			filterType: selectedTech,
+		});
+	};
+
+	const changeFilter = (tech: any) => {
+		setSelectedTech(tech);
 		dispatch({
 			type: 'BOARD_LIST',
 			setBoardList,
 			uuid,
 			orderType,
+			filterType: tech,
 		});
 	};
 
@@ -90,6 +113,21 @@ const Index = () => {
 						onClick={() => {
 							clickFilterBtn('hot');
 							setFilterBtn('hot');
+						}}
+					/>
+				</div>
+				<div className={Style['techDropDown']}>
+					<Dropdown
+						search
+						id="inputId"
+						placeholder="Filter"
+						options={techList}
+						// value={techList.teamSelectValue}
+						onChange={(event, data) => {
+							// console.log(event);
+							// console.log(data.value);
+							changeFilter(data.value);
+							// setSelectedTech(obj.value);
 						}}
 					/>
 				</div>

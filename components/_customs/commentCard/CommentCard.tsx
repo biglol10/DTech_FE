@@ -73,7 +73,9 @@ const CommentCard = ({
 					<div>{cmntDate.toDateString()}</div>
 				</div>
 				<div className={Style['cmnt_below']}>
-					<div className={Style['cmnt_content']}>{content}</div>
+					<div className={Style['cmnt_content']}>
+						<pre>{content}</pre>
+					</div>
 					<div>
 						{cmntUid === uuid && (
 							<Icon

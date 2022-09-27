@@ -63,12 +63,16 @@
 		align-content: space-between;
 		
 		.boardFilterBtns{
-			width:80%;
+			width:55%;
 			
 			.filterBtn{
 				margin-left:20px;
 				border-radius: 20px;
 			}
+			
+		}
+		.techDropDown{
+			width:25%;
 		}
 		.boardSumbitBtn{
 			// right:0px;
