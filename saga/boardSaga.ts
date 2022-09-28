@@ -5,6 +5,9 @@ import { boardLikeRequest } from '@utils/api/board/setBoardLikeRequest';
 import { submitBoardRequest } from '@utils/api/board/setSubmitBoardRequest';
 import { sendBoardImgRequest } from '@utils/api/board/setBoardImgRequest';
 import { techListRequest } from '@utils/api/register/getTechListRequest';
+import { commentListRequest } from '@utils/api/board/getCommentListRequest';
+import { commentRequest } from '@utils/api/board/setCommentRequest';
+import { useDispatch } from 'react-redux';
 
 interface IBoardList {
 	result: string;
@@ -21,14 +24,25 @@ interface ITechList {
 	techList: any | undefined;
 	errMessage: string | undefined;
 }
+interface ICommentList {
+	result: string;
+	commentList: any | undefined;
+	errMessage?: string | undefined;
+}
+
 interface ISubmitBoard {
 	result: string;
 	resultData: any | undefined;
 	errMessage?: string | undefined;
 }
 
-const boardListFunction = function* ({ setBoardList }: any) {
-	const boardListResult: IBoardList = yield call(boardListRequest, {});
+const boardListFunction = function* ({ setBoardList, uuid, orderType, filterType }: any) {
+	console.log(filterType);
+	const boardListResult: IBoardList = yield call(boardListRequest, {
+		uuid,
+		orderType,
+		filterType,
+	});
 
 	if (boardListResult.result === 'success') {
 		setBoardList(boardListResult.boardList);
@@ -57,6 +71,8 @@ const techListFunction = function* ({ setTechList }: any) {
 			};
 		});
 
+		newTempArr.unshift({ key: 'null', value: null, name: '선택 없음', text: '선택 없음' });
+
 		setTechList(newTempArr);
 	} else {
 		console.error(techListResult.errMessage);
@@ -64,7 +80,13 @@ const techListFunction = function* ({ setTechList }: any) {
 	yield;
 };
 
-const submitBoardFunction = function* ({ content, uuid, selectedTech, boardTitle }: any) {
+const submitBoardFunction = function* ({
+	content,
+	uuid,
+	selectedTech,
+	boardTitle,
+	callbackFn,
+}: any) {
 	const formData = new FormData();
 
 	const postData: any = {
@@ -86,7 +108,57 @@ const submitBoardFunction = function* ({ content, uuid, selectedTech, boardTitle
 		);
 	}
 
-	yield call(sendBoardImgRequest, formData);
+	const sendBoardResult: ISubmitBoard = yield call(sendBoardImgRequest, formData);
+
+	// console.log('submitBoardFunction');
+	// console.log(sendBoardResult);
+	yield call(callbackFn, sendBoardResult);
+};
+
+const boardDetailFunction = function* ({ brdId, uuid, card, setCard }: any) {
+	console.log('boardDetailFunction');
+	console.log(brdId);
+	console.log(uuid);
+	const boardListResult: IBoardList = yield call(boardListRequest, {
+		uuid,
+		brdId,
+	});
+
+	console.log(boardListResult);
+	setCard(boardListResult.boardList);
+	yield;
+};
+
+const setCommentFunction = function* ({
+	setCommentArea,
+	commentArea,
+	brdId,
+	uuid,
+	setCommentList,
+	callbackFn,
+}: any) {
+	console.log('setCommentFunction');
+	const commentListResult: ICommentList = yield call(commentRequest, {
+		commentArea,
+		brdId,
+		uuid,
+	});
+
+	console.log(commentListResult.commentList);
+
+	setCommentList(commentListResult.commentList);
+
+	yield call(callbackFn);
+	setCommentArea('');
+};
+
+const getCommentListFunction = function* ({ brdId, setCommentList }: any) {
+	// console.log('getCommentList');
+	const commentListResult: ICommentList = yield call(commentListRequest, { brdId });
+
+	console.log(commentListResult);
+	// console.log(commentListResult.commentList);
+	setCommentList(commentListResult.commentList);
 };
 
 const getBoardList = function* () {
@@ -105,6 +177,26 @@ const getTechList = function* () {
 	yield takeLatest(RCONST.BOARD_TECH_LIST, techListFunction);
 };
 
+const getBoardDetail = function* () {
+	yield takeLatest(RCONST.BOARD_DETAIL, boardDetailFunction);
+};
+
+const setComment = function* () {
+	yield takeLatest(RCONST.SEND_COMMENT, setCommentFunction);
+};
+
+const getCommentList = function* () {
+	yield takeLatest(RCONST.COMMENT_LIST, getCommentListFunction);
+};
+
 export default function* boardSaga() {
-	yield all([fork(getBoardList), fork(setBoardLike), fork(setSubmitBoard), fork(getTechList)]);
+	yield all([
+		fork(getBoardList),
+		fork(setBoardLike),
+		fork(setSubmitBoard),
+		fork(getTechList),
+		fork(getBoardDetail),
+		fork(setComment),
+		fork(getCommentList),
+	]);
 }

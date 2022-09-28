@@ -1,14 +1,18 @@
 import axios from 'axios';
 
-const submitBoardRequest = async (props: any) => {
+const commentRequest = async (props: any) => {
 	const postData = props;
-	const submitBoardResult = await axios
-		.post(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/board/setSubmitBoard`, postData)
+
+	// console.log('commentRequest');
+	// console.log(postData);
+	const commentListResult = await axios
+		.post(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/board/setComment`, postData)
 		.then((res: any) => {
+			// console.log(res.data);
 			if (res.data.resultData.status === 'success') {
 				return {
 					result: res.data.resultData.status,
-					resultData: res.data.resultData.queryResult[0],
+					commentList: res.data.resultData.queryResult,
 				};
 			} else {
 				return {
@@ -23,7 +27,7 @@ const submitBoardRequest = async (props: any) => {
 			};
 		});
 
-	return submitBoardResult;
+	return commentListResult;
 };
 
-export { submitBoardRequest };
+export { commentRequest };

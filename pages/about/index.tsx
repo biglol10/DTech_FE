@@ -252,6 +252,149 @@ const About = () => {
 							</Card.Description>
 						</Card.Content>
 					</Card>
+
+					{/* 장보영 선임 정보 */}
+					<Card fluid>
+						<Card.Content className={Style['cardContent']}>
+							<Image src={Person1} width={35} height={35} />
+							<Card.Header>장보영 (선임)</Card.Header>
+							<Card.Meta>Front-end Developer</Card.Meta>
+							<Card.Description>
+								<Table basic="very" celled collapsing>
+									<Table.Body>
+										<Table.Row>
+											<Table.Cell>
+												<Header as="h4" image>
+													<Header.Content>
+														<div
+															className={Style['subTitleDivWithSVG']}
+														>
+															<UserRoleSvg />
+															Role
+														</div>
+
+														<Header.Subheader>
+															프로젝트에서의 역할
+														</Header.Subheader>
+													</Header.Content>
+												</Header>
+											</Table.Cell>
+											<Table.Cell>
+												Main developer, FE &#38; BE 메인 개발
+											</Table.Cell>
+										</Table.Row>
+										<Table.Row>
+											<Table.Cell>
+												<Header as="h4" image>
+													<Header.Content>
+														<div
+															className={Style['subTitleDivWithSVG']}
+														>
+															<SkillListSvg />
+															Contribution
+														</div>
+
+														<Header.Subheader>
+															기여한 부분
+														</Header.Subheader>
+													</Header.Content>
+												</Header>
+											</Table.Cell>
+											<Table.Cell>
+												<b>[FE]</b> 게시판 + 회원가입 페이지 개발
+												<br />
+												<b>[BE]</b> 백엔드 환경성정(multer S3 Upload),
+												회원가입 + 게시판 관련 api 개발, AWS
+												구성(RDS(MYSQL), S3, IAM ), DB(MYSQL) 관리
+												<br />
+												<b>[기타]</b> 프로젝트 기획, 디자인
+											</Table.Cell>
+										</Table.Row>
+										<Table.Row>
+											<Table.Cell>
+												<Header as="h4" image>
+													<Header.Content>
+														<div
+															className={Style['subTitleDivWithSVG']}
+														>
+															<GithubSvg />
+															Github, <br /> 연락처
+														</div>
+
+														<Header.Subheader>
+															Github &#38; Email
+														</Header.Subheader>
+													</Header.Content>
+												</Header>
+											</Table.Cell>
+											<Table.Cell>
+												<a
+													href={'https://github.com/biglol10'}
+													target="_blank"
+													rel="noopener noreferrer"
+												></a>
+												<span
+													style={{ margin: '0 10px', fontWeight: 'bold' }}
+												>
+													/
+												</span>
+												<span>by5242@lgcns.com</span>
+											</Table.Cell>
+										</Table.Row>
+									</Table.Body>
+								</Table>
+							</Card.Description>
+						</Card.Content>
+					</Card>
+
+					{/* <Card fluid>
+						<Card.Content>
+							<SemanticImage
+								floated="right"
+								size="mini"
+								src="/images/avatar/large/molly.png"
+							/>
+							<Card.Header>Molly Thomas</Card.Header>
+							<Card.Meta>New User</Card.Meta>
+							<Card.Description>
+								Molly wants to add you to the group <strong>musicians</strong>
+							</Card.Description>
+						</Card.Content>
+						<Card.Content extra>
+							<div className="ui two buttons">
+								<Button basic color="green">
+									Approve
+								</Button>
+								<Button basic color="red">
+									Decline
+								</Button>
+							</div>
+						</Card.Content>
+					</Card>
+					<Card>
+						<Card.Content>
+							<SemanticImage
+								floated="right"
+								size="mini"
+								src="/images/avatar/large/jenny.jpg"
+							/>
+							<Card.Header>Jenny Lawrence</Card.Header>
+							<Card.Meta>New User</Card.Meta>
+							<Card.Description>
+								Jenny requested permission to view your contact details
+							</Card.Description>
+						</Card.Content>
+						<Card.Content extra>
+							<div className="ui two buttons">
+								<Button basic color="green">
+									Approve
+								</Button>
+								<Button basic color="red">
+									Decline
+								</Button>
+							</div>
+						</Card.Content>
+					</Card> */}
 				</Card.Group>
 			</div>
 		</div>
