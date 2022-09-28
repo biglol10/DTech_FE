@@ -1,31 +1,12 @@
 import { MainLayoutTemplate } from '@components/customs';
-import {
-	InputDefault,
-	DTechQuill,
-	InputDropdown,
-	Button,
-	InputLayout,
-	QuillBox,
-} from '@components/index';
+import { InputDefault, DTechQuill, InputDropdown } from '@components/index';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { useState, useRef, useEffect } from 'react';
 import { ChatList } from '@utils/types/commAndStoreTypes';
-import dynamic from 'next/dynamic';
 import { toast } from 'react-toastify';
 
 import Style from './board.module.scss';
-
-const ReactQuill = dynamic(
-	async () => {
-		const { default: RQ } = await import('react-quill');
-
-		return function comp({ forwardedRef, ...props }: any) {
-			return <RQ ref={forwardedRef} {...props} />;
-		};
-	},
-	{ ssr: false },
-);
 
 const Submit = () => {
 	const router = useRouter();
@@ -56,10 +37,6 @@ const Submit = () => {
 		});
 	};
 
-	// useEffect(() => {
-	// 	inputRef.current.focus();
-	// }, [boardTitle]);
-
 	useEffect(() => {
 		dispatch({
 			type: 'BOARD_TECH_LIST',
@@ -82,12 +59,14 @@ const Submit = () => {
 						className={Style['inputIdField']}
 					/>
 				</div>
+
 				<div className={Style['boardMain']}>
 					<InputDefault
 						key="key"
 						id="title"
 						stretch={true}
 						placeholder="제목"
+						// value={boardTitle}
 						className={Style['boardTitle']}
 						onChange={(obj: { value: string }) => {
 							setBoardTitle(obj.value);
