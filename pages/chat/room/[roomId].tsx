@@ -1,33 +1,27 @@
 /** ****************************************************************************************
- * @설명 : 채팅 페이지
+ * @설명 : 그룹채팅 페이지
  ********************************************************************************************
  * 번호    작업자     작업일         브랜치                   변경내용
  *-------------------------------------------------------------------------------------------
- * 1      변지욱     2022-08-25   feature/JW/chat        최초작성
- * 2      변지욱     2022-08-29   feature/JW/chat        유저명 표시하도록 변경, socket에서 직접 채팅리스트 가져오도록 변경
- * 3      변지욱     2022-08-29   feature/JW/layoutchat  최초 로드 시엔 변경중입니다 텍스트 안 보이게 변경
- * 4      변지욱     2022-09-06   feature/JW/chatPage    누구랑 채팅하는지 세팅
- * 5      변지욱     2022-09-21   feature/JW/chatPageBug 채팅 제대로 표시 안되는 버그 픽스
+ * 1      변지욱     2022-09-26   feature/JW/chatRoom     최초작성
  ********************************************************************************************/
 
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react';
-import { Avatar, Box, DTechQuill, SharpDivider, TextWithDotAnimation } from '@components/index';
+import { Box, DTechQuill, SharpDivider, TextWithDotAnimation, Label } from '@components/index';
 import { MainLayoutTemplate, SingleChatMessage } from '@components/customs';
-import { Container, Segment } from 'semantic-ui-react';
+import { Container, Segment, Icon } from 'semantic-ui-react';
 
-import { ChatList, IUsersStatusArr, IAuth, IAppCommon } from '@utils/types/commAndStoreTypes';
-import OnlineSvg from '@styles/svg/online.svg';
-import OfflineSvg from '@styles/svg/offline.svg';
+import { ChatList, IUsersStatusArr, IAuth } from '@utils/types/commAndStoreTypes';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
-import cookie from 'js-cookie';
+import { parseCookies } from 'nookies';
 import lodash from 'lodash';
-import * as RCONST from '@utils/constants/reducerConstants';
 import { chatToDateGroup } from '@utils/appRelated/helperFunctions';
+import * as RCONST from '@utils/constants/reducerConstants';
 
-import Style from './[userId].module.scss';
+import Style from './[roomId].module.scss';
 
 interface IChatList {
 	MESSAGE_ID: string;
@@ -58,86 +52,65 @@ const dayOfWeek: { [val: string]: string } = {
 	'6': '일요일',
 };
 
-const UserChat = ({
+const RoomChat = ({
 	usersStatusArr,
 	queryObj,
+	currentChatRoomName,
 }: {
 	usersStatusArr: IUsersStatusArr[];
-	queryObj: any;
+	queryObj: { roomId: string };
+	currentChatRoomName: string;
 }) => {
+	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
+	const socket = authStore.userSocket;
+
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
-	const [chatUser, setChatUser] = useState<{ [name: string]: string }>();
 	const [chatList, setChatList] = useState<ChatDateReduce>({});
 	const [textChangeNotification, setTextChangeNotification] = useState(false);
 	const [sendingUserState, setSendingUserState] = useState<string>('');
-	const conversationId = useRef<string>();
 
 	const bottomRef = useRef<any>(null);
 	const firstLoadRef = useRef<boolean>(true);
 	const quillRef = useRef<any>(null);
 
-	const userUID = useMemo(() => {
-		return queryObj.userId;
-	}, [queryObj.userId]);
-
-	// const { userId: userUID } = queryObj; // UID in here
-
-	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
-	const appCommon = useSelector((state: { appCommon: IAppCommon }) => state.appCommon);
-	const socket = authStore.userSocket;
+	const roomID = useMemo(() => {
+		return queryObj.roomId;
+	}, [queryObj.roomId]);
 
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		dispatch({ type: RCONST.SET_CURRENT_CHAT_USER, chatUser: userUID });
+		dispatch({ type: RCONST.SET_CURRENT_CHAT_GROUP, chatGroup: roomID });
 
 		return () => {
-			dispatch({ type: RCONST.SET_CURRENT_CHAT_USER, chatUser: '' });
+			dispatch({ type: RCONST.SET_CURRENT_CHAT_GROUP, chatGroup: '' });
 		};
-	}, [dispatch, userUID]);
+	}, [dispatch, roomID]);
+
+	const getGroupChatListCallback = useCallback(() => {
+		axios
+			.post(
+				`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getGroupChatList`,
+				{
+					chatRoomId: roomID,
+					readingUser: authStore.userUID,
+				},
+				{
+					headers: { Authorization: `Bearer ${authStore.userToken}` },
+				},
+			)
+			.then((response) => {
+				const chatGroupReduce = chatToDateGroup(response.data.chatList);
+
+				setChatList((prev) => chatGroupReduce);
+			});
+	}, [authStore.userToken, authStore.userUID, roomID]);
 
 	useEffect(() => {
-		const { currentChatUser } = appCommon;
-
-		if (currentChatUser) {
-			axios
-				.get(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/getUsersInfo`, {
-					params: { usersParam: [userUID] },
-				})
-				.then((response) => {
-					setChatUser(response.data.usersInfo[0]);
-				})
-				.catch(() => {
-					toast['error'](<>{'유저정보를 가져오지 못했습니다'}</>);
-				});
+		if (roomID && authStore.userToken && authStore.userUID) {
+			getGroupChatListCallback();
 		}
-	}, [appCommon, userUID]);
-
-	const getPrivateChatListCallback = useCallback(() => {
-		if (cookie.get('currentChatUser') !== userUID) return;
-		const { currentChatUser } = appCommon;
-
-		if (currentChatUser && authStore.userUID && authStore.userToken) {
-			axios
-				.post(
-					`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getPrivateChatList`,
-					{ fromUID: authStore.userUID, toUID: userUID },
-					{
-						headers: { Authorization: `Bearer ${authStore.userToken}` },
-					},
-				)
-				.then((response) => {
-					conversationId.current = response.data.convId;
-					const chatGroupReduce = chatToDateGroup(response.data.chatList);
-
-					setChatList((prev) => chatGroupReduce);
-				});
-		}
-	}, [appCommon, authStore.userToken, authStore.userUID, userUID]);
-
-	useEffect(() => {
-		getPrivateChatListCallback();
-	}, [getPrivateChatListCallback]);
+	}, [authStore.userToken, authStore.userUID, getGroupChatListCallback, roomID]);
 
 	useEffect(() => {
 		bottomRef.current?.scrollIntoView({ behavior: 'auto' });
@@ -155,17 +128,11 @@ const UserChat = ({
 		}
 	}, [authStore.userName, authStore.userTitle, socket]);
 
-	useEffect(() => {
-		setTimeout(() => {
-			if (textChangeNotification) setTextChangeNotification(false);
-		}, 3500);
-	}, [textChangeNotification]);
-
 	const sendPrivateMessageSocket = (content: ChatList, imgArr = []) => {
-		socket?.emit('sendPrivateMessage', {
+		socket?.emit('sendGroupMessage', {
 			chatMessage: content.value,
 			userUID: authStore.userUID,
-			convId: conversationId.current,
+			convId: roomID,
 			imgList: JSON.stringify(
 				imgArr.length !== 0
 					? imgArr.map(
@@ -174,8 +141,6 @@ const UserChat = ({
 					: [],
 			),
 			linkList: JSON.stringify(content.linkList),
-			toUserId: chatUser && chatUser.USER_ID,
-			toUserUID: appCommon.currentChatUser,
 		});
 	};
 
@@ -210,23 +175,43 @@ const UserChat = ({
 	};
 
 	useEffect(() => {
-		socket?.on('messageSendSuccess', ({ chatListSocket, convIdSocket, toUserUID }: any) => {
-			if (appCommon.currentChatUser === toUserUID) {
-				const cloneObjReduce = chatToDateGroup(lodash.cloneDeep(chatListSocket));
+		setTimeout(() => {
+			if (textChangeNotification) setTextChangeNotification(false);
+		}, 3500);
+	}, [textChangeNotification]);
 
-				setChatList((prev) => cloneObjReduce);
-			}
+	useEffect(() => {
+		if (roomID && authStore.userId) {
+			socket?.emit('joinRoom', {
+				roomID,
+				joinedUser: authStore.userId,
+			});
+		}
+
+		socket?.on('messageGroupSendSuccess', ({ chatListSocket }: any) => {
+			const cloneObjReduce = chatToDateGroup(lodash.cloneDeep(chatListSocket));
+
+			setChatList((prev) => cloneObjReduce);
 		});
 
-		socket?.on('newMessageReceived', ({ chatListSocket, convIdSocket, fromUID }: any) => {
-			if (userUID === fromUID) getPrivateChatListCallback();
+		socket?.on('newMessageGroupReceived', ({ chatListSocket, fromUID, convId }: any) => {
+			if (roomID === convId) getGroupChatListCallback();
 		});
 
 		socket?.on('textChangeNotification', (sendingUser: string) => {
 			setSendingUserState(sendingUser);
 			setTextChangeNotification(true);
 		});
-	}, [socket, appCommon.currentChatUser, userUID, getPrivateChatListCallback]);
+
+		return () => {
+			if (roomID && authStore.userId) {
+				socket?.emit('leaveRoom', {
+					roomID,
+					joinedUser: authStore.userId,
+				});
+			}
+		};
+	}, [authStore.userId, getGroupChatListCallback, roomID, socket]);
 
 	return (
 		<>
@@ -238,17 +223,19 @@ const UserChat = ({
 					textAlign="left"
 					className={Style['chatUserBox']}
 				>
-					{usersStatusArr.filter((item) => item.USER_UID === userUID).length > 0 ? (
-						<OnlineSvg />
-					) : (
-						<OfflineSvg />
-					)}
-					<Avatar
-						id="userSettingArea"
-						fontColor="white"
-						content={chatUser ? `${chatUser.USER_NM} (${chatUser.USER_TITLE})` : ''}
-						imageSize="mini"
-						labelSize="mini"
+					<Label
+						basic
+						// content={
+						// 	cookie.get('currentChatRoom')
+						// 		? JSON.parse(cookie.get('currentChatRoom')!).chatName
+						// 		: '그룹 채팅'
+						// }
+						content={currentChatRoomName}
+						iconOrImage="icon"
+						icon={<Icon name="rocketchat" />}
+						color="green"
+						borderNone
+						size="big"
 					/>
 				</Box>
 				<Container>
@@ -286,9 +273,9 @@ const UserChat = ({
 																			}
 																			messageOwner={
 																				item3.USER_UID ===
-																				userUID
-																					? 'other'
-																					: 'mine'
+																				authStore.userUID
+																					? 'mine'
+																					: 'other'
 																			}
 																			linkList={
 																				item3.LINK_LIST
@@ -353,11 +340,18 @@ const UserChat = ({
 	);
 };
 
-UserChat.PageLayout = MainLayoutTemplate;
-UserChat.displayName = 'chatPage';
+RoomChat.PageLayout = MainLayoutTemplate;
+RoomChat.displayName = 'chatPage';
 
 export const getServerSideProps = async (context: any) => {
-	return { props: { queryObj: context.query } };
+	const { currentChatRoom } = parseCookies(context);
+
+	return {
+		props: {
+			queryObj: context.query,
+			currentChatRoomName: JSON.parse(currentChatRoom).chatName,
+		},
+	};
 };
 
-export default UserChat;
+export default RoomChat;

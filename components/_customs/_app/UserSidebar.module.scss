@@ -41,7 +41,8 @@
 
 		.usersAdmin,
 		.usersOnline,
-		.usersOffline {
+		.usersOffline,
+		.groupChat {
 			margin: 0 5%;
 			color: white;
 		}
@@ -50,6 +51,30 @@
 			& > span:nth-child(2) {
 				color: yellow !important;
 			}
+		}
+	}
+
+	.createChatRoom {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 6vh;
+		cursor: pointer;
+
+		svg {
+			// margin-top: 50px;
+			height: 30px !important;
+			width: 30px !important;
+
+			// path {
+			// 	fill: #f0e4ff;
+			// }
+		}
+
+		span {
+			font-size: 1rem;
+			color: white;
+			margin-left: 10px;
 		}
 	}
 }

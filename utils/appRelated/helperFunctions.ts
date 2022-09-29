@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import dayjs from 'dayjs';
 
 const baseImage = {
 	AvatarBase0: 'AvatarBase_BLACK1.png',
@@ -44,4 +45,23 @@ const generateAvatarImage = (uid: string) => {
 	}
 };
 
-export { generateUID, generateImageUID, generateAvatarImage };
+const chatToDateGroup = (arr: any) => {
+	const groupsReduce = arr.reduce((previouseVal: any, currentVal: any) => {
+		const date = currentVal.SENT_DATETIME.split('T')[0];
+
+		const hourMin = dayjs(currentVal.SENT_DATETIME).format('HH:mm');
+
+		if (!previouseVal[date]) {
+			previouseVal[date] = {};
+		}
+		if (!previouseVal[date][hourMin]) {
+			previouseVal[date][hourMin] = [];
+		}
+		previouseVal[date][hourMin].push(currentVal);
+		return previouseVal;
+	}, {});
+
+	return groupsReduce;
+};
+
+export { generateUID, generateImageUID, generateAvatarImage, chatToDateGroup };

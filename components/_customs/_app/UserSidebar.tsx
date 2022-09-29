@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { InputLayout, SharpDivider, InputWithIcon } from '@components/index';
 import Image from 'next/image';
 import DLogo from '@public/images/DLogo2.png';
@@ -9,7 +9,11 @@ import { useSelector } from 'react-redux';
 import { IAuth, IUsersStatusArr, IAppCommon } from '@utils/types/commAndStoreTypes';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { useChatUtil } from '@utils/hooks/customHooks';
+import { useChatUtil, useModal } from '@utils/hooks/customHooks';
+import { modalUISize } from '@utils/constants/uiConstants';
+import { CreateChatGroup, IndividualChatGroup } from '@components/customs';
+
+import ChatSvg from '@styles/svg/chat.svg';
 
 import IndividualChatUser from './IndividualChatUser';
 import Style from './UserSidebar.module.scss';
@@ -17,17 +21,21 @@ import Style from './UserSidebar.module.scss';
 interface IUnReadChatList {
 	CONVERSATION_ID: string;
 	USER_UID: string;
+	GUBUN: 'private' | 'group';
 }
 
 const UserSidebar = ({
 	iconLeft,
 	usersStatusArr,
+	groupChatArr,
 }: {
 	iconLeft: boolean;
 	usersStatusArr: IUsersStatusArr[];
+	groupChatArr: { CONVERSATION_ID: string; CONVERSATION_NAME: string; CNT: number }[];
 }) => {
 	const [isLogoBorderBottom, setIsLogoBorderBottom] = useState(false);
 	const [userSearch, setUserSearch] = useState('');
+	const { handleModal } = useModal();
 
 	const cx = classNames.bind(Style);
 
@@ -45,9 +53,13 @@ const UserSidebar = ({
 					params: { fromUID: authStore.userUID },
 				})
 				.then((response) => {
-					const resData = response.data.unReadList.map(
-						(item: IUnReadChatList) => item.USER_UID,
-					);
+					const resData = response.data.unReadList.map((item: IUnReadChatList) => {
+						if (item.GUBUN === 'private') {
+							return item.USER_UID;
+						} else {
+							return item.CONVERSATION_ID;
+						}
+					});
 
 					initUnReadChatList(resData);
 				})
@@ -62,14 +74,33 @@ const UserSidebar = ({
 		const socket = authStore.userSocket;
 
 		socket?.on('newMessageReceivedSidebar', ({ fromUID }: { fromUID: string }) => {
-			if (fromUID !== appCommon.currentChatUser) {
+			if (fromUID !== appCommon.currentChatUser && fromUID) {
 				unReadArrAdd(fromUID);
 			} else {
 				unReadArrSlice(fromUID);
 			}
 		});
+
+		// TODO change the logic
+		socket?.on('newMessageGroupReceivedSidebar', ({ fromUID }: { fromUID: string }) => {
+			if (fromUID !== appCommon.currentChatGroup && fromUID) {
+				unReadArrAdd(fromUID);
+			} else {
+				unReadArrSlice(fromUID);
+			}
+		});
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [appCommon.currentChatUser, authStore.userSocket]);
+
+	const createChatRoom = useCallback(() => {
+		handleModal({
+			modalOpen: true,
+			modalContent: <CreateChatGroup usersStatusArr={usersStatusArr} authStore={authStore} />,
+			modalSize: modalUISize.SMALL,
+			modalIsBasic: false,
+		});
+	}, [authStore, handleModal, usersStatusArr]);
 
 	return (
 		<div className={cx('sidebarChat', `${iconLeft ? 'showSidebar' : 'hideSidebar'}`)}>
@@ -131,6 +162,24 @@ const UserSidebar = ({
 									))}
 							</div>
 
+							<SharpDivider content="그룹채팅" />
+
+							<div className={Style['groupChat']}>
+								{groupChatArr.map((item, idx) => {
+									return (
+										<IndividualChatGroup
+											key={`IndividualChatGroup_${idx}`}
+											chatUID={item.CONVERSATION_ID}
+											chatName={item.CONVERSATION_NAME}
+											cnt={item.CNT}
+											newMsgNoti={appCommon.unReadMsg.includes(
+												item.CONVERSATION_ID,
+											)}
+										/>
+									);
+								})}
+							</div>
+
 							<SharpDivider content="온라인" />
 
 							<div className={Style['usersOnline']}>
@@ -188,6 +237,10 @@ const UserSidebar = ({
 									)}
 							</div>
 						</div>
+					</div>
+					<div className={Style['createChatRoom']}>
+						<ChatSvg />
+						<span onClick={createChatRoom}>대화방 만들기</span>
 					</div>
 				</>
 			)}

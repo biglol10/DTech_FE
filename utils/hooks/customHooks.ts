@@ -84,19 +84,28 @@ const useChatUtil = () => {
 	};
 
 	const unReadArrSlice = (uID: string) => {
-		const unReadMsg = lodash.cloneDeep(appCommon.unReadMsg);
+		if (!uID) return;
 
+		const unReadMsg = lodash.cloneDeep(appCommon.unReadMsg);
 		const indexOf = unReadMsg.indexOf(uID);
 
-		indexOf > -1 && unReadMsg.splice(indexOf, 1);
+		if (indexOf === -1) return;
+
+		unReadMsg.splice(indexOf, 1);
 
 		dispatch({ type: RCONST.SET_CURRENT_UNREAD_MSG, unReadMsg });
 	};
 
 	const unReadArrAdd = (uID: string) => {
+		if (!uID) return;
+
 		const unReadMsg = lodash.cloneDeep(appCommon.unReadMsg);
+		const indexOf = unReadMsg.indexOf(uID);
+
+		if (indexOf > -1) return;
 
 		unReadMsg.push(uID);
+
 		dispatch({ type: RCONST.SET_CURRENT_UNREAD_MSG, unReadMsg });
 	};
 
