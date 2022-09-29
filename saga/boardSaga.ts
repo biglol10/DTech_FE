@@ -1,4 +1,4 @@
-import { all, call, fork, takeLatest } from 'redux-saga/effects';
+import { all, put, call, fork, takeLatest } from 'redux-saga/effects';
 import * as RCONST from '@utils/constants/reducerConstants';
 import { boardListRequest } from '@utils/api/board/getBoardList';
 import { boardLikeRequest } from '@utils/api/board/setBoardLikeRequest';
@@ -87,6 +87,7 @@ const submitBoardFunction = function* ({
 	boardTitle,
 	callbackFn,
 }: any) {
+	console.log('submitBoard1');
 	const formData = new FormData();
 
 	const postData: any = {
@@ -110,21 +111,17 @@ const submitBoardFunction = function* ({
 
 	const sendBoardResult: ISubmitBoard = yield call(sendBoardImgRequest, formData);
 
-	// console.log('submitBoardFunction');
-	// console.log(sendBoardResult);
+	console.log('submitBoardFunction');
+	console.log(sendBoardResult);
 	yield call(callbackFn, sendBoardResult);
 };
 
 const boardDetailFunction = function* ({ brdId, uuid, card, setCard }: any) {
-	console.log('boardDetailFunction');
-	console.log(brdId);
-	console.log(uuid);
 	const boardListResult: IBoardList = yield call(boardListRequest, {
 		uuid,
 		brdId,
 	});
 
-	console.log(boardListResult);
 	setCard(boardListResult.boardList);
 	yield;
 };
@@ -137,14 +134,11 @@ const setCommentFunction = function* ({
 	setCommentList,
 	callbackFn,
 }: any) {
-	console.log('setCommentFunction');
 	const commentListResult: ICommentList = yield call(commentRequest, {
 		commentArea,
 		brdId,
 		uuid,
 	});
-
-	console.log(commentListResult.commentList);
 
 	setCommentList(commentListResult.commentList);
 
@@ -156,8 +150,6 @@ const getCommentListFunction = function* ({ brdId, setCommentList }: any) {
 	// console.log('getCommentList');
 	const commentListResult: ICommentList = yield call(commentListRequest, { brdId });
 
-	console.log(commentListResult);
-	// console.log(commentListResult.commentList);
 	setCommentList(commentListResult.commentList);
 };
 

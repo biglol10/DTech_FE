@@ -12,7 +12,6 @@ import {
 	registerStep4,
 	registerReset,
 } from '@store/registerSlice';
-import PrevieImageComp from '@components/quill/PreviewImageComp';
 
 interface IIdCheckParam {
 	type: string;

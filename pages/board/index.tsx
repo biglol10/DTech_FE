@@ -11,7 +11,7 @@ const Index = () => {
 	const [boardList, setBoardList] = useState([]);
 	const [techList, setTechList] = useState([]);
 	const [orderType, setOrderType] = useState('');
-	const [selectedTech, setSelectedTech] = useState('');
+	const [selectedTech, setSelectedTech] = useState(null);
 	const [filterBtn, setFilterBtn] = useState('new');
 	const uuid = useSelector((state: any) => state.auth.userUID);
 

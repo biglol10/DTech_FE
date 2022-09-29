@@ -2,7 +2,7 @@ import { MainLayoutTemplate } from '@components/customs';
 import { InputDefault, DTechQuill, InputDropdown } from '@components/index';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { ChatList } from '@utils/types/commAndStoreTypes';
 import { toast } from 'react-toastify';
 
@@ -16,18 +16,17 @@ const Submit = () => {
 	const [selectedTech, setSelectedTech] = useState('');
 	const uuid = useSelector((state: any) => state.auth.userUID);
 	const dispatch = useDispatch();
-	const inputRef = useRef<any>();
+	const titleStr = useRef('');
 
 	const submitBoard = (content: ChatList) => {
-		// console.log(content);
+		console.log(titleStr);
 		dispatch({
 			type: 'SUBMIT_BOARD',
 			content,
 			uuid,
 			selectedTech,
-			boardTitle,
+			boardTitle: titleStr.current,
 			callbackFn: (data: any) => {
-				// console.log('submitBoardClick!!');
 				if (data.result === 'success') {
 					router.push('/board');
 				} else {
@@ -43,6 +42,14 @@ const Submit = () => {
 			setTechList,
 		});
 	}, []);
+
+	// const writeTitle = (title: string) => {
+	// 	titleStr = title;
+	// 	// dispatch({
+	// 	// 	type: 'BOARD_TITLE',
+	// 	// 	title,
+	// 	// });
+	// };
 
 	return (
 		<>
@@ -69,7 +76,11 @@ const Submit = () => {
 						// value={boardTitle}
 						className={Style['boardTitle']}
 						onChange={(obj: { value: string }) => {
-							setBoardTitle(obj.value);
+							// setBoardTitle(obj.value);
+							// writeTitle(obj.value);
+							// writeTitle(obj.value);
+							// titleStr = obj.value;
+							titleStr.current = obj.value;
 						}}
 						// ref={inputRef}
 					/>
