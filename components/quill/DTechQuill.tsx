@@ -12,6 +12,7 @@
  * 7      변지욱     2022-08-27   feature/JW/inputwithicon    lodash 이용해 notifyTextChange 제어
  * 8      변지욱     2022-09-13   feature/JW/quillButton      Send 버튼 위치 제어 가능토록 수정
  * 9      변지욱     2022-09-19   feature/JW/imageBlob        이미지 붙여먹기 시 blob객체로 변환 후 File
+ * 10     변지욱     2022-09-29   feature/JW/chatRoom         enterSubmit이 있을 경우 엔터 이벤트 커스터마이징, 긔 외엔 null (게시판 때문)
  ********************************************************************************************/
 
 import React, {
@@ -198,31 +199,28 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 					],
 					handlers: { image: imageHandler },
 				},
-				keyboard: {
-					bindings: {
-						shift_enter: {
-							key: 13,
-							shiftKey: true,
-							handler: (range: any) => {
-								quillRef.current.getEditor().insertText(range.index, '\n');
-								quillRef.current.getEditor().scrollIntoView({ behavior: 'auto' });
+				keyboard: enterSubmit
+					? {
+							bindings: {
+								shift_enter: {
+									key: 13,
+									shiftKey: true,
+									handler: (range: any) => {
+										quillRef.current.getEditor().insertText(range.index, '\n');
+										quillRef.current
+											.getEditor()
+											.scrollIntoView({ behavior: 'auto' });
+									},
+								},
+								enter: {
+									key: 13,
+									handler: (range: any) => {
+										editorSubmitEvent();
+									},
+								},
 							},
-						},
-						enter: {
-							key: 13,
-							handler: (range: any) => {
-								if (enterSubmit) {
-									editorSubmitEvent();
-								} else {
-									quillRef.current.getEditor().insertText(range.index, '\n');
-									quillRef.current
-										.getEditor()
-										.scrollIntoView({ behavior: 'auto' });
-								}
-							},
-						},
-					},
-				},
+					  }
+					: {},
 			}),
 			[editorSubmitEvent, enterSubmit, imageHandler],
 		);

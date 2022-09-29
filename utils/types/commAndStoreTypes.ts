@@ -47,6 +47,7 @@ export interface IAppCommon {
 		currentRoute: string | null | undefined;
 	};
 	currentChatUser: string;
+	currentChatGroup: string;
 	unReadMsg: string[];
 }
 
