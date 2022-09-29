@@ -41,7 +41,6 @@ interface IDTechQuill {
 	quillMinHeight?: number;
 	quillMaxHeight?: number;
 	enterSubmit?: boolean;
-	QuillSSR?: ComponentType<any>;
 	notifyTextChange?: Function | null;
 	submitButtonOutside?: boolean;
 }
@@ -101,7 +100,6 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 			quillMaxHeight = 200,
 			returnQuillWrapperHeight = null,
 			enterSubmit = true,
-			QuillSSR,
 			notifyTextChange = null,
 			submitButtonOutside = false,
 		},
@@ -374,29 +372,16 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 							{ name: 'quillMaxHeight', value: quillMaxHeight },
 						])}
 					>
-						{QuillSSR ? (
-							<QuillSSR
-								forwardedRef={quillRef}
-								placeholder="내용을 입력하세요"
-								modules={modules}
-								formats={formats}
-								// value={quillContext}
-								onChange={(content: any, delta: any, source: any, editor: any) => {
-									quillTextChange(editor.getHTML());
-								}}
-							/>
-						) : (
-							<ReactQuill
-								forwardedRef={quillRef}
-								placeholder="내용을 입력하세요"
-								modules={modules}
-								formats={formats}
-								// value={quillContext}
-								onChange={(content: any, delta: any, source: any, editor: any) => {
-									quillTextChange(editor.getHTML());
-								}}
-							/>
-						)}
+						<ReactQuill
+							forwardedRef={quillRef}
+							placeholder="내용을 입력하세요"
+							modules={modules}
+							formats={formats}
+							// value={quillContext}
+							onChange={(content: any, delta: any, source: any, editor: any) => {
+								quillTextChange(editor.getHTML());
+							}}
+						/>
 
 						{!!urlPreviewList.length && (
 							<div
