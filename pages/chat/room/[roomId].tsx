@@ -202,6 +202,15 @@ const RoomChat = ({
 			setSendingUserState(sendingUser);
 			setTextChangeNotification(true);
 		});
+
+		return () => {
+			if (roomID && authStore.userId) {
+				socket?.emit('leaveRoom', {
+					roomID,
+					joinedUser: authStore.userId,
+				});
+			}
+		};
 	}, [authStore.userId, getGroupChatListCallback, roomID, socket]);
 
 	return (
