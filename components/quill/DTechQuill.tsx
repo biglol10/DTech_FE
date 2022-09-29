@@ -16,7 +16,6 @@
  ********************************************************************************************/
 
 import React, {
-	ComponentType,
 	useCallback,
 	useEffect,
 	useMemo,
