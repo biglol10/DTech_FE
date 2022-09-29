@@ -305,6 +305,7 @@ const registerUserFunction = function* ({ registerData, propFunction }: any) {
 		const postData2: any = {
 			type: 'REGISTER_USER',
 			dir: 'profile_img/',
+			uuid: fileName,
 		};
 
 		formData.append('postData', JSON.stringify(postData2));

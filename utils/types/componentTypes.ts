@@ -201,7 +201,11 @@ export interface ICard {
 	date?: Date;
 	userName?: string;
 	userTitle?: string;
+	boardUid?: string;
 	images?: Array<any>;
+	liked?: number;
+	techNm?: string;
+	cb?: Function;
 }
 
 export interface ITextWithDotAnimation {

@@ -60,7 +60,7 @@ const RegisterStep2 = (props: any) => {
 
 	return (
 		<>
-			<div style={inputElCommStyle(0, 'left', true)}>
+			<div className={Style['stepDiv']}>
 				<InputLayout
 					error={teamSelectValue.teamSelectError}
 					errorMsg="팀을 선택하세요."
@@ -69,7 +69,7 @@ const RegisterStep2 = (props: any) => {
 					inputLabelSize={labelSize}
 					showInputLabel={true}
 					autoFitErrorLabel={true}
-					spacing={40}
+					spacing={30}
 				>
 					<InputDropdown
 						id="inputId"

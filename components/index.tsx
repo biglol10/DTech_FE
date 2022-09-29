@@ -24,6 +24,7 @@ import DTechQuill from './quill/DTechQuill';
 import TextArea from './textarea/TextArea';
 import BoardCard from './card/BoardCard';
 import TextWithDotAnimation from './textWithDotAnimation/TextWithDotAnimation';
+import QuillBox from './_customs/commentCard/QuillBox';
 
 export {
 	Accordion,
@@ -56,4 +57,5 @@ export {
 	TextArea,
 	BoardCard,
 	TextWithDotAnimation,
+	QuillBox,
 };
