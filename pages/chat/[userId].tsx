@@ -210,15 +210,15 @@ const UserChat = ({
 	};
 
 	useEffect(() => {
-		socket?.on('messageSendSuccess', ({ chatListSocket, convIdSocket, toUserUID }: any) => {
+		socket?.on('messageSendSuccess', ({ chatListSocket, toUserUID }: any) => {
 			if (appCommon.currentChatUser === toUserUID) {
 				const cloneObjReduce = chatToDateGroup(lodash.cloneDeep(chatListSocket));
 
-				setChatList((prev) => cloneObjReduce);
+				setChatList(() => cloneObjReduce);
 			}
 		});
 
-		socket?.on('newMessageReceived', ({ chatListSocket, convIdSocket, fromUID }: any) => {
+		socket?.on('newMessageReceived', ({ fromUID }: any) => {
 			if (userUID === fromUID) getPrivateChatListCallback();
 		});
 
@@ -260,7 +260,7 @@ const UserChat = ({
 							className={Style['chatWrapperSegment']}
 						>
 							{chatList &&
-								Object.keys(chatList).map((item: string, idx: number) => {
+								Object.keys(chatList).map((item: string) => {
 									return (
 										<>
 											<SharpDivider
@@ -269,56 +269,72 @@ const UserChat = ({
 												})`}
 												className={Style['dateDivider']}
 											/>
-											{Object.keys(chatList[item]).map(
-												(item2: string, idx2: number) => {
-													return (
-														<>
-															{chatList[item][item2].map(
-																(
-																	item3: IChatList,
-																	idx3: number,
-																) => {
-																	return (
-																		<SingleChatMessage
-																			key={item3.MESSAGE_ID}
-																			value={
-																				item3.MESSAGE_TEXT
-																			}
-																			messageOwner={
-																				item3.USER_UID ===
-																				userUID
-																					? 'other'
-																					: 'mine'
-																			}
-																			linkList={
-																				item3.LINK_LIST
-																			}
-																			sentTime={
-																				idx3 ===
+											{Object.keys(chatList[item]).map((item2: string) => {
+												return (
+													<>
+														{chatList[item][item2].map(
+															(item3: IChatList, idx3: number) => {
+																return (
+																	<SingleChatMessage
+																		key={item3.MESSAGE_ID}
+																		value={item3.MESSAGE_TEXT}
+																		messageOwner={
+																			item3.USER_UID ===
+																			userUID
+																				? 'other'
+																				: 'mine'
+																		}
+																		linkList={item3.LINK_LIST}
+																		sentTime={
+																			idx3 ===
+																			chatList[item][item2]
+																				.length -
+																				1
+																				? item3.SENT_DATETIME
+																				: null
+																		}
+																		userName={`${item3.USER_NM} (${item3.USER_TITLE})`}
+																		imgList={
+																			typeof item3.IMG_LIST ===
+																			'string'
+																				? JSON.parse(
+																						item3.IMG_LIST,
+																				  )
+																				: item3.IMG_LIST
+																		}
+																		isPreviousUserChat={
+																			idx3 > 0 &&
+																			chatList[item][item2][
+																				idx3
+																			].USER_UID ===
 																				chatList[item][
 																					item2
-																				].length -
-																					1
-																					? item3.SENT_DATETIME
-																					: null
-																			}
-																			userName={`${item3.USER_NM} (${item3.USER_TITLE})`}
-																			imgList={
-																				typeof item3.IMG_LIST ===
-																				'string'
-																					? JSON.parse(
-																							item3.IMG_LIST,
-																					  )
-																					: item3.IMG_LIST
-																			}
-																		/>
-																	);
-																},
-															)}
-														</>
-													);
-												},
-											)}
+																				][idx3 - 1]
+																					.USER_UID &&
+																			dayjs(
+																				chatList[item][
+																					item2
+																				][idx3]
+																					.SENT_DATETIME,
+																			).format(
+																				'YYYY-MM-DD',
+																			) ===
+																				dayjs(
+																					chatList[item][
+																						item2
+																					][idx3 - 1]
+																						.SENT_DATETIME,
+																				).format(
+																					'YYYY-MM-DD',
+																				)
+																		}
+																	/>
+																);
+															},
+														)}
+													</>
+												);
+											})}
 										</>
 									);
 								})}
@@ -337,7 +353,6 @@ const UserChat = ({
 							handleSubmit={(content: ChatList) => {
 								sendMessageFunction(content);
 							}}
-							// QuillSSR={ReactQuill}
 							notifyTextChange={notifyTextChange}
 						/>
 						<TextWithDotAnimation
