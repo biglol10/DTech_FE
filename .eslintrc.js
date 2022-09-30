@@ -4,7 +4,7 @@ module.exports = {
 		es2021: true,
 		node: true,
 	},
-	extends: ['naver', 'plugin:react/recommended', 'prettier', 'plugin:react-hooks/recommended'],
+	extends: ['plugin:react/recommended', 'prettier', 'plugin:react-hooks/recommended'],
 	parser: '@typescript-eslint/parser',
 	parserOptions: {
 		ecmaVersion: 2018,
