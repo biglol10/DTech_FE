@@ -16,16 +16,14 @@ const Submit = () => {
 	const [selectedTech, setSelectedTech] = useState('');
 	const uuid = useSelector((state: any) => state.auth.userUID);
 	const dispatch = useDispatch();
-	const titleStr = useRef('');
 
 	const submitBoard = (content: ChatList) => {
-		console.log(titleStr);
 		dispatch({
 			type: 'SUBMIT_BOARD',
 			content,
 			uuid,
 			selectedTech,
-			boardTitle: titleStr.current,
+			boardTitle,
 			callbackFn: (data: any) => {
 				if (data.result === 'success') {
 					router.push('/board');
@@ -42,14 +40,6 @@ const Submit = () => {
 			setTechList,
 		});
 	}, []);
-
-	// const writeTitle = (title: string) => {
-	// 	titleStr = title;
-	// 	// dispatch({
-	// 	// 	type: 'BOARD_TITLE',
-	// 	// 	title,
-	// 	// });
-	// };
 
 	return (
 		<>
@@ -76,15 +66,9 @@ const Submit = () => {
 						// value={boardTitle}
 						className={Style['boardTitle']}
 						onChange={(obj: { value: string }) => {
-							// setBoardTitle(obj.value);
-							// writeTitle(obj.value);
-							// writeTitle(obj.value);
-							// titleStr = obj.value;
-							titleStr.current = obj.value;
+							setBoardTitle(obj.value);
 						}}
-						// ref={inputRef}
 					/>
-					{/* <QuillBox selectedTech={selectedTech} boardTitle={boardTitle} /> */}
 					<DTechQuill
 						// QuillSSR={ReactQuill}
 						enterSubmit={false}
