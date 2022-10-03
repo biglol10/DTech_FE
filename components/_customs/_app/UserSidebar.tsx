@@ -239,7 +239,7 @@ const UserSidebar = ({
 						</div>
 					</div>
 					<div className={Style['createChatRoom']}>
-						<ChatSvg />
+						<Icon name="wechat" color="yellow" size="big" />
 						<span onClick={createChatRoom}>대화방 만들기</span>
 					</div>
 				</>

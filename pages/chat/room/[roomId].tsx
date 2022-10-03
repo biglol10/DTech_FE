@@ -298,6 +298,35 @@ const RoomChat = ({
 																					  )
 																					: item3.IMG_LIST
 																			}
+																			isPreviousUserChat={
+																				idx3 > 0 &&
+																				chatList[item][
+																					item2
+																				][idx3 - 1]
+																					.USER_UID ===
+																					chatList[item][
+																						item2
+																					][idx3]
+																						.USER_UID &&
+																				dayjs(
+																					chatList[item][
+																						item2
+																					][idx3]
+																						.SENT_DATETIME,
+																				).format(
+																					'YYYY-MM-DD',
+																				) ===
+																					dayjs(
+																						chatList[
+																							item
+																						][item2][
+																							idx3 - 1
+																						]
+																							.SENT_DATETIME,
+																					).format(
+																						'YYYY-MM-DD',
+																					)
+																			}
 																		/>
 																	);
 																},

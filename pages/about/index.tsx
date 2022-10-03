@@ -51,7 +51,7 @@ const About = () => {
 											</Table.Cell>
 											<Table.Cell>
 												<b>[FE]</b> React, Nextjs, Typescript,
-												Redux-Toolkit, Redux-saga, Socket, Sass
+												Redux-Toolkit, Redux-saga, Socket, SASS/SCSS
 												<br />
 												<b>[BE]</b> Express, Typescript, Socket, AWS-S3,
 												MYSQL
@@ -77,7 +77,7 @@ const About = () => {
 											<Table.Cell>
 												Redux-toolkit, Redux-Saga, Lodash, Chartjs,
 												React-toastify, React-Quill, Axios, Classnames,
-												Dayjs, Semantic-ui-react
+												Dayjs, Semantic-ui-react, Socket-IO
 											</Table.Cell>
 										</Table.Row>
 										<Table.Row>
@@ -123,7 +123,7 @@ const About = () => {
 											</Table.Cell>
 											<Table.Cell>
 												팀 스킬 현황, 유저검색, 스킬 별 인원 통계, 실시간
-												채팅, 읽지않은 메시지, 이미지 업로드, 링크
+												채팅, 그룹채팅, 읽지않은 메시지, 이미지 업로드, 링크
 												메타데이터 제공, 질의응답 게시판, 댓글/좋아요
 											</Table.Cell>
 										</Table.Row>
@@ -204,8 +204,9 @@ const About = () => {
 											</Table.Cell>
 											<Table.Cell>
 												<b>[FE]</b> 프로젝트 환경설정 (Layout, Redux,
-												Storybook, Webpack, Typescript), 팀 스킬 대시보드
-												화면 개발, 로그인 + 채팅 + About 페이지 개발
+												Storybook, Webpack, Typescript, ESLint), 팀 스킬
+												대시보드 화면 개발, 로그인 + 채팅 + About 페이지
+												개발
 												<br />
 												<b>[BE]</b> 백엔드 환경설정 (AsyncHandler,
 												ErrorHandler, MYSQL연결, Socket IO),

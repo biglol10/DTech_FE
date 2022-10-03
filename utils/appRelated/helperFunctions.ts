@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import dayjs from 'dayjs';
+import axios from 'axios';
 
 const baseImage = {
 	AvatarBase0: 'AvatarBase_BLACK1.png',
@@ -63,5 +64,7 @@ const chatToDateGroup = (arr: any) => {
 
 	return groupsReduce;
 };
+
+// const axiosRequest = async ()
 
 export { generateUID, generateImageUID, generateAvatarImage, chatToDateGroup };

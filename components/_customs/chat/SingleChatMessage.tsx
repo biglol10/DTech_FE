@@ -16,6 +16,7 @@ interface ChatListExtends extends ChatList {
 	messageOwner: 'other' | 'mine';
 	sentTime: string | null | undefined;
 	userName: string;
+	isPreviousUserChat: boolean;
 }
 
 const SingleChatMessage = ({
@@ -25,11 +26,14 @@ const SingleChatMessage = ({
 	linkList,
 	sentTime,
 	userName,
+	isPreviousUserChat,
 }: ChatListExtends) => {
 	const [showCopyButton, setShowCopyButton] = useState(false);
 	const [copyButtonClicked, setCopyButtonClicked] = useState(false);
 	const { handleModal } = useModal();
 	const sentTimeRef = useRef(sentTime ? dayjs(sentTime).format('HH:mm') : null);
+
+	console.log(`userName is ${userName} and isPreviousUserChat is ${isPreviousUserChat}`);
 
 	const openImageModal = (imgSrc: string) => {
 		handleModal({
@@ -65,14 +69,16 @@ const SingleChatMessage = ({
 				<div className={cx('singleChatDiv', messageOwner)}>
 					<Label
 						attached={`top ${messageOwner === 'other' ? 'left' : 'right'}`}
-						className={Style['avatarLabel']}
+						className={cx('avatarLabel', isPreviousUserChat && 'avatarLabelHidden')}
 					>
-						<Avatar
-							labelSize="mini"
-							src={techImage['React']}
-							fontColor="black"
-							content={userName}
-						/>
+						{!isPreviousUserChat && (
+							<Avatar
+								labelSize="mini"
+								src={techImage['React']}
+								fontColor="black"
+								content={userName}
+							/>
+						)}
 					</Label>
 
 					{value && (
@@ -81,6 +87,9 @@ const SingleChatMessage = ({
 								style={{
 									display: 'flex',
 									justifyContent: `${messageOwner === 'mine' ? 'right' : 'left'}`,
+									// marginTop: `${
+									// 	isPreviousUserChat === true ? '1px !important' : 'auto'
+									// }`,
 								}}
 							>
 								{messageOwner === 'other' ? (
@@ -91,17 +100,18 @@ const SingleChatMessage = ({
 											className={cx('messageLabel', messageOwner)}
 										>
 											{/* <pre>{value}</pre> */}
+											{sentTimeRef.current}
 											<pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre>
 										</Label>
-										<span style={{ alignSelf: 'flex-end' }}>
+										{/* <span style={{ alignSelf: 'flex-end' }}>
 											{sentTimeRef.current}
-										</span>
+										</span> */}
 									</>
 								) : (
 									<>
-										<span style={{ alignSelf: 'self-end' }}>
+										{/* <span style={{ alignSelf: 'self-end' }}>
 											{sentTimeRef.current}
-										</span>
+										</span> */}
 										<Label
 											basic
 											pointing={'right'}
@@ -109,6 +119,7 @@ const SingleChatMessage = ({
 										>
 											{/* <pre>{value}</pre> */}
 											<pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre>
+											{sentTimeRef.current}
 										</Label>
 									</>
 								)}
