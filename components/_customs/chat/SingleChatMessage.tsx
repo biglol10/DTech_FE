@@ -87,9 +87,9 @@ const SingleChatMessage = ({
 								style={{
 									display: 'flex',
 									justifyContent: `${messageOwner === 'mine' ? 'right' : 'left'}`,
-									marginTop: `${
-										isPreviousUserChat === true ? '1px !important' : 'auto'
-									}`,
+									// marginTop: `${
+									// 	isPreviousUserChat === true ? '1px !important' : 'auto'
+									// }`,
 								}}
 							>
 								{messageOwner === 'other' ? (
@@ -100,17 +100,18 @@ const SingleChatMessage = ({
 											className={cx('messageLabel', messageOwner)}
 										>
 											{/* <pre>{value}</pre> */}
+											{sentTimeRef.current}
 											<pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre>
 										</Label>
-										<span style={{ alignSelf: 'flex-end' }}>
+										{/* <span style={{ alignSelf: 'flex-end' }}>
 											{sentTimeRef.current}
-										</span>
+										</span> */}
 									</>
 								) : (
 									<>
-										<span style={{ alignSelf: 'self-end' }}>
+										{/* <span style={{ alignSelf: 'self-end' }}>
 											{sentTimeRef.current}
-										</span>
+										</span> */}
 										<Label
 											basic
 											pointing={'right'}
@@ -118,6 +119,7 @@ const SingleChatMessage = ({
 										>
 											{/* <pre>{value}</pre> */}
 											<pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre>
+											{sentTimeRef.current}
 										</Label>
 									</>
 								)}

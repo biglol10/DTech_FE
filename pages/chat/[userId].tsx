@@ -25,7 +25,7 @@ import { toast } from 'react-toastify';
 import cookie from 'js-cookie';
 import lodash from 'lodash';
 import * as RCONST from '@utils/constants/reducerConstants';
-import { chatToDateGroup } from '@utils/appRelated/helperFunctions';
+import { chatToDateGroup, generateAvatarImage } from '@utils/appRelated/helperFunctions';
 
 import Style from './[userId].module.scss';
 
@@ -249,6 +249,10 @@ const UserChat = ({
 						content={chatUser ? `${chatUser.USER_NM} (${chatUser.USER_TITLE})` : ''}
 						imageSize="mini"
 						labelSize="mini"
+						src={
+							chatUser &&
+							`${chatUser.USER_IMG_URL || generateAvatarImage(chatUser.USER_UID)}`
+						}
 					/>
 				</Box>
 				<Container>
@@ -286,12 +290,7 @@ const UserChat = ({
 																		}
 																		linkList={item3.LINK_LIST}
 																		sentTime={
-																			idx3 ===
-																			chatList[item][item2]
-																				.length -
-																				1
-																				? item3.SENT_DATETIME
-																				: null
+																			item3.SENT_DATETIME
 																		}
 																		userName={`${item3.USER_NM} (${item3.USER_TITLE})`}
 																		imgList={

@@ -73,7 +73,6 @@ const Submit = () => {
 						}}
 						// ref={inputRef}
 					/>
-					{/* <QuillBox selectedTech={selectedTech} boardTitle={boardTitle} /> */}
 					<DTechQuill
 						// QuillSSR={ReactQuill}
 						enterSubmit={false}
