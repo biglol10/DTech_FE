@@ -8,6 +8,7 @@
  * 3      변지욱     2022-08-29   feature/JW/layoutchat  최초 로드 시엔 변경중입니다 텍스트 안 보이게 변경
  * 4      변지욱     2022-09-06   feature/JW/chatPage    누구랑 채팅하는지 세팅
  * 5      변지욱     2022-09-21   feature/JW/chatPageBug 채팅 제대로 표시 안되는 버그 픽스
+ * 6      변지욱     2022-10-03   feature/JW/change      이전 채팅 사용자랑 같으면 이름 표시X
  ********************************************************************************************/
 
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react';
@@ -80,8 +81,6 @@ const UserChat = ({
 		return queryObj.userId;
 	}, [queryObj.userId]);
 
-	// const { userId: userUID } = queryObj; // UID in here
-
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
 	const appCommon = useSelector((state: { appCommon: IAppCommon }) => state.appCommon);
 	const socket = authStore.userSocket;
@@ -130,7 +129,7 @@ const UserChat = ({
 					conversationId.current = response.data.convId;
 					const chatGroupReduce = chatToDateGroup(response.data.chatList);
 
-					setChatList((prev) => chatGroupReduce);
+					setChatList(chatGroupReduce);
 				});
 		}
 	}, [appCommon, authStore.userToken, authStore.userUID, userUID]);

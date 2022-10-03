@@ -28,12 +28,13 @@ const SingleChatMessage = ({
 	userName,
 	isPreviousUserChat,
 }: ChatListExtends) => {
-	const [showCopyButton, setShowCopyButton] = useState(false);
 	const [copyButtonClicked, setCopyButtonClicked] = useState(false);
 	const { handleModal } = useModal();
 	const sentTimeRef = useRef(sentTime ? dayjs(sentTime).format('HH:mm') : null);
 
-	console.log(`userName is ${userName} and isPreviousUserChat is ${isPreviousUserChat}`);
+	// console.log(
+	// 	`userName is ${userName} and isPreviousUserChat is ${isPreviousUserChat} and sentTime is ${sentTime}`,
+	// );
 
 	const openImageModal = (imgSrc: string) => {
 		handleModal({
@@ -58,14 +59,7 @@ const SingleChatMessage = ({
 
 	return (
 		<>
-			<div
-				className={Style['chatWrapper']}
-				onMouseEnter={() => setShowCopyButton(true)}
-				onMouseLeave={() => {
-					setShowCopyButton(false);
-					setCopyButtonClicked(false);
-				}}
-			>
+			<div className={Style['chatWrapper']}>
 				<div className={cx('singleChatDiv', messageOwner)}>
 					<Label
 						attached={`top ${messageOwner === 'other' ? 'left' : 'right'}`}
@@ -99,27 +93,23 @@ const SingleChatMessage = ({
 											pointing={'left'}
 											className={cx('messageLabel', messageOwner)}
 										>
-											{/* <pre>{value}</pre> */}
-											{sentTimeRef.current}
 											<pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre>
 										</Label>
-										{/* <span style={{ alignSelf: 'flex-end' }}>
+										<span style={{ alignSelf: 'flex-end' }}>
 											{sentTimeRef.current}
-										</span> */}
+										</span>
 									</>
 								) : (
 									<>
-										{/* <span style={{ alignSelf: 'self-end' }}>
+										<span style={{ alignSelf: 'self-end' }}>
 											{sentTimeRef.current}
-										</span> */}
+										</span>
 										<Label
 											basic
 											pointing={'right'}
 											className={cx('messageLabel', messageOwner)}
 										>
-											{/* <pre>{value}</pre> */}
 											<pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre>
-											{sentTimeRef.current}
 										</Label>
 									</>
 								)}
@@ -152,32 +142,30 @@ const SingleChatMessage = ({
 					)}
 				</div>
 
-				{showCopyButton && (
-					<div className={Style['copyButton']}>
-						<Button
-							content={copyButtonClicked ? 'copied!' : 'copy'}
-							color={copyButtonClicked ? 'google plus' : 'instagram'}
-							buttonType="none"
-							onClick={async () => {
-								setCopyButtonClicked(true);
-								if ('clipboard' in navigator) {
-									await navigator.clipboard.writeText(
-										value.replace(/[^\x00-\x7F]/g, ''),
-									);
-								} else {
-									return document.execCommand(
-										'copy',
-										true,
-										value.replace(/[^\x00-\x7F]/g, ''),
-									);
-								}
-								setTimeout(() => {
-									setCopyButtonClicked(false);
-								}, 3000);
-							}}
-						/>
-					</div>
-				)}
+				<div className={Style['copyButton']}>
+					<Button
+						content={copyButtonClicked ? 'copied!' : 'copy'}
+						color={copyButtonClicked ? 'google plus' : 'instagram'}
+						buttonType="none"
+						onClick={async () => {
+							setCopyButtonClicked(true);
+							if ('clipboard' in navigator) {
+								await navigator.clipboard.writeText(
+									value.replace(/[^\x00-\x7F]/g, ''),
+								);
+							} else {
+								return document.execCommand(
+									'copy',
+									true,
+									value.replace(/[^\x00-\x7F]/g, ''),
+								);
+							}
+							setTimeout(() => {
+								setCopyButtonClicked(false);
+							}, 3000);
+						}}
+					/>
+				</div>
 
 				{linkList && !!linkList.length && (
 					<div className={Style['linkListDiv']}>
