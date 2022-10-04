@@ -1,5 +1,8 @@
 import crypto from 'crypto';
 import dayjs from 'dayjs';
+import axios from 'axios';
+import _ from 'lodash';
+import cookie from 'js-cookie';
 
 const baseImage = {
 	AvatarBase0: 'AvatarBase_BLACK1.png',
@@ -64,4 +67,97 @@ const chatToDateGroup = (arr: any) => {
 	return groupsReduce;
 };
 
-export { generateUID, generateImageUID, generateAvatarImage, chatToDateGroup };
+interface axiosRequestObj {
+	url: string;
+	requestType: 'get' | 'post';
+	dataObj?: null | object;
+	withAuth?: boolean;
+	successCallback?: null | Function;
+	failCallback?: null | Function;
+	returnAxiosObject?: null | Function;
+	tokenValue?: string;
+}
+
+const comAxiosRequest = async (param: axiosRequestObj) => {
+	const {
+		url,
+		requestType = 'get',
+		dataObj = null,
+		withAuth = false,
+		successCallback = null,
+		failCallback = null,
+		tokenValue = '',
+	} = param;
+
+	const objectParam = _.merge(
+		{
+			url,
+			method: requestType,
+		},
+		dataObj && requestType === 'post' ? { data: dataObj } : { params: dataObj },
+		cookie.get('token') && withAuth
+			? { headers: { Authorization: `Bearer ${cookie.get('token')}` } }
+			: {},
+		tokenValue && { headers: { Authorization: `Bearer ${tokenValue}` } },
+	);
+
+	const axiosResult = await axios(objectParam)
+		.then((response) => {
+			successCallback && successCallback(response);
+			return {
+				status: 'success',
+				response,
+			};
+		})
+		.catch((err) => {
+			failCallback && failCallback(err);
+			return {
+				status: 'error',
+				response: err,
+			};
+		});
+
+	return axiosResult;
+};
+
+const exampleAxios = () => {
+	// ? Post
+	// axios
+	// 	.post(
+	// 		`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getPrivateChatList`,
+	// 		{ fromUID: authStore.userUID, toUID: userUID },
+	// 		{
+	// 			headers: { Authorization: `Bearer ${authStore.userToken}` },
+	// 		},
+	// 	)
+	// 	.then((response) => {
+	// 		conversationId.current = response.data.convId;
+	// 		const chatGroupReduce = chatToDateGroup(response.data.chatList);
+	// 		setChatList(chatGroupReduce);
+	// 	});
+	// ? get
+	// const axiosData = await axios
+	// 	.get(`${process.env.BE_BASE_URL}/api/dashboard/getTeamSkills`, {
+	// 		headers: { Authorization: `Bearer ${token}` },
+	// 	})
+	// 	.then((response) => {
+	// 		return response.data;
+	// 	})
+	// 	.catch((err) => {
+	// 		return {
+	// 			teamSkillDashboard: null,
+	// 			teamSkillCountObj: {},
+	// 			userDashboard: [],
+	// 		};
+	// 	});
+	return null;
+};
+
+export {
+	generateUID,
+	generateImageUID,
+	generateAvatarImage,
+	chatToDateGroup,
+	comAxiosRequest,
+	exampleAxios,
+};

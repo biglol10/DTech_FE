@@ -18,7 +18,7 @@ import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import { parseCookies } from 'nookies';
 import lodash from 'lodash';
-import { chatToDateGroup } from '@utils/appRelated/helperFunctions';
+import { chatToDateGroup, comAxiosRequest } from '@utils/appRelated/helperFunctions';
 import * as RCONST from '@utils/constants/reducerConstants';
 
 import Style from './[roomId].module.scss';
@@ -88,23 +88,22 @@ const RoomChat = ({
 	}, [dispatch, roomID]);
 
 	const getGroupChatListCallback = useCallback(() => {
-		axios
-			.post(
-				`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getGroupChatList`,
-				{
-					chatRoomId: roomID,
-					readingUser: authStore.userUID,
-				},
-				{
-					headers: { Authorization: `Bearer ${authStore.userToken}` },
-				},
-			)
-			.then((response) => {
+		comAxiosRequest({
+			url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getGroupChatList`,
+			requestType: 'post',
+			dataObj: {
+				chatRoomId: roomID,
+				readingUser: authStore.userUID,
+			},
+			withAuth: true,
+			successCallback: (response: any) => {
 				const chatGroupReduce = chatToDateGroup(response.data.chatList);
 
 				setChatList((prev) => chatGroupReduce);
-			});
-	}, [authStore.userToken, authStore.userUID, roomID]);
+			},
+			failCallback: () => toast['error'](<>{'채팅정보를 가져오지 못했습니다'}</>),
+		});
+	}, [authStore.userUID, roomID]);
 
 	useEffect(() => {
 		if (roomID && authStore.userToken && authStore.userUID) {
@@ -161,14 +160,17 @@ const RoomChat = ({
 				);
 			}
 
-			await axios
-				.post(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/uploadChatImg`, formData)
-				.then((response) => {
+			await comAxiosRequest({
+				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/uploadChatImg`,
+				requestType: 'post',
+				dataObj: formData,
+				successCallback: (response: any) => {
 					sendPrivateMessageSocket(content, response.data.bodyObj.imgArr);
-				})
-				.catch(() => {
+				},
+				failCallback: () => {
 					toast['error'](<>{'이미지를 보내지 못했습니다'}</>);
-				});
+				},
+			});
 		} else {
 			sendPrivateMessageSocket(content);
 		}
@@ -225,11 +227,6 @@ const RoomChat = ({
 				>
 					<Label
 						basic
-						// content={
-						// 	cookie.get('currentChatRoom')
-						// 		? JSON.parse(cookie.get('currentChatRoom')!).chatName
-						// 		: '그룹 채팅'
-						// }
 						content={currentChatRoomName}
 						iconOrImage="icon"
 						icon={<Icon name="rocketchat" />}
@@ -298,6 +295,35 @@ const RoomChat = ({
 																					  )
 																					: item3.IMG_LIST
 																			}
+																			isSamePreviousUserChat={
+																				idx3 > 0 &&
+																				chatList[item][
+																					item2
+																				][idx3 - 1]
+																					.USER_UID ===
+																					chatList[item][
+																						item2
+																					][idx3]
+																						.USER_UID &&
+																				dayjs(
+																					chatList[item][
+																						item2
+																					][idx3]
+																						.SENT_DATETIME,
+																				).format(
+																					'YYYY-MM-DD',
+																				) ===
+																					dayjs(
+																						chatList[
+																							item
+																						][item2][
+																							idx3 - 1
+																						]
+																							.SENT_DATETIME,
+																					).format(
+																						'YYYY-MM-DD',
+																					)
+																			}
 																		/>
 																	);
 																},
@@ -324,7 +350,6 @@ const RoomChat = ({
 							handleSubmit={(content: ChatList) => {
 								sendMessageFunction(content);
 							}}
-							// QuillSSR={ReactQuill}
 							notifyTextChange={notifyTextChange}
 						/>
 						<TextWithDotAnimation
