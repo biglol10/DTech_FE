@@ -28,6 +28,7 @@ import { toast } from 'react-toastify';
 import _ from 'lodash';
 import { useModal } from '@utils/hooks/customHooks';
 import { modalUISize } from '@utils/constants/uiConstants';
+import { comAxiosRequest } from '@utils/appRelated/helperFunctions';
 
 import Style from './dashboard.module.scss';
 
@@ -338,7 +339,7 @@ export const getServerSideProps = async (context: any) => {
 
 	const teamSkillCountObj: any = {};
 
-	if (!_.isEmpty(axiosData.teamSkillCountObj)) {
+	if (axiosData && !_.isEmpty(axiosData.teamSkillCountObj)) {
 		const tempData: any = axiosData.teamSkillCountObj;
 
 		Object.keys(tempData).map((item, idx) => {

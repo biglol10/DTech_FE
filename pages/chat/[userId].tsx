@@ -26,7 +26,11 @@ import { toast } from 'react-toastify';
 import cookie from 'js-cookie';
 import lodash from 'lodash';
 import * as RCONST from '@utils/constants/reducerConstants';
-import { chatToDateGroup, generateAvatarImage } from '@utils/appRelated/helperFunctions';
+import {
+	chatToDateGroup,
+	generateAvatarImage,
+	comAxiosRequest,
+} from '@utils/appRelated/helperFunctions';
 
 import Style from './[userId].module.scss';
 
@@ -99,16 +103,23 @@ const UserChat = ({
 		const { currentChatUser } = appCommon;
 
 		if (currentChatUser) {
-			axios
-				.get(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/getUsersInfo`, {
-					params: { usersParam: [userUID] },
-				})
-				.then((response) => {
-					setChatUser(response.data.usersInfo[0]);
-				})
-				.catch(() => {
-					toast['error'](<>{'유저정보를 가져오지 못했습니다'}</>);
-				});
+			comAxiosRequest({
+				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/getUsersInfo`,
+				requestType: 'get',
+				dataObj: { usersParam: [userUID] },
+				successCallback: (response: any) => setChatUser(response.data.usersInfo[0]),
+				failCallback: () => toast['error'](<>{'유저정보를 가져오지 못했습니다'}</>),
+			});
+			// axios
+			// 	.get(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/getUsersInfo`, {
+			// 		params: { usersParam: [userUID] },
+			// 	})
+			// 	.then((response) => {
+			// 		setChatUser(response.data.usersInfo[0]);
+			// 	})
+			// 	.catch(() => {
+			// 		toast['error'](<>{'유저정보를 가져오지 못했습니다'}</>);
+			// 	});
 		}
 	}, [appCommon, userUID]);
 
@@ -117,20 +128,34 @@ const UserChat = ({
 		const { currentChatUser } = appCommon;
 
 		if (currentChatUser && authStore.userUID && authStore.userToken) {
-			axios
-				.post(
-					`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getPrivateChatList`,
-					{ fromUID: authStore.userUID, toUID: userUID },
-					{
-						headers: { Authorization: `Bearer ${authStore.userToken}` },
-					},
-				)
-				.then((response) => {
+			comAxiosRequest({
+				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getPrivateChatList`,
+				requestType: 'post',
+				dataObj: { fromUID: authStore.userUID, toUID: userUID },
+				withAuth: true,
+				successCallback: (response: any) => {
 					conversationId.current = response.data.convId;
 					const chatGroupReduce = chatToDateGroup(response.data.chatList);
 
 					setChatList(chatGroupReduce);
-				});
+				},
+				failCallback: () => toast['error'](<>{'채팅정보를 가져오지 못했습니다'}</>),
+			});
+
+			// axios
+			// 	.post(
+			// 		`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getPrivateChatList`,
+			// 		{ fromUID: authStore.userUID, toUID: userUID },
+			// 		{
+			// 			headers: { Authorization: `Bearer ${authStore.userToken}` },
+			// 		},
+			// 	)
+			// 	.then((response) => {
+			// 		conversationId.current = response.data.convId;
+			// 		const chatGroupReduce = chatToDateGroup(response.data.chatList);
+
+			// 		setChatList(chatGroupReduce);
+			// 	});
 		}
 	}, [appCommon, authStore.userToken, authStore.userUID, userUID]);
 
@@ -300,7 +325,7 @@ const UserChat = ({
 																				  )
 																				: item3.IMG_LIST
 																		}
-																		isPreviousUserChat={
+																		isSamePreviousUserChat={
 																			idx3 > 0 &&
 																			chatList[item][item2][
 																				idx3

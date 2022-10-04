@@ -16,7 +16,7 @@ interface ChatListExtends extends ChatList {
 	messageOwner: 'other' | 'mine';
 	sentTime: string | null | undefined;
 	userName: string;
-	isPreviousUserChat: boolean;
+	isSamePreviousUserChat: boolean;
 }
 
 const SingleChatMessage = ({
@@ -26,15 +26,11 @@ const SingleChatMessage = ({
 	linkList,
 	sentTime,
 	userName,
-	isPreviousUserChat,
+	isSamePreviousUserChat,
 }: ChatListExtends) => {
 	const [copyButtonClicked, setCopyButtonClicked] = useState(false);
 	const { handleModal } = useModal();
 	const sentTimeRef = useRef(sentTime ? dayjs(sentTime).format('HH:mm') : null);
-
-	// console.log(
-	// 	`userName is ${userName} and isPreviousUserChat is ${isPreviousUserChat} and sentTime is ${sentTime}`,
-	// );
 
 	const openImageModal = (imgSrc: string) => {
 		handleModal({
@@ -61,19 +57,29 @@ const SingleChatMessage = ({
 		<>
 			<div className={Style['chatWrapper']}>
 				<div className={cx('singleChatDiv', messageOwner)}>
-					<Label
-						attached={`top ${messageOwner === 'other' ? 'left' : 'right'}`}
-						className={cx('avatarLabel', isPreviousUserChat && 'avatarLabelHidden')}
-					>
-						{!isPreviousUserChat && (
+					{!isSamePreviousUserChat ? (
+						<Label
+							attached={`top ${messageOwner === 'other' ? 'left' : 'right'}`}
+							className={cx(
+								'avatarLabel',
+								isSamePreviousUserChat && 'avatarLabelHidden',
+							)}
+						>
 							<Avatar
 								labelSize="mini"
 								src={techImage['React']}
 								fontColor="black"
 								content={userName}
 							/>
-						)}
-					</Label>
+						</Label>
+					) : (
+						<div
+							className={cx(
+								'avatarLabel',
+								isSamePreviousUserChat && 'avatarLabelHidden',
+							)}
+						></div>
+					)}
 
 					{value && (
 						<>
@@ -81,9 +87,6 @@ const SingleChatMessage = ({
 								style={{
 									display: 'flex',
 									justifyContent: `${messageOwner === 'mine' ? 'right' : 'left'}`,
-									// marginTop: `${
-									// 	isPreviousUserChat === true ? '1px !important' : 'auto'
-									// }`,
 								}}
 							>
 								{messageOwner === 'other' ? (
@@ -95,15 +98,20 @@ const SingleChatMessage = ({
 										>
 											<pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre>
 										</Label>
-										<span style={{ alignSelf: 'flex-end' }}>
-											{sentTimeRef.current}
-										</span>
+										{!isSamePreviousUserChat && (
+											<span style={{ alignSelf: 'flex-end' }}>
+												{sentTimeRef.current}
+											</span>
+										)}
 									</>
 								) : (
 									<>
-										<span style={{ alignSelf: 'self-end' }}>
-											{sentTimeRef.current}
-										</span>
+										{!isSamePreviousUserChat && (
+											<span style={{ alignSelf: 'self-end' }}>
+												{sentTimeRef.current}
+											</span>
+										)}
+
 										<Label
 											basic
 											pointing={'right'}
@@ -116,7 +124,6 @@ const SingleChatMessage = ({
 							</div>
 						</>
 					)}
-					{/* <span>{imgList}</span> */}
 					{imgList && imgList.length > 0 && (
 						<div className={cx('imageListDiv', messageOwner)}>
 							{imgList.map((itemUrl: any, idx: number) => {
