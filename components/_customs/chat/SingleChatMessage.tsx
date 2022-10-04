@@ -6,13 +6,14 @@ import { Label } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import { useModal } from '@utils/hooks/customHooks';
 import { modalUISize } from '@utils/constants/uiConstants';
-import Image from 'next/image';
-import { ChatList } from '@utils/types/commAndStoreTypes';
 import dayjs from 'dayjs';
 
 import Style from './SingleChatMessage.module.scss';
 
-interface ChatListExtends extends ChatList {
+interface ChatListExtends {
+	value: string;
+	imgList: string[];
+	linkList: any;
 	messageOwner: 'other' | 'mine';
 	sentTime: string | null | undefined;
 	userName: string;
@@ -136,13 +137,14 @@ const SingleChatMessage = ({
 									/>
 								);
 							})}
-							{/* {imgList.map((item: { fileName: string; filePreview: string }, idx) => (
+							{/* bottomRef끝까지 가지 않아 일반 img태그 사용 */}
+							{/* {imgList.map((itemUrl: any, idx: number) => (
 								<Image
 									key={`asdf_${idx}`}
-									src={item.filePreview} // 아직 이미지 S3에 올리는 작업을 하지 않았으니 미리보기 적용
+									src={itemUrl}
 									height={50}
 									width={50}
-									onClick={() => openImageModal(item.filePreview)}
+									onClick={() => openImageModal(itemUrl)}
 								/>
 							))} */}
 						</div>
