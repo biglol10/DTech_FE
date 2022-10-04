@@ -163,22 +163,22 @@ const Index = ({
 	const enterSearch = useCallback(() => {
 		setInputLoading(true);
 		if (userToken) {
-			axios
-				.post(
-					`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/dashboard/getUserSkillFilter`,
-					{
-						filterSkill: searchCondition.skillset,
-						filterName: searchCondition.personname,
-					},
-					{ headers: { Authorization: `Bearer ${userToken}` } },
-				)
-				.then((response) => {
+			comAxiosRequest({
+				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/dashboard/getUserSkillFilter`,
+				requestType: 'post',
+				dataObj: {
+					filterSkill: searchCondition.skillset,
+					filterName: searchCondition.personname,
+				},
+				withAuth: true,
+				successCallback: (response: any) => {
 					tempArr.current = response.data.filterdUsersList;
 					setUserListData(response.data.filterdUsersList);
-				})
-				.catch((err) => {
+				},
+				failCallback: () => {
 					toast['error'](<>{'데이터를 가져오지 못했습니다'}</>);
-				});
+				},
+			});
 		}
 		setInputLoading(false);
 	}, [searchCondition.personname, searchCondition.skillset, userToken]);
@@ -322,20 +322,24 @@ const Index = ({
 export const getServerSideProps = async (context: any) => {
 	const { token } = parseCookies(context);
 
-	const axiosData = await axios
-		.get(`${process.env.BE_BASE_URL}/api/dashboard/getTeamSkills`, {
-			headers: { Authorization: `Bearer ${token}` },
-		})
-		.then((response) => {
-			return response.data;
-		})
-		.catch((err) => {
-			return {
+	let axiosData: any = null;
+
+	await comAxiosRequest({
+		url: `${process.env.BE_BASE_URL}/api/dashboard/getTeamSkills`,
+		requestType: 'get',
+		withAuth: true,
+		successCallback: (response: any) => {
+			axiosData = response.data;
+		},
+		failCallback: () => {
+			axiosData = {
 				teamSkillDashboard: null,
 				teamSkillCountObj: {},
 				userDashboard: [],
 			};
-		});
+		},
+		tokenValue: token,
+	});
 
 	const teamSkillCountObj: any = {};
 

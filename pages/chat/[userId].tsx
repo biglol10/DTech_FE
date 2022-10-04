@@ -110,16 +110,6 @@ const UserChat = ({
 				successCallback: (response: any) => setChatUser(response.data.usersInfo[0]),
 				failCallback: () => toast['error'](<>{'유저정보를 가져오지 못했습니다'}</>),
 			});
-			// axios
-			// 	.get(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/getUsersInfo`, {
-			// 		params: { usersParam: [userUID] },
-			// 	})
-			// 	.then((response) => {
-			// 		setChatUser(response.data.usersInfo[0]);
-			// 	})
-			// 	.catch(() => {
-			// 		toast['error'](<>{'유저정보를 가져오지 못했습니다'}</>);
-			// 	});
 		}
 	}, [appCommon, userUID]);
 
@@ -141,21 +131,6 @@ const UserChat = ({
 				},
 				failCallback: () => toast['error'](<>{'채팅정보를 가져오지 못했습니다'}</>),
 			});
-
-			// axios
-			// 	.post(
-			// 		`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getPrivateChatList`,
-			// 		{ fromUID: authStore.userUID, toUID: userUID },
-			// 		{
-			// 			headers: { Authorization: `Bearer ${authStore.userToken}` },
-			// 		},
-			// 	)
-			// 	.then((response) => {
-			// 		conversationId.current = response.data.convId;
-			// 		const chatGroupReduce = chatToDateGroup(response.data.chatList);
-
-			// 		setChatList(chatGroupReduce);
-			// 	});
 		}
 	}, [appCommon, authStore.userToken, authStore.userUID, userUID]);
 

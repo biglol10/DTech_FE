@@ -75,6 +75,7 @@ interface axiosRequestObj {
 	successCallback?: null | Function;
 	failCallback?: null | Function;
 	returnAxiosObject?: null | Function;
+	tokenValue?: string;
 }
 
 const comAxiosRequest = async (param: axiosRequestObj) => {
@@ -85,7 +86,7 @@ const comAxiosRequest = async (param: axiosRequestObj) => {
 		withAuth = false,
 		successCallback = null,
 		failCallback = null,
-		returnAxiosObject = null,
+		tokenValue = '',
 	} = param;
 
 	const objectParam = _.merge(
@@ -97,6 +98,7 @@ const comAxiosRequest = async (param: axiosRequestObj) => {
 		cookie.get('token') && withAuth
 			? { headers: { Authorization: `Bearer ${cookie.get('token')}` } }
 			: {},
+		tokenValue && { headers: { Authorization: `Bearer ${tokenValue}` } },
 	);
 
 	const axiosResult = await axios(objectParam)
@@ -115,10 +117,47 @@ const comAxiosRequest = async (param: axiosRequestObj) => {
 			};
 		});
 
-	console.log('axiosResult is');
-	console.log(axiosResult);
-
-	returnAxiosObject && returnAxiosObject(axiosResult);
+	return axiosResult;
 };
 
-export { generateUID, generateImageUID, generateAvatarImage, chatToDateGroup, comAxiosRequest };
+const exampleAxios = () => {
+	// ? Post
+	// axios
+	// 	.post(
+	// 		`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getPrivateChatList`,
+	// 		{ fromUID: authStore.userUID, toUID: userUID },
+	// 		{
+	// 			headers: { Authorization: `Bearer ${authStore.userToken}` },
+	// 		},
+	// 	)
+	// 	.then((response) => {
+	// 		conversationId.current = response.data.convId;
+	// 		const chatGroupReduce = chatToDateGroup(response.data.chatList);
+	// 		setChatList(chatGroupReduce);
+	// 	});
+	// ? get
+	// const axiosData = await axios
+	// 	.get(`${process.env.BE_BASE_URL}/api/dashboard/getTeamSkills`, {
+	// 		headers: { Authorization: `Bearer ${token}` },
+	// 	})
+	// 	.then((response) => {
+	// 		return response.data;
+	// 	})
+	// 	.catch((err) => {
+	// 		return {
+	// 			teamSkillDashboard: null,
+	// 			teamSkillCountObj: {},
+	// 			userDashboard: [],
+	// 		};
+	// 	});
+	return null;
+};
+
+export {
+	generateUID,
+	generateImageUID,
+	generateAvatarImage,
+	chatToDateGroup,
+	comAxiosRequest,
+	exampleAxios,
+};
