@@ -67,16 +67,20 @@ const chatToDateGroup = (arr: any) => {
 	return groupsReduce;
 };
 
+type callbackType = (obj: any) => void;
+
 interface axiosRequestObj {
 	url: string;
 	requestType: 'get' | 'post';
 	dataObj?: null | object;
 	withAuth?: boolean;
-	successCallback?: null | Function;
-	failCallback?: null | Function;
-	returnAxiosObject?: null | Function;
+	successCallback?: null | callbackType;
+	failCallback?: null | callbackType;
+	returnAxiosObject?: null | callbackType;
 	tokenValue?: string;
 }
+
+type SuccessOrFailType = 'success' | 'error';
 
 const comAxiosRequest = async (param: axiosRequestObj) => {
 	const {
@@ -101,18 +105,21 @@ const comAxiosRequest = async (param: axiosRequestObj) => {
 		tokenValue && { headers: { Authorization: `Bearer ${tokenValue}` } },
 	);
 
-	const axiosResult = await axios(objectParam)
-		.then((response) => {
+	const axiosResult: {
+		status: SuccessOrFailType;
+		response: any;
+	} = await axios(objectParam)
+		.then((response: any) => {
 			successCallback && successCallback(response);
 			return {
-				status: 'success',
+				status: 'success' as SuccessOrFailType,
 				response,
 			};
 		})
-		.catch((err) => {
+		.catch((err: any) => {
 			failCallback && failCallback(err);
 			return {
-				status: 'error',
+				status: 'error' as SuccessOrFailType,
 				response: err,
 			};
 		});
