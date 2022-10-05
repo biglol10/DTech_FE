@@ -12,7 +12,6 @@ import { MainLayoutTemplate, SingleChatMessage } from '@components/customs';
 import { Container, Segment, Icon } from 'semantic-ui-react';
 
 import { ChatList, IUsersStatusArr, IAuth } from '@utils/types/commAndStoreTypes';
-import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
@@ -96,7 +95,7 @@ const RoomChat = ({
 				readingUser: authStore.userUID,
 			},
 			withAuth: true,
-			successCallback: (response: any) => {
+			successCallback: (response) => {
 				const chatGroupReduce = chatToDateGroup(response.data.chatList);
 
 				setChatList((prev) => chatGroupReduce);
@@ -164,7 +163,7 @@ const RoomChat = ({
 				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/uploadChatImg`,
 				requestType: 'post',
 				dataObj: formData,
-				successCallback: (response: any) => {
+				successCallback: (response) => {
 					sendPrivateMessageSocket(content, response.data.bodyObj.imgArr);
 				},
 				failCallback: () => {

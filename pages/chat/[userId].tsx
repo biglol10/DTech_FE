@@ -19,7 +19,6 @@ import { Container, Segment } from 'semantic-ui-react';
 import { ChatList, IUsersStatusArr, IAuth, IAppCommon } from '@utils/types/commAndStoreTypes';
 import OnlineSvg from '@styles/svg/online.svg';
 import OfflineSvg from '@styles/svg/offline.svg';
-import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
@@ -107,7 +106,7 @@ const UserChat = ({
 				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/getUsersInfo`,
 				requestType: 'get',
 				dataObj: { usersParam: [userUID] },
-				successCallback: (response: any) => setChatUser(response.data.usersInfo[0]),
+				successCallback: (response) => setChatUser(response.data.usersInfo[0]),
 				failCallback: () => toast['error'](<>{'유저정보를 가져오지 못했습니다'}</>),
 			});
 		}
@@ -123,7 +122,7 @@ const UserChat = ({
 				requestType: 'post',
 				dataObj: { fromUID: authStore.userUID, toUID: userUID },
 				withAuth: true,
-				successCallback: (response: any) => {
+				successCallback: (response) => {
 					conversationId.current = response.data.convId;
 					const chatGroupReduce = chatToDateGroup(response.data.chatList);
 
@@ -199,7 +198,7 @@ const UserChat = ({
 				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/uploadChatImg`,
 				requestType: 'post',
 				dataObj: formData,
-				successCallback: (response: any) => {
+				successCallback: (response) => {
 					sendPrivateMessageSocket(content, response.data.bodyObj.imgArr);
 				},
 				failCallback: () => {

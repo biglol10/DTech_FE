@@ -8,7 +8,6 @@
  ********************************************************************************************/
 
 import { useEffect, useMemo, useState, useCallback, useRef } from 'react';
-import axios from 'axios';
 import { parseCookies } from 'nookies';
 import { Bar } from 'react-chartjs-2';
 import {
@@ -171,7 +170,7 @@ const Index = ({
 					filterName: searchCondition.personname,
 				},
 				withAuth: true,
-				successCallback: (response: any) => {
+				successCallback: (response) => {
 					tempArr.current = response.data.filterdUsersList;
 					setUserListData(response.data.filterdUsersList);
 				},
@@ -328,7 +327,7 @@ export const getServerSideProps = async (context: any) => {
 		url: `${process.env.BE_BASE_URL}/api/dashboard/getTeamSkills`,
 		requestType: 'get',
 		withAuth: true,
-		successCallback: (response: any) => {
+		successCallback: (response) => {
 			axiosData = response.data;
 		},
 		failCallback: () => {
