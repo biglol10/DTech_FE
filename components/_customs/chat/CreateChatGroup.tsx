@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { InputLayout, InputWithIcon, InputDefault, Avatar, Button } from '@components/index';
 import {
 	Segment,
@@ -204,11 +204,8 @@ const CreateChatGroup = ({
 						!!allUsersArr.length &&
 						allUsersArr.map((user, idx) => {
 							return (
-								<>
-									<li
-										key={`userLi_${idx}`}
-										onClick={() => addUserCollection(user)}
-									>
+								<React.Fragment key={`userLi_${idx}`}>
+									<li onClick={() => addUserCollection(user)}>
 										<Avatar
 											content={user.USER_NM}
 											src={
@@ -223,7 +220,7 @@ const CreateChatGroup = ({
 										hidden={idx === usersStatusArrClone.length - 1}
 										className={Style['divider']}
 									/>
-								</>
+								</React.Fragment>
 							);
 						})}
 				</ul>

@@ -7,7 +7,14 @@
  ********************************************************************************************/
 
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react';
-import { Box, DTechQuill, SharpDivider, TextWithDotAnimation, Label } from '@components/index';
+import {
+	Box,
+	DTechQuill,
+	SharpDivider,
+	TextWithDotAnimation,
+	Label,
+	AvatarGroup,
+} from '@components/index';
 import { MainLayoutTemplate, SingleChatMessage } from '@components/customs';
 import { Container, Segment, Icon } from 'semantic-ui-react';
 
@@ -17,7 +24,11 @@ import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import { parseCookies } from 'nookies';
 import lodash from 'lodash';
-import { chatToDateGroup, comAxiosRequest } from '@utils/appRelated/helperFunctions';
+import {
+	chatToDateGroup,
+	comAxiosRequest,
+	generateAvatarImage,
+} from '@utils/appRelated/helperFunctions';
 import * as RCONST from '@utils/constants/reducerConstants';
 
 import Style from './[roomId].module.scss';
@@ -65,6 +76,7 @@ const RoomChat = ({
 
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
 	const [chatList, setChatList] = useState<ChatDateReduce>({});
+	const [groupMembers, setGroupMembers] = useState<IUsersStatusArr[]>([]);
 	const [textChangeNotification, setTextChangeNotification] = useState(false);
 	const [sendingUserState, setSendingUserState] = useState<string>('');
 
@@ -98,6 +110,7 @@ const RoomChat = ({
 			successCallback: (response) => {
 				const chatGroupReduce = chatToDateGroup(response.data.chatList);
 
+				setGroupMembers(response.data.groupChatUsers);
 				setChatList((prev) => chatGroupReduce);
 			},
 			failCallback: () => toast['error'](<>{'채팅정보를 가져오지 못했습니다'}</>),
@@ -214,6 +227,31 @@ const RoomChat = ({
 		};
 	}, [authStore.userId, getGroupChatListCallback, roomID, socket]);
 
+	const usersImage = useMemo(() => {
+		const avatarGroupImgList = groupMembers.map((oneUser) => {
+			if (oneUser.USER_IMG_URL) {
+				return oneUser.USER_IMG_URL;
+			} else {
+				return `${generateAvatarImage(oneUser.USER_UID)}`;
+			}
+		});
+
+		const avatarGroupUserList = groupMembers
+			.slice(0, 3)
+			.reduce((previousVal, currentVal, idx3) => {
+				if (idx3 === 0) {
+					return `${previousVal}${currentVal.USER_NM} (${currentVal.USER_TITLE})`;
+				} else {
+					return `${previousVal}, ${currentVal.USER_NM} (${currentVal.USER_TITLE})`;
+				}
+			}, '');
+
+		return {
+			avatarGroupImgList,
+			avatarGroupUserList,
+		};
+	}, [groupMembers]);
+
 	return (
 		<>
 			<main id={Style['chatMain']}>
@@ -233,6 +271,18 @@ const RoomChat = ({
 						borderNone
 						size="big"
 					/>
+					{usersImage && (
+						<AvatarGroup
+							imageList={usersImage.avatarGroupImgList}
+							divHeight={20}
+							totalCount={usersImage.avatarGroupImgList.length}
+							usersString={usersImage.avatarGroupUserList}
+							className={Style['groupChatAvatarGroup']}
+							onClick={(e) => {
+								alert(e);
+							}}
+						/>
+					)}
 				</Box>
 				<Container>
 					{quillWrapperHeight ? (
@@ -245,7 +295,11 @@ const RoomChat = ({
 							{chatList &&
 								Object.keys(chatList).map((item: string, idx: number) => {
 									return (
-										<>
+										<React.Fragment
+											key={`${item}_(${
+												dayOfWeek[dayjs(item).day().toString()]
+											})`}
+										>
 											<SharpDivider
 												content={`${item} (${
 													dayOfWeek[dayjs(item).day().toString()]
@@ -255,7 +309,13 @@ const RoomChat = ({
 											{Object.keys(chatList[item]).map(
 												(item2: string, idx2: number) => {
 													return (
-														<>
+														<React.Fragment
+															key={`${item}_(${
+																dayOfWeek[
+																	dayjs(item).day().toString()
+																]
+															})_${item2}`}
+														>
 															{chatList[item][item2].map(
 																(
 																	item3: IChatList,
@@ -327,11 +387,11 @@ const RoomChat = ({
 																	);
 																},
 															)}
-														</>
+														</React.Fragment>
 													);
 												},
 											)}
-										</>
+										</React.Fragment>
 									);
 								})}
 							<div ref={bottomRef} />

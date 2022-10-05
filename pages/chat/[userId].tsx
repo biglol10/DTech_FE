@@ -267,7 +267,11 @@ const UserChat = ({
 							{chatList &&
 								Object.keys(chatList).map((item: string) => {
 									return (
-										<>
+										<React.Fragment
+											key={`${item}_(${
+												dayOfWeek[dayjs(item).day().toString()]
+											})`}
+										>
 											<SharpDivider
 												content={`${item} (${
 													dayOfWeek[dayjs(item).day().toString()]
@@ -276,7 +280,11 @@ const UserChat = ({
 											/>
 											{Object.keys(chatList[item]).map((item2: string) => {
 												return (
-													<>
+													<React.Fragment
+														key={`${item}_(${
+															dayOfWeek[dayjs(item).day().toString()]
+														})_${item2}`}
+													>
 														{chatList[item][item2].map(
 															(item3: IChatList, idx3: number) => {
 																return (
@@ -332,10 +340,10 @@ const UserChat = ({
 																);
 															},
 														)}
-													</>
+													</React.Fragment>
 												);
 											})}
-										</>
+										</React.Fragment>
 									);
 								})}
 							<div ref={bottomRef} />

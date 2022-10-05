@@ -204,9 +204,9 @@ const About = () => {
 											</Table.Cell>
 											<Table.Cell>
 												<b>[FE]</b> 프로젝트 환경설정 (Layout, Redux,
-												Storybook, Webpack, Typescript, ESLint), 팀 스킬
-												대시보드 화면 개발, 로그인 + 채팅 + About 페이지
-												개발
+												Storybook, Webpack, Typescript, ESLint,
+												Custom-Hooks, 공통함수), 팀 스킬 대시보드 화면 개발,
+												로그인 + 채팅 + About 페이지 개발
 												<br />
 												<b>[BE]</b> 백엔드 환경설정 (AsyncHandler,
 												ErrorHandler, MYSQL연결, Socket IO),
