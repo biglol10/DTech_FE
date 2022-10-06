@@ -16,11 +16,20 @@
 		}
 	}
 
+	.avatarLabelHidden,
+	.copyButton {
+		visibility: hidden;
+	}
+
 	&:hover {
 		background-color: #f8f8f8;
 
 		.linkListDiv {
 			background-color: snow;
+		}
+
+		.copyButton {
+			visibility: initial;
 		}
 	}
 

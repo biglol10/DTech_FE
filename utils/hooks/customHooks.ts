@@ -20,6 +20,9 @@ const useModal = () => {
 					modalSize: args.modalSize,
 					modalTitle: args.modalTitle,
 					modalIsBasic: args.modalIsBasic,
+					modalFitContentWidth: args.modalFitContentWidth,
+					modalShowCloseIcon: args.modalShowCloseIcon,
+					modalContentId: args.modalContentId,
 				},
 			});
 		},

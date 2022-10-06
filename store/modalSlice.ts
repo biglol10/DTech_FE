@@ -10,6 +10,9 @@ const initialState = {
 	modalContent: null,
 	modalSize: modalUISize.SMALL,
 	modalIsBasic: false,
+	modalFitContentWidth: false,
+	modalShowCloseIcon: 'Y',
+	modalContentId: '',
 } as IModalState;
 
 const modalSlice = createSlice({
@@ -22,6 +25,9 @@ const modalSlice = createSlice({
 			state.modalContent = action.payload.modalContent;
 			state.modalSize = action.payload.modalSize;
 			state.modalIsBasic = action.payload.modalIsBasic || false;
+			state.modalFitContentWidth = action.payload.modalFitContentWidth || false;
+			state.modalShowCloseIcon = action.payload.modalShowCloseIcon || 'Y';
+			state.modalContentId = action.payload.modalContentId;
 		},
 		closeModal(state) {
 			state.modalOpen = false;
@@ -29,6 +35,9 @@ const modalSlice = createSlice({
 			state.modalContent = null;
 			state.modalSize = modalUISize.SMALL;
 			state.modalIsBasic = false;
+			state.modalFitContentWidth = false;
+			state.modalShowCloseIcon = 'Y';
+			state.modalContentId = '';
 		},
 	},
 });

@@ -4,22 +4,34 @@
  * 번호    작업자     작업일         브랜치                   변경내용
  *-------------------------------------------------------------------------------------------
  * 1      변지욱     2022-09-26   feature/JW/chatRoom     최초작성
+ * 2      변지욱     2022-10-06   feature/JW/groupChat    그룹챗 멤버 modal 표시
  ********************************************************************************************/
 
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react';
-import { Box, DTechQuill, SharpDivider, TextWithDotAnimation, Label } from '@components/index';
-import { MainLayoutTemplate, SingleChatMessage } from '@components/customs';
-import { Container, Segment, Icon } from 'semantic-ui-react';
+import {
+	Box,
+	DTechQuill,
+	SharpDivider,
+	TextWithDotAnimation,
+	Label,
+	AvatarGroup,
+} from '@components/index';
+import { MainLayoutTemplate, SingleChatMessage, ChatMembersModal } from '@components/customs';
+import { Container, Segment, Icon, Header } from 'semantic-ui-react';
 
 import { ChatList, IUsersStatusArr, IAuth } from '@utils/types/commAndStoreTypes';
-import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import { parseCookies } from 'nookies';
 import lodash from 'lodash';
-import { chatToDateGroup } from '@utils/appRelated/helperFunctions';
+import {
+	chatToDateGroup,
+	comAxiosRequest,
+	generateAvatarImage,
+} from '@utils/appRelated/helperFunctions';
 import * as RCONST from '@utils/constants/reducerConstants';
+import { useModal } from '@utils/hooks/customHooks';
 
 import Style from './[roomId].module.scss';
 
@@ -66,12 +78,17 @@ const RoomChat = ({
 
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
 	const [chatList, setChatList] = useState<ChatDateReduce>({});
+	const [groupMembers, setGroupMembers] = useState<IUsersStatusArr[]>([]);
 	const [textChangeNotification, setTextChangeNotification] = useState(false);
 	const [sendingUserState, setSendingUserState] = useState<string>('');
 
 	const bottomRef = useRef<any>(null);
 	const firstLoadRef = useRef<boolean>(true);
 	const quillRef = useRef<any>(null);
+
+	const chatMembersModalRef = useRef<HTMLDivElement>();
+
+	const { handleModal } = useModal();
 
 	const roomID = useMemo(() => {
 		return queryObj.roomId;
@@ -88,23 +105,23 @@ const RoomChat = ({
 	}, [dispatch, roomID]);
 
 	const getGroupChatListCallback = useCallback(() => {
-		axios
-			.post(
-				`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getGroupChatList`,
-				{
-					chatRoomId: roomID,
-					readingUser: authStore.userUID,
-				},
-				{
-					headers: { Authorization: `Bearer ${authStore.userToken}` },
-				},
-			)
-			.then((response) => {
+		comAxiosRequest({
+			url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getGroupChatList`,
+			requestType: 'post',
+			dataObj: {
+				chatRoomId: roomID,
+				readingUser: authStore.userUID,
+			},
+			withAuth: true,
+			successCallback: (response) => {
 				const chatGroupReduce = chatToDateGroup(response.data.chatList);
 
+				setGroupMembers(response.data.groupChatUsers);
 				setChatList((prev) => chatGroupReduce);
-			});
-	}, [authStore.userToken, authStore.userUID, roomID]);
+			},
+			failCallback: () => toast['error'](<>{'채팅정보를 가져오지 못했습니다'}</>),
+		});
+	}, [authStore.userUID, roomID]);
 
 	useEffect(() => {
 		if (roomID && authStore.userToken && authStore.userUID) {
@@ -161,14 +178,17 @@ const RoomChat = ({
 				);
 			}
 
-			await axios
-				.post(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/uploadChatImg`, formData)
-				.then((response) => {
+			await comAxiosRequest({
+				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/uploadChatImg`,
+				requestType: 'post',
+				dataObj: formData,
+				successCallback: (response) => {
 					sendPrivateMessageSocket(content, response.data.bodyObj.imgArr);
-				})
-				.catch(() => {
+				},
+				failCallback: () => {
 					toast['error'](<>{'이미지를 보내지 못했습니다'}</>);
-				});
+				},
+			});
 		} else {
 			sendPrivateMessageSocket(content);
 		}
@@ -213,6 +233,52 @@ const RoomChat = ({
 		};
 	}, [authStore.userId, getGroupChatListCallback, roomID, socket]);
 
+	const usersImage = useMemo(() => {
+		const avatarGroupImgList = groupMembers.map((oneUser) => {
+			if (oneUser.USER_IMG_URL) {
+				return oneUser.USER_IMG_URL;
+			} else {
+				return `${generateAvatarImage(oneUser.USER_UID)}`;
+			}
+		});
+
+		const avatarGroupUserList = groupMembers
+			.slice(0, 3)
+			.reduce((previousVal, currentVal, idx3) => {
+				if (idx3 === 0) {
+					return `${previousVal}${currentVal.USER_NM} (${currentVal.USER_TITLE})`;
+				} else {
+					return `${previousVal}, ${currentVal.USER_NM} (${currentVal.USER_TITLE})`;
+				}
+			}, '');
+
+		return {
+			avatarGroupImgList,
+			avatarGroupUserList,
+		};
+	}, [groupMembers]);
+
+	const openChatGroupModal = useCallback(() => {
+		handleModal({
+			modalOpen: true,
+			modalContent: (
+				<ChatMembersModal
+					currentChatRoomName={currentChatRoomName}
+					chatGroupMembers={groupMembers}
+					id="chatMembersModal"
+				/>
+			),
+			modalFitContentWidth: true,
+			modalContentId: 'chatMembersModal',
+			modalTitle: (
+				<Header as="h3">
+					<Icon name="rocketchat" />
+					<Header.Content>{currentChatRoomName}의 멤버목록</Header.Content>
+				</Header>
+			),
+		});
+	}, [currentChatRoomName, groupMembers, handleModal]);
+
 	return (
 		<>
 			<main id={Style['chatMain']}>
@@ -225,11 +291,6 @@ const RoomChat = ({
 				>
 					<Label
 						basic
-						// content={
-						// 	cookie.get('currentChatRoom')
-						// 		? JSON.parse(cookie.get('currentChatRoom')!).chatName
-						// 		: '그룹 채팅'
-						// }
 						content={currentChatRoomName}
 						iconOrImage="icon"
 						icon={<Icon name="rocketchat" />}
@@ -237,6 +298,18 @@ const RoomChat = ({
 						borderNone
 						size="big"
 					/>
+					{usersImage && (
+						<AvatarGroup
+							imageList={usersImage.avatarGroupImgList}
+							divHeight={20}
+							totalCount={usersImage.avatarGroupImgList.length}
+							usersString={usersImage.avatarGroupUserList}
+							className={Style['groupChatAvatarGroup']}
+							onClick={(e) => {
+								openChatGroupModal();
+							}}
+						/>
+					)}
 				</Box>
 				<Container>
 					{quillWrapperHeight ? (
@@ -249,7 +322,11 @@ const RoomChat = ({
 							{chatList &&
 								Object.keys(chatList).map((item: string, idx: number) => {
 									return (
-										<>
+										<React.Fragment
+											key={`${item}_(${
+												dayOfWeek[dayjs(item).day().toString()]
+											})`}
+										>
 											<SharpDivider
 												content={`${item} (${
 													dayOfWeek[dayjs(item).day().toString()]
@@ -259,7 +336,13 @@ const RoomChat = ({
 											{Object.keys(chatList[item]).map(
 												(item2: string, idx2: number) => {
 													return (
-														<>
+														<React.Fragment
+															key={`${item}_(${
+																dayOfWeek[
+																	dayjs(item).day().toString()
+																]
+															})_${item2}`}
+														>
 															{chatList[item][item2].map(
 																(
 																	item3: IChatList,
@@ -298,15 +381,44 @@ const RoomChat = ({
 																					  )
 																					: item3.IMG_LIST
 																			}
+																			isSamePreviousUserChat={
+																				idx3 > 0 &&
+																				chatList[item][
+																					item2
+																				][idx3 - 1]
+																					.USER_UID ===
+																					chatList[item][
+																						item2
+																					][idx3]
+																						.USER_UID &&
+																				dayjs(
+																					chatList[item][
+																						item2
+																					][idx3]
+																						.SENT_DATETIME,
+																				).format(
+																					'YYYY-MM-DD',
+																				) ===
+																					dayjs(
+																						chatList[
+																							item
+																						][item2][
+																							idx3 - 1
+																						]
+																							.SENT_DATETIME,
+																					).format(
+																						'YYYY-MM-DD',
+																					)
+																			}
 																		/>
 																	);
 																},
 															)}
-														</>
+														</React.Fragment>
 													);
 												},
 											)}
-										</>
+										</React.Fragment>
 									);
 								})}
 							<div ref={bottomRef} />
@@ -324,7 +436,6 @@ const RoomChat = ({
 							handleSubmit={(content: ChatList) => {
 								sendMessageFunction(content);
 							}}
-							// QuillSSR={ReactQuill}
 							notifyTextChange={notifyTextChange}
 						/>
 						<TextWithDotAnimation

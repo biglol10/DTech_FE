@@ -8,10 +8,12 @@
  ********************************************************************************************/
 
 import { customStyleObj } from '@utils/styleRelated/stylehelper';
-import { useState } from 'react';
+import { MouseEventHandler, useState } from 'react';
 import classNames from 'classnames/bind';
 
 import Style from './AvatarGroup.module.scss';
+
+type onClickFunc = MouseEventHandler<HTMLDivElement> | undefined;
 
 interface IImageList {
 	className?: string;
@@ -21,6 +23,7 @@ interface IImageList {
 	divHeight: number;
 	totalCount: number;
 	showCount?: boolean;
+	onClick?: onClickFunc;
 }
 
 const AvatarGroup = ({
@@ -31,6 +34,7 @@ const AvatarGroup = ({
 	divHeight,
 	totalCount = 0,
 	showCount = true,
+	onClick = undefined,
 }: IImageList) => {
 	const [showTooltip, setShowTooltip] = useState(false);
 
@@ -40,6 +44,7 @@ const AvatarGroup = ({
 		<div
 			className={`${Style['avatarGroup']} ${className}`}
 			style={customStyleObj(spacing, [{ name: 'divHeight', value: divHeight }])}
+			onClick={onClick && onClick}
 		>
 			<div
 				className={cx('avatarUser', `${showTooltip ? 'showBorder' : 'hideBorder'}`)}

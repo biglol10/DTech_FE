@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { InputLayout, InputWithIcon, InputDefault, Avatar, Button } from '@components/index';
 import {
 	Segment,
@@ -9,12 +9,12 @@ import {
 	Image as SemanticImage,
 } from 'semantic-ui-react';
 import { IAuth, IUsersStatusArr } from '@utils/types/commAndStoreTypes';
-import { generateAvatarImage } from '@utils/appRelated/helperFunctions';
+import { generateAvatarImage, comAxiosRequest } from '@utils/appRelated/helperFunctions';
 import { useModal } from '@utils/hooks/customHooks';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
-import axios from 'axios';
 import lodash from 'lodash';
+import cookie from 'js-cookie';
 
 import ChatSvg from '@styles/svg/chat.svg';
 
@@ -103,38 +103,36 @@ const CreateChatGroup = ({
 			ONLINE_STATUS: 'ONLINE',
 		});
 
-		const chatGroupFunc = await axios
-			.post(
-				`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/createChatGroup`,
-				{
-					chatGroupName: chatRoomName,
-					userParticipants: userCollection.map((item) => ({
-						USER_UID: item.USER_UID,
-						USER_ID: item.USER_ID,
-					})),
-					senderUID: authStore.userUID,
-				},
-				{ headers: { Authorization: `Bearer ${authStore.userToken}` } },
-			)
-			.then((response) => {
-				return response.data;
-			})
-			.catch(() => {
-				return {
-					result: 'error',
-				};
-			});
+		const chatGroupFunc = await comAxiosRequest({
+			url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/createChatGroup`,
+			requestType: 'post',
+			dataObj: {
+				chatGroupName: chatRoomName,
+				userParticipants: userCollection.map((item) => ({
+					USER_UID: item.USER_UID,
+					USER_ID: item.USER_ID,
+				})),
+				senderUID: authStore.userUID,
+			},
+			withAuth: true,
+		});
 
 		handleModal({
 			modalOpen: false,
 		});
 
-		if (chatGroupFunc.result !== 'success') {
+		if (chatGroupFunc.status !== 'success') {
 			toast['error'](<>{'채팅 그룹을 만들지 못했습니다'}</>);
 			return;
 		}
 
-		router.push(`/chat/room/${chatGroupFunc.chatGroupUID}`);
+		const chatGroupFuncRes = chatGroupFunc.response.data;
+
+		cookie.set(
+			'currentChatRoom',
+			JSON.stringify({ chatUID: chatGroupFuncRes.chatGroupUID, chatName: chatRoomName }),
+		);
+		router.push(`/chat/room/${chatGroupFuncRes.chatGroupUID}`);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [chatRoomName, handleModal, userCollection, authStore, regExp]);
@@ -206,11 +204,8 @@ const CreateChatGroup = ({
 						!!allUsersArr.length &&
 						allUsersArr.map((user, idx) => {
 							return (
-								<>
-									<li
-										key={`userLi_${idx}`}
-										onClick={() => addUserCollection(user)}
-									>
+								<React.Fragment key={`userLi_${idx}`}>
+									<li onClick={() => addUserCollection(user)}>
 										<Avatar
 											content={user.USER_NM}
 											src={
@@ -225,7 +220,7 @@ const CreateChatGroup = ({
 										hidden={idx === usersStatusArrClone.length - 1}
 										className={Style['divider']}
 									/>
-								</>
+								</React.Fragment>
 							);
 						})}
 				</ul>

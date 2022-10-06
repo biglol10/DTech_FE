@@ -5,10 +5,13 @@ import { Socket } from 'socket.io-client';
 
 export interface IModalState {
 	modalOpen?: boolean;
-	modalTitle?: string;
-	modalContent?: React.ReactNode;
+	modalTitle?: string | React.ReactNode;
+	modalContent?: React.ReactElement | any;
 	modalSize?: string;
 	modalIsBasic?: boolean;
+	modalFitContentWidth?: boolean;
+	modalShowCloseIcon?: 'Y' | 'N';
+	modalContentId?: string;
 }
 
 export interface ChatList {
