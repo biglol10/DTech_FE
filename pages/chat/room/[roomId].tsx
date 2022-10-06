@@ -15,7 +15,7 @@ import {
 	Label,
 	AvatarGroup,
 } from '@components/index';
-import { MainLayoutTemplate, SingleChatMessage } from '@components/customs';
+import { MainLayoutTemplate, SingleChatMessage, ChatMembersModal } from '@components/customs';
 import { Container, Segment, Icon } from 'semantic-ui-react';
 
 import { ChatList, IUsersStatusArr, IAuth } from '@utils/types/commAndStoreTypes';
@@ -30,6 +30,8 @@ import {
 	generateAvatarImage,
 } from '@utils/appRelated/helperFunctions';
 import * as RCONST from '@utils/constants/reducerConstants';
+import { modalUISize } from '@utils/constants/uiConstants';
+import { useModal } from '@utils/hooks/customHooks';
 
 import Style from './[roomId].module.scss';
 
@@ -83,6 +85,10 @@ const RoomChat = ({
 	const bottomRef = useRef<any>(null);
 	const firstLoadRef = useRef<boolean>(true);
 	const quillRef = useRef<any>(null);
+
+	const chatMembersModalRef = useRef<HTMLDivElement>();
+
+	const { handleModal } = useModal();
 
 	const roomID = useMemo(() => {
 		return queryObj.roomId;
@@ -252,6 +258,21 @@ const RoomChat = ({
 		};
 	}, [groupMembers]);
 
+	const openChatGroupModal = useCallback(() => {
+		handleModal({
+			modalOpen: true,
+			modalContent: (
+				<ChatMembersModal
+					currentChatRoomName={currentChatRoomName}
+					chatGroupMembers={groupMembers}
+					ref={chatMembersModalRef}
+				/>
+			),
+			modalSize: modalUISize.TINY,
+			modalFitContentWidth: true,
+		});
+	}, [currentChatRoomName, groupMembers, handleModal]);
+
 	return (
 		<>
 			<main id={Style['chatMain']}>
@@ -279,7 +300,7 @@ const RoomChat = ({
 							usersString={usersImage.avatarGroupUserList}
 							className={Style['groupChatAvatarGroup']}
 							onClick={(e) => {
-								alert(e);
+								openChatGroupModal();
 							}}
 						/>
 					)}

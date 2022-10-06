@@ -127,6 +127,14 @@ const comAxiosRequest = async (param: axiosRequestObj) => {
 	return axiosResult;
 };
 
+const appDelay = (time: number) => {
+	return new Promise((resolve) => {
+		setTimeout(() => {
+			resolve(true);
+		}, time);
+	});
+};
+
 const exampleAxios = () => {
 	// ? Post
 	// axios
@@ -167,4 +175,5 @@ export {
 	chatToDateGroup,
 	comAxiosRequest,
 	exampleAxios,
+	appDelay,
 };

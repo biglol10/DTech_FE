@@ -11,6 +11,7 @@ import CheckSvg from '@styles/svg/check.svg';
 import PeopleSvg from '@styles/svg/people.svg';
 import UserRoleSvg from '@styles/svg/userRole.svg';
 import GithubSvg from '@styles/svg/github.svg';
+import StorybookSvg from '@styles/svg/storybook.svg';
 
 import Style from './about.module.scss';
 
@@ -125,6 +126,31 @@ const About = () => {
 												팀 스킬 현황, 유저검색, 스킬 별 인원 통계, 실시간
 												채팅, 그룹채팅, 읽지않은 메시지, 이미지 업로드, 링크
 												메타데이터 제공, 질의응답 게시판, 댓글/좋아요
+											</Table.Cell>
+										</Table.Row>
+										<Table.Row>
+											<Table.Cell>
+												<Header as="h4" image>
+													<Header.Content>
+														<div
+															className={Style['subTitleDivWithSVG']}
+														>
+															<StorybookSvg />
+															Storyook
+														</div>
+
+														<Header.Subheader>링크</Header.Subheader>
+													</Header.Content>
+												</Header>
+											</Table.Cell>
+											<Table.Cell>
+												<a
+													href="http://localhost:6006/?path=/story/example-introduction--page"
+													target="_blank"
+													rel="noreferrer"
+												>
+													http://localhost:6006/?path=/story/example-introduction--page
+												</a>
 											</Table.Cell>
 										</Table.Row>
 										<Table.Row>
