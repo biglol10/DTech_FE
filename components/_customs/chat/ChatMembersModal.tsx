@@ -8,10 +8,10 @@ import Style from './ChatMembersModal.module.scss';
 
 const ChatMembersModal = forwardRef<
 	any,
-	{ currentChatRoomName: string; chatGroupMembers: IUsersStatusArr[] }
->(({ currentChatRoomName, chatGroupMembers }, ref) => {
+	{ id: string; currentChatRoomName: string; chatGroupMembers: IUsersStatusArr[] }
+>(({ id, currentChatRoomName, chatGroupMembers }, ref) => {
 	return (
-		<div ref={ref}>
+		<div ref={ref} id={id}>
 			<Segment placeholder>
 				<Header as="h3">
 					<Icon name="rocketchat" />

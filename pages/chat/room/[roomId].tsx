@@ -265,10 +265,11 @@ const RoomChat = ({
 				<ChatMembersModal
 					currentChatRoomName={currentChatRoomName}
 					chatGroupMembers={groupMembers}
-					ref={chatMembersModalRef}
+					id="chatMembersModal"
 				/>
 			),
 			modalFitContentWidth: true,
+			modalContentId: 'chatMembersModal',
 		});
 	}, [currentChatRoomName, groupMembers, handleModal]);
 

@@ -5,8 +5,8 @@ import { techImage } from '@utils/constants/imageConstants';
 import { Label } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import { useModal } from '@utils/hooks/customHooks';
-import { modalUISize } from '@utils/constants/uiConstants';
 import dayjs from 'dayjs';
+import { modalUISize } from '@utils/constants/uiConstants';
 
 import Style from './SingleChatMessage.module.scss';
 
@@ -38,17 +38,21 @@ const SingleChatMessage = ({
 			modalOpen: true,
 			modalContent: (
 				<img
+					id="chatImageId"
 					src={imgSrc}
 					style={{
-						maxHeight: '90%',
-						maxWidth: '90%',
+						maxHeight: '700px',
+						maxWidth: '1000px',
 						display: 'block',
 						margin: 'auto',
 					}}
 				/>
 			),
-			modalSize: modalUISize.LARGE,
+			// modalSize: modalUISize.LARGE,
 			modalIsBasic: true,
+			modalContentId: 'chatImageId',
+			modalShowCloseIcon: 'N',
+			modalFitContentWidth: true,
 		});
 	};
 
