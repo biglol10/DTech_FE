@@ -13,11 +13,6 @@ const ChatMembersModal = forwardRef<
 	return (
 		<div ref={ref} id={id}>
 			<Segment placeholder>
-				<Header as="h3">
-					<Icon name="rocketchat" />
-					<Header.Content>{currentChatRoomName}의 멤버목록</Header.Content>
-				</Header>
-
 				<Segment.Group raised>
 					<ul className={Style['userArrUl']}>
 						{chatGroupMembers &&

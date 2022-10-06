@@ -17,7 +17,7 @@ import {
 	AvatarGroup,
 } from '@components/index';
 import { MainLayoutTemplate, SingleChatMessage, ChatMembersModal } from '@components/customs';
-import { Container, Segment, Icon } from 'semantic-ui-react';
+import { Container, Segment, Icon, Header } from 'semantic-ui-react';
 
 import { ChatList, IUsersStatusArr, IAuth } from '@utils/types/commAndStoreTypes';
 import { useSelector, useDispatch } from 'react-redux';
@@ -270,6 +270,12 @@ const RoomChat = ({
 			),
 			modalFitContentWidth: true,
 			modalContentId: 'chatMembersModal',
+			modalTitle: (
+				<Header as="h3">
+					<Icon name="rocketchat" />
+					<Header.Content>{currentChatRoomName}의 멤버목록</Header.Content>
+				</Header>
+			),
 		});
 	}, [currentChatRoomName, groupMembers, handleModal]);
 
