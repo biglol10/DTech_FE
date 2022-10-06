@@ -1,0 +1,27 @@
+.userArrUl {
+	list-style: none;
+	display: block;
+
+	height: 300px;
+	overflow-y: auto;
+
+	& > li:first-child {
+		margin-top: 10px;
+	}
+
+	li {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding-left: 0px;
+		border-radius: 5px;
+
+		&:hover {
+			background-color: beige;
+		}
+	}
+
+	.divider {
+		margin: 7px 0px !important;
+	}
+}

@@ -11,6 +11,7 @@ import CheckSvg from '@styles/svg/check.svg';
 import PeopleSvg from '@styles/svg/people.svg';
 import UserRoleSvg from '@styles/svg/userRole.svg';
 import GithubSvg from '@styles/svg/github.svg';
+import StorybookSvg from '@styles/svg/storybook.svg';
 
 import Style from './about.module.scss';
 
@@ -134,6 +135,31 @@ const About = () => {
 														<div
 															className={Style['subTitleDivWithSVG']}
 														>
+															<StorybookSvg />
+															Storyook
+														</div>
+
+														<Header.Subheader>링크</Header.Subheader>
+													</Header.Content>
+												</Header>
+											</Table.Cell>
+											<Table.Cell>
+												<a
+													href="http://localhost:6006/?path=/story/example-introduction--page"
+													target="_blank"
+													rel="noreferrer"
+												>
+													http://localhost:6006/?path=/story/example-introduction--page
+												</a>
+											</Table.Cell>
+										</Table.Row>
+										<Table.Row>
+											<Table.Cell>
+												<Header as="h4" image>
+													<Header.Content>
+														<div
+															className={Style['subTitleDivWithSVG']}
+														>
 															<PeopleSvg />
 															Creators
 														</div>
@@ -204,9 +230,9 @@ const About = () => {
 											</Table.Cell>
 											<Table.Cell>
 												<b>[FE]</b> 프로젝트 환경설정 (Layout, Redux,
-												Storybook, Webpack, Typescript, ESLint), 팀 스킬
-												대시보드 화면 개발, 로그인 + 채팅 + About 페이지
-												개발
+												Storybook, Webpack, Typescript, ESLint,
+												Custom-Hooks, 공통함수), 팀 스킬 대시보드 화면 개발,
+												로그인 + 채팅 + About 페이지 개발
 												<br />
 												<b>[BE]</b> 백엔드 환경설정 (AsyncHandler,
 												ErrorHandler, MYSQL연결, Socket IO),

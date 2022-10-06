@@ -4,11 +4,19 @@
  * 번호    작업자     작업일         브랜치                   변경내용
  *-------------------------------------------------------------------------------------------
  * 1      변지욱     2022-09-26   feature/JW/chatRoom     최초작성
+ * 2      변지욱     2022-10-06   feature/JW/groupChat    그룹챗 멤버 modal 표시
  ********************************************************************************************/
 
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react';
-import { Box, DTechQuill, SharpDivider, TextWithDotAnimation, Label } from '@components/index';
-import { MainLayoutTemplate, SingleChatMessage } from '@components/customs';
+import {
+	Box,
+	DTechQuill,
+	SharpDivider,
+	TextWithDotAnimation,
+	Label,
+	AvatarGroup,
+} from '@components/index';
+import { MainLayoutTemplate, SingleChatMessage, ChatMembersModal } from '@components/customs';
 import { Container, Segment, Icon } from 'semantic-ui-react';
 
 import { ChatList, IUsersStatusArr, IAuth } from '@utils/types/commAndStoreTypes';
@@ -17,8 +25,13 @@ import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import { parseCookies } from 'nookies';
 import lodash from 'lodash';
-import { chatToDateGroup, comAxiosRequest } from '@utils/appRelated/helperFunctions';
+import {
+	chatToDateGroup,
+	comAxiosRequest,
+	generateAvatarImage,
+} from '@utils/appRelated/helperFunctions';
 import * as RCONST from '@utils/constants/reducerConstants';
+import { useModal } from '@utils/hooks/customHooks';
 
 import Style from './[roomId].module.scss';
 
@@ -65,12 +78,17 @@ const RoomChat = ({
 
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
 	const [chatList, setChatList] = useState<ChatDateReduce>({});
+	const [groupMembers, setGroupMembers] = useState<IUsersStatusArr[]>([]);
 	const [textChangeNotification, setTextChangeNotification] = useState(false);
 	const [sendingUserState, setSendingUserState] = useState<string>('');
 
 	const bottomRef = useRef<any>(null);
 	const firstLoadRef = useRef<boolean>(true);
 	const quillRef = useRef<any>(null);
+
+	const chatMembersModalRef = useRef<HTMLDivElement>();
+
+	const { handleModal } = useModal();
 
 	const roomID = useMemo(() => {
 		return queryObj.roomId;
@@ -98,6 +116,7 @@ const RoomChat = ({
 			successCallback: (response) => {
 				const chatGroupReduce = chatToDateGroup(response.data.chatList);
 
+				setGroupMembers(response.data.groupChatUsers);
 				setChatList((prev) => chatGroupReduce);
 			},
 			failCallback: () => toast['error'](<>{'채팅정보를 가져오지 못했습니다'}</>),
@@ -214,6 +233,45 @@ const RoomChat = ({
 		};
 	}, [authStore.userId, getGroupChatListCallback, roomID, socket]);
 
+	const usersImage = useMemo(() => {
+		const avatarGroupImgList = groupMembers.map((oneUser) => {
+			if (oneUser.USER_IMG_URL) {
+				return oneUser.USER_IMG_URL;
+			} else {
+				return `${generateAvatarImage(oneUser.USER_UID)}`;
+			}
+		});
+
+		const avatarGroupUserList = groupMembers
+			.slice(0, 3)
+			.reduce((previousVal, currentVal, idx3) => {
+				if (idx3 === 0) {
+					return `${previousVal}${currentVal.USER_NM} (${currentVal.USER_TITLE})`;
+				} else {
+					return `${previousVal}, ${currentVal.USER_NM} (${currentVal.USER_TITLE})`;
+				}
+			}, '');
+
+		return {
+			avatarGroupImgList,
+			avatarGroupUserList,
+		};
+	}, [groupMembers]);
+
+	const openChatGroupModal = useCallback(() => {
+		handleModal({
+			modalOpen: true,
+			modalContent: (
+				<ChatMembersModal
+					currentChatRoomName={currentChatRoomName}
+					chatGroupMembers={groupMembers}
+					ref={chatMembersModalRef}
+				/>
+			),
+			modalFitContentWidth: true,
+		});
+	}, [currentChatRoomName, groupMembers, handleModal]);
+
 	return (
 		<>
 			<main id={Style['chatMain']}>
@@ -233,6 +291,18 @@ const RoomChat = ({
 						borderNone
 						size="big"
 					/>
+					{usersImage && (
+						<AvatarGroup
+							imageList={usersImage.avatarGroupImgList}
+							divHeight={20}
+							totalCount={usersImage.avatarGroupImgList.length}
+							usersString={usersImage.avatarGroupUserList}
+							className={Style['groupChatAvatarGroup']}
+							onClick={(e) => {
+								openChatGroupModal();
+							}}
+						/>
+					)}
 				</Box>
 				<Container>
 					{quillWrapperHeight ? (
@@ -245,7 +315,11 @@ const RoomChat = ({
 							{chatList &&
 								Object.keys(chatList).map((item: string, idx: number) => {
 									return (
-										<>
+										<React.Fragment
+											key={`${item}_(${
+												dayOfWeek[dayjs(item).day().toString()]
+											})`}
+										>
 											<SharpDivider
 												content={`${item} (${
 													dayOfWeek[dayjs(item).day().toString()]
@@ -255,7 +329,13 @@ const RoomChat = ({
 											{Object.keys(chatList[item]).map(
 												(item2: string, idx2: number) => {
 													return (
-														<>
+														<React.Fragment
+															key={`${item}_(${
+																dayOfWeek[
+																	dayjs(item).day().toString()
+																]
+															})_${item2}`}
+														>
 															{chatList[item][item2].map(
 																(
 																	item3: IChatList,
@@ -327,11 +407,11 @@ const RoomChat = ({
 																	);
 																},
 															)}
-														</>
+														</React.Fragment>
 													);
 												},
 											)}
-										</>
+										</React.Fragment>
 									);
 								})}
 							<div ref={bottomRef} />

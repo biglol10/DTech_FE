@@ -10,6 +10,7 @@ const initialState = {
 	modalContent: null,
 	modalSize: modalUISize.SMALL,
 	modalIsBasic: false,
+	modalFitContentWidth: false,
 } as IModalState;
 
 const modalSlice = createSlice({
@@ -22,6 +23,7 @@ const modalSlice = createSlice({
 			state.modalContent = action.payload.modalContent;
 			state.modalSize = action.payload.modalSize;
 			state.modalIsBasic = action.payload.modalIsBasic || false;
+			state.modalFitContentWidth = action.payload.modalFitContentWidth || false;
 		},
 		closeModal(state) {
 			state.modalOpen = false;
@@ -29,6 +31,7 @@ const modalSlice = createSlice({
 			state.modalContent = null;
 			state.modalSize = modalUISize.SMALL;
 			state.modalIsBasic = false;
+			state.modalFitContentWidth = false;
 		},
 	},
 });
