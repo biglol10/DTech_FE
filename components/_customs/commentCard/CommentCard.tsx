@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import { Icon } from 'semantic-ui-react';
 import { toast } from 'react-toastify';
+import { comAxiosRequest } from '@utils/appRelated/helperFunctions';
 import axios from 'axios';
 import Style from './CommentCard.module.scss';
 
@@ -40,20 +41,20 @@ const CommentCard = ({
 		if (deleting) return;
 		setDeleting(true);
 
-		axios
-			.post('http://localhost:3066/api/board/deleteCmnt', {
-				params: { cmntCd, boardCd },
-			})
-			.then((response) => {
+		comAxiosRequest({
+			url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/board/deleteCmnt`,
+			requestType: 'post',
+			dataObj: { cmntCd, boardCd },
+			successCallback: (response) => {
 				cbFunc();
 				toast(<>{'댓글이 삭제되었습니다.'}</>);
-			})
-			.catch(() => {
-				toast['error'](<>{'댓글 삭제를 실패했습니다.'}</>);
-			})
-			.finally(() => {
 				setDeleting(false);
-			});
+			},
+			failCallback: () => {
+				toast['error'](<>{'댓글 삭제를 실패했습니다.'}</>);
+				setDeleting(false);
+			},
+		});
 	};
 
 	return (

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { comAxiosRequest } from '@utils/appRelated/helperFunctions';
 import { Card, Icon } from 'semantic-ui-react';
 import SimpleImageSlider from 'react-simple-image-slider';
 import { useState } from 'react';
@@ -42,19 +43,20 @@ const BoardCard = ({
 	};
 
 	const deleteBrd = async () => {
-		await axios
-			.post(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/board/deleteBoard`, {
-				brdId: id,
-			})
-			.then((response) => {
+		comAxiosRequest({
+			url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/board/deleteBoard`,
+			requestType: 'post',
+			dataObj: { brdId: id },
+			successCallback: (response) => {
 				if (cb !== undefined) {
 					cb();
 				}
 				toast(<>{'게시글이 삭제되었습니다.'}</>);
-			})
-			.catch((err) => {
+			},
+			failCallback: () => {
 				toast['error'](<>{'게시글을 삭제하지 못했습니다.'}</>);
-			});
+			},
+		});
 	};
 
 	return (
