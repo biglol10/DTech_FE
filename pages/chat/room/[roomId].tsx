@@ -31,7 +31,6 @@ import {
 	generateAvatarImage,
 } from '@utils/appRelated/helperFunctions';
 import * as RCONST from '@utils/constants/reducerConstants';
-import { modalUISize } from '@utils/constants/uiConstants';
 import { useModal } from '@utils/hooks/customHooks';
 
 import Style from './[roomId].module.scss';
@@ -269,7 +268,6 @@ const RoomChat = ({
 					ref={chatMembersModalRef}
 				/>
 			),
-			modalSize: modalUISize.TINY,
 			modalFitContentWidth: true,
 		});
 	}, [currentChatRoomName, groupMembers, handleModal]);

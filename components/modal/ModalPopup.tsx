@@ -34,6 +34,11 @@ const ModalPopup = () => {
 		if (content && content.ref && content.ref.current) {
 			setModalContentWidth(content.ref.current.offsetWidth);
 		}
+
+		// 안 해주면 열 때마다 modal이 줄어드는 현상 발생
+		return () => {
+			setModalContentWidth(0);
+		};
 	}, [fitContentWidth, content]);
 
 	return (

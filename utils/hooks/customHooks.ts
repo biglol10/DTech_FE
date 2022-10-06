@@ -1,10 +1,9 @@
-import { useCallback, useRef, useEffect, useState } from 'react';
+import { useCallback, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import io, { Socket } from 'socket.io-client';
 import { IModalState, IAppCommon } from '@utils/types/commAndStoreTypes';
 import * as RCONST from '@utils/constants/reducerConstants';
 import lodash from 'lodash';
-import { appDelay } from '@utils/appRelated/helperFunctions';
 
 const useModal = () => {
 	const modalState = useSelector((state: any) => state.modal);
