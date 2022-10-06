@@ -6,10 +6,11 @@
  * 1      장보영     2022-09-15   feature/BY/board       최초작성
  ********************************************************************************************/
 
+import { useSelector } from 'react-redux';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Icon, TextArea, Button } from 'semantic-ui-react';
-import axios, { AxiosResponse } from 'axios';
+import { Icon } from 'semantic-ui-react';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 import Style from './CommentCard.module.scss';
 
 interface ICommentCard {
@@ -33,32 +34,25 @@ const CommentCard = ({
 	boardCd,
 	cbFunc,
 }: ICommentCard) => {
-	const dispatch = useDispatch();
-	const [clickedCmnt, setClickedCmnt] = useState(false);
-	const [commentArea, setCommentArea] = useState('');
 	const uuid = useSelector((state: any) => state.auth.userUID);
-	const clickCmnt = () => {
-		console.log('clickCmnt');
-		setClickedCmnt(!clickedCmnt);
-	};
-	const sendComment = () => {
-		dispatch({
-			type: 'SEND_COMMENT',
-		});
-	};
-
+	const [deleting, setDeleting] = useState(false);
 	const deleteCmnt = () => {
-		console.log('delete');
+		if (deleting) return;
+		setDeleting(true);
+
 		axios
 			.post('http://localhost:3066/api/board/deleteCmnt', {
 				params: { cmntCd, boardCd },
 			})
 			.then((response) => {
-				// setChatUser(response.data.usersInfo[0]);
 				cbFunc();
+				toast(<>{'댓글이 삭제되었습니다.'}</>);
 			})
 			.catch(() => {
-				// toast['error'](<>{'유저정보를 가져오지 못했습니다'}</>);
+				toast['error'](<>{'댓글 삭제를 실패했습니다.'}</>);
+			})
+			.finally(() => {
+				setDeleting(false);
 			});
 	};
 
@@ -86,36 +80,6 @@ const CommentCard = ({
 						)}
 					</div>
 				</div>
-
-				{clickedCmnt && (
-					<div className={Style['commentArea']}>
-						<TextArea
-							className={Style['commentTextArea']}
-							onChange={(event: any) => {
-								setCommentArea(event.target.value);
-							}}
-						/>
-						<Button
-							className={Style['commentBtn']}
-							onClick={() => {
-								sendComment();
-							}}
-						>
-							SEND
-						</Button>
-					</div>
-				)}
-				{/* {!isEnd && (
-					<CommentCard
-						key="a"
-						content="content"
-						cmntCd="a"
-						cmntUser="a"
-						cmntUserTitle="title"
-						cmntDate={new Date()}
-						isEnd={true}
-					/>
-				)} */}
 			</div>
 		</div>
 	);

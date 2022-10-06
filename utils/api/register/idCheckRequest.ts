@@ -8,8 +8,6 @@ const idCheckRequest = async (props: IUserId) => {
 	const idCheckResult = await axios
 		.post(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/idCheck`, props)
 		.then((res: any) => {
-			console.log('idCheckRequest');
-			console.log(res);
 			if (res.data.result === 'success') {
 				return {
 					result: res.data.result,

@@ -159,9 +159,7 @@ const validStep1Function = function* ({
 	setPwInputValue({ ...pwInputValue, pwInputError, pwInputErrMsg });
 	setPwInput2Value({ ...pwInput2Value, pwInput2Error, pwInput2ErrMsg });
 
-	if (isReject) {
-		console.log('reject');
-	} else {
+	if (!isReject) {
 		propFunction({
 			goNext,
 		});
@@ -210,9 +208,7 @@ const validStep2Function = function* ({
 		setTitleSelectValue({ ...titleSelectValue, titleSelectError });
 		setPhoneNumValue({ ...phoneNumValue, phoneNumError });
 
-		if (isReject) {
-			console.log('reject');
-		} else {
+		if (!isReject) {
 			propFunction({ goNext });
 		}
 	} else {
@@ -234,8 +230,6 @@ const validStep4Function = function* ({
 	propFunction,
 }: any) {
 	if (goNext) {
-		// const selected = (tech: any) => tech.value === true;
-
 		const techSelected = techSelectedList.techSelectValue.some(
 			(tech: any) => tech.value === true,
 		);

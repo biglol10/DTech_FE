@@ -16,6 +16,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Avatar } from '@components/index';
 import { Icon } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { useSelector, useDispatch } from 'react-redux';
 import cookie from 'js-cookie';
 import { useSocket } from '@utils/hooks/customHooks';
@@ -264,7 +265,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 					</nav>
 					{settingOpen && (
 						<div ref={wrapperRef} className={Style['settingPopup']}>
-							<div>
+							<div onClick={() => router.push('/profile')}>
 								<Icon name="user circle" />내 프로필 보기
 							</div>
 							<hr className={Style['menu-separator']} />

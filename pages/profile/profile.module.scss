@@ -1,0 +1,17 @@
+.profileCard{
+  background-color: white;
+  border-radius: 5px;
+  width:600px;
+  margin:auto;
+  margin-top: 50px;
+  .profileTop{
+    display:flex;
+    width: 100%;
+    .profileTopLeft{
+      width:30%;
+    }
+    .profileTopRight{
+      width:70%;
+    }
+  }
+}

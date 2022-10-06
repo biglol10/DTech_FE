@@ -8,7 +8,6 @@
  ********************************************************************************************/
 
 import { useRef, useState } from 'react';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, InputLayout, InputWithIcon } from '@components/index';
 import { Icon } from 'semantic-ui-react';
@@ -150,7 +149,6 @@ const RegisterStep1 = (props: any) => {
 							let tempNameInputError = nameInputValue.nameInputError;
 
 							if (obj.value.length !== 0) {
-								// setNameInputError(false);
 								tempNameInputError = false;
 							}
 							setNameInputValue({

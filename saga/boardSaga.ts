@@ -1,20 +1,13 @@
-import { all, put, call, fork, takeLatest } from 'redux-saga/effects';
+import { all, call, fork, takeLatest } from 'redux-saga/effects';
 import * as RCONST from '@utils/constants/reducerConstants';
 import { boardListRequest } from '@utils/api/board/getBoardList';
 import { boardLikeRequest } from '@utils/api/board/setBoardLikeRequest';
-import { submitBoardRequest } from '@utils/api/board/setSubmitBoardRequest';
 import { sendBoardImgRequest } from '@utils/api/board/setBoardImgRequest';
 import { techListRequest } from '@utils/api/register/getTechListRequest';
 import { commentListRequest } from '@utils/api/board/getCommentListRequest';
 import { commentRequest } from '@utils/api/board/setCommentRequest';
-import { useDispatch } from 'react-redux';
 
 interface IBoardList {
-	result: string;
-	boardList: any | undefined;
-	errMessage: string | undefined;
-}
-interface IBoardLike {
 	result: string;
 	boardList: any | undefined;
 	errMessage: string | undefined;
@@ -37,7 +30,6 @@ interface ISubmitBoard {
 }
 
 const boardListFunction = function* ({ setBoardList, uuid, orderType, filterType }: any) {
-	console.log(filterType);
 	const boardListResult: IBoardList = yield call(boardListRequest, {
 		uuid,
 		orderType,
@@ -47,13 +39,12 @@ const boardListFunction = function* ({ setBoardList, uuid, orderType, filterType
 	if (boardListResult.result === 'success') {
 		setBoardList(boardListResult.boardList);
 	} else {
-		console.error(boardListResult.errMessage);
+		// console.error(boardListResult.errMessage);
 	}
 	yield;
 };
 
 const boardLikeFunction = function* ({ id, userUID, like }: any) {
-	// console.log(id, userUID, like);
 	yield call(boardLikeRequest, { id, userUID, like });
 };
 
@@ -75,7 +66,7 @@ const techListFunction = function* ({ setTechList }: any) {
 
 		setTechList(newTempArr);
 	} else {
-		console.error(techListResult.errMessage);
+		// console.error(techListResult.errMessage);
 	}
 	yield;
 };
@@ -87,7 +78,6 @@ const submitBoardFunction = function* ({
 	boardTitle,
 	callbackFn,
 }: any) {
-	console.log('submitBoard1');
 	const formData = new FormData();
 
 	const postData: any = {
@@ -111,8 +101,6 @@ const submitBoardFunction = function* ({
 
 	const sendBoardResult: ISubmitBoard = yield call(sendBoardImgRequest, formData);
 
-	console.log('submitBoardFunction');
-	console.log(sendBoardResult);
 	yield call(callbackFn, sendBoardResult);
 };
 
@@ -147,7 +135,6 @@ const setCommentFunction = function* ({
 };
 
 const getCommentListFunction = function* ({ brdId, setCommentList }: any) {
-	// console.log('getCommentList');
 	const commentListResult: ICommentList = yield call(commentListRequest, { brdId });
 
 	setCommentList(commentListResult.commentList);

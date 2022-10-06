@@ -2,7 +2,7 @@ import { MainLayoutTemplate } from '@components/customs';
 import { InputDefault, DTechQuill, InputDropdown } from '@components/index';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { ChatList } from '@utils/types/commAndStoreTypes';
 import { toast } from 'react-toastify';
 
@@ -39,6 +39,7 @@ const Submit = () => {
 			type: 'BOARD_TECH_LIST',
 			setTechList,
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
@@ -49,7 +50,6 @@ const Submit = () => {
 						id="inputId"
 						placeholder="기술 선택"
 						options={techList}
-						// value={techList.teamSelectValue}
 						onChange={(obj: { value: string }) => {
 							setSelectedTech(obj.value);
 						}}
@@ -63,21 +63,18 @@ const Submit = () => {
 						id="title"
 						stretch={true}
 						placeholder="제목"
-						// value={boardTitle}
 						className={Style['boardTitle']}
 						onChange={(obj: { value: string }) => {
 							setBoardTitle(obj.value);
 						}}
 					/>
 					<DTechQuill
-						// QuillSSR={ReactQuill}
 						enterSubmit={false}
 						quillMinHeight={300}
 						returnQuillWrapperHeight={(heightValue: number) => {
 							setQuillWrapperHeight(heightValue);
 						}}
 						handleSubmit={(content: ChatList) => {
-							// 이미지 S3 되면 올리고 setChatList 호출
 							submitBoard(content);
 						}}
 						submitButtonOutside={true}
@@ -89,6 +86,6 @@ const Submit = () => {
 };
 
 Submit.PageLayout = MainLayoutTemplate;
-// Index.displayName = 'root';
+Submit.displayName = 'board';
 
 export default Submit;
