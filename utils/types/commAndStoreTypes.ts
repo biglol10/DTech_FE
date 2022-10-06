@@ -10,6 +10,8 @@ export interface IModalState {
 	modalSize?: string;
 	modalIsBasic?: boolean;
 	modalFitContentWidth?: boolean;
+	modalShowCloseIcon?: 'Y' | 'N';
+	modalContentId?: string;
 }
 
 export interface ChatList {

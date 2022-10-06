@@ -12,6 +12,8 @@ const modalControlFunction = function* (action: any) {
 			modalSize: action.modalSize,
 			modalIsBasic: action.modalIsBasic,
 			modalFitContentWidth: action.modalFitContentWidth,
+			modalShowCloseIcon: action.modalShowCloseIcon,
+			modalContentId: action.modalContentId,
 		};
 
 		yield put(showModal(modalObj));
