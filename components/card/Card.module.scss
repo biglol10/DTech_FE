@@ -13,22 +13,51 @@
     .likeCnt{
       margin-top:10px;
     }
+    border-radius: 5px 0px 0px 5px;
   }
   .card{
     display: flex;
     flex-direction: row;
-    border-radius: 20px;
+    // border-radius: 20px;
     
     .cardContent{
       width:570px;
       margin-top: 0px;
+      .cardHeader{
+        margin-bottom: 5px;
+        display: flex;
+        width:100%;
+        align-items: center;
+        justify-content: space-between;
+        .cardTechNm{
+          font-size:10px;
+          padding: 0px 5px;
+          border : 2px solid #2184D0;
+          color:#2184D0;
+          border-radius: 5px;
+          float:right;
+        }
+      }
       .cardMeta{
         display: flex;
         justify-content:space-between;
+        margin-bottom:15px;
+      }
+      .imageSlider{
+        // background-color: red;
+        // width:100%;
+        display: flex;
+        // align-items: center;
+        // justify-items: center;
+        justify-content: center;
+
+        margin:auto;
       }
     }
     .comments{
       margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
     }
   }
   

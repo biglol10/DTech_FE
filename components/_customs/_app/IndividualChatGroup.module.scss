@@ -1,0 +1,44 @@
+.folder-icons {
+	margin-top: 10px;
+	display: flex;
+	align-items: center;
+	height: 30px;
+	cursor: pointer;
+
+	.user-avatar {
+		position: relative;
+		display: flex;
+
+		img {
+			width: 30px;
+			border-radius: 10px;
+		}
+
+		& > div {
+			position: absolute;
+			top: 18px;
+			right: -5px;
+			box-sizing: unset;
+			width: 12px;
+			height: 12px;
+			border-radius: 4px;
+			font-size: 0.8rem;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			background-color: darkolivegreen;
+			color: white;
+			border: 1px solid white;
+		}
+	}
+
+	.groupName {
+		margin-left: 10px;
+		font-weight: lighter;
+		font-size: 15px;
+
+		&.newNoti {
+			font-weight: bold;
+		}
+	}
+}

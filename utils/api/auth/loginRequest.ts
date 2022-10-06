@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { comAxiosRequest } from '@utils/appRelated/helperFunctions';
 
 interface authObjParamSetting {
 	userId: string;
@@ -6,60 +6,48 @@ interface authObjParamSetting {
 }
 
 const fireTokenRequest = async (token: string) => {
-	const authResult = await axios
-		.post(
-			'http://localhost:3066/api/auth/getLoggedInUserInfo',
-			{},
-			{
-				headers: { Authorization: `Bearer ${token}` },
-			},
-		)
-		.then((response) => {
-			return response.data;
-		})
-		.catch((err) => {
-			return {
-				success: false,
-				user: {},
-			};
-		});
+	const axiosResult = await comAxiosRequest({
+		url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/getLoggedInUserInfo`,
+		dataObj: {},
+		requestType: 'post',
+		withAuth: true,
+	});
 
-	return authResult;
+	if (axiosResult.status === 'success') {
+		return axiosResult.response.data;
+	} else {
+		return {
+			success: false,
+			user: {},
+		};
+	}
 };
 
 const fireLoginRequest = async (props: authObjParamSetting) => {
-	const loginResult = await axios
-		.post('http://localhost:3066/api/auth/loginUser', props, {
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		})
-		.then(({ data: responseData }) => {
-			if (responseData.result === 'success') {
-				return {
-					userName: responseData.name,
-					userId: responseData.userId,
-					time: responseData.time,
-					userToken: responseData.token,
-					userUID: responseData.userUID,
-					userProfileImg: responseData.userProfileImg,
-					result: 'success',
-				};
-			} else {
-				return {
-					result: responseData.result,
-					errMessage: responseData.message,
-				};
-			}
-		})
-		.catch((err) => {
-			return {
-				result: 'error',
-				errMessage: err.message,
-			};
-		});
+	const axiosResult = await comAxiosRequest({
+		url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/loginUser`,
+		requestType: 'post',
+		dataObj: props,
+	});
 
-	return loginResult;
+	if (axiosResult.status === 'success') {
+		const { data: responseData } = axiosResult.response;
+
+		return {
+			userName: responseData.name,
+			userId: responseData.userId,
+			time: responseData.time,
+			userToken: responseData.token,
+			userUID: responseData.userUID,
+			userProfileImg: responseData.userProfileImg,
+			result: 'success',
+		};
+	}
+
+	return {
+		result: 'error',
+		errMessage: '로그인에 실패했습니다',
+	};
 };
 
 export { fireLoginRequest, fireTokenRequest };

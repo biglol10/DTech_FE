@@ -19,10 +19,16 @@ import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import cookie from 'js-cookie';
 import { useSocket } from '@utils/hooks/customHooks';
-import axios from 'axios';
 import { IAuth, IAppCommon, IUsersStatusArr } from '@utils/types/commAndStoreTypes';
 import _ from 'lodash';
-import { generateAvatarImage } from '@utils/appRelated/helperFunctions';
+import { generateAvatarImage, comAxiosRequest } from '@utils/appRelated/helperFunctions';
+import * as RCONST from '@utils/constants/reducerConstants';
+
+import GraphSvg from '@styles/svg/graph.svg';
+import ChatSvg from '@styles/svg/chat.svg';
+import CodingSvg from '@styles/svg/coding.svg';
+import AboutSvg from '@styles/svg/about.svg';
+import ProfileSvg from '@styles/svg/profile.svg';
 
 import UserSidebar from './UserSidebar';
 import Style from './MainLayoutTemplate.module.scss';
@@ -38,10 +44,14 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	const [settingOpen, setSettingOpen] = useState(false);
 	const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
 	const [usersStatusArr, setUsersStatusArr] = useState<IUsersStatusArr[]>([]);
+	const [groupChatArr, setGroupChatArr] = useState<
+		{ CONVERSATION_ID: string; CONVERSATION_NAME: string; CNT: number }[]
+	>([]);
 
 	const wrapperRef = useRef<HTMLDivElement>(null);
 	const connectedUsersRef = useRef<any>([]);
 	const usersStatusArrRef = useRef<any>([]);
+	const chatGroupsArrRef = useRef<any>([]);
 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
 	const appCommon = useSelector((state: { appCommon: IAppCommon }) => state.appCommon);
@@ -94,36 +104,63 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 			);
 
 			socket.on('newUserCreated', () => getUsersStatus());
+
+			socket?.on('chatGroupCreateSuccess', () => {
+				getGroupChatArr();
+			});
 		}
 		// 다른 dependency 추가하면 connectedUsers가 여러번 찍힘... 딱히 문제는 없지만 최소한으로 작동하는게 목적
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [authStore]);
 
 	const getUsersStatus = useCallback(() => {
-		axios
-			.get('http://localhost:3066/api/auth/getUsersStatus', {
-				params: { onlineUsers: onlineUsers.length > 0 ? onlineUsers : ['none'] },
-				// headers: { Authorization: authStore.userToken },
-			})
-			.then((response) => {
+		comAxiosRequest({
+			url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/getUsersStatus`,
+			requestType: 'get',
+			dataObj: { onlineUsers: onlineUsers.length > 0 ? onlineUsers : ['none'] },
+			successCallback: (response) => {
 				const stateEqual = _.isEqual(usersStatusArrRef.current, response.data.usersStatus);
 
 				if (!stateEqual) {
 					usersStatusArrRef.current = response.data.usersStatus;
 					setUsersStatusArr(response.data.usersStatus);
 				}
-			})
-			.catch((err) => {});
+			},
+			failCallback: () => {},
+		});
 	}, [onlineUsers]);
+
+	const getGroupChatArr = useCallback(() => {
+		if (authStore.userUID) {
+			comAxiosRequest({
+				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getChatGroups`,
+				requestType: 'get',
+				dataObj: { currentUser: authStore.userUID },
+				successCallback: (response) => {
+					const stateEqual = _.isEqual(
+						chatGroupsArrRef.current,
+						response.data.chatGroups,
+					);
+
+					if (!stateEqual) {
+						chatGroupsArrRef.current = response.data.chatGroups;
+						setGroupChatArr(response.data.chatGroups);
+					}
+				},
+				failCallback: () => {},
+			});
+		}
+	}, [authStore.userUID]);
 
 	useEffect(() => {
 		getUsersStatus();
-	}, [getUsersStatus]);
+		getGroupChatArr();
+	}, [getGroupChatArr, getUsersStatus]);
 
 	const logout = () => {
 		disconnect();
 		dispatch({
-			type: 'AUTH_RESET',
+			type: RCONST.AUTH_RESET,
 		});
 		cookie.remove('token');
 		cookie.remove('currentChatUser');
@@ -143,15 +180,24 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 							/>
 						</div>
 						<div className={Style['wrapper']}>
-							<img src="https://i.ibb.co/L8D5T60/light.png" />
+							<GraphSvg onClick={() => router.push('/dashboard')} />
+							<ChatSvg onClick={() => router.push('/chat/chatArea')} />
+							<CodingSvg onClick={() => router.push('/board')} />
+							<AboutSvg onClick={() => router.push('/about')} />
+							<ProfileSvg />
+							{/* <img src="https://i.ibb.co/L8D5T60/light.png" />
 							<img src="https://i.ibb.co/zmDbMVZ/diamond.png" />
 							<img src="https://i.ibb.co/W5QZ9Fk/envelope.png" />
 							<img src="https://i.ibb.co/CnKDBxC/flask.png" />
 							<img src="https://i.ibb.co/MGs4Fyn/sent-mail.png" />
-							<img src="https://i.ibb.co/zGtDpcp/map.png" />
+							<img src="https://i.ibb.co/zGtDpcp/map.png" /> */}
 						</div>
 					</nav>
-					<UserSidebar iconLeft={iconLeft} usersStatusArr={usersStatusArr} />
+					<UserSidebar
+						iconLeft={iconLeft}
+						usersStatusArr={usersStatusArr}
+						groupChatArr={groupChatArr}
+					/>
 				</div>
 				<div className={Style['right']}>
 					<nav className={Style['navHeader']}>
@@ -194,6 +240,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 								className={
 									Style[`${appCommon.route.currentRoute === 'about' && 'active'}`]
 								}
+								onClick={() => router.push('/about')}
 							>
 								<a>About</a>
 							</li>

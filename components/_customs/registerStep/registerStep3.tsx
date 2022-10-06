@@ -44,7 +44,7 @@ const RegisterStep3 = (props: any) => {
 
 	return (
 		<>
-			<div style={inputElCommStyle(0, 'left', true)}>
+			<div className={Style['stepDiv']}>
 				<InputLayout
 					error={userDetailValue.userDetailError}
 					errorMsg="1000자 이하로 소개해주세요."
@@ -52,7 +52,7 @@ const RegisterStep3 = (props: any) => {
 					inputLabelSize={labelSize}
 					showInputLabel={true}
 					autoFitErrorLabel={true}
-					spacing={2}
+					spacing={30}
 				>
 					<TextArea
 						placeholder="관심 기술, 경험 프로젝트 등(1000자 이하)"

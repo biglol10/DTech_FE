@@ -1,26 +1,16 @@
 import { MainLayoutTemplate } from '@components/customs';
-import { InputDefault, DTechQuill, InputDropdown, Button, InputLayout } from '@components/index';
+import { InputDefault, DTechQuill, InputDropdown } from '@components/index';
 import { useDispatch, useSelector } from 'react-redux';
-import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { ChatList } from '@utils/types/commAndStoreTypes';
-import dynamic from 'next/dynamic';
+import { toast } from 'react-toastify';
 
 import Style from './board.module.scss';
 
-const ReactQuill = dynamic(
-	async () => {
-		const { default: RQ } = await import('react-quill');
-
-		return function comp({ forwardedRef, ...props }: any) {
-			return <RQ ref={forwardedRef} {...props} />;
-		};
-	},
-	{ ssr: false },
-);
-
 const Submit = () => {
+	const router = useRouter();
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
-
 	const [techList, setTechList] = useState([]);
 	const [boardTitle, setBoardTitle] = useState('');
 	const [selectedTech, setSelectedTech] = useState('');
@@ -34,6 +24,13 @@ const Submit = () => {
 			uuid,
 			selectedTech,
 			boardTitle,
+			callbackFn: (data: any) => {
+				if (data.result === 'success') {
+					router.push('/board');
+				} else {
+					toast['error'](<>{'submit failed'}</>);
+				}
+			},
 		});
 	};
 
@@ -44,38 +41,10 @@ const Submit = () => {
 		});
 	}, []);
 
-	const submitClick = () => {
-		// console.log('submitClick');
-	};
-
 	return (
 		<>
 			<div className={Style['boardLayout']}>
-				<div className={Style['boardMain']}>
-					{/* <InputLayout
-						error={false}
-						errorMsg="제목을 입력하세요."
-						stretch={true}
-						// inputLabel="이메일*"
-						// inputLabelSize={labelSize}
-						// showInputLabel={true}
-						autoFitErrorLabel={true}
-						spacing={40}
-					>
-						
-					</InputLayout> */}
-					<InputDefault
-						id="title"
-						stretch={true}
-						placeholder="제목"
-						className={Style['boardTitle']}
-						value={boardTitle}
-						onChange={(obj: { value: string }) => {
-							// console.log(obj);
-							setBoardTitle(obj.value);
-						}}
-					/>
-
+				<div className={Style['inputIdFieldDiv']}>
 					<InputDropdown
 						id="inputId"
 						placeholder="기술 선택"
@@ -86,8 +55,22 @@ const Submit = () => {
 						}}
 						className={Style['inputIdField']}
 					/>
+				</div>
+
+				<div className={Style['boardMain']}>
+					<InputDefault
+						key="key"
+						id="title"
+						stretch={true}
+						placeholder="제목"
+						// value={boardTitle}
+						className={Style['boardTitle']}
+						onChange={(obj: { value: string }) => {
+							setBoardTitle(obj.value);
+						}}
+					/>
 					<DTechQuill
-						QuillSSR={ReactQuill}
+						// QuillSSR={ReactQuill}
 						enterSubmit={false}
 						quillMinHeight={300}
 						returnQuillWrapperHeight={(heightValue: number) => {
@@ -95,19 +78,9 @@ const Submit = () => {
 						}}
 						handleSubmit={(content: ChatList) => {
 							// 이미지 S3 되면 올리고 setChatList 호출
-							// console.log('handleSubmit');
-							// console.log(content);
 							submitBoard(content);
 						}}
-					/>
-
-					<Button
-						className={Style['registerButton']}
-						content="보내기"
-						size="large"
-						color="grey"
-						buttonType="none"
-						onClick={submitClick}
+						submitButtonOutside={true}
 					/>
 				</div>
 			</div>

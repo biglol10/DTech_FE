@@ -6,7 +6,7 @@ interface IUserId {
 
 const idCheckRequest = async (props: IUserId) => {
 	const idCheckResult = await axios
-		.post('http://localhost:3066/api/auth/idCheck', props)
+		.post(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/idCheck`, props)
 		.then((res: any) => {
 			console.log('idCheckRequest');
 			console.log(res);

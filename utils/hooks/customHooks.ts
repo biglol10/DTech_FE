@@ -1,7 +1,8 @@
-import { useCallback, useRef, useEffect } from 'react';
+import { useCallback, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import io, { Socket } from 'socket.io-client';
 import { IModalState, IAppCommon } from '@utils/types/commAndStoreTypes';
+import * as RCONST from '@utils/constants/reducerConstants';
 import lodash from 'lodash';
 
 const useModal = () => {
@@ -12,13 +13,16 @@ const useModal = () => {
 		(args: IModalState) => {
 			// ...{args} 는 안 먹힘
 			dispatch({
-				type: 'MODALCONTROL',
+				type: RCONST.MODALCONTROL,
 				...{
 					modalOpen: args.modalOpen,
 					modalContent: args.modalContent,
 					modalSize: args.modalSize,
 					modalTitle: args.modalTitle,
 					modalIsBasic: args.modalIsBasic,
+					modalFitContentWidth: args.modalFitContentWidth,
+					modalShowCloseIcon: args.modalShowCloseIcon,
+					modalContentId: args.modalContentId,
 				},
 			});
 		},
@@ -41,14 +45,14 @@ const useSocket = () => {
 	const init = (userId: string) => {
 		if (!userId) return;
 		if (!socket.current) {
-			socket.current = io('http://localhost:3066');
+			socket.current = io(`${process.env.NEXT_PUBLIC_BE_BASE_URL}`);
 		}
 
 		if (socket.current) {
 			socket.current.connect();
 			socket.current.emit('connectUser', { userId });
 			dispatch({
-				type: 'AUTH_USERSOCKET',
+				type: RCONST.AUTH_USERSOCKET,
 				socketRef: socket.current,
 			});
 		}
@@ -60,7 +64,7 @@ const useSocket = () => {
 		socketStore && socketStore.disconnect();
 
 		dispatch({
-			type: 'AUTH_USERSOCKET_RESET',
+			type: RCONST.AUTH_USERSOCKET_RESET,
 		});
 	};
 
@@ -77,26 +81,35 @@ const useChatUtil = () => {
 
 	const init = (unReadMsg: string[]) => {
 		dispatch({
-			type: 'SET_CURRENT_UNREAD_MSG',
+			type: RCONST.SET_CURRENT_UNREAD_MSG,
 			unReadMsg: lodash.isEmpty(unReadMsg) ? [] : unReadMsg,
 		});
 	};
 
 	const unReadArrSlice = (uID: string) => {
-		const unReadMsg = lodash.cloneDeep(appCommon.unReadMsg);
+		if (!uID) return;
 
+		const unReadMsg = lodash.cloneDeep(appCommon.unReadMsg);
 		const indexOf = unReadMsg.indexOf(uID);
 
-		indexOf > -1 && unReadMsg.splice(indexOf, 1);
+		if (indexOf === -1) return;
 
-		dispatch({ type: 'SET_CURRENT_UNREAD_MSG', unReadMsg });
+		unReadMsg.splice(indexOf, 1);
+
+		dispatch({ type: RCONST.SET_CURRENT_UNREAD_MSG, unReadMsg });
 	};
 
 	const unReadArrAdd = (uID: string) => {
+		if (!uID) return;
+
 		const unReadMsg = lodash.cloneDeep(appCommon.unReadMsg);
+		const indexOf = unReadMsg.indexOf(uID);
+
+		if (indexOf > -1) return;
 
 		unReadMsg.push(uID);
-		dispatch({ type: 'SET_CURRENT_UNREAD_MSG', unReadMsg });
+
+		dispatch({ type: RCONST.SET_CURRENT_UNREAD_MSG, unReadMsg });
 	};
 
 	return {

@@ -21,6 +21,13 @@ export default {
 			control: { type: 'radio' },
 			table: { defaultValue: { summary: true } },
 		},
+		submitButtonOutside: {
+			defaultValue: false,
+			description: '엔터 버튼 quill 내부에 위치 여부',
+			options: [true, false],
+			control: { type: 'radio' },
+			table: { defaultValue: { summary: true } },
+		},
 	},
 };
 
@@ -44,10 +51,11 @@ export const QuillSample = (args: any) => {
 			quillMinHeight={args.quillMinHeight}
 			quillMaxHeight={args.quillMaxHeight}
 			handleSubmit={(obj: any) => {
-				console.log(console.log(quillRef.current));
+				console.log(quillRef.current);
 			}}
 			QuillSSR={ReactQuill}
 			enterSubmit={args.enterSubmit}
+			submitButtonOutside={args.submitButtonOutside}
 		/>
 	);
 };

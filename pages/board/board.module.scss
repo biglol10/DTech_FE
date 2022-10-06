@@ -1,35 +1,123 @@
+
+
+@-webkit-keyframes AnimationName {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+@-moz-keyframes AnimationName {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+@-o-keyframes AnimationName {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+@keyframes AnimationName { 
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+
 .boardLayout{
 	// background-color: red;
+	.inputIdFieldDiv{
+		width:60%;
+		margin:auto;
+		display: flex;
+		// flex-direction: row-reverse;
+		.inputIdField{
+			margin-top: 10px;
+			border-radius: 8px;
+			// width:50px;
+		}
+	}
 	.boardMain {
 		background-color: white;
 		width:60%;
 		margin:auto;
 		border-radius: 10px;
-		padding:20px;
-		margin-top: 20px;
+		padding:20px 20px 60px 20px;
+		margin-top: 10px;
 
 		.boardTitle{
-			margin-bottom: 20px;
+			margin-bottom: 10px;
 		}
+		
 	}
 }
 
 .boardPage{
 	display: flex;
 	flex-direction: column;
+	
+	.boardFilter{
+		background-color: white;
+		border-radius: 5px;
+		width:600px;
+		margin:auto;
+		align-items: center;
+		display: flex;
+		align-content: space-between;
+		
+		.boardFilterBtns{
+			width:55%;
+			
+			.filterBtn{
+				margin-left:20px;
+				border-radius: 20px;
+			}
+			
+		}
+		.techDropDown{
+			width:25%;
+		}
+		.boardSumbitBtn{
+			// right:0px;
+			width:20%;
+			.filterBtn{
+				border-radius: 0px 5px 5px 0px;
+				width: 100%;
+				height:100%;
+				background-color: #767676;
+				color:white;
+				// background: linear-gradient(-90deg, #FFBB25, #FB3820, #8236CA, #29BAE4);
+				// animation: AnimationName 15s ease infinite;
+			}
+		}
+	}
 	.boardList{
 		margin:auto;
 	}
-	.boardFilter{
-		background-color: white;
-		border-radius: 0.285714rem;
-		width:600px;
-		height:40px;
+}
+.commentPage{
+	display: flex;
+	flex-direction: column;
+	
+	.cardDiv{
 		margin:auto;
-		align-items: center;
-		margin
-		.FilterBtn{
-			margin-left:20px;
+	}
+	.commentDiv{
+		background-color: white;
+		width:600px;
+		margin:auto;
+		padding: 20px;
+		.commentArea{
+			display: flex;
+			margin-bottom: 30px;
+			.commentTextArea{
+				width:100%;
+				height:40px
+
+			}
+			.commentBtn{
+				width:80px;
+				.cmnt_btn_str{
+					color:blue
+				}
+			}
 		}
 	}
 }

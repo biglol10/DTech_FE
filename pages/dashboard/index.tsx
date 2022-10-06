@@ -4,11 +4,10 @@
  * 번호    작업자     작업일         브랜치                       변경내용
  *-------------------------------------------------------------------------------------------
  * 1      변지욱     2022-07-27   feature/JW/dashbaord       최초작성
+ * 2      변지욱     2022-09-22   feature/JW/profileModal    프로필 클릭 시 사용자 profile modal 표시
  ********************************************************************************************/
 
 import { useEffect, useMemo, useState, useCallback, useRef } from 'react';
-import { useRouter } from 'next/router';
-import axios from 'axios';
 import { parseCookies } from 'nookies';
 import { Bar } from 'react-chartjs-2';
 import {
@@ -26,6 +25,9 @@ import { SkillTable, PersonCard, MainLayoutTemplate } from '@components/customs'
 import CountUp from 'react-countup';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
+import { useModal } from '@utils/hooks/customHooks';
+import { modalUISize } from '@utils/constants/uiConstants';
+import { comAxiosRequest } from '@utils/appRelated/helperFunctions';
 
 import Style from './dashboard.module.scss';
 
@@ -81,8 +83,8 @@ const Index = ({
 	teamSkillCountObj: ITeamSkillCountObj;
 	userToken: string;
 }) => {
-	const router = useRouter();
 	const [inputLoading, setInputLoading] = useState(false);
+	const { handleModal } = useModal();
 
 	const data = {
 		labels: teamSkillDashboard.map((item) => item.TECH_NM),
@@ -160,22 +162,22 @@ const Index = ({
 	const enterSearch = useCallback(() => {
 		setInputLoading(true);
 		if (userToken) {
-			axios
-				.post(
-					'http://localhost:3066/api/dashboard/getUserSkillFilter',
-					{
-						filterSkill: searchCondition.skillset,
-						filterName: searchCondition.personname,
-					},
-					{ headers: { Authorization: `Bearer ${userToken}` } },
-				)
-				.then((response) => {
+			comAxiosRequest({
+				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/dashboard/getUserSkillFilter`,
+				requestType: 'post',
+				dataObj: {
+					filterSkill: searchCondition.skillset,
+					filterName: searchCondition.personname,
+				},
+				withAuth: true,
+				successCallback: (response) => {
 					tempArr.current = response.data.filterdUsersList;
 					setUserListData(response.data.filterdUsersList);
-				})
-				.catch((err) => {
+				},
+				failCallback: () => {
 					toast['error'](<>{'데이터를 가져오지 못했습니다'}</>);
-				});
+				},
+			});
 		}
 		setInputLoading(false);
 	}, [searchCondition.personname, searchCondition.skillset, userToken]);
@@ -187,6 +189,32 @@ const Index = ({
 				: tempArr.current,
 		);
 	}, [searchCondition.rank]);
+
+	const profileDetailModal = useCallback(
+		(singleUser: IUserDashboard) => {
+			handleModal({
+				modalOpen: true,
+				modalContent: (
+					<div className={Style['peopleCardArea']}>
+						<PersonCard
+							username={singleUser.USER_NAME}
+							profileUrl={singleUser.USER_IMG_URL}
+							rank={singleUser.USER_TITLE}
+							skills={singleUser.TECH_ARR.join()}
+							domains={singleUser.USER_DOMAIN || ''}
+							githubUrl={singleUser.GITHUB_URL || ''}
+							detail={singleUser.USER_DETAIL || ''}
+							userUID={singleUser.USER_UID}
+							profileDetailModal={null}
+						/>
+					</div>
+				),
+				modalSize: modalUISize.SMALL,
+				modalIsBasic: false,
+			});
+		},
+		[handleModal],
+	);
 
 	return (
 		<>
@@ -280,6 +308,7 @@ const Index = ({
 								githubUrl={singleUser.GITHUB_URL || ''}
 								detail={singleUser.USER_DETAIL || ''}
 								userUID={singleUser.USER_UID}
+								profileDetailModal={() => profileDetailModal(singleUser)}
 							/>
 						);
 					})}
@@ -292,24 +321,28 @@ const Index = ({
 export const getServerSideProps = async (context: any) => {
 	const { token } = parseCookies(context);
 
-	const axiosData = await axios
-		.get('http://localhost:3066/api/dashboard/getTeamSkills', {
-			headers: { Authorization: `Bearer ${token}` },
-		})
-		.then((response) => {
-			return response.data;
-		})
-		.catch((err) => {
-			return {
+	let axiosData: any = null;
+
+	await comAxiosRequest({
+		url: `${process.env.BE_BASE_URL}/api/dashboard/getTeamSkills`,
+		requestType: 'get',
+		withAuth: true,
+		successCallback: (response) => {
+			axiosData = response.data;
+		},
+		failCallback: () => {
+			axiosData = {
 				teamSkillDashboard: null,
 				teamSkillCountObj: {},
 				userDashboard: [],
 			};
-		});
+		},
+		tokenValue: token,
+	});
 
 	const teamSkillCountObj: any = {};
 
-	if (!_.isEmpty(axiosData.teamSkillCountObj)) {
+	if (axiosData && !_.isEmpty(axiosData.teamSkillCountObj)) {
 		const tempData: any = axiosData.teamSkillCountObj;
 
 		Object.keys(tempData).map((item, idx) => {

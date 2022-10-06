@@ -6,15 +6,18 @@ import { Socket } from 'socket.io-client';
 export interface IModalState {
 	modalOpen?: boolean;
 	modalTitle?: string;
-	modalContent?: React.ReactNode;
+	modalContent?: React.ReactElement | any;
 	modalSize?: string;
 	modalIsBasic?: boolean;
+	modalFitContentWidth?: boolean;
+	modalShowCloseIcon?: 'Y' | 'N';
+	modalContentId?: string;
 }
 
 export interface ChatList {
 	value: string;
-	imgList?: { fileName: string; filePreview: string }[] | never[];
-	linkList?: any;
+	imgList: { fileName: string; filePreview: string; imageFile: File }[];
+	linkList: any;
 }
 
 export interface IToastState {
@@ -47,6 +50,7 @@ export interface IAppCommon {
 		currentRoute: string | null | undefined;
 	};
 	currentChatUser: string;
+	currentChatGroup: string;
 	unReadMsg: string[];
 }
 

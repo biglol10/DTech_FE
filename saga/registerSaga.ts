@@ -12,7 +12,6 @@ import {
 	registerStep4,
 	registerReset,
 } from '@store/registerSlice';
-import PrevieImageComp from '@components/quill/PreviewImageComp';
 
 interface IIdCheckParam {
 	type: string;
@@ -305,6 +304,7 @@ const registerUserFunction = function* ({ registerData, propFunction }: any) {
 		const postData2: any = {
 			type: 'REGISTER_USER',
 			dir: 'profile_img/',
+			uuid: fileName,
 		};
 
 		formData.append('postData', JSON.stringify(postData2));

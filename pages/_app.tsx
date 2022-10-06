@@ -70,7 +70,28 @@ const MyApp = ({ Component, pageProps }: ComponentWithPageLayout) => {
 		<>
 			<Head>
 				<title>DTech App</title>
-				<meta name="description" content="DTech App" />
+				<meta
+					name="description"
+					content="팀 스킬 현형파악 및 지식공유를 쉽게 할 수 있는 앱입니다"
+				/>
+				<meta
+					name="og:description"
+					content="팀 스킬 현형파악 및 지식공유를 쉽게 할 수 있는 앱입니다"
+				/>
+				<meta name="author" content="Biglol, BY" />
+				<meta
+					name="og:image"
+					content="https://dcx-tech.s3.ap-northeast-2.amazonaws.com/chat/96eef3d803cc0f3318f93503b.png"
+				/>
+				<meta
+					name="og:image:url"
+					content="https://dcx-tech.s3.ap-northeast-2.amazonaws.com/chat/96eef3d803cc0f3318f93503b.png"
+				/>
+				<meta name="keywords" content="Skill Dashboard, Slack-like chatting, Team board" />
+				<meta
+					name="og:keywords"
+					content="Skill Dashboard, Slack-like chatting, Team board"
+				/>
 			</Head>
 			{Component.PageLayout ? (
 				<>
@@ -87,58 +108,8 @@ const MyApp = ({ Component, pageProps }: ComponentWithPageLayout) => {
 					{toastMemo}
 				</>
 			)}
-			{/* {pageProps.isWithMainLayout ? (
-				 <>
-					 <MainLayoutTemplate>
-						 <Component {...pageProps} />
-					 </MainLayoutTemplate>
-					 <ModalPopup />
-					 {toastMemo}
-				 </>
-			 ) : (
-				 <>
-					 <Component {...pageProps} />
-					 <ModalPopup />
-					 {toastMemo}
-				 </>
-			 )} */}
 		</>
 	);
 };
 
-// MyApp.getInitialProps = async ({ Component, ctx }: any) => {
-// 	const { token } = parseCookies(ctx); // token because you set [token] in authUser.js
-// 	let pageProps: any = {};
-
-// 	// ['/'] check for homepage, if user is trying to access proectedRoutes
-// 	const protectedRoutesArray = [
-// 		'/',
-// 		'/[username]',
-// 		'/notifications',
-// 		'/post/[postId]',
-// 		'/messages',
-// 		'/search',
-// 		'/dashboard',
-// 	];
-
-// 	const protectedRoutes = protectedRoutesArray.includes(ctx.pathname);
-
-// 	const withMainLayoutArray = ['/', '/_error', '/apiTestPage', '/anotherPage', '/dashboard']; // 새로고침 시 ctx.pathname이 /_error로 됨 이유는 모르겠음
-
-// 	const isWithMainLayout = withMainLayoutArray.includes(ctx.pathname);
-
-// 	if (!token) {
-// 		protectedRoutes && redirectUser(ctx, '/login');
-// 	} else {
-// 		pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
-// 		pageProps.isWithMainLayout = isWithMainLayout;
-// 		pageProps.pathname = ctx.pathname;
-// 		pageProps.token = token;
-// 	}
-
-// 	return { pageProps };
-// };
-
 export default wrapper.withRedux(MyApp);
-// high order component (=wrapper.withRedux) enables us to wrap all
-// of our page components with redux
