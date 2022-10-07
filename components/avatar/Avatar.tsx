@@ -42,7 +42,7 @@ const Avatar = ({
 };
 
 // PersonCard 에서 popupView이 변경될 때마다 리랜더링이 발생하는데 그럼 랜덤으로 가져온 색이 클릭할 때마다 랜덤으로 변함... 그래서 Avatar컴포넌트 자체에서 무언가 바뀐게 없을 때 리랜더링이 이뤄지지 않게 (색이 또 변하지 않게) 해당 로직 추가
-const areEqualComp = (prevProps: any, nextProps: any) => {
+const areEqualComp = (prevProps: IAvatar, nextProps: IAvatar) => {
 	return prevProps.content === nextProps.content;
 };
 
