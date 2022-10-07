@@ -7,6 +7,7 @@
  * 2      변지욱     2022-10-06   feature/JW/groupChat    그룹챗 멤버 modal 표시
  ********************************************************************************************/
 
+import { GetServerSideProps } from 'next';
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import {
 	Box,
@@ -19,7 +20,7 @@ import {
 import { MainLayoutTemplate, SingleChatMessage, ChatMembersModal } from '@components/customs';
 import { Container, Segment, Icon, Header } from 'semantic-ui-react';
 
-import { ChatList, IUsersStatusArr, IAuth } from '@utils/types/commAndStoreTypes';
+import { ChatList, IUsersStatusArr, IAuth, IMetadata } from '@utils/types/commAndStoreTypes';
 import { useSelector, useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
@@ -31,7 +32,7 @@ import {
 	generateAvatarImage,
 } from '@utils/appRelated/helperFunctions';
 import * as RCONST from '@utils/constants/reducerConstants';
-import { useModal } from '@utils/hooks/customHooks';
+import { useModal, useChatUtil } from '@utils/hooks/customHooks';
 
 import Style from './[roomId].module.scss';
 
@@ -40,7 +41,7 @@ interface IChatList {
 	TO_USERNAME: string;
 	MESSAGE_TEXT: string;
 	IMG_LIST: string[];
-	LINK_LIST: string[];
+	LINK_LIST: IMetadata[];
 	SENT_DATETIME: string;
 	USER_UID: string;
 	USER_NM: string;
@@ -86,7 +87,7 @@ const RoomChat = ({
 	const firstLoadRef = useRef<boolean>(true);
 	const quillRef = useRef<any>(null);
 
-	const chatMembersModalRef = useRef<HTMLDivElement>();
+	const { unReadArrSlice } = useChatUtil();
 
 	const { handleModal } = useModal();
 
@@ -262,11 +263,7 @@ const RoomChat = ({
 		handleModal({
 			modalOpen: true,
 			modalContent: (
-				<ChatMembersModal
-					currentChatRoomName={currentChatRoomName}
-					chatGroupMembers={groupMembers}
-					id="chatMembersModal"
-				/>
+				<ChatMembersModal chatGroupMembers={groupMembers} id="chatMembersModal" />
 			),
 			modalFitContentWidth: true,
 			modalContentId: 'chatMembersModal',
@@ -278,6 +275,10 @@ const RoomChat = ({
 			),
 		});
 	}, [currentChatRoomName, groupMembers, handleModal]);
+
+	useEffect(() => {
+		unReadArrSlice(roomID);
+	}, [unReadArrSlice, roomID]);
 
 	return (
 		<>
@@ -454,7 +455,7 @@ const RoomChat = ({
 RoomChat.PageLayout = MainLayoutTemplate;
 RoomChat.displayName = 'chatPage';
 
-export const getServerSideProps = async (context: any) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
 	const { currentChatRoom } = parseCookies(context);
 
 	return {

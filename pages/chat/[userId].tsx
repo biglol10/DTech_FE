@@ -11,12 +11,19 @@
  * 6      변지욱     2022-10-03   feature/JW/change      이전 채팅 사용자랑 같으면 이름 표시X
  ********************************************************************************************/
 
+import { GetServerSideProps } from 'next';
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { Avatar, Box, DTechQuill, SharpDivider, TextWithDotAnimation } from '@components/index';
 import { MainLayoutTemplate, SingleChatMessage } from '@components/customs';
 import { Container, Segment } from 'semantic-ui-react';
 
-import { ChatList, IUsersStatusArr, IAuth, IAppCommon } from '@utils/types/commAndStoreTypes';
+import {
+	ChatList,
+	IUsersStatusArr,
+	IAuth,
+	IAppCommon,
+	IMetadata,
+} from '@utils/types/commAndStoreTypes';
 import OnlineSvg from '@styles/svg/online.svg';
 import OfflineSvg from '@styles/svg/offline.svg';
 import { useSelector, useDispatch } from 'react-redux';
@@ -30,6 +37,7 @@ import {
 	generateAvatarImage,
 	comAxiosRequest,
 } from '@utils/appRelated/helperFunctions';
+import { useChatUtil } from '@utils/hooks/customHooks';
 
 import Style from './[userId].module.scss';
 
@@ -38,7 +46,7 @@ interface IChatList {
 	TO_USERNAME: string;
 	MESSAGE_TEXT: string;
 	IMG_LIST: string[];
-	LINK_LIST: string[];
+	LINK_LIST: IMetadata[];
 	SENT_DATETIME: string;
 	USER_UID: string;
 	USER_NM: string;
@@ -89,6 +97,7 @@ const UserChat = ({
 	const socket = authStore.userSocket;
 
 	const dispatch = useDispatch();
+	const { unReadArrSlice } = useChatUtil();
 
 	useEffect(() => {
 		dispatch({ type: RCONST.SET_CURRENT_CHAT_USER, chatUser: userUID });
@@ -228,6 +237,10 @@ const UserChat = ({
 			setTextChangeNotification(true);
 		});
 	}, [socket, appCommon.currentChatUser, userUID, getPrivateChatListCallback]);
+
+	useEffect(() => {
+		unReadArrSlice(userUID);
+	}, [unReadArrSlice, userUID]);
 
 	return (
 		<>
@@ -379,7 +392,7 @@ const UserChat = ({
 UserChat.PageLayout = MainLayoutTemplate;
 UserChat.displayName = 'chatPage';
 
-export const getServerSideProps = async (context: any) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
 	return { props: { queryObj: context.query } };
 };
 

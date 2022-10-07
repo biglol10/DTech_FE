@@ -56,8 +56,9 @@ const CreateChatGroup = ({
 		});
 	};
 
-	const deleteUserCollection = (e: any) => {
-		const { useruidval } = e.target.dataset;
+	const deleteUserCollection = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+		const eTarget = e.target as HTMLDivElement;
+		const { useruidval } = eTarget.dataset;
 
 		const filterArr = userCollection.filter((user) => user.USER_UID !== useruidval);
 
@@ -234,7 +235,7 @@ const CreateChatGroup = ({
 							as="a"
 							style={{ margin: '1px 2px' }}
 							data-useruidval={user.USER_UID}
-							onClick={(e: any) => {
+							onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
 								const newDeleteUserCollection = lodash.debounce(
 									() => deleteUserCollection(e),
 									100,

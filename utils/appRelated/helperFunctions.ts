@@ -48,8 +48,8 @@ const generateAvatarImage = (uid: string) => {
 	}
 };
 
-const chatToDateGroup = (arr: any) => {
-	const groupsReduce = arr.reduce((previouseVal: any, currentVal: any) => {
+const chatToDateGroup = (arr: any[]) => {
+	const groupsReduce = arr.reduce((previouseVal, currentVal) => {
 		const date = currentVal.SENT_DATETIME.split('T')[0];
 
 		const hourMin = dayjs(currentVal.SENT_DATETIME).format('HH:mm');
@@ -109,14 +109,14 @@ const comAxiosRequest = async (param: axiosRequestObj) => {
 		status: SuccessOrFailType;
 		response: any;
 	} = await axios(objectParam)
-		.then((response: any) => {
+		.then((response) => {
 			successCallback && successCallback(response);
 			return {
 				status: 'success' as SuccessOrFailType,
 				response,
 			};
 		})
-		.catch((err: any) => {
+		.catch((err) => {
 			failCallback && failCallback(err);
 			return {
 				status: 'error' as SuccessOrFailType,

@@ -234,8 +234,8 @@ const About = () => {
 												Custom-Hooks, 공통함수), 팀 스킬 대시보드 화면 개발,
 												로그인 + 채팅 + About 페이지 개발
 												<br />
-												<b>[BE]</b> 백엔드 환경설정 (AsyncHandler,
-												ErrorHandler, MYSQL연결, Socket IO),
+												<b>[BE]</b> 백엔드 환경설정 (Node Express구성,
+												AsyncHandler, ErrorHandler, MYSQL연결, Socket IO),
 												로그인/채팅/대시보드 관련 api 개발, 메타데이터
 												fetch기능 개발
 												<br />
