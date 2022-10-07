@@ -6,6 +6,22 @@
 		display: flex;
 		align-items: center;
 		padding-left: 30px;
+		position: relative;
+		justify-content: space-between;
+
+		& > .groupChatAvatarGroup {
+			margin-right: 100px;
+			cursor: pointer;
+
+			&:hover {
+				& > div:last-of-type {
+					// background-color: yellowgreen !important;
+					// width: 180px;
+					color: white !important;
+					font-size: 1.2rem;
+				}
+			}
+		}
 	}
 
 	.chatUserBox > div {

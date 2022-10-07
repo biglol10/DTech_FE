@@ -8,24 +8,37 @@
  * 3      변지욱     2022-08-29   feature/JW/layoutchat  최초 로드 시엔 변경중입니다 텍스트 안 보이게 변경
  * 4      변지욱     2022-09-06   feature/JW/chatPage    누구랑 채팅하는지 세팅
  * 5      변지욱     2022-09-21   feature/JW/chatPageBug 채팅 제대로 표시 안되는 버그 픽스
+ * 6      변지욱     2022-10-03   feature/JW/change      이전 채팅 사용자랑 같으면 이름 표시X
+ * 7      변지욱     2022-10-07   feature/JW/chatScroll  위로 스크롤 했을 시 하단 자동스크롤 방지
  ********************************************************************************************/
 
+import { GetServerSideProps } from 'next';
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { Avatar, Box, DTechQuill, SharpDivider, TextWithDotAnimation } from '@components/index';
 import { MainLayoutTemplate, SingleChatMessage } from '@components/customs';
 import { Container, Segment } from 'semantic-ui-react';
 
-import { ChatList, IUsersStatusArr, IAuth, IAppCommon } from '@utils/types/commAndStoreTypes';
+import {
+	ChatList,
+	IUsersStatusArr,
+	IAuth,
+	IAppCommon,
+	IMetadata,
+} from '@utils/types/commAndStoreTypes';
 import OnlineSvg from '@styles/svg/online.svg';
 import OfflineSvg from '@styles/svg/offline.svg';
-import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import cookie from 'js-cookie';
 import lodash from 'lodash';
 import * as RCONST from '@utils/constants/reducerConstants';
-import { chatToDateGroup, generateAvatarImage } from '@utils/appRelated/helperFunctions';
+import {
+	chatToDateGroup,
+	generateAvatarImage,
+	comAxiosRequest,
+} from '@utils/appRelated/helperFunctions';
+import { useChatUtil } from '@utils/hooks/customHooks';
 
 import Style from './[userId].module.scss';
 
@@ -34,7 +47,7 @@ interface IChatList {
 	TO_USERNAME: string;
 	MESSAGE_TEXT: string;
 	IMG_LIST: string[];
-	LINK_LIST: string[];
+	LINK_LIST: IMetadata[];
 	SENT_DATETIME: string;
 	USER_UID: string;
 	USER_NM: string;
@@ -49,13 +62,13 @@ interface ChatDateReduce {
 }
 
 const dayOfWeek: { [val: string]: string } = {
-	'0': '월요일',
-	'1': '화요일',
-	'2': '수요일',
-	'3': '목요일',
-	'4': '금요일',
-	'5': '토요일',
-	'6': '일요일',
+	'0': '일요일',
+	'1': '월요일',
+	'2': '화요일',
+	'3': '수요일',
+	'4': '목요일',
+	'5': '금요일',
+	'6': '토요일',
 };
 
 const UserChat = ({
@@ -72,21 +85,23 @@ const UserChat = ({
 	const [sendingUserState, setSendingUserState] = useState<string>('');
 	const conversationId = useRef<string>();
 
-	const bottomRef = useRef<any>(null);
+	const bottomRef = useRef<HTMLDivElement>(null);
 	const firstLoadRef = useRef<boolean>(true);
 	const quillRef = useRef<any>(null);
+	const isScrolledRef = useRef<boolean>(false);
+
+	const chatSegmentUniqueId = lodash.uniqueId('chatSegment');
 
 	const userUID = useMemo(() => {
 		return queryObj.userId;
 	}, [queryObj.userId]);
-
-	// const { userId: userUID } = queryObj; // UID in here
 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
 	const appCommon = useSelector((state: { appCommon: IAppCommon }) => state.appCommon);
 	const socket = authStore.userSocket;
 
 	const dispatch = useDispatch();
+	const { unReadArrSlice } = useChatUtil();
 
 	useEffect(() => {
 		dispatch({ type: RCONST.SET_CURRENT_CHAT_USER, chatUser: userUID });
@@ -100,16 +115,13 @@ const UserChat = ({
 		const { currentChatUser } = appCommon;
 
 		if (currentChatUser) {
-			axios
-				.get(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/getUsersInfo`, {
-					params: { usersParam: [userUID] },
-				})
-				.then((response) => {
-					setChatUser(response.data.usersInfo[0]);
-				})
-				.catch(() => {
-					toast['error'](<>{'유저정보를 가져오지 못했습니다'}</>);
-				});
+			comAxiosRequest({
+				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/getUsersInfo`,
+				requestType: 'get',
+				dataObj: { usersParam: [userUID] },
+				successCallback: (response) => setChatUser(response.data.usersInfo[0]),
+				failCallback: () => toast['error'](<>{'유저정보를 가져오지 못했습니다'}</>),
+			});
 		}
 	}, [appCommon, userUID]);
 
@@ -118,20 +130,19 @@ const UserChat = ({
 		const { currentChatUser } = appCommon;
 
 		if (currentChatUser && authStore.userUID && authStore.userToken) {
-			axios
-				.post(
-					`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getPrivateChatList`,
-					{ fromUID: authStore.userUID, toUID: userUID },
-					{
-						headers: { Authorization: `Bearer ${authStore.userToken}` },
-					},
-				)
-				.then((response) => {
+			comAxiosRequest({
+				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getPrivateChatList`,
+				requestType: 'post',
+				dataObj: { fromUID: authStore.userUID, toUID: userUID },
+				withAuth: true,
+				successCallback: (response) => {
 					conversationId.current = response.data.convId;
 					const chatGroupReduce = chatToDateGroup(response.data.chatList);
 
-					setChatList((prev) => chatGroupReduce);
-				});
+					setChatList(chatGroupReduce);
+				},
+				failCallback: () => toast['error'](<>{'채팅정보를 가져오지 못했습니다'}</>),
+			});
 		}
 	}, [appCommon, authStore.userToken, authStore.userUID, userUID]);
 
@@ -140,7 +151,7 @@ const UserChat = ({
 	}, [getPrivateChatListCallback]);
 
 	useEffect(() => {
-		bottomRef.current?.scrollIntoView({ behavior: 'auto' });
+		if (!isScrolledRef.current) bottomRef.current?.scrollIntoView({ behavior: 'auto' });
 	}, [chatList, quillWrapperHeight]);
 
 	const notifyTextChange = useCallback(() => {
@@ -196,14 +207,17 @@ const UserChat = ({
 				);
 			}
 
-			await axios
-				.post(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/uploadChatImg`, formData)
-				.then((response) => {
+			await comAxiosRequest({
+				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/uploadChatImg`,
+				requestType: 'post',
+				dataObj: formData,
+				successCallback: (response) => {
 					sendPrivateMessageSocket(content, response.data.bodyObj.imgArr);
-				})
-				.catch(() => {
+				},
+				failCallback: () => {
 					toast['error'](<>{'이미지를 보내지 못했습니다'}</>);
-				});
+				},
+			});
 		} else {
 			sendPrivateMessageSocket(content);
 		}
@@ -227,6 +241,26 @@ const UserChat = ({
 			setTextChangeNotification(true);
 		});
 	}, [socket, appCommon.currentChatUser, userUID, getPrivateChatListCallback]);
+
+	useEffect(() => {
+		unReadArrSlice(userUID);
+	}, [unReadArrSlice, userUID]);
+
+	useEffect(() => {
+		const el = document.getElementById(chatSegmentUniqueId);
+		const scrollFunc = () => {
+			if (el) {
+				isScrolledRef.current = el.scrollHeight - el.clientHeight - 200 >= el.scrollTop;
+			}
+		};
+
+		if (el) {
+			el.addEventListener('scroll', scrollFunc);
+		}
+		return () => {
+			el?.removeEventListener('scroll', scrollFunc);
+		};
+	}, [chatSegmentUniqueId, quillWrapperHeight]);
 
 	return (
 		<>
@@ -262,11 +296,16 @@ const UserChat = ({
 								height: `calc(100% - ${quillWrapperHeight}px - 20px)`,
 							}}
 							className={Style['chatWrapperSegment']}
+							id={chatSegmentUniqueId}
 						>
 							{chatList &&
 								Object.keys(chatList).map((item: string) => {
 									return (
-										<>
+										<React.Fragment
+											key={`${item}_(${
+												dayOfWeek[dayjs(item).day().toString()]
+											})`}
+										>
 											<SharpDivider
 												content={`${item} (${
 													dayOfWeek[dayjs(item).day().toString()]
@@ -275,7 +314,11 @@ const UserChat = ({
 											/>
 											{Object.keys(chatList[item]).map((item2: string) => {
 												return (
-													<>
+													<React.Fragment
+														key={`${item}_(${
+															dayOfWeek[dayjs(item).day().toString()]
+														})_${item2}`}
+													>
 														{chatList[item][item2].map(
 															(item3: IChatList, idx3: number) => {
 																return (
@@ -301,7 +344,7 @@ const UserChat = ({
 																				  )
 																				: item3.IMG_LIST
 																		}
-																		isPreviousUserChat={
+																		isSamePreviousUserChat={
 																			idx3 > 0 &&
 																			chatList[item][item2][
 																				idx3
@@ -331,10 +374,10 @@ const UserChat = ({
 																);
 															},
 														)}
-													</>
+													</React.Fragment>
 												);
 											})}
-										</>
+										</React.Fragment>
 									);
 								})}
 							<div ref={bottomRef} />
@@ -370,7 +413,7 @@ const UserChat = ({
 UserChat.PageLayout = MainLayoutTemplate;
 UserChat.displayName = 'chatPage';
 
-export const getServerSideProps = async (context: any) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
 	return { props: { queryObj: context.query } };
 };
 

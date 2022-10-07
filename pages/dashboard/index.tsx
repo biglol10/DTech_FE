@@ -7,8 +7,8 @@
  * 2      변지욱     2022-09-22   feature/JW/profileModal    프로필 클릭 시 사용자 profile modal 표시
  ********************************************************************************************/
 
+import { GetServerSideProps } from 'next';
 import { useEffect, useMemo, useState, useCallback, useRef } from 'react';
-import axios from 'axios';
 import { parseCookies } from 'nookies';
 import { Bar } from 'react-chartjs-2';
 import {
@@ -28,6 +28,7 @@ import { toast } from 'react-toastify';
 import _ from 'lodash';
 import { useModal } from '@utils/hooks/customHooks';
 import { modalUISize } from '@utils/constants/uiConstants';
+import { comAxiosRequest } from '@utils/appRelated/helperFunctions';
 
 import Style from './dashboard.module.scss';
 
@@ -162,22 +163,22 @@ const Index = ({
 	const enterSearch = useCallback(() => {
 		setInputLoading(true);
 		if (userToken) {
-			axios
-				.post(
-					`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/dashboard/getUserSkillFilter`,
-					{
-						filterSkill: searchCondition.skillset,
-						filterName: searchCondition.personname,
-					},
-					{ headers: { Authorization: `Bearer ${userToken}` } },
-				)
-				.then((response) => {
+			comAxiosRequest({
+				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/dashboard/getUserSkillFilter`,
+				requestType: 'post',
+				dataObj: {
+					filterSkill: searchCondition.skillset,
+					filterName: searchCondition.personname,
+				},
+				withAuth: true,
+				successCallback: (response) => {
 					tempArr.current = response.data.filterdUsersList;
 					setUserListData(response.data.filterdUsersList);
-				})
-				.catch((err) => {
+				},
+				failCallback: () => {
 					toast['error'](<>{'데이터를 가져오지 못했습니다'}</>);
-				});
+				},
+			});
 		}
 		setInputLoading(false);
 	}, [searchCondition.personname, searchCondition.skillset, userToken]);
@@ -318,27 +319,31 @@ const Index = ({
 	);
 };
 
-export const getServerSideProps = async (context: any) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
 	const { token } = parseCookies(context);
 
-	const axiosData = await axios
-		.get(`${process.env.BE_BASE_URL}/api/dashboard/getTeamSkills`, {
-			headers: { Authorization: `Bearer ${token}` },
-		})
-		.then((response) => {
-			return response.data;
-		})
-		.catch((err) => {
-			return {
+	let axiosData: any = null;
+
+	await comAxiosRequest({
+		url: `${process.env.BE_BASE_URL}/api/dashboard/getTeamSkills`,
+		requestType: 'get',
+		withAuth: true,
+		successCallback: (response) => {
+			axiosData = response.data;
+		},
+		failCallback: () => {
+			axiosData = {
 				teamSkillDashboard: null,
 				teamSkillCountObj: {},
 				userDashboard: [],
 			};
-		});
+		},
+		tokenValue: token,
+	});
 
 	const teamSkillCountObj: any = {};
 
-	if (!_.isEmpty(axiosData.teamSkillCountObj)) {
+	if (axiosData && !_.isEmpty(axiosData.teamSkillCountObj)) {
 		const tempData: any = axiosData.teamSkillCountObj;
 
 		Object.keys(tempData).map((item, idx) => {

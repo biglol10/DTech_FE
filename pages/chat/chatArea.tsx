@@ -1,6 +1,7 @@
 import { Box, List } from '@components/index';
 import { MainLayoutTemplate } from '@components/customs';
 import { parseCookies } from 'nookies';
+import { GetServerSideProps } from 'next';
 
 const ChatPage = () => {
 	const items = [
@@ -74,7 +75,7 @@ const ChatPage = () => {
 ChatPage.displayName = 'chatMainPage';
 ChatPage.PageLayout = MainLayoutTemplate;
 
-export const getServerSideProps = async (context: any) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
 	const { currentChatUser } = parseCookies(context);
 
 	if (currentChatUser) {

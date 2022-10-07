@@ -1,6 +1,8 @@
 import crypto from 'crypto';
 import dayjs from 'dayjs';
 import axios from 'axios';
+import _ from 'lodash';
+import cookie from 'js-cookie';
 
 const baseImage = {
 	AvatarBase0: 'AvatarBase_BLACK1.png',
@@ -46,8 +48,8 @@ const generateAvatarImage = (uid: string) => {
 	}
 };
 
-const chatToDateGroup = (arr: any) => {
-	const groupsReduce = arr.reduce((previouseVal: any, currentVal: any) => {
+const chatToDateGroup = (arr: any[]) => {
+	const groupsReduce = arr.reduce((previouseVal, currentVal) => {
 		const date = currentVal.SENT_DATETIME.split('T')[0];
 
 		const hourMin = dayjs(currentVal.SENT_DATETIME).format('HH:mm');
@@ -65,6 +67,113 @@ const chatToDateGroup = (arr: any) => {
 	return groupsReduce;
 };
 
-// const axiosRequest = async ()
+type callbackType = (obj: any) => void;
 
-export { generateUID, generateImageUID, generateAvatarImage, chatToDateGroup };
+interface axiosRequestObj {
+	url: string;
+	requestType: 'get' | 'post';
+	dataObj?: null | object;
+	withAuth?: boolean;
+	successCallback?: null | callbackType;
+	failCallback?: null | callbackType;
+	returnAxiosObject?: null | callbackType;
+	tokenValue?: string;
+}
+
+type SuccessOrFailType = 'success' | 'error';
+
+const comAxiosRequest = async (param: axiosRequestObj) => {
+	const {
+		url,
+		requestType = 'get',
+		dataObj = null,
+		withAuth = false,
+		successCallback = null,
+		failCallback = null,
+		tokenValue = '',
+	} = param;
+
+	const objectParam = _.merge(
+		{
+			url,
+			method: requestType,
+		},
+		dataObj && requestType === 'post' ? { data: dataObj } : { params: dataObj },
+		cookie.get('token') && withAuth
+			? { headers: { Authorization: `Bearer ${cookie.get('token')}` } }
+			: {},
+		tokenValue && { headers: { Authorization: `Bearer ${tokenValue}` } },
+	);
+
+	const axiosResult: {
+		status: SuccessOrFailType;
+		response: any;
+	} = await axios(objectParam)
+		.then((response) => {
+			successCallback && successCallback(response);
+			return {
+				status: 'success' as SuccessOrFailType,
+				response,
+			};
+		})
+		.catch((err) => {
+			failCallback && failCallback(err);
+			return {
+				status: 'error' as SuccessOrFailType,
+				response: err,
+			};
+		});
+
+	return axiosResult;
+};
+
+const appDelay = (time: number) => {
+	return new Promise((resolve) => {
+		setTimeout(() => {
+			resolve(true);
+		}, time);
+	});
+};
+
+const exampleAxios = () => {
+	// ? Post
+	// axios
+	// 	.post(
+	// 		`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getPrivateChatList`,
+	// 		{ fromUID: authStore.userUID, toUID: userUID },
+	// 		{
+	// 			headers: { Authorization: `Bearer ${authStore.userToken}` },
+	// 		},
+	// 	)
+	// 	.then((response) => {
+	// 		conversationId.current = response.data.convId;
+	// 		const chatGroupReduce = chatToDateGroup(response.data.chatList);
+	// 		setChatList(chatGroupReduce);
+	// 	});
+	// ? get
+	// const axiosData = await axios
+	// 	.get(`${process.env.BE_BASE_URL}/api/dashboard/getTeamSkills`, {
+	// 		headers: { Authorization: `Bearer ${token}` },
+	// 	})
+	// 	.then((response) => {
+	// 		return response.data;
+	// 	})
+	// 	.catch((err) => {
+	// 		return {
+	// 			teamSkillDashboard: null,
+	// 			teamSkillCountObj: {},
+	// 			userDashboard: [],
+	// 		};
+	// 	});
+	return null;
+};
+
+export {
+	generateUID,
+	generateImageUID,
+	generateAvatarImage,
+	chatToDateGroup,
+	comAxiosRequest,
+	exampleAxios,
+	appDelay,
+};

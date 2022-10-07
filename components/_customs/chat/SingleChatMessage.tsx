@@ -5,18 +5,19 @@ import { techImage } from '@utils/constants/imageConstants';
 import { Label } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import { useModal } from '@utils/hooks/customHooks';
-import { modalUISize } from '@utils/constants/uiConstants';
-import Image from 'next/image';
-import { ChatList } from '@utils/types/commAndStoreTypes';
 import dayjs from 'dayjs';
+import { IMetadata } from '@utils/types/commAndStoreTypes';
 
 import Style from './SingleChatMessage.module.scss';
 
-interface ChatListExtends extends ChatList {
+interface ChatListExtends {
+	value: string;
+	imgList: string[];
+	linkList: IMetadata[];
 	messageOwner: 'other' | 'mine';
 	sentTime: string | null | undefined;
 	userName: string;
-	isPreviousUserChat: boolean;
+	isSamePreviousUserChat: boolean;
 }
 
 const SingleChatMessage = ({
@@ -26,31 +27,32 @@ const SingleChatMessage = ({
 	linkList,
 	sentTime,
 	userName,
-	isPreviousUserChat,
+	isSamePreviousUserChat,
 }: ChatListExtends) => {
-	const [showCopyButton, setShowCopyButton] = useState(false);
 	const [copyButtonClicked, setCopyButtonClicked] = useState(false);
 	const { handleModal } = useModal();
 	const sentTimeRef = useRef(sentTime ? dayjs(sentTime).format('HH:mm') : null);
-
-	console.log(`userName is ${userName} and isPreviousUserChat is ${isPreviousUserChat}`);
 
 	const openImageModal = (imgSrc: string) => {
 		handleModal({
 			modalOpen: true,
 			modalContent: (
 				<img
+					id="chatImageId"
 					src={imgSrc}
 					style={{
-						maxHeight: '90%',
-						maxWidth: '90%',
+						maxHeight: '700px',
+						maxWidth: '1000px',
 						display: 'block',
 						margin: 'auto',
 					}}
 				/>
 			),
-			modalSize: modalUISize.LARGE,
+			// modalSize: modalUISize.LARGE,
 			modalIsBasic: true,
+			modalContentId: 'chatImageId',
+			modalShowCloseIcon: 'N',
+			modalFitContentWidth: true,
 		});
 	};
 
@@ -58,28 +60,31 @@ const SingleChatMessage = ({
 
 	return (
 		<>
-			<div
-				className={Style['chatWrapper']}
-				onMouseEnter={() => setShowCopyButton(true)}
-				onMouseLeave={() => {
-					setShowCopyButton(false);
-					setCopyButtonClicked(false);
-				}}
-			>
+			<div className={Style['chatWrapper']}>
 				<div className={cx('singleChatDiv', messageOwner)}>
-					<Label
-						attached={`top ${messageOwner === 'other' ? 'left' : 'right'}`}
-						className={cx('avatarLabel', isPreviousUserChat && 'avatarLabelHidden')}
-					>
-						{!isPreviousUserChat && (
+					{!isSamePreviousUserChat ? (
+						<Label
+							attached={`top ${messageOwner === 'other' ? 'left' : 'right'}`}
+							className={cx(
+								'avatarLabel',
+								isSamePreviousUserChat && 'avatarLabelHidden',
+							)}
+						>
 							<Avatar
 								labelSize="mini"
 								src={techImage['React']}
 								fontColor="black"
 								content={userName}
 							/>
-						)}
-					</Label>
+						</Label>
+					) : (
+						<div
+							className={cx(
+								'avatarLabel',
+								isSamePreviousUserChat && 'avatarLabelHidden',
+							)}
+						></div>
+					)}
 
 					{value && (
 						<>
@@ -87,9 +92,6 @@ const SingleChatMessage = ({
 								style={{
 									display: 'flex',
 									justifyContent: `${messageOwner === 'mine' ? 'right' : 'left'}`,
-									// marginTop: `${
-									// 	isPreviousUserChat === true ? '1px !important' : 'auto'
-									// }`,
 								}}
 							>
 								{messageOwner === 'other' ? (
@@ -99,37 +101,37 @@ const SingleChatMessage = ({
 											pointing={'left'}
 											className={cx('messageLabel', messageOwner)}
 										>
-											{/* <pre>{value}</pre> */}
-											{sentTimeRef.current}
 											<pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre>
 										</Label>
-										{/* <span style={{ alignSelf: 'flex-end' }}>
-											{sentTimeRef.current}
-										</span> */}
+										{!isSamePreviousUserChat && (
+											<span style={{ alignSelf: 'flex-end' }}>
+												{sentTimeRef.current}
+											</span>
+										)}
 									</>
 								) : (
 									<>
-										{/* <span style={{ alignSelf: 'self-end' }}>
-											{sentTimeRef.current}
-										</span> */}
+										{!isSamePreviousUserChat && (
+											<span style={{ alignSelf: 'self-end' }}>
+												{sentTimeRef.current}
+											</span>
+										)}
+
 										<Label
 											basic
 											pointing={'right'}
 											className={cx('messageLabel', messageOwner)}
 										>
-											{/* <pre>{value}</pre> */}
 											<pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre>
-											{sentTimeRef.current}
 										</Label>
 									</>
 								)}
 							</div>
 						</>
 					)}
-					{/* <span>{imgList}</span> */}
 					{imgList && imgList.length > 0 && (
 						<div className={cx('imageListDiv', messageOwner)}>
-							{imgList.map((itemUrl: any, idx: number) => {
+							{imgList.map((itemUrl: string, idx: number) => {
 								return (
 									<img
 										style={{ height: '50px', width: '50px' }}
@@ -139,45 +141,44 @@ const SingleChatMessage = ({
 									/>
 								);
 							})}
-							{/* {imgList.map((item: { fileName: string; filePreview: string }, idx) => (
+							{/* bottomRef끝까지 가지 않아 일반 img태그 사용 */}
+							{/* {imgList.map((itemUrl: string, idx: number) => (
 								<Image
 									key={`asdf_${idx}`}
-									src={item.filePreview} // 아직 이미지 S3에 올리는 작업을 하지 않았으니 미리보기 적용
+									src={itemUrl}
 									height={50}
 									width={50}
-									onClick={() => openImageModal(item.filePreview)}
+									onClick={() => openImageModal(itemUrl)}
 								/>
 							))} */}
 						</div>
 					)}
 				</div>
 
-				{showCopyButton && (
-					<div className={Style['copyButton']}>
-						<Button
-							content={copyButtonClicked ? 'copied!' : 'copy'}
-							color={copyButtonClicked ? 'google plus' : 'instagram'}
-							buttonType="none"
-							onClick={async () => {
-								setCopyButtonClicked(true);
-								if ('clipboard' in navigator) {
-									await navigator.clipboard.writeText(
-										value.replace(/[^\x00-\x7F]/g, ''),
-									);
-								} else {
-									return document.execCommand(
-										'copy',
-										true,
-										value.replace(/[^\x00-\x7F]/g, ''),
-									);
-								}
-								setTimeout(() => {
-									setCopyButtonClicked(false);
-								}, 3000);
-							}}
-						/>
-					</div>
-				)}
+				<div className={Style['copyButton']}>
+					<Button
+						content={copyButtonClicked ? 'copied!' : 'copy'}
+						color={copyButtonClicked ? 'google plus' : 'instagram'}
+						buttonType="none"
+						onClick={async () => {
+							setCopyButtonClicked(true);
+							if ('clipboard' in navigator) {
+								await navigator.clipboard.writeText(
+									value.replace(/[^\x00-\x7F]/g, ''),
+								);
+							} else {
+								return document.execCommand(
+									'copy',
+									true,
+									value.replace(/[^\x00-\x7F]/g, ''),
+								);
+							}
+							setTimeout(() => {
+								setCopyButtonClicked(false);
+							}, 3000);
+						}}
+					/>
+				</div>
 
 				{linkList && !!linkList.length && (
 					<div className={Style['linkListDiv']}>
@@ -186,7 +187,7 @@ const SingleChatMessage = ({
 								Array(6 - linkList.length - 1)
 									.fill(0)
 									.map((item: null, idx) => <div key={`emptyA_${idx}`}></div>)}
-							{linkList.map((item: { [name: string]: string }, idx: number) => {
+							{linkList.map((item, idx: number) => {
 								return (
 									<a
 										key={`ahref_${item.url}_${idx}`}

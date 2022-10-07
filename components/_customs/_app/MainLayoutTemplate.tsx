@@ -19,10 +19,9 @@ import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import cookie from 'js-cookie';
 import { useSocket } from '@utils/hooks/customHooks';
-import axios from 'axios';
 import { IAuth, IAppCommon, IUsersStatusArr } from '@utils/types/commAndStoreTypes';
 import _ from 'lodash';
-import { generateAvatarImage } from '@utils/appRelated/helperFunctions';
+import { generateAvatarImage, comAxiosRequest } from '@utils/appRelated/helperFunctions';
 import * as RCONST from '@utils/constants/reducerConstants';
 
 import GraphSvg from '@styles/svg/graph.svg';
@@ -93,9 +92,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 			socket.on(
 				'connectedUsers',
 				({ users }: { users: { userId: string; socketId: string }[] }) => {
-					const onlineUsersArr = users
-						// .filter((item) => item.userId !== authStore.userId)
-						.map((item2) => item2.userId);
+					const onlineUsersArr = users.map((item2) => item2.userId);
 
 					if (!_.isEqual(connectedUsersRef.current, onlineUsersArr)) {
 						connectedUsersRef.current = onlineUsersArr;
@@ -115,29 +112,29 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	}, [authStore]);
 
 	const getUsersStatus = useCallback(() => {
-		axios
-			.get(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/getUsersStatus`, {
-				params: { onlineUsers: onlineUsers.length > 0 ? onlineUsers : ['none'] },
-				// headers: { Authorization: authStore.userToken },
-			})
-			.then((response) => {
+		comAxiosRequest({
+			url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/getUsersStatus`,
+			requestType: 'get',
+			dataObj: { onlineUsers: onlineUsers.length > 0 ? onlineUsers : ['none'] },
+			successCallback: (response) => {
 				const stateEqual = _.isEqual(usersStatusArrRef.current, response.data.usersStatus);
 
 				if (!stateEqual) {
 					usersStatusArrRef.current = response.data.usersStatus;
 					setUsersStatusArr(response.data.usersStatus);
 				}
-			})
-			.catch((err) => {});
+			},
+			failCallback: () => {},
+		});
 	}, [onlineUsers]);
 
 	const getGroupChatArr = useCallback(() => {
 		if (authStore.userUID) {
-			axios
-				.get(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getChatGroups`, {
-					params: { currentUser: authStore.userUID },
-				})
-				.then((response) => {
+			comAxiosRequest({
+				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getChatGroups`,
+				requestType: 'get',
+				dataObj: { currentUser: authStore.userUID },
+				successCallback: (response) => {
 					const stateEqual = _.isEqual(
 						chatGroupsArrRef.current,
 						response.data.chatGroups,
@@ -147,7 +144,9 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 						chatGroupsArrRef.current = response.data.chatGroups;
 						setGroupChatArr(response.data.chatGroups);
 					}
-				});
+				},
+				failCallback: () => {},
+			});
 		}
 	}, [authStore.userUID]);
 

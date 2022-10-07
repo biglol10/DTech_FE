@@ -6,7 +6,7 @@
  * 1      변지욱     2022-06-20                              최초작성
  ********************************************************************************************/
 
-import { JSXElementConstructor as JSX } from 'react';
+import React, { JSXElementConstructor as JSX } from 'react';
 import { List as SemanticList } from 'semantic-ui-react';
 import Style from './List.module.scss';
 
@@ -29,7 +29,7 @@ const List = ({ id = '', items, listType = 'none', verticalAlign = 'middle' }: I
 			ordered={listType === 'ordered'}
 			verticalAlign={verticalAlign}
 		>
-			{items.map((item: any, idx: number) => {
+			{items.map((item: { content: React.ReactElement | string }, idx: number) => {
 				return (
 					<SemanticList.Item key={`${id}_listItem_${idx}`} className={Style['listItem']}>
 						{item.content}

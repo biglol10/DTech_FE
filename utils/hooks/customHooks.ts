@@ -1,12 +1,12 @@
 import { useCallback, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import io, { Socket } from 'socket.io-client';
-import { IModalState, IAppCommon } from '@utils/types/commAndStoreTypes';
+import { IModalState, IAppCommon, IAuth } from '@utils/types/commAndStoreTypes';
 import * as RCONST from '@utils/constants/reducerConstants';
 import lodash from 'lodash';
 
 const useModal = () => {
-	const modalState = useSelector((state: any) => state.modal);
+	const modalState = useSelector((state: { modal: IModalState }) => state.modal);
 	const dispatch = useDispatch();
 
 	const handleModal = useCallback(
@@ -20,6 +20,9 @@ const useModal = () => {
 					modalSize: args.modalSize,
 					modalTitle: args.modalTitle,
 					modalIsBasic: args.modalIsBasic,
+					modalFitContentWidth: args.modalFitContentWidth,
+					modalShowCloseIcon: args.modalShowCloseIcon,
+					modalContentId: args.modalContentId,
 				},
 			});
 		},
@@ -37,7 +40,7 @@ const useSocket = () => {
 
 	const dispatch = useDispatch();
 
-	const authStore = useSelector((state: any) => state.auth);
+	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
 
 	const init = (userId: string) => {
 		if (!userId) return;

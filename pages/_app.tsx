@@ -17,6 +17,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import cookie from 'js-cookie';
 import { useSocket } from '@utils/hooks/customHooks';
+import { IAuth, IToastState } from '@utils/types/commAndStoreTypes';
 
 import '@styles/globals.scss';
 import 'semantic-ui-css/semantic.min.css';
@@ -25,14 +26,13 @@ import 'react-toastify/dist/ReactToastify.css';
 
 type ComponentWithPageLayout = AppProps & {
 	Component: AppProps['Component'] & {
-		// PageLayout?: React.ComponentType;
-		PageLayout?: any;
+		PageLayout?: React.ElementType;
 	};
 };
 
 const MyApp = ({ Component, pageProps }: ComponentWithPageLayout) => {
-	const authStore = useSelector((state: any) => state.auth);
-	const toastInfo = useSelector((state: any) => state.toastInfo);
+	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
+	const toastInfo = useSelector((state: { toastInfo: IToastState }) => state.toastInfo);
 	const dispatch = useDispatch();
 	const { init: initSocket } = useSocket();
 
@@ -70,7 +70,28 @@ const MyApp = ({ Component, pageProps }: ComponentWithPageLayout) => {
 		<>
 			<Head>
 				<title>DTech App</title>
-				<meta name="description" content="DTech App" />
+				<meta
+					name="description"
+					content="팀 스킬 현형파악 및 지식공유를 쉽게 할 수 있는 앱입니다"
+				/>
+				<meta
+					name="og:description"
+					content="팀 스킬 현형파악 및 지식공유를 쉽게 할 수 있는 앱입니다"
+				/>
+				<meta name="author" content="Biglol, BY" />
+				<meta
+					name="og:image"
+					content="https://dcx-tech.s3.ap-northeast-2.amazonaws.com/chat/96eef3d803cc0f3318f93503b.png"
+				/>
+				<meta
+					name="og:image:url"
+					content="https://dcx-tech.s3.ap-northeast-2.amazonaws.com/chat/96eef3d803cc0f3318f93503b.png"
+				/>
+				<meta name="keywords" content="Skill Dashboard, Slack-like chatting, Team board" />
+				<meta
+					name="og:keywords"
+					content="Skill Dashboard, Slack-like chatting, Team board"
+				/>
 			</Head>
 			{Component.PageLayout ? (
 				<>

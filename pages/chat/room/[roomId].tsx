@@ -4,22 +4,36 @@
  * 번호    작업자     작업일         브랜치                   변경내용
  *-------------------------------------------------------------------------------------------
  * 1      변지욱     2022-09-26   feature/JW/chatRoom     최초작성
+ * 2      변지욱     2022-10-06   feature/JW/groupChat    그룹챗 멤버 modal 표시
+ * 3      변지욱     2022-10-07   feature/JW/chatScroll   위로 스크롤 했을 시 하단 자동스크롤 방지
  ********************************************************************************************/
 
+import { GetServerSideProps } from 'next';
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react';
-import { Box, DTechQuill, SharpDivider, TextWithDotAnimation, Label } from '@components/index';
-import { MainLayoutTemplate, SingleChatMessage } from '@components/customs';
-import { Container, Segment, Icon } from 'semantic-ui-react';
+import {
+	Box,
+	DTechQuill,
+	SharpDivider,
+	TextWithDotAnimation,
+	Label,
+	AvatarGroup,
+} from '@components/index';
+import { MainLayoutTemplate, SingleChatMessage, ChatMembersModal } from '@components/customs';
+import { Container, Segment, Icon, Header } from 'semantic-ui-react';
 
-import { ChatList, IUsersStatusArr, IAuth } from '@utils/types/commAndStoreTypes';
-import axios from 'axios';
+import { ChatList, IUsersStatusArr, IAuth, IMetadata } from '@utils/types/commAndStoreTypes';
 import { useSelector, useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import { parseCookies } from 'nookies';
 import lodash from 'lodash';
-import { chatToDateGroup } from '@utils/appRelated/helperFunctions';
+import {
+	chatToDateGroup,
+	comAxiosRequest,
+	generateAvatarImage,
+} from '@utils/appRelated/helperFunctions';
 import * as RCONST from '@utils/constants/reducerConstants';
+import { useModal, useChatUtil } from '@utils/hooks/customHooks';
 
 import Style from './[roomId].module.scss';
 
@@ -28,7 +42,7 @@ interface IChatList {
 	TO_USERNAME: string;
 	MESSAGE_TEXT: string;
 	IMG_LIST: string[];
-	LINK_LIST: string[];
+	LINK_LIST: IMetadata[];
 	SENT_DATETIME: string;
 	USER_UID: string;
 	USER_NM: string;
@@ -43,13 +57,13 @@ interface ChatDateReduce {
 }
 
 const dayOfWeek: { [val: string]: string } = {
-	'0': '월요일',
-	'1': '화요일',
-	'2': '수요일',
-	'3': '목요일',
-	'4': '금요일',
-	'5': '토요일',
-	'6': '일요일',
+	'0': '일요일',
+	'1': '월요일',
+	'2': '화요일',
+	'3': '수요일',
+	'4': '목요일',
+	'5': '금요일',
+	'6': '토요일',
 };
 
 const RoomChat = ({
@@ -66,12 +80,20 @@ const RoomChat = ({
 
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
 	const [chatList, setChatList] = useState<ChatDateReduce>({});
+	const [groupMembers, setGroupMembers] = useState<IUsersStatusArr[]>([]);
 	const [textChangeNotification, setTextChangeNotification] = useState(false);
 	const [sendingUserState, setSendingUserState] = useState<string>('');
 
 	const bottomRef = useRef<any>(null);
 	const firstLoadRef = useRef<boolean>(true);
 	const quillRef = useRef<any>(null);
+	const isScrolledRef = useRef<boolean>(false);
+
+	const chatSegmentUniqueId = lodash.uniqueId('chatSegment');
+
+	const { unReadArrSlice } = useChatUtil();
+
+	const { handleModal } = useModal();
 
 	const roomID = useMemo(() => {
 		return queryObj.roomId;
@@ -88,23 +110,23 @@ const RoomChat = ({
 	}, [dispatch, roomID]);
 
 	const getGroupChatListCallback = useCallback(() => {
-		axios
-			.post(
-				`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getGroupChatList`,
-				{
-					chatRoomId: roomID,
-					readingUser: authStore.userUID,
-				},
-				{
-					headers: { Authorization: `Bearer ${authStore.userToken}` },
-				},
-			)
-			.then((response) => {
+		comAxiosRequest({
+			url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getGroupChatList`,
+			requestType: 'post',
+			dataObj: {
+				chatRoomId: roomID,
+				readingUser: authStore.userUID,
+			},
+			withAuth: true,
+			successCallback: (response) => {
 				const chatGroupReduce = chatToDateGroup(response.data.chatList);
 
+				setGroupMembers(response.data.groupChatUsers);
 				setChatList((prev) => chatGroupReduce);
-			});
-	}, [authStore.userToken, authStore.userUID, roomID]);
+			},
+			failCallback: () => toast['error'](<>{'채팅정보를 가져오지 못했습니다'}</>),
+		});
+	}, [authStore.userUID, roomID]);
 
 	useEffect(() => {
 		if (roomID && authStore.userToken && authStore.userUID) {
@@ -113,7 +135,7 @@ const RoomChat = ({
 	}, [authStore.userToken, authStore.userUID, getGroupChatListCallback, roomID]);
 
 	useEffect(() => {
-		bottomRef.current?.scrollIntoView({ behavior: 'auto' });
+		if (!isScrolledRef.current) bottomRef.current?.scrollIntoView({ behavior: 'auto' });
 	}, [chatList, quillWrapperHeight]);
 
 	const notifyTextChange = useCallback(() => {
@@ -161,14 +183,17 @@ const RoomChat = ({
 				);
 			}
 
-			await axios
-				.post(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/uploadChatImg`, formData)
-				.then((response) => {
+			await comAxiosRequest({
+				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/uploadChatImg`,
+				requestType: 'post',
+				dataObj: formData,
+				successCallback: (response) => {
 					sendPrivateMessageSocket(content, response.data.bodyObj.imgArr);
-				})
-				.catch(() => {
+				},
+				failCallback: () => {
 					toast['error'](<>{'이미지를 보내지 못했습니다'}</>);
-				});
+				},
+			});
 		} else {
 			sendPrivateMessageSocket(content);
 		}
@@ -213,6 +238,68 @@ const RoomChat = ({
 		};
 	}, [authStore.userId, getGroupChatListCallback, roomID, socket]);
 
+	const usersImage = useMemo(() => {
+		const avatarGroupImgList = groupMembers.map((oneUser) => {
+			if (oneUser.USER_IMG_URL) {
+				return oneUser.USER_IMG_URL;
+			} else {
+				return `${generateAvatarImage(oneUser.USER_UID)}`;
+			}
+		});
+
+		const avatarGroupUserList = groupMembers
+			.slice(0, 3)
+			.reduce((previousVal, currentVal, idx3) => {
+				if (idx3 === 0) {
+					return `${previousVal}${currentVal.USER_NM} (${currentVal.USER_TITLE})`;
+				} else {
+					return `${previousVal}, ${currentVal.USER_NM} (${currentVal.USER_TITLE})`;
+				}
+			}, '');
+
+		return {
+			avatarGroupImgList,
+			avatarGroupUserList,
+		};
+	}, [groupMembers]);
+
+	const openChatGroupModal = useCallback(() => {
+		handleModal({
+			modalOpen: true,
+			modalContent: (
+				<ChatMembersModal chatGroupMembers={groupMembers} id="chatMembersModal" />
+			),
+			modalFitContentWidth: true,
+			modalContentId: 'chatMembersModal',
+			modalTitle: (
+				<Header as="h3">
+					<Icon name="rocketchat" />
+					<Header.Content>{currentChatRoomName}의 멤버목록</Header.Content>
+				</Header>
+			),
+		});
+	}, [currentChatRoomName, groupMembers, handleModal]);
+
+	useEffect(() => {
+		unReadArrSlice(roomID);
+	}, [unReadArrSlice, roomID]);
+
+	useEffect(() => {
+		const el = document.getElementById(chatSegmentUniqueId);
+		const scrollFunc = () => {
+			if (el) {
+				isScrolledRef.current = el.scrollHeight - el.clientHeight - 200 >= el.scrollTop;
+			}
+		};
+
+		if (el) {
+			el.addEventListener('scroll', scrollFunc);
+		}
+		return () => {
+			el?.removeEventListener('scroll', scrollFunc);
+		};
+	}, [chatSegmentUniqueId, quillWrapperHeight]);
+
 	return (
 		<>
 			<main id={Style['chatMain']}>
@@ -225,11 +312,6 @@ const RoomChat = ({
 				>
 					<Label
 						basic
-						// content={
-						// 	cookie.get('currentChatRoom')
-						// 		? JSON.parse(cookie.get('currentChatRoom')!).chatName
-						// 		: '그룹 채팅'
-						// }
 						content={currentChatRoomName}
 						iconOrImage="icon"
 						icon={<Icon name="rocketchat" />}
@@ -237,6 +319,18 @@ const RoomChat = ({
 						borderNone
 						size="big"
 					/>
+					{usersImage && (
+						<AvatarGroup
+							imageList={usersImage.avatarGroupImgList}
+							divHeight={20}
+							totalCount={usersImage.avatarGroupImgList.length}
+							usersString={usersImage.avatarGroupUserList}
+							className={Style['groupChatAvatarGroup']}
+							onClick={(e) => {
+								openChatGroupModal();
+							}}
+						/>
+					)}
 				</Box>
 				<Container>
 					{quillWrapperHeight ? (
@@ -245,11 +339,16 @@ const RoomChat = ({
 								height: `calc(100% - ${quillWrapperHeight}px - 20px)`,
 							}}
 							className={Style['chatWrapperSegment']}
+							id={chatSegmentUniqueId}
 						>
 							{chatList &&
 								Object.keys(chatList).map((item: string, idx: number) => {
 									return (
-										<>
+										<React.Fragment
+											key={`${item}_(${
+												dayOfWeek[dayjs(item).day().toString()]
+											})`}
+										>
 											<SharpDivider
 												content={`${item} (${
 													dayOfWeek[dayjs(item).day().toString()]
@@ -259,7 +358,13 @@ const RoomChat = ({
 											{Object.keys(chatList[item]).map(
 												(item2: string, idx2: number) => {
 													return (
-														<>
+														<React.Fragment
+															key={`${item}_(${
+																dayOfWeek[
+																	dayjs(item).day().toString()
+																]
+															})_${item2}`}
+														>
 															{chatList[item][item2].map(
 																(
 																	item3: IChatList,
@@ -298,7 +403,7 @@ const RoomChat = ({
 																					  )
 																					: item3.IMG_LIST
 																			}
-																			isPreviousUserChat={
+																			isSamePreviousUserChat={
 																				idx3 > 0 &&
 																				chatList[item][
 																					item2
@@ -331,11 +436,11 @@ const RoomChat = ({
 																	);
 																},
 															)}
-														</>
+														</React.Fragment>
 													);
 												},
 											)}
-										</>
+										</React.Fragment>
 									);
 								})}
 							<div ref={bottomRef} />
@@ -353,7 +458,6 @@ const RoomChat = ({
 							handleSubmit={(content: ChatList) => {
 								sendMessageFunction(content);
 							}}
-							// QuillSSR={ReactQuill}
 							notifyTextChange={notifyTextChange}
 						/>
 						<TextWithDotAnimation
@@ -372,7 +476,7 @@ const RoomChat = ({
 RoomChat.PageLayout = MainLayoutTemplate;
 RoomChat.displayName = 'chatPage';
 
-export const getServerSideProps = async (context: any) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
 	const { currentChatRoom } = parseCookies(context);
 
 	return {
