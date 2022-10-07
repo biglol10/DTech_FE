@@ -20,7 +20,7 @@ import Style from './about.module.scss';
 const About = () => {
 	return (
 		<div className={Style['aboutMain']}>
-			<div style={{ width: '50%', margin: '0 auto', paddingTop: '50px' }}>
+			<div>
 				<Card.Group>
 					{/* 프로젝트 정보 */}
 					<Card fluid>
