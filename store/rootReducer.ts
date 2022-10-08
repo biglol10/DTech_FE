@@ -19,9 +19,8 @@ import authSlice from './authSlice';
 import registerSlice from './registerSlice';
 import toastSlice from './toastSlice';
 import appCommonSlice from './appCommon';
-// import saga from './sagaCounter';
 
-const rootReducer = (state: any, action: any) => {
+export const rootReducer = (state: any, action: any) => {
 	switch (action.type) {
 		case HYDRATE: {
 			// // Attention! This will overwrite client state! Real apps should use proper reconciliation.
@@ -72,30 +71,51 @@ const loggerMiddleware = // console.log를 위한 custom middleware
 // 2. 실수로 클릭 (예를 들어 로그인) 2번하면 thunk에서는 2번 요청이 다 감... saga에서는 takeLatest라는게 있어서
 //    2번의 요청이 동시에 들어왔으면 가장 마지막 것만 보내고 첫번째는 무시
 // 3. throttle(or debounch) 적용하여 1초에 몇번까지 요청을 허용해준다 (3번이면 1초에 3번 초과하는 요청은 막음)
-const makeStore = () => {
-	const sagaMiddleware = createSagaMiddleware();
-	const customMiddleware = [sagaMiddleware, loggerMiddleware];
 
-	const concatMiddleware: any =
-		process.env.NODE_ENV === 'production' ? sagaMiddleware : customMiddleware;
+const sagaMiddleware = createSagaMiddleware();
+const customMiddleware = [sagaMiddleware, loggerMiddleware];
 
-	const store: any = configureStore({
-		reducer: rootReducer,
-		middleware: (getDefaultMiddleware) =>
-			getDefaultMiddleware({
-				// async Saga를 위해 resolve, reject를 반환해서 에러가 생기는 이슈로,
-				// serializableCheck 미들웨어를 사용안함
-				thunk: false,
-				serializableCheck: false,
-			}).concat(concatMiddleware),
-		devTools: devMode, // redux devtools 확장 프로그램 사용 가능여부
-	});
+const concatMiddleware: any =
+	process.env.NODE_ENV === 'production' ? sagaMiddleware : customMiddleware;
 
-	store.sagaTask = sagaMiddleware.run(rootSaga);
-	return store;
-};
+export const store: any = configureStore({
+	reducer: rootReducer,
+	middleware: (getDefaultMiddleware) =>
+		getDefaultMiddleware({
+			// async Saga를 위해 resolve, reject를 반환해서 에러가 생기는 이슈로,
+			// serializableCheck 미들웨어를 사용안함
+			thunk: false,
+			serializableCheck: false,
+		}).concat(concatMiddleware),
+	devTools: devMode, // redux devtools 확장 프로그램 사용 가능여부
+});
 
-const wrapper = createWrapper(makeStore, { debug: devMode });
+store.sagaTask = sagaMiddleware.run(rootSaga);
 
-export { makeStore };
+const wrapper = createWrapper(() => store, { debug: devMode });
+
 export default wrapper;
+
+// * makeStore주석
+// const makeStore = () => {
+// 	const sagaMiddleware = createSagaMiddleware();
+// 	const customMiddleware = [sagaMiddleware, loggerMiddleware];
+
+// 	const concatMiddleware: any =
+// 		process.env.NODE_ENV === 'production' ? sagaMiddleware : customMiddleware;
+
+// 	const store: any = configureStore({
+// 		reducer: rootReducer,
+// 		middleware: (getDefaultMiddleware) =>
+// 			getDefaultMiddleware({
+// 				// async Saga를 위해 resolve, reject를 반환해서 에러가 생기는 이슈로,
+// 				// serializableCheck 미들웨어를 사용안함
+// 				thunk: false,
+// 				serializableCheck: false,
+// 			}).concat(concatMiddleware),
+// 		devTools: devMode, // redux devtools 확장 프로그램 사용 가능여부
+// 	});
+
+// 	store.sagaTask = sagaMiddleware.run(rootSaga);
+// 	return store;
+// };
