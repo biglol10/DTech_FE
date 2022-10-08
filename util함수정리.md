@@ -19,7 +19,7 @@
 
 ```diff
 !   @경로 : utils/appRelated/helperFunctions
-!   @설명 : 부가적인 기능을 제공하는 함수 모음
+!   @설명 : 유틸기능 제공 함수 모음
 ```
 
 ---
@@ -33,6 +33,30 @@
 > [함수명] => generateImageUID  
 > [parameter] => null  
 > [기능] => 25자리 uniqueID 생성 (이미지 용도)
+
+<br/>
+
+> [함수명] => generateAvatarImage  
+> [parameter] => uid: string  
+> [기능] => 사용자 UID에 따른 이미지 리턴함수
+
+<br/>
+
+> [함수명] => chatToDateGroup  
+> [parameter] => arr: any[]  
+> [기능] => 채팅 리스트를 날짜별로 묶는 함수
+
+<br/>
+
+> [함수명] => comAxiosRequest  
+> [parameter] => param: axiosRequestObj
+> [기능] => Axios Request 공통 함수
+
+<br/>
+
+> [함수명] => appDelay  
+> [parameter] => time: number
+> [기능] => Delay 함수
 
 <br/><br/>
 

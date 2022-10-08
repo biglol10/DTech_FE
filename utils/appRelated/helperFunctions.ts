@@ -3,6 +3,8 @@ import dayjs from 'dayjs';
 import axios from 'axios';
 import _ from 'lodash';
 import cookie from 'js-cookie';
+import { store } from '@store/rootReducer';
+import { IAuth } from '@utils/types/commAndStoreTypes';
 
 const baseImage = {
 	AvatarBase0: 'AvatarBase_BLACK1.png',
@@ -105,6 +107,8 @@ const comAxiosRequest = async (param: axiosRequestObj) => {
 		tokenValue && { headers: { Authorization: `Bearer ${tokenValue}` } },
 	);
 
+	const { auth: userAuth }: { auth: IAuth } = store.getState();
+
 	const axiosResult: {
 		status: SuccessOrFailType;
 		response: any;
@@ -117,6 +121,17 @@ const comAxiosRequest = async (param: axiosRequestObj) => {
 			};
 		})
 		.catch((err) => {
+			let stringified = '';
+
+			try {
+				stringified = JSON.stringify(dataObj);
+			} catch {
+				stringified = '';
+			}
+
+			const errMsg = err.response?.data?.error || '';
+
+			fireErrLog(url, requestType, stringified, errMsg, userAuth.userUID || '');
 			failCallback && failCallback(err);
 			return {
 				status: 'error' as SuccessOrFailType,
@@ -125,6 +140,22 @@ const comAxiosRequest = async (param: axiosRequestObj) => {
 		});
 
 	return axiosResult;
+};
+
+const fireErrLog = (
+	url: string,
+	requestType: 'get' | 'post',
+	dataObj: string = '',
+	errMsg: string = '',
+	userId: string = '',
+) => {
+	axios.post(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/utils/insertErrLog`, {
+		uri: url.replace(process.env.NEXT_PUBLIC_BE_BASE_URL!, ''),
+		requestType,
+		data: dataObj,
+		errMsg,
+		userId,
+	});
 };
 
 const appDelay = (time: number) => {
