@@ -6,14 +6,14 @@ import { Label } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import { useModal } from '@utils/hooks/customHooks';
 import dayjs from 'dayjs';
-import { modalUISize } from '@utils/constants/uiConstants';
+import { IMetadata } from '@utils/types/commAndStoreTypes';
 
 import Style from './SingleChatMessage.module.scss';
 
 interface ChatListExtends {
 	value: string;
 	imgList: string[];
-	linkList: any;
+	linkList: IMetadata[];
 	messageOwner: 'other' | 'mine';
 	sentTime: string | null | undefined;
 	userName: string;
@@ -131,7 +131,7 @@ const SingleChatMessage = ({
 					)}
 					{imgList && imgList.length > 0 && (
 						<div className={cx('imageListDiv', messageOwner)}>
-							{imgList.map((itemUrl: any, idx: number) => {
+							{imgList.map((itemUrl: string, idx: number) => {
 								return (
 									<img
 										style={{ height: '50px', width: '50px' }}
@@ -142,7 +142,7 @@ const SingleChatMessage = ({
 								);
 							})}
 							{/* bottomRef끝까지 가지 않아 일반 img태그 사용 */}
-							{/* {imgList.map((itemUrl: any, idx: number) => (
+							{/* {imgList.map((itemUrl: string, idx: number) => (
 								<Image
 									key={`asdf_${idx}`}
 									src={itemUrl}
@@ -187,7 +187,7 @@ const SingleChatMessage = ({
 								Array(6 - linkList.length - 1)
 									.fill(0)
 									.map((item: null, idx) => <div key={`emptyA_${idx}`}></div>)}
-							{linkList.map((item: { [name: string]: string }, idx: number) => {
+							{linkList.map((item, idx: number) => {
 								return (
 									<a
 										key={`ahref_${item.url}_${idx}`}

@@ -1,6 +1,7 @@
 import { Box, List } from '@components/index';
 import { MainLayoutTemplate } from '@components/customs';
 import { parseCookies } from 'nookies';
+import { GetServerSideProps } from 'next';
 
 const ChatPage = () => {
 	const items = [
@@ -44,6 +45,9 @@ const ChatPage = () => {
 		{
 			content: `읽지 않은 메시지가 있을 경우 상대방의 이름이 bold로 나타나며 해당 정보를 실시간으로 가져올 수 있습니다`,
 		},
+		{
+			content: `대화방 만들기에서 그룹채팅을 시작할 수 있습니다`,
+		},
 	];
 
 	return (
@@ -74,7 +78,7 @@ const ChatPage = () => {
 ChatPage.displayName = 'chatMainPage';
 ChatPage.PageLayout = MainLayoutTemplate;
 
-export const getServerSideProps = async (context: any) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
 	const { currentChatUser } = parseCookies(context);
 
 	if (currentChatUser) {

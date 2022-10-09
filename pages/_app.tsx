@@ -17,6 +17,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import cookie from 'js-cookie';
 import { useSocket } from '@utils/hooks/customHooks';
+import { IAuth, IToastState } from '@utils/types/commAndStoreTypes';
 
 import '@styles/globals.scss';
 import 'semantic-ui-css/semantic.min.css';
@@ -25,14 +26,13 @@ import 'react-toastify/dist/ReactToastify.css';
 
 type ComponentWithPageLayout = AppProps & {
 	Component: AppProps['Component'] & {
-		// PageLayout?: React.ComponentType;
-		PageLayout?: any;
+		PageLayout?: React.ElementType;
 	};
 };
 
 const MyApp = ({ Component, pageProps }: ComponentWithPageLayout) => {
-	const authStore = useSelector((state: any) => state.auth);
-	const toastInfo = useSelector((state: any) => state.toastInfo);
+	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
+	const toastInfo = useSelector((state: { toastInfo: IToastState }) => state.toastInfo);
 	const dispatch = useDispatch();
 	const { init: initSocket } = useSocket();
 

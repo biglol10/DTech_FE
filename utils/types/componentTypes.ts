@@ -6,13 +6,13 @@
  * 1      변지욱     2022-06-16                              최초작성
  ********************************************************************************************/
 
-import React, { ReactNode, JSXElementConstructor as JSX } from 'react';
-import { ButtonProps, StrictLabelProps, SemanticICONS } from 'semantic-ui-react';
+import React, { ReactNode, JSXElementConstructor as JSX, ChangeEvent, SyntheticEvent } from 'react';
+import { ButtonProps, StrictLabelProps } from 'semantic-ui-react';
 
 export interface IInputLayout {
 	id?: string;
 	className?: string;
-	children: any;
+	children: React.ReactElement;
 	inputLabel?: string;
 	inputLabelSize?: 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 	showInputLabel?: boolean;
@@ -53,6 +53,8 @@ export interface IInputWithIcon extends IInputDefault {
 }
 
 export interface IInputPhone extends IInputDefault {}
+
+// type htmlEventHandler = () => Promise<any>;
 
 export interface IButton {
 	className?: string;
@@ -179,7 +181,7 @@ export interface IInputDropdown {
 
 export interface IAvatar {
 	id?: string;
-	src?: any;
+	src?: string | null;
 	content: string | JSX.Element;
 	fontColor?: string;
 	spacing?: number;

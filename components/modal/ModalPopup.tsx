@@ -13,10 +13,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Modal } from 'semantic-ui-react';
 import { modalUISize } from '@utils/constants/uiConstants';
 import * as RCONST from '@utils/constants/reducerConstants';
+import { IModalState } from '@utils/types/commAndStoreTypes';
 
 const ModalPopup = () => {
 	const dispatch = useDispatch();
-	const modalState = useSelector((state: any) => state.modal);
+	const modalState = useSelector((state: { modal: IModalState }) => state.modal);
 	const open = modalState.modalOpen;
 	const content = modalState.modalContent;
 	const modalSize = modalState.modalSize || modalUISize.SMALL;
@@ -34,7 +35,7 @@ const ModalPopup = () => {
 
 	useEffect(() => {
 		try {
-			if (fitContentWidth) {
+			if (fitContentWidth && elementId) {
 				const el = document.getElementById(elementId);
 
 				if (el) {

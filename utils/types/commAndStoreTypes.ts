@@ -5,9 +5,9 @@ import { Socket } from 'socket.io-client';
 
 export interface IModalState {
 	modalOpen?: boolean;
-	modalTitle?: string;
-	modalContent?: React.ReactElement | any;
-	modalSize?: string;
+	modalTitle?: string | React.ReactNode;
+	modalContent?: React.ReactElement | string | null;
+	modalSize?: 'mini' | 'tiny' | 'small' | 'large' | 'fullscreen' | undefined;
 	modalIsBasic?: boolean;
 	modalFitContentWidth?: boolean;
 	modalShowCloseIcon?: 'Y' | 'N';
@@ -17,7 +17,7 @@ export interface IModalState {
 export interface ChatList {
 	value: string;
 	imgList: { fileName: string; filePreview: string; imageFile: File }[];
-	linkList: any;
+	linkList: { [name: string]: string }[];
 }
 
 export interface IToastState {
@@ -69,4 +69,12 @@ export interface IAuth {
 	userEmail: string;
 	userToken: string;
 	userSocket: null | Socket;
+}
+
+export interface IMetadata {
+	status: 'success' | 'fail';
+	url?: string;
+	metadata_title: string;
+	metadata_description: string;
+	metadata_image: string;
 }
