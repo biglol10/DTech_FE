@@ -26,8 +26,11 @@ const middleware = (request: NextRequest) => {
 
 	if (!cookieValue && isWithProtectedRoutes()) {
 		return NextResponse.redirect(
-			`http://localhost:3065/${process.env.NODE_ENV === 'production' ? 'dtech/' : ''}login`,
+			new URL(`/${process.env.NODE_ENV === 'production' ? 'dtech/' : ''}login`, request.url),
 		);
+		// return NextResponse.redirect(
+		// 	`http://localhost:3065/${process.env.NODE_ENV === 'production' ? 'dtech/' : ''}login`,
+		// );
 	}
 };
 
