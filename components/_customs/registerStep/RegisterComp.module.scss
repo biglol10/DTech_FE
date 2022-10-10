@@ -73,15 +73,19 @@
 	}
 	.emailDiv{
 		display: flex;
-		justify-content: space-between;
-		
+		// justify-content: space-between;
 		.inputIdField{
 			width:70%;
 		}
-		.idCheckBtn {
+		.idCheckBtnDiv {
+			margin-top:62px;
 			width:30%;
-			// height:40px;
-			margin: 0px ;
+			height:43px;
+			padding: 0px;
+			.idCheckBtn{
+				width:100%;
+				// padding: 0px;
+			}
 		}
 	}
 	.inputLabelHeader{
