@@ -93,9 +93,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 			socket.on(
 				'connectedUsers',
 				({ users }: { users: { userId: string; socketId: string }[] }) => {
-					const onlineUsersArr = users
-						// .filter((item) => item.userId !== authStore.userId)
-						.map((item2) => item2.userId);
+					const onlineUsersArr = users.map((item2) => item2.userId);
 
 					if (!_.isEqual(connectedUsersRef.current, onlineUsersArr)) {
 						connectedUsersRef.current = onlineUsersArr;

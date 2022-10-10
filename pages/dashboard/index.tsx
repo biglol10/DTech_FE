@@ -7,6 +7,7 @@
  * 2      변지욱     2022-09-22   feature/JW/profileModal    프로필 클릭 시 사용자 profile modal 표시
  ********************************************************************************************/
 
+import { GetServerSideProps } from 'next';
 import { useEffect, useMemo, useState, useCallback, useRef } from 'react';
 import { parseCookies } from 'nookies';
 import { Bar } from 'react-chartjs-2';
@@ -318,7 +319,7 @@ const Index = ({
 	);
 };
 
-export const getServerSideProps = async (context: any) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
 	const { token } = parseCookies(context);
 
 	let axiosData: any = null;

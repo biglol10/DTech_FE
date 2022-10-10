@@ -7,6 +7,12 @@ $backgroundUrl: url(~@public/background/AboutBackground6.png);
 	height: 100%;
 	overflow-y: auto;
 
+	& > div {
+		width: 50%;
+		margin: 0 auto;
+		padding-top: 50px;
+	}
+
 	.cardContent {
 		& > span:first-child {
 			float: left;

@@ -65,25 +65,6 @@ const UserSidebar = ({
 					toast['error'](<>{'읽지 않은 메시지알림을 불러오지 못했습니다'}</>);
 				},
 			});
-
-			// axios
-			// 	.get(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getUnreadChatNoti`, {
-			// 		params: { fromUID: authStore.userUID },
-			// 	})
-			// 	.then((response) => {
-			// 		const resData = response.data.unReadList.map((item: IUnReadChatList) => {
-			// 			if (item.GUBUN === 'private') {
-			// 				return item.USER_UID;
-			// 			} else {
-			// 				return item.CONVERSATION_ID;
-			// 			}
-			// 		});
-
-			// 		initUnReadChatList(resData);
-			// 	})
-			// 	.catch((err) => {
-			// 		toast['error'](<>{'읽지 않은 메시지알림을 불러오지 못했습니다'}</>);
-			// 	});
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [authStore]);
@@ -92,24 +73,13 @@ const UserSidebar = ({
 		const socket = authStore.userSocket;
 
 		socket?.on('newMessageReceivedSidebar', ({ fromUID }: { fromUID: string }) => {
-			if (fromUID !== appCommon.currentChatUser) {
-				unReadArrAdd(fromUID);
-			} else {
-				unReadArrSlice(fromUID);
-			}
+			unReadArrAdd(fromUID);
 		});
 
-		// TODO change the logic
 		socket?.on('newMessageGroupReceivedSidebar', ({ fromUID }: { fromUID: string }) => {
-			if (fromUID !== appCommon.currentChatGroup) {
-				unReadArrAdd(fromUID);
-			} else {
-				unReadArrSlice(fromUID);
-			}
+			unReadArrAdd(fromUID);
 		});
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [appCommon.currentChatUser, authStore.userSocket]);
+	}, [authStore.userSocket, unReadArrAdd]);
 
 	const createChatRoom = useCallback(() => {
 		handleModal({

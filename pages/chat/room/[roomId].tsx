@@ -5,8 +5,10 @@
  *-------------------------------------------------------------------------------------------
  * 1      변지욱     2022-09-26   feature/JW/chatRoom     최초작성
  * 2      변지욱     2022-10-06   feature/JW/groupChat    그룹챗 멤버 modal 표시
+ * 3      변지욱     2022-10-07   feature/JW/chatScroll   위로 스크롤 했을 시 하단 자동스크롤 방지
  ********************************************************************************************/
 
+import { GetServerSideProps } from 'next';
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import {
 	Box,
@@ -19,7 +21,7 @@ import {
 import { MainLayoutTemplate, SingleChatMessage, ChatMembersModal } from '@components/customs';
 import { Container, Segment, Icon, Header } from 'semantic-ui-react';
 
-import { ChatList, IUsersStatusArr, IAuth } from '@utils/types/commAndStoreTypes';
+import { ChatList, IUsersStatusArr, IAuth, IMetadata } from '@utils/types/commAndStoreTypes';
 import { useSelector, useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
@@ -31,7 +33,7 @@ import {
 	generateAvatarImage,
 } from '@utils/appRelated/helperFunctions';
 import * as RCONST from '@utils/constants/reducerConstants';
-import { useModal } from '@utils/hooks/customHooks';
+import { useModal, useChatUtil } from '@utils/hooks/customHooks';
 
 import Style from './[roomId].module.scss';
 
@@ -40,7 +42,7 @@ interface IChatList {
 	TO_USERNAME: string;
 	MESSAGE_TEXT: string;
 	IMG_LIST: string[];
-	LINK_LIST: string[];
+	LINK_LIST: IMetadata[];
 	SENT_DATETIME: string;
 	USER_UID: string;
 	USER_NM: string;
@@ -55,13 +57,13 @@ interface ChatDateReduce {
 }
 
 const dayOfWeek: { [val: string]: string } = {
-	'0': '월요일',
-	'1': '화요일',
-	'2': '수요일',
-	'3': '목요일',
-	'4': '금요일',
-	'5': '토요일',
-	'6': '일요일',
+	'0': '일요일',
+	'1': '월요일',
+	'2': '화요일',
+	'3': '수요일',
+	'4': '목요일',
+	'5': '금요일',
+	'6': '토요일',
 };
 
 const RoomChat = ({
@@ -85,8 +87,11 @@ const RoomChat = ({
 	const bottomRef = useRef<any>(null);
 	const firstLoadRef = useRef<boolean>(true);
 	const quillRef = useRef<any>(null);
+	const isScrolledRef = useRef<boolean>(false);
 
-	const chatMembersModalRef = useRef<HTMLDivElement>();
+	const chatSegmentUniqueId = lodash.uniqueId('chatSegment');
+
+	const { unReadArrSlice } = useChatUtil();
 
 	const { handleModal } = useModal();
 
@@ -130,7 +135,7 @@ const RoomChat = ({
 	}, [authStore.userToken, authStore.userUID, getGroupChatListCallback, roomID]);
 
 	useEffect(() => {
-		bottomRef.current?.scrollIntoView({ behavior: 'auto' });
+		if (!isScrolledRef.current) bottomRef.current?.scrollIntoView({ behavior: 'auto' });
 	}, [chatList, quillWrapperHeight]);
 
 	const notifyTextChange = useCallback(() => {
@@ -262,11 +267,7 @@ const RoomChat = ({
 		handleModal({
 			modalOpen: true,
 			modalContent: (
-				<ChatMembersModal
-					currentChatRoomName={currentChatRoomName}
-					chatGroupMembers={groupMembers}
-					id="chatMembersModal"
-				/>
+				<ChatMembersModal chatGroupMembers={groupMembers} id="chatMembersModal" />
 			),
 			modalFitContentWidth: true,
 			modalContentId: 'chatMembersModal',
@@ -278,6 +279,26 @@ const RoomChat = ({
 			),
 		});
 	}, [currentChatRoomName, groupMembers, handleModal]);
+
+	useEffect(() => {
+		unReadArrSlice(roomID);
+	}, [unReadArrSlice, roomID]);
+
+	useEffect(() => {
+		const el = document.getElementById(chatSegmentUniqueId);
+		const scrollFunc = () => {
+			if (el) {
+				isScrolledRef.current = el.scrollHeight - el.clientHeight - 200 >= el.scrollTop;
+			}
+		};
+
+		if (el) {
+			el.addEventListener('scroll', scrollFunc);
+		}
+		return () => {
+			el?.removeEventListener('scroll', scrollFunc);
+		};
+	}, [chatSegmentUniqueId, quillWrapperHeight]);
 
 	return (
 		<>
@@ -318,6 +339,7 @@ const RoomChat = ({
 								height: `calc(100% - ${quillWrapperHeight}px - 20px)`,
 							}}
 							className={Style['chatWrapperSegment']}
+							id={chatSegmentUniqueId}
 						>
 							{chatList &&
 								Object.keys(chatList).map((item: string, idx: number) => {
@@ -454,7 +476,7 @@ const RoomChat = ({
 RoomChat.PageLayout = MainLayoutTemplate;
 RoomChat.displayName = 'chatPage';
 
-export const getServerSideProps = async (context: any) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
 	const { currentChatRoom } = parseCookies(context);
 
 	return {
