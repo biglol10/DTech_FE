@@ -9,7 +9,6 @@
  * 4      변지욱     2022-09-06   feature/JW/chatPage    누구랑 채팅하는지 세팅
  * 5      변지욱     2022-09-21   feature/JW/chatPageBug 채팅 제대로 표시 안되는 버그 픽스
  * 6      변지욱     2022-10-03   feature/JW/change      이전 채팅 사용자랑 같으면 이름 표시X
- * 7      변지욱     2022-10-07   feature/JW/chatScroll  위로 스크롤 했을 시 하단 자동스크롤 방지
  ********************************************************************************************/
 
 import { GetServerSideProps } from 'next';
@@ -62,13 +61,13 @@ interface ChatDateReduce {
 }
 
 const dayOfWeek: { [val: string]: string } = {
-	'0': '일요일',
-	'1': '월요일',
-	'2': '화요일',
-	'3': '수요일',
-	'4': '목요일',
-	'5': '금요일',
-	'6': '토요일',
+	'0': '월요일',
+	'1': '화요일',
+	'2': '수요일',
+	'3': '목요일',
+	'4': '금요일',
+	'5': '토요일',
+	'6': '일요일',
 };
 
 const UserChat = ({
@@ -85,12 +84,9 @@ const UserChat = ({
 	const [sendingUserState, setSendingUserState] = useState<string>('');
 	const conversationId = useRef<string>();
 
-	const bottomRef = useRef<HTMLDivElement>(null);
+	const bottomRef = useRef<any>(null);
 	const firstLoadRef = useRef<boolean>(true);
 	const quillRef = useRef<any>(null);
-	const isScrolledRef = useRef<boolean>(false);
-
-	const chatSegmentUniqueId = lodash.uniqueId('chatSegment');
 
 	const userUID = useMemo(() => {
 		return queryObj.userId;
@@ -151,7 +147,7 @@ const UserChat = ({
 	}, [getPrivateChatListCallback]);
 
 	useEffect(() => {
-		if (!isScrolledRef.current) bottomRef.current?.scrollIntoView({ behavior: 'auto' });
+		bottomRef.current?.scrollIntoView({ behavior: 'auto' });
 	}, [chatList, quillWrapperHeight]);
 
 	const notifyTextChange = useCallback(() => {
@@ -246,22 +242,6 @@ const UserChat = ({
 		unReadArrSlice(userUID);
 	}, [unReadArrSlice, userUID]);
 
-	useEffect(() => {
-		const el = document.getElementById(chatSegmentUniqueId);
-		const scrollFunc = () => {
-			if (el) {
-				isScrolledRef.current = el.scrollHeight - el.clientHeight - 200 >= el.scrollTop;
-			}
-		};
-
-		if (el) {
-			el.addEventListener('scroll', scrollFunc);
-		}
-		return () => {
-			el?.removeEventListener('scroll', scrollFunc);
-		};
-	}, [chatSegmentUniqueId, quillWrapperHeight]);
-
 	return (
 		<>
 			<main id={Style['chatMain']}>
@@ -296,7 +276,6 @@ const UserChat = ({
 								height: `calc(100% - ${quillWrapperHeight}px - 20px)`,
 							}}
 							className={Style['chatWrapperSegment']}
-							id={chatSegmentUniqueId}
 						>
 							{chatList &&
 								Object.keys(chatList).map((item: string) => {
