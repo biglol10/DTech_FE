@@ -10,7 +10,7 @@ module.exports = {
 		ecmaVersion: 2018,
 		sourceType: 'module',
 	},
-	ignorePatterns: ['scripts/*', 'next.config.js', 'server.js'],
+	ignorePatterns: ['scripts/*', 'next.config.js', '.next/*'],
 	rules: {
 		quotes: ['error', 'single', { allowTemplateLiterals: true }], // ? template literal 허용
 		'spaced-comment': ['error', 'always', { markers: ['/'] }], // ? 주석에 이후 1 공백 (markers 안에 있는 것들은 예외) (예를 들어 '//' 이후 '/' 를 쓸 때 1 공백 있어야 하는 룰에 예외처리)
