@@ -12,7 +12,8 @@
  * 7      변지욱     2022-08-27   feature/JW/inputwithicon    lodash 이용해 notifyTextChange 제어
  * 8      변지욱     2022-09-13   feature/JW/quillButton      Send 버튼 위치 제어 가능토록 수정
  * 9      변지욱     2022-09-19   feature/JW/imageBlob        이미지 붙여먹기 시 blob객체로 변환 후 File
- * 10     변지욱     2022-09-29   feature/JW/chatRoom         enterSubmit이 있을 경우 엔터 이벤트 커스터마이징, 긔 외엔 null (게시판 때문)
+ * 10     변지욱     2022-09-29   feature/JW/chatRoom         enterSubmit이 있을 경우 엔터 이벤트 커스터마이징, 긔 외엔 null (게시판 때문)\
+ * 11     변지욱     2022-10-12   feature/JW/quill            텍스트가 아닌 html을 다루기로 함
  ********************************************************************************************/
 
 import React, {
@@ -145,7 +146,7 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 					}
 				}
 
-				setQuillContext(quillRef.current.getEditor().getText());
+				setQuillContext(quillRef.current.getEditor().root.innerHTML);
 			};
 		}, [urlPreviewList]);
 
@@ -158,7 +159,7 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 
 			handleSubmit &&
 				handleSubmit({
-					value: quillRef.current.getEditor().getText().trim(),
+					value: quillRef.current.getEditor().root.innerHTML.trim(),
 					imgList: urlPreviewList,
 					linkList: quillRef.current
 						.getEditor()
@@ -174,7 +175,7 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 		useImperativeHandle(
 			ref,
 			() => ({
-				value: quillRef?.current?.getEditor().getText().trim(),
+				value: quillRef?.current?.getEditor().root.innerHTML,
 				imgList: urlPreviewList,
 				linkList: quillRef?.current
 					?.getEditor()
@@ -268,7 +269,7 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 		const changeUrlPreviewList = useCallback(
 			(fileName: string) => {
 				setUrlPreviewList(urlPreviewList.filter((item: any) => item.fileName !== fileName));
-				setQuillContext(quillRef.current.getEditor().getText());
+				setQuillContext(quillRef.current.getEditor().root.innerHTML);
 			},
 			[urlPreviewList],
 		);
@@ -288,12 +289,16 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 
 					const filteredString = quillRef.current
 						.getEditor()
-						.getText()
-						.replace(`<img src="${mediaPreview}">`, '');
+						.root.innerHTML.replace(`<img src="${mediaPreview}">`, '');
+
+					// const filteredString = quillRef.current
+					// 	.getEditor()
+					// 	.getText()
+					// 	.replace(`<img src="${mediaPreview}">`, '');
 
 					if (mediaPreview && filteredString) {
 						setQuillContext(filteredString);
-						quillRef.current.getEditor().setText(filteredString);
+						quillRef.current.getEditor().root.innerHTML = filteredString;
 						if (urlPreviewList.length >= 6) {
 							toast['error'](<>{'이미지는 최대 6개로 제한합니다'}</>);
 
