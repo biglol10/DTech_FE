@@ -53,8 +53,12 @@
 		}
 
 		.messageLabel {
-			max-width: 90%;
+			max-width: 100%;
 			color: black !important;
+
+			& * {
+				margin: 0;
+			}
 
 			&.other {
 				border-color: darkorange;

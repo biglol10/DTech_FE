@@ -5,7 +5,6 @@
  *-------------------------------------------------------------------------------------------
  * 1      변지욱     2022-09-26   feature/JW/chatRoom     최초작성
  * 2      변지욱     2022-10-06   feature/JW/groupChat    그룹챗 멤버 modal 표시
- * 3      변지욱     2022-10-07   feature/JW/chatScroll   위로 스크롤 했을 시 하단 자동스크롤 방지
  ********************************************************************************************/
 
 import { GetServerSideProps } from 'next';
@@ -57,13 +56,13 @@ interface ChatDateReduce {
 }
 
 const dayOfWeek: { [val: string]: string } = {
-	'0': '일요일',
-	'1': '월요일',
-	'2': '화요일',
-	'3': '수요일',
-	'4': '목요일',
-	'5': '금요일',
-	'6': '토요일',
+	'0': '월요일',
+	'1': '화요일',
+	'2': '수요일',
+	'3': '목요일',
+	'4': '금요일',
+	'5': '토요일',
+	'6': '일요일',
 };
 
 const RoomChat = ({
@@ -87,9 +86,6 @@ const RoomChat = ({
 	const bottomRef = useRef<any>(null);
 	const firstLoadRef = useRef<boolean>(true);
 	const quillRef = useRef<any>(null);
-	const isScrolledRef = useRef<boolean>(false);
-
-	const chatSegmentUniqueId = lodash.uniqueId('chatSegment');
 
 	const { unReadArrSlice } = useChatUtil();
 
@@ -135,7 +131,7 @@ const RoomChat = ({
 	}, [authStore.userToken, authStore.userUID, getGroupChatListCallback, roomID]);
 
 	useEffect(() => {
-		if (!isScrolledRef.current) bottomRef.current?.scrollIntoView({ behavior: 'auto' });
+		bottomRef.current?.scrollIntoView({ behavior: 'auto' });
 	}, [chatList, quillWrapperHeight]);
 
 	const notifyTextChange = useCallback(() => {
@@ -284,22 +280,6 @@ const RoomChat = ({
 		unReadArrSlice(roomID);
 	}, [unReadArrSlice, roomID]);
 
-	useEffect(() => {
-		const el = document.getElementById(chatSegmentUniqueId);
-		const scrollFunc = () => {
-			if (el) {
-				isScrolledRef.current = el.scrollHeight - el.clientHeight - 200 >= el.scrollTop;
-			}
-		};
-
-		if (el) {
-			el.addEventListener('scroll', scrollFunc);
-		}
-		return () => {
-			el?.removeEventListener('scroll', scrollFunc);
-		};
-	}, [chatSegmentUniqueId, quillWrapperHeight]);
-
 	return (
 		<>
 			<main id={Style['chatMain']}>
@@ -339,7 +319,6 @@ const RoomChat = ({
 								height: `calc(100% - ${quillWrapperHeight}px - 20px)`,
 							}}
 							className={Style['chatWrapperSegment']}
-							id={chatSegmentUniqueId}
 						>
 							{chatList &&
 								Object.keys(chatList).map((item: string, idx: number) => {
