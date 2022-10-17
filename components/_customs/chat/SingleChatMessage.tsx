@@ -7,6 +7,7 @@ import classNames from 'classnames/bind';
 import { useModal } from '@utils/hooks/customHooks';
 import dayjs from 'dayjs';
 import { IMetadata } from '@utils/types/commAndStoreTypes';
+import dompurify from 'dompurify';
 
 import Style from './SingleChatMessage.module.scss';
 
@@ -86,7 +87,7 @@ const SingleChatMessage = ({
 						></div>
 					)}
 
-					{value && (
+					{value && value !== '<p><br></p>' && (
 						<>
 							<div
 								style={{
@@ -101,7 +102,14 @@ const SingleChatMessage = ({
 											pointing={'left'}
 											className={cx('messageLabel', messageOwner)}
 										>
-											<pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre>
+											<span
+												dangerouslySetInnerHTML={{
+													__html: dompurify.sanitize(
+														`${value.replaceAll('\t', ' '.repeat(3))}`,
+													),
+												}}
+											></span>
+											{/* <pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre> */}
 										</Label>
 										{!isSamePreviousUserChat && (
 											<span style={{ alignSelf: 'flex-end' }}>
@@ -122,7 +130,14 @@ const SingleChatMessage = ({
 											pointing={'right'}
 											className={cx('messageLabel', messageOwner)}
 										>
-											<pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre>
+											<span
+												dangerouslySetInnerHTML={{
+													__html: dompurify.sanitize(
+														`${value.replaceAll('\t', ' '.repeat(3))}`,
+													),
+												}}
+											></span>
+											{/* <pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre> */}
 										</Label>
 									</>
 								)}
