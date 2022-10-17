@@ -7,12 +7,11 @@
  ********************************************************************************************/
 
 import Link from 'next/link';
-import { useState } from 'react';
 import { Button } from '@components/index';
 import Style from './RegisterComp.module.scss';
 
 const RegisterResult = (props: any) => {
-	const [resultInfo, setResultInfo] = useState(props.resultData.result);
+	const resultInfo = props.resultData.result;
 
 	return (
 		<>

@@ -2,7 +2,7 @@ import { MainLayoutTemplate } from '@components/customs';
 import { comAxiosRequest } from '@utils/appRelated/helperFunctions';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Image, Label } from 'semantic-ui-react';
+import { Image } from 'semantic-ui-react';
 import Style from './profile.module.scss';
 
 interface IUserInfo {
@@ -28,13 +28,10 @@ const Profile = () => {
 				requestType: 'post',
 				dataObj: { uuid },
 				successCallback: (response) => {
-					console.log('success');
 					setUserInfo(response.data.resultData.queryResult[0]);
 					// console.log(response.data.resultData.queryResult[0]);
 				},
-				failCallback: () => {
-					console.log('failed');
-				},
+				failCallback: () => {},
 			});
 		}
 		comAxiosRequest({
@@ -42,13 +39,9 @@ const Profile = () => {
 			requestType: 'post',
 			dataObj: { uuid },
 			successCallback: (response) => {
-				console.log('success');
-				console.log(response.data.resultData);
 				setUserSkills(response.data.resultData.queryResult);
 			},
-			failCallback: () => {
-				console.log('failed');
-			},
+			failCallback: () => {},
 		});
 	}, [uuid]);
 

@@ -1,7 +1,6 @@
 import { ICard } from '@utils/types/componentTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 import { comAxiosRequest } from '@utils/appRelated/helperFunctions';
 import { Card, Icon } from 'semantic-ui-react';

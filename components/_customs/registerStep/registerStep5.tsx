@@ -16,7 +16,7 @@ import Style from './RegisterComp.module.scss';
 
 const RegisterStep5 = (props: any) => {
 	const dispatch = useDispatch();
-	const [registerData, setRegisterData] = useState(useSelector((state: any) => state.register));
+	const registerData = useSelector((state: any) => state.register);
 	const [image, setImage] = useState(
 		useSelector((state: any) => state.register.userProfileImage),
 	);

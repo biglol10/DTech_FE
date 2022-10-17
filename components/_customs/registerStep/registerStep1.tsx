@@ -11,7 +11,6 @@ import { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, InputLayout, InputWithIcon } from '@components/index';
 import { Icon } from 'semantic-ui-react';
-import classNames from 'classnames/bind';
 import { useRouter } from 'next/router';
 
 import Style from './RegisterComp.module.scss';
@@ -23,7 +22,6 @@ const RegisterStep1 = (props: any) => {
 
 	const dispatch = useDispatch();
 	const router = useRouter();
-	const cx = classNames.bind(Style);
 
 	const [idInputValue, setIdInputValue] = useState(
 		useSelector((state: any) => state.register.idInputValue),

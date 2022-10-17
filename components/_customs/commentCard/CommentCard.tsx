@@ -11,7 +11,6 @@ import { useState } from 'react';
 import { Icon } from 'semantic-ui-react';
 import { toast } from 'react-toastify';
 import { comAxiosRequest } from '@utils/appRelated/helperFunctions';
-import axios from 'axios';
 import Style from './CommentCard.module.scss';
 
 interface ICommentCard {

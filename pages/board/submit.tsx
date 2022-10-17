@@ -10,7 +10,6 @@ import Style from './board.module.scss';
 
 const Submit = () => {
 	const router = useRouter();
-	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
 	const [techList, setTechList] = useState([]);
 	const [boardTitle, setBoardTitle] = useState('');
 	const [selectedTech, setSelectedTech] = useState('');
@@ -71,9 +70,6 @@ const Submit = () => {
 					<DTechQuill
 						enterSubmit={false}
 						quillMinHeight={300}
-						returnQuillWrapperHeight={(heightValue: number) => {
-							setQuillWrapperHeight(heightValue);
-						}}
 						handleSubmit={(content: ChatList) => {
 							submitBoard(content);
 						}}
