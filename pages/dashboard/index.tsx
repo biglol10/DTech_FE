@@ -29,6 +29,7 @@ import _ from 'lodash';
 import { useModal } from '@utils/hooks/customHooks';
 import { modalUISize } from '@utils/constants/uiConstants';
 import { comAxiosRequest } from '@utils/appRelated/helperFunctions';
+import cookies from 'js-cookie';
 
 import Style from './dashboard.module.scss';
 
@@ -320,7 +321,8 @@ const Index = ({
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-	const { token } = parseCookies(context);
+	// const { token } = parseCookies(context);
+	const token = cookies.get('token');
 
 	console.log('token value is');
 	console.log(token);
