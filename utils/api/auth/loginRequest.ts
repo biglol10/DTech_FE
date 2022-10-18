@@ -8,7 +8,9 @@ interface authObjParamSetting {
 const fireTokenRequest = async (token: string) => {
 	const axiosResult = await comAxiosRequest({
 		url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/getLoggedInUserInfo`,
-		dataObj: {},
+		dataObj: {
+			token,
+		},
 		requestType: 'post',
 		withAuth: true,
 	});
