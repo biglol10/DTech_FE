@@ -323,7 +323,7 @@ const Index = ({
 export const getServerSideProps: GetServerSideProps = async ({ req, res }: any) => {
 	const { token } = parseCookies(req);
 
-	res.setHeader('Cache-Control', 'public, max-age=60');
+	res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
 
 	let axiosData: any = null;
 
