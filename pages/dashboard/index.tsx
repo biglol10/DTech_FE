@@ -322,12 +322,14 @@ const Index = ({
 export const getServerSideProps: GetServerSideProps = async (context) => {
 	const { token } = parseCookies(context);
 
+	console.log('token value is');
+	console.log(token);
+
 	let axiosData: any = null;
 
 	await comAxiosRequest({
 		url: `${process.env.BE_BASE_URL}/api/dashboard/getTeamSkills`,
 		requestType: 'get',
-		withAuth: true,
 		successCallback: (response) => {
 			axiosData = response.data;
 		},
