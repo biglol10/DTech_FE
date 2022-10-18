@@ -104,29 +104,19 @@ const comAxiosRequest = async (param: axiosRequestObj) => {
 		cookie.get('token') && withAuth
 			? {
 					headers: {
-						Authorization: `Bearer ${cookie.get('token')}`,
-						'Access-Control-Allow-Origin': '*',
-						'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
-						'Access-Control-Allow-Headers':
-							'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With',
+						authorizations: `Bearer ${cookie.get('token')}`,
 					},
 			  }
-			: {
-					'Access-Control-Allow-Origin': '*',
-					'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
-					'Access-Control-Allow-Headers':
-						'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With',
-			  },
+			: {},
 		tokenValue && {
 			headers: {
-				Authorization: `Bearer ${tokenValue}`,
-				'Access-Control-Allow-Origin': '*',
-				'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
-				'Access-Control-Allow-Headers':
-					'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With',
+				authorizations: `Bearer ${tokenValue}`,
 			},
 		},
 	);
+
+	console.log('objParam is');
+	console.log(objectParam);
 
 	const { auth: userAuth }: { auth: IAuth } = store.getState();
 
