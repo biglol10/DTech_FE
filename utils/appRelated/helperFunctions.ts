@@ -102,9 +102,16 @@ const comAxiosRequest = async (param: axiosRequestObj) => {
 		},
 		dataObj && requestType === 'post' ? { data: dataObj } : { params: dataObj },
 		cookie.get('token') && withAuth
-			? { headers: { Authorization: `Bearer ${cookie.get('token')}` } }
-			: {},
-		tokenValue && { headers: { Authorization: `Bearer ${tokenValue}` } },
+			? {
+					headers: {
+						Authorization: `Bearer ${cookie.get('token')}`,
+						'Access-Control-Allow-Origin': true,
+					},
+			  }
+			: { 'Access-Control-Allow-Origin': true },
+		tokenValue && {
+			headers: { Authorization: `Bearer ${tokenValue}`, 'Access-Control-Allow-Origin': true },
+		},
 	);
 
 	const { auth: userAuth }: { auth: IAuth } = store.getState();
