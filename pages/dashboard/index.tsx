@@ -320,12 +320,10 @@ const Index = ({
 	);
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-	// const { token } = parseCookies(context);
-	const token = cookies.get('token');
+export const getServerSideProps: GetServerSideProps = async ({ req, res }: any) => {
+	const { token } = parseCookies(req);
 
-	console.log('token value is');
-	console.log(token);
+	res.setHeader('Cache-Control', 'public, max-age=60');
 
 	let axiosData: any = null;
 
