@@ -105,12 +105,26 @@ const comAxiosRequest = async (param: axiosRequestObj) => {
 			? {
 					headers: {
 						Authorization: `Bearer ${cookie.get('token')}`,
-						'Access-Control-Allow-Origin': true,
+						'Access-Control-Allow-Origin': '*',
+						'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+						'Access-Control-Allow-Headers':
+							'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With',
 					},
 			  }
-			: { 'Access-Control-Allow-Origin': true },
+			: {
+					'Access-Control-Allow-Origin': '*',
+					'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+					'Access-Control-Allow-Headers':
+						'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With',
+			  },
 		tokenValue && {
-			headers: { Authorization: `Bearer ${tokenValue}`, 'Access-Control-Allow-Origin': true },
+			headers: {
+				Authorization: `Bearer ${tokenValue}`,
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+				'Access-Control-Allow-Headers':
+					'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With',
+			},
 		},
 	);
 
