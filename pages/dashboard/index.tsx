@@ -326,7 +326,7 @@ const Index = ({
 	);
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }: any) => {
+export const getInitialProps: GetServerSideProps = async ({ req, res }: any) => {
 	const { token } = parseCookies(req);
 
 	res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
