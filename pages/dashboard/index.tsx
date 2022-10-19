@@ -239,7 +239,9 @@ const Index = ({
 					<Bar options={options} data={data} />
 				</div>
 				<div className={Style['skillOverviewTable']}>
-					<SkillTable teamSkillData={teamSkillCountObj} />
+					{!_.isEmpty(teamSkillCountObj) && (
+						<SkillTable teamSkillData={teamSkillCountObj} />
+					)}
 				</div>
 			</div>
 			<div className={Style['dashboardBottomMain']}>
@@ -297,7 +299,12 @@ const Index = ({
 					</ul>
 					<div>
 						<h4>
-							<CountUp end={userListData.length} delay={0} duration={0.2} />명
+							<CountUp
+								end={userListData ? userListData.length : 0}
+								delay={0}
+								duration={0.2}
+							/>
+							명
 						</h4>
 					</div>
 				</div>
