@@ -129,32 +129,31 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	}, [onlineUsers]);
 
 	const getGroupChatArr = useCallback(() => {
-		if (authStore.userUID) {
-			comAxiosRequest({
-				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getChatGroups`,
-				requestType: 'get',
-				dataObj: { currentUser: authStore.userUID },
-				successCallback: (response) => {
-					console.log('chatGroups response is');
-					console.log(response.data.chatGroups);
+		comAxiosRequest({
+			url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getChatGroups`,
+			requestType: 'get',
+			dataObj: { currentUser: authStore.userUID },
+			successCallback: (response) => {
+				console.log('chatGroups response is');
+				console.log(response.data.chatGroups);
 
-					console.log('chatGroups current is');
-					console.log(chatGroupsArrRef.current);
+				console.log('chatGroups current is');
+				console.log(chatGroupsArrRef.current);
 
-					console.log(_.isEqual(chatGroupsArrRef.current, response.data.chatGroups));
-					const stateEqual = _.isEqual(
-						chatGroupsArrRef.current,
-						response.data.chatGroups,
-					);
+				console.log(_.isEqual(chatGroupsArrRef.current, response.data.chatGroups));
+				const stateEqual = _.isEqual(chatGroupsArrRef.current, response.data.chatGroups);
 
-					if (!stateEqual) {
-						chatGroupsArrRef.current = response.data.chatGroups;
-						setGroupChatArr(response.data.chatGroups);
-					}
-				},
-				failCallback: () => {},
-			});
-		}
+				setGroupChatArr(response.data.chatGroups);
+
+				// if (!stateEqual) {
+				// 	chatGroupsArrRef.current = response.data.chatGroups;
+				// 	setGroupChatArr(response.data.chatGroups);
+				// }
+			},
+			failCallback: (err) => {
+				console.log('err and ', err);
+			},
+		});
 	}, [authStore.userUID]);
 
 	useEffect(() => {
