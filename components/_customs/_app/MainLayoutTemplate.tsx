@@ -135,11 +135,6 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 				requestType: 'post',
 				dataObj: { currentUser: authStore.userUID },
 				successCallback: (response) => {
-					console.log('chatGroups response is');
-					console.log(response.data.chatGroups);
-
-					console.log('chatGroups current is');
-					console.log(chatGroupsArrRef.current);
 					const stateEqual = _.isEqual(
 						chatGroupsArrRef.current,
 						response.data.chatGroups,
@@ -160,7 +155,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 
 		setTimeout(() => {
 			getGroupChatArr();
-		}, 1000);
+		}, 200);
 	}, [getGroupChatArr, getUsersStatus]);
 
 	const logout = () => {
