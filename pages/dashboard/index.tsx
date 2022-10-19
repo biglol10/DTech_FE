@@ -372,7 +372,7 @@ export const getInitialProps: GetServerSideProps = async (context) => {
 
 	return {
 		props: {
-			teamSkillDashboard: axiosData.teamSkillDashboard,
+			teamSkillDashboard: axiosData.teamSkillDashboard || [],
 			userDashboard: axiosData.userDashboard,
 			teamSkillCountObj,
 			aProp: process.env.S3_URL,
