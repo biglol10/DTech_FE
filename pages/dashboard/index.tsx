@@ -320,14 +320,14 @@ const Index = ({
 	);
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }: any) => {
+export const getInitialProps: any = async ({ req, res }: any) => {
 	const { token } = parseCookies(req);
 
 	res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
 
 	let axiosData: any = null;
 
-	await comAxiosRequest({
+	const abc = await comAxiosRequest({
 		url: `${process.env.BE_BASE_URL}/api/dashboard/getTeamSkills`,
 		requestType: 'get',
 		successCallback: (response) => {
