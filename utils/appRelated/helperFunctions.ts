@@ -113,9 +113,6 @@ const comAxiosRequest = async (param: axiosRequestObj) => {
 				authorizations: `Bearer ${tokenValue}`,
 			},
 		},
-		{
-			withCredentials: true,
-		},
 	);
 
 	const { auth: userAuth }: { auth: IAuth } = store.getState();

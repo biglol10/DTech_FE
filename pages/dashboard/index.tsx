@@ -29,7 +29,6 @@ import _ from 'lodash';
 import { useModal } from '@utils/hooks/customHooks';
 import { modalUISize } from '@utils/constants/uiConstants';
 import { comAxiosRequest } from '@utils/appRelated/helperFunctions';
-import cookies from 'js-cookie';
 
 import Style from './dashboard.module.scss';
 
@@ -72,31 +71,91 @@ interface IUserDashboard {
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const Index = ({
-	aProp,
-	teamSkillDashboard,
-	userDashboard,
-	teamSkillCountObj,
-	userToken,
-}: {
-	aProp: string;
-	teamSkillDashboard: ITeamSkillDashboard[];
-	userDashboard: IUserDashboard[];
-	teamSkillCountObj: ITeamSkillCountObj;
-	userToken: string;
-}) => {
+const Index = ({ aProp, userToken }: { aProp: string; userToken: string }) => {
 	const [inputLoading, setInputLoading] = useState(false);
 	const { handleModal } = useModal();
+	const [userListData, setUserListData] = useState<IUserDashboard[]>([]);
+	const tempArr = useRef<IUserDashboard[]>();
+
+	const [customObj, setCustomObj] = useState<{
+		teamSkillDashboard: ITeamSkillDashboard[];
+		userDashboard: IUserDashboard[];
+		teamSkillCountObj: ITeamSkillCountObj;
+	}>({
+		teamSkillDashboard: [],
+		userDashboard: [],
+		teamSkillCountObj: {},
+	});
+
+	const axiosDataCallback = useCallback((axiosData: any) => {
+		const teamSkillCountObj2: any = {};
+
+		if (axiosData && !_.isEmpty(axiosData.teamSkillCountObj)) {
+			const tempData: any = axiosData.teamSkillCountObj;
+
+			!_.isEmpty(tempData) &&
+				Object.keys(tempData).map((item, idx) => {
+					const tempSkillObj = tempData[item];
+
+					teamSkillCountObj2[item] = {
+						SKILL_NM: tempSkillObj[0].TECH_NM,
+						SKILL_CNT: tempSkillObj[0].TECH_CNT,
+						USER_INFO: tempSkillObj.reduce((previousVal: object[], currentVal: any) => {
+							const obj = {
+								USER_NM: currentVal.USER_NM,
+								USER_UID: currentVal.USER_UID,
+								IMG_URL: currentVal.USER_IMG_URL,
+								TEAM_CD: currentVal.TEAM_CD,
+								USER_TITLE: currentVal.USER_TITLE,
+							};
+
+							previousVal.push(obj);
+							return previousVal;
+						}, []),
+					};
+
+					return null;
+				});
+
+			setCustomObj(() => {
+				return {
+					teamSkillDashboard: axiosData.teamSkillDashboard,
+					userDashboard: axiosData.userDashboard,
+					teamSkillCountObj: teamSkillCountObj2,
+				};
+			});
+
+			setUserListData(axiosData.userDashboard);
+			tempArr.current = axiosData.userDashboard;
+		}
+	}, []);
+
+	useEffect(() => {
+		comAxiosRequest({
+			url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/dashboard/getTeamSkills`,
+			requestType: 'get',
+			successCallback: (response) => {
+				axiosDataCallback(response.data);
+			},
+			failCallback: () => {
+				axiosDataCallback({
+					teamSkillDashboard: [],
+					userDashboard: [],
+					teamSkillCountObj: {},
+				});
+			},
+		});
+	}, [axiosDataCallback]);
 
 	const data = {
-		labels: !_.isEmpty(teamSkillDashboard)
-			? teamSkillDashboard.map((item) => item.TECH_NM)
+		labels: !_.isEmpty(customObj.teamSkillDashboard)
+			? customObj.teamSkillDashboard.map((item) => item.TECH_NM)
 			: [''],
 		datasets: [
 			{
 				label: '인원',
-				data: !_.isEmpty(teamSkillDashboard)
-					? teamSkillDashboard.map((item) => item.TECH_CNT)
+				data: !_.isEmpty(customObj.teamSkillDashboard)
+					? customObj.teamSkillDashboard.map((item) => item.TECH_CNT)
 					: [''],
 				backgroundColor: [
 					'rgba(255, 99, 132, 0.2)',
@@ -160,10 +219,6 @@ const Index = ({
 		rank: '',
 	});
 
-	const [userListData, setUserListData] = useState<typeof userDashboard>(userDashboard);
-
-	const tempArr = useRef<typeof userDashboard>(userDashboard);
-
 	const inputSearchRef = useRef<any>();
 
 	const enterSearch = useCallback(() => {
@@ -190,11 +245,19 @@ const Index = ({
 	}, [searchCondition.personname, searchCondition.skillset, userToken]);
 
 	useEffect(() => {
-		setUserListData(
-			searchCondition.rank
-				? tempArr.current.filter((item) => item.USER_TITLE === searchCondition.rank)
-				: tempArr.current,
-		);
+		setUserListData(() => {
+			if (tempArr.current) {
+				const tempArrFiltered = tempArr?.current?.filter(
+					(item) => item.USER_TITLE === searchCondition.rank,
+				);
+
+				if (searchCondition.rank) {
+					return tempArrFiltered;
+				} else {
+					return tempArr.current;
+				}
+			} else return [];
+		});
 	}, [searchCondition.rank]);
 
 	const profileDetailModal = useCallback(
@@ -239,8 +302,8 @@ const Index = ({
 					<Bar options={options} data={data} />
 				</div>
 				<div className={Style['skillOverviewTable']}>
-					{!_.isEmpty(teamSkillCountObj) && (
-						<SkillTable teamSkillData={teamSkillCountObj} />
+					{!_.isEmpty(customObj.teamSkillCountObj) && (
+						<SkillTable teamSkillData={customObj.teamSkillCountObj} />
 					)}
 				</div>
 			</div>
