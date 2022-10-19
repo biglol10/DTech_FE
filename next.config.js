@@ -13,13 +13,13 @@ module.exports = {
 			return [
 				{
 					source: '/',
-					destination: '/dtech/about',
+					destination: '/dtech/dashboard',
 					basePath: false,
 					permanent: false, // true 일 경우 uses the 308 status code which instructs the browser to cache the redirect (즉 캐싱으로 계속 남아있어서 이거 해제해도 /react로 날라감)
 				},
 				{
 					source: '/dtech',
-					destination: '/dtech/about',
+					destination: '/dtech/dashboard',
 					basePath: false,
 					permanent: false, // true 일 경우 uses the 308 status code which instructs the browser to cache the redirect (즉 캐싱으로 계속 남아있어서 이거 해제해도 /react로 날라감)
 				},
