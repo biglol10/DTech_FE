@@ -130,12 +130,14 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	}, [onlineUsers]);
 
 	const getGroupChatArr = useCallback(() => {
-		if (authStore.userUID)
+		if (!_.isNull(authStore.userUID))
 			axios
 				.get(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getChatGroups`, {
 					params: { currentUser: authStore.userUID },
 				})
 				.then((response) => {
+					console.log('chatGroups response is ');
+					console.log(response.data);
 					const stateEqual = _.isEqual(
 						chatGroupsArrRef.current,
 						response.data.chatGroups,
