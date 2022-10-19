@@ -320,8 +320,10 @@ const Index = ({
 	);
 };
 
-export const getInitialProps: GetServerSideProps = async (context) => {
-	const { token } = parseCookies(context);
+export const getServerSideProps: GetServerSideProps = async ({ req, res }: any) => {
+	const { token } = parseCookies(req);
+
+	res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
 
 	let axiosData: any = null;
 
@@ -344,7 +346,7 @@ export const getInitialProps: GetServerSideProps = async (context) => {
 	const teamSkillCountObj: any = {};
 
 	if (axiosData && !_.isEmpty(axiosData.teamSkillCountObj)) {
-		const tempData: any = axiosData.teamSkillCountObj || {};
+		const tempData: any = axiosData.teamSkillCountObj;
 
 		Object.keys(tempData).map((item, idx) => {
 			const tempSkillObj = tempData[item];
@@ -372,9 +374,9 @@ export const getInitialProps: GetServerSideProps = async (context) => {
 
 	return {
 		props: {
-			teamSkillDashboard: axiosData.teamSkillDashboard || [],
-			userDashboard: axiosData.userDashboard || [],
-			teamSkillCountObj: teamSkillCountObj || [],
+			teamSkillDashboard: axiosData.teamSkillDashboard,
+			userDashboard: axiosData.userDashboard,
+			teamSkillCountObj,
 			aProp: process.env.S3_URL,
 		},
 	};
