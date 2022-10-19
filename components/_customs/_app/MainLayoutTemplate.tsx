@@ -135,6 +135,13 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 				requestType: 'get',
 				dataObj: { currentUser: authStore.userUID },
 				successCallback: (response) => {
+					console.log('chatGroups response is');
+					console.log(response.data.chatGroups);
+
+					console.log('chatGroups current is');
+					console.log(chatGroupsArrRef.current);
+
+					console.log(_.isEqual(chatGroupsArrRef.current, response.data.chatGroups));
 					const stateEqual = _.isEqual(
 						chatGroupsArrRef.current,
 						response.data.chatGroups,
