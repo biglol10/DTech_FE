@@ -23,7 +23,6 @@ import { IAuth, IAppCommon, IUsersStatusArr } from '@utils/types/commAndStoreTyp
 import _ from 'lodash';
 import { generateAvatarImage, comAxiosRequest } from '@utils/appRelated/helperFunctions';
 import * as RCONST from '@utils/constants/reducerConstants';
-import axios from 'axios';
 
 import GraphSvg from '@styles/svg/graph.svg';
 import ChatSvg from '@styles/svg/chat.svg';
@@ -130,14 +129,17 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	}, [onlineUsers]);
 
 	const getGroupChatArr = useCallback(() => {
-		if (!_.isNull(authStore.userUID))
-			axios
-				.get(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getChatGroups`, {
-					params: { currentUser: authStore.userUID },
-				})
-				.then((response) => {
-					console.log('chatGroups response is ');
-					console.log(response.data);
+		if (authStore.userUID) {
+			comAxiosRequest({
+				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getChatGroups`,
+				requestType: 'post',
+				dataObj: { currentUser: authStore.userUID },
+				successCallback: (response) => {
+					console.log('chatGroups response is');
+					console.log(response.data.chatGroups);
+
+					console.log('chatGroups current is');
+					console.log(chatGroupsArrRef.current);
 					const stateEqual = _.isEqual(
 						chatGroupsArrRef.current,
 						response.data.chatGroups,
@@ -147,7 +149,10 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 						chatGroupsArrRef.current = response.data.chatGroups;
 						setGroupChatArr(response.data.chatGroups);
 					}
-				});
+				},
+				failCallback: () => {},
+			});
+		}
 	}, [authStore.userUID]);
 
 	useEffect(() => {
@@ -155,7 +160,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 
 		setTimeout(() => {
 			getGroupChatArr();
-		}, 2000);
+		}, 1000);
 	}, [getGroupChatArr, getUsersStatus]);
 
 	const logout = () => {
