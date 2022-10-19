@@ -15,6 +15,7 @@ const middleware = (request: NextRequest) => {
 		'/search',
 		'/dashboard',
 		'/chat',
+		'/about',
 	];
 
 	const isWithProtectedRoutes = () => {

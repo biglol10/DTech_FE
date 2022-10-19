@@ -89,11 +89,15 @@ const Index = ({
 	const { handleModal } = useModal();
 
 	const data = {
-		labels: teamSkillDashboard.map((item) => item.TECH_NM),
+		labels: !_.isEmpty(teamSkillDashboard)
+			? teamSkillDashboard.map((item) => item.TECH_NM)
+			: [''],
 		datasets: [
 			{
 				label: '인원',
-				data: teamSkillDashboard.map((item) => item.TECH_CNT),
+				data: !_.isEmpty(teamSkillDashboard)
+					? teamSkillDashboard.map((item) => item.TECH_CNT)
+					: [''],
 				backgroundColor: [
 					'rgba(255, 99, 132, 0.2)',
 					'rgba(54, 162, 235, 0.2)',
@@ -133,18 +137,19 @@ const Index = ({
 	const options3 = useMemo(() => {
 		const techArr: any = [{ key: '전체', text: '전체', value: '전체' }];
 
-		Object.keys(techImage).map((item) => {
-			const itemString = item as keyof typeof techImage;
+		!_.isEmpty(techImage) &&
+			Object.keys(techImage).map((item) => {
+				const itemString = item as keyof typeof techImage;
 
-			techArr.push({
-				key: item,
-				text: item,
-				value: item,
-				image: techImage[itemString],
+				techArr.push({
+					key: item,
+					text: item,
+					value: item,
+					image: techImage[itemString],
+				});
+
+				return null;
 			});
-
-			return null;
-		});
 
 		return techArr;
 	}, []);
@@ -234,7 +239,9 @@ const Index = ({
 					<Bar options={options} data={data} />
 				</div>
 				<div className={Style['skillOverviewTable']}>
-					<SkillTable teamSkillData={teamSkillCountObj} />
+					{!_.isEmpty(teamSkillCountObj) && (
+						<SkillTable teamSkillData={teamSkillCountObj} />
+					)}
 				</div>
 			</div>
 			<div className={Style['dashboardBottomMain']}>
@@ -292,35 +299,41 @@ const Index = ({
 					</ul>
 					<div>
 						<h4>
-							<CountUp end={userListData.length} delay={0} duration={0.2} />명
+							<CountUp
+								end={userListData ? userListData.length : 0}
+								delay={0}
+								duration={0.2}
+							/>
+							명
 						</h4>
 					</div>
 				</div>
 				<SharpDivider content="" />
 				<div className={Style['peopleCardArea']}>
-					{userListData.map((singleUser, idx) => {
-						return (
-							<PersonCard
-								key={`personCard_${singleUser.USER_ID}`}
-								username={singleUser.USER_NAME}
-								profileUrl={singleUser.USER_IMG_URL}
-								rank={singleUser.USER_TITLE}
-								skills={singleUser.TECH_ARR.join()}
-								domains={singleUser.USER_DOMAIN || ''}
-								githubUrl={singleUser.GITHUB_URL || ''}
-								detail={singleUser.USER_DETAIL || ''}
-								userUID={singleUser.USER_UID}
-								profileDetailModal={() => profileDetailModal(singleUser)}
-							/>
-						);
-					})}
+					{!_.isEmpty(userListData) &&
+						userListData.map((singleUser, idx) => {
+							return (
+								<PersonCard
+									key={`personCard_${singleUser.USER_ID}`}
+									username={singleUser.USER_NAME}
+									profileUrl={singleUser.USER_IMG_URL}
+									rank={singleUser.USER_TITLE}
+									skills={singleUser.TECH_ARR.join()}
+									domains={singleUser.USER_DOMAIN || ''}
+									githubUrl={singleUser.GITHUB_URL || ''}
+									detail={singleUser.USER_DETAIL || ''}
+									userUID={singleUser.USER_UID}
+									profileDetailModal={() => profileDetailModal(singleUser)}
+								/>
+							);
+						})}
 				</div>
 			</div>
 		</>
 	);
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }: any) => {
+export const getInitialProps: GetServerSideProps = async ({ req, res }: any) => {
 	const { token } = parseCookies(req);
 
 	res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
@@ -348,28 +361,29 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }: any) 
 	if (axiosData && !_.isEmpty(axiosData.teamSkillCountObj)) {
 		const tempData: any = axiosData.teamSkillCountObj;
 
-		Object.keys(tempData).map((item, idx) => {
-			const tempSkillObj = tempData[item];
+		!_.isEmpty(tempData) &&
+			Object.keys(tempData).map((item, idx) => {
+				const tempSkillObj = tempData[item];
 
-			teamSkillCountObj[item] = {
-				SKILL_NM: tempSkillObj[0].TECH_NM,
-				SKILL_CNT: tempSkillObj[0].TECH_CNT,
-				USER_INFO: tempSkillObj.reduce((previousVal: object[], currentVal: any) => {
-					const obj = {
-						USER_NM: currentVal.USER_NM,
-						USER_UID: currentVal.USER_UID,
-						IMG_URL: currentVal.USER_IMG_URL,
-						TEAM_CD: currentVal.TEAM_CD,
-						USER_TITLE: currentVal.USER_TITLE,
-					};
+				teamSkillCountObj[item] = {
+					SKILL_NM: tempSkillObj[0].TECH_NM,
+					SKILL_CNT: tempSkillObj[0].TECH_CNT,
+					USER_INFO: tempSkillObj.reduce((previousVal: object[], currentVal: any) => {
+						const obj = {
+							USER_NM: currentVal.USER_NM,
+							USER_UID: currentVal.USER_UID,
+							IMG_URL: currentVal.USER_IMG_URL,
+							TEAM_CD: currentVal.TEAM_CD,
+							USER_TITLE: currentVal.USER_TITLE,
+						};
 
-					previousVal.push(obj);
-					return previousVal;
-				}, []),
-			};
+						previousVal.push(obj);
+						return previousVal;
+					}, []),
+				};
 
-			return null;
-		});
+				return null;
+			});
 	}
 
 	return {
