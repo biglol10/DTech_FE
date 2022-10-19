@@ -320,7 +320,7 @@ const Index = ({
 	);
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getInitialProps: GetServerSideProps = async (context) => {
 	const { token } = parseCookies(context);
 
 	let axiosData: any = null;
