@@ -344,7 +344,7 @@ export const getInitialProps: GetServerSideProps = async (context) => {
 	const teamSkillCountObj: any = {};
 
 	if (axiosData && !_.isEmpty(axiosData.teamSkillCountObj)) {
-		const tempData: any = axiosData.teamSkillCountObj;
+		const tempData: any = axiosData.teamSkillCountObj || {};
 
 		Object.keys(tempData).map((item, idx) => {
 			const tempSkillObj = tempData[item];
@@ -373,8 +373,8 @@ export const getInitialProps: GetServerSideProps = async (context) => {
 	return {
 		props: {
 			teamSkillDashboard: axiosData.teamSkillDashboard || [],
-			userDashboard: axiosData.userDashboard,
-			teamSkillCountObj,
+			userDashboard: axiosData.userDashboard || [],
+			teamSkillCountObj: teamSkillCountObj || [],
 			aProp: process.env.S3_URL,
 		},
 	};
