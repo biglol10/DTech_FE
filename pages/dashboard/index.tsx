@@ -89,11 +89,15 @@ const Index = ({
 	const { handleModal } = useModal();
 
 	const data = {
-		labels: teamSkillDashboard.map((item) => item.TECH_NM),
+		labels: !_.isEmpty(teamSkillDashboard)
+			? teamSkillDashboard.map((item) => item.TECH_NM)
+			: [''],
 		datasets: [
 			{
 				label: '인원',
-				data: teamSkillDashboard.map((item) => item.TECH_CNT),
+				data: !_.isEmpty(teamSkillDashboard)
+					? teamSkillDashboard.map((item) => item.TECH_CNT)
+					: [''],
 				backgroundColor: [
 					'rgba(255, 99, 132, 0.2)',
 					'rgba(54, 162, 235, 0.2)',
@@ -133,18 +137,19 @@ const Index = ({
 	const options3 = useMemo(() => {
 		const techArr: any = [{ key: '전체', text: '전체', value: '전체' }];
 
-		Object.keys(techImage).map((item) => {
-			const itemString = item as keyof typeof techImage;
+		!_.isEmpty(techImage) &&
+			Object.keys(techImage).map((item) => {
+				const itemString = item as keyof typeof techImage;
 
-			techArr.push({
-				key: item,
-				text: item,
-				value: item,
-				image: techImage[itemString],
+				techArr.push({
+					key: item,
+					text: item,
+					value: item,
+					image: techImage[itemString],
+				});
+
+				return null;
 			});
-
-			return null;
-		});
 
 		return techArr;
 	}, []);
@@ -298,8 +303,7 @@ const Index = ({
 				</div>
 				<SharpDivider content="" />
 				<div className={Style['peopleCardArea']}>
-					{userListData &&
-						userListData.length &&
+					{!_.isEmpty(userListData) &&
 						userListData.map((singleUser, idx) => {
 							return (
 								<PersonCard
@@ -322,14 +326,14 @@ const Index = ({
 	);
 };
 
-export const getInitialProps: any = async ({ req, res }: any) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, res }: any) => {
 	const { token } = parseCookies(req);
 
 	res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
 
 	let axiosData: any = null;
 
-	const abc = await comAxiosRequest({
+	await comAxiosRequest({
 		url: `${process.env.BE_BASE_URL}/api/dashboard/getTeamSkills`,
 		requestType: 'get',
 		successCallback: (response) => {
@@ -348,36 +352,37 @@ export const getInitialProps: any = async ({ req, res }: any) => {
 	const teamSkillCountObj: any = {};
 
 	if (axiosData && !_.isEmpty(axiosData.teamSkillCountObj)) {
-		const tempData: any = axiosData.teamSkillCountObj || [];
+		const tempData: any = axiosData.teamSkillCountObj;
 
-		Object.keys(tempData).map((item, idx) => {
-			const tempSkillObj = tempData[item];
+		!_.isEmpty(tempData) &&
+			Object.keys(tempData).map((item, idx) => {
+				const tempSkillObj = tempData[item];
 
-			teamSkillCountObj[item] = {
-				SKILL_NM: tempSkillObj[0].TECH_NM,
-				SKILL_CNT: tempSkillObj[0].TECH_CNT,
-				USER_INFO: tempSkillObj.reduce((previousVal: object[], currentVal: any) => {
-					const obj = {
-						USER_NM: currentVal.USER_NM,
-						USER_UID: currentVal.USER_UID,
-						IMG_URL: currentVal.USER_IMG_URL,
-						TEAM_CD: currentVal.TEAM_CD,
-						USER_TITLE: currentVal.USER_TITLE,
-					};
+				teamSkillCountObj[item] = {
+					SKILL_NM: tempSkillObj[0].TECH_NM,
+					SKILL_CNT: tempSkillObj[0].TECH_CNT,
+					USER_INFO: tempSkillObj.reduce((previousVal: object[], currentVal: any) => {
+						const obj = {
+							USER_NM: currentVal.USER_NM,
+							USER_UID: currentVal.USER_UID,
+							IMG_URL: currentVal.USER_IMG_URL,
+							TEAM_CD: currentVal.TEAM_CD,
+							USER_TITLE: currentVal.USER_TITLE,
+						};
 
-					previousVal.push(obj);
-					return previousVal;
-				}, []),
-			};
+						previousVal.push(obj);
+						return previousVal;
+					}, []),
+				};
 
-			return null;
-		});
+				return null;
+			});
 	}
 
 	return {
 		props: {
-			teamSkillDashboard: axiosData.teamSkillDashboard || [],
-			userDashboard: axiosData.userDashboard || [],
+			teamSkillDashboard: axiosData.teamSkillDashboard,
+			userDashboard: axiosData.userDashboard,
 			teamSkillCountObj,
 			aProp: process.env.S3_URL,
 		},
