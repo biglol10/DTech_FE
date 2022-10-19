@@ -298,22 +298,24 @@ const Index = ({
 				</div>
 				<SharpDivider content="" />
 				<div className={Style['peopleCardArea']}>
-					{userListData.map((singleUser, idx) => {
-						return (
-							<PersonCard
-								key={`personCard_${singleUser.USER_ID}`}
-								username={singleUser.USER_NAME}
-								profileUrl={singleUser.USER_IMG_URL}
-								rank={singleUser.USER_TITLE}
-								skills={singleUser.TECH_ARR.join()}
-								domains={singleUser.USER_DOMAIN || ''}
-								githubUrl={singleUser.GITHUB_URL || ''}
-								detail={singleUser.USER_DETAIL || ''}
-								userUID={singleUser.USER_UID}
-								profileDetailModal={() => profileDetailModal(singleUser)}
-							/>
-						);
-					})}
+					{userListData &&
+						userListData.length &&
+						userListData.map((singleUser, idx) => {
+							return (
+								<PersonCard
+									key={`personCard_${singleUser.USER_ID}`}
+									username={singleUser.USER_NAME}
+									profileUrl={singleUser.USER_IMG_URL}
+									rank={singleUser.USER_TITLE}
+									skills={singleUser.TECH_ARR.join()}
+									domains={singleUser.USER_DOMAIN || ''}
+									githubUrl={singleUser.GITHUB_URL || ''}
+									detail={singleUser.USER_DETAIL || ''}
+									userUID={singleUser.USER_UID}
+									profileDetailModal={() => profileDetailModal(singleUser)}
+								/>
+							);
+						})}
 				</div>
 			</div>
 		</>
@@ -346,7 +348,7 @@ export const getInitialProps: any = async ({ req, res }: any) => {
 	const teamSkillCountObj: any = {};
 
 	if (axiosData && !_.isEmpty(axiosData.teamSkillCountObj)) {
-		const tempData: any = axiosData.teamSkillCountObj;
+		const tempData: any = axiosData.teamSkillCountObj || [];
 
 		Object.keys(tempData).map((item, idx) => {
 			const tempSkillObj = tempData[item];
@@ -374,8 +376,8 @@ export const getInitialProps: any = async ({ req, res }: any) => {
 
 	return {
 		props: {
-			teamSkillDashboard: axiosData.teamSkillDashboard,
-			userDashboard: axiosData.userDashboard,
+			teamSkillDashboard: axiosData.teamSkillDashboard || [],
+			userDashboard: axiosData.userDashboard || [],
 			teamSkillCountObj,
 			aProp: process.env.S3_URL,
 		},
