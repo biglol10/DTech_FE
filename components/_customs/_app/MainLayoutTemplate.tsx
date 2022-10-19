@@ -23,6 +23,7 @@ import { IAuth, IAppCommon, IUsersStatusArr } from '@utils/types/commAndStoreTyp
 import _ from 'lodash';
 import { generateAvatarImage, comAxiosRequest } from '@utils/appRelated/helperFunctions';
 import * as RCONST from '@utils/constants/reducerConstants';
+import axios from 'axios';
 
 import GraphSvg from '@styles/svg/graph.svg';
 import ChatSvg from '@styles/svg/chat.svg';
@@ -129,31 +130,18 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	}, [onlineUsers]);
 
 	const getGroupChatArr = useCallback(() => {
-		comAxiosRequest({
-			url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getChatGroups`,
-			requestType: 'get',
-			dataObj: { currentUser: authStore.userUID },
-			successCallback: (response) => {
-				console.log('chatGroups response is');
-				console.log(response.data.chatGroups);
-
-				console.log('chatGroups current is');
-				console.log(chatGroupsArrRef.current);
-
-				console.log(_.isEqual(chatGroupsArrRef.current, response.data.chatGroups));
+		axios
+			.get(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getChatGroups`, {
+				params: { currentUser: authStore.userUID },
+			})
+			.then((response) => {
 				const stateEqual = _.isEqual(chatGroupsArrRef.current, response.data.chatGroups);
 
-				setGroupChatArr(response.data.chatGroups);
-
-				// if (!stateEqual) {
-				// 	chatGroupsArrRef.current = response.data.chatGroups;
-				// 	setGroupChatArr(response.data.chatGroups);
-				// }
-			},
-			failCallback: (err) => {
-				console.log('err and ', err);
-			},
-		});
+				if (!stateEqual) {
+					chatGroupsArrRef.current = response.data.chatGroups;
+					setGroupChatArr(response.data.chatGroups);
+				}
+			});
 	}, [authStore.userUID]);
 
 	useEffect(() => {
