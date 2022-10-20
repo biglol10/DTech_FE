@@ -133,7 +133,7 @@ const Index = ({ aProp, userToken }: { aProp: string; userToken: string }) => {
 	useEffect(() => {
 		comAxiosRequest({
 			url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/dashboard/getTeamSkills`,
-			requestType: 'get',
+			requestType: 'post',
 			successCallback: (response) => {
 				axiosDataCallback(response.data);
 			},
@@ -405,7 +405,7 @@ export const getInitialProps: GetServerSideProps = async ({ req, res }: any) => 
 
 	await comAxiosRequest({
 		url: `${process.env.BE_BASE_URL}/api/dashboard/getTeamSkills`,
-		requestType: 'get',
+		requestType: 'post',
 		successCallback: (response) => {
 			axiosData = response.data;
 		},

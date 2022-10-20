@@ -114,7 +114,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	const getUsersStatus = useCallback(() => {
 		comAxiosRequest({
 			url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/getUsersStatus`,
-			requestType: 'get',
+			requestType: 'post',
 			dataObj: { onlineUsers: onlineUsers.length > 0 ? onlineUsers : ['none'] },
 			successCallback: (response) => {
 				const stateEqual = _.isEqual(usersStatusArrRef.current, response.data.usersStatus);

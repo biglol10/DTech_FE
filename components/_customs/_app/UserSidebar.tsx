@@ -48,7 +48,7 @@ const UserSidebar = ({
 		if (authStore && authStore.userUID) {
 			comAxiosRequest({
 				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getUnreadChatNoti`,
-				requestType: 'get',
+				requestType: 'post',
 				dataObj: { fromUID: authStore.userUID },
 				successCallback: (response) => {
 					const resData = response.data.unReadList.map((item: IUnReadChatList) => {
