@@ -396,10 +396,10 @@ const Index = ({ aProp, userToken }: { aProp: string; userToken: string }) => {
 	);
 };
 
-export const getInitialProps: GetServerSideProps = async ({ req, res }: any) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, res }: any) => {
 	const { token } = parseCookies(req);
 
-	res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
+	console.log(`token is ${token}`);
 
 	let axiosData: any = null;
 
@@ -419,42 +419,41 @@ export const getInitialProps: GetServerSideProps = async ({ req, res }: any) => 
 		tokenValue: token,
 	});
 
-	const teamSkillCountObj: any = {};
+	console.log(`axios data is `, axiosData);
 
-	if (axiosData && !_.isEmpty(axiosData.teamSkillCountObj)) {
-		const tempData: any = axiosData.teamSkillCountObj;
+	// const teamSkillCountObj: any = {};
 
-		!_.isEmpty(tempData) &&
-			Object.keys(tempData).map((item, idx) => {
-				const tempSkillObj = tempData[item];
+	// if (axiosData && !_.isEmpty(axiosData.teamSkillCountObj)) {
+	// 	const tempData: any = axiosData.teamSkillCountObj;
 
-				teamSkillCountObj[item] = {
-					SKILL_NM: tempSkillObj[0].TECH_NM,
-					SKILL_CNT: tempSkillObj[0].TECH_CNT,
-					USER_INFO: tempSkillObj.reduce((previousVal: object[], currentVal: any) => {
-						const obj = {
-							USER_NM: currentVal.USER_NM,
-							USER_UID: currentVal.USER_UID,
-							IMG_URL: currentVal.USER_IMG_URL,
-							TEAM_CD: currentVal.TEAM_CD,
-							USER_TITLE: currentVal.USER_TITLE,
-						};
+	// 	!_.isEmpty(tempData) &&
+	// 		Object.keys(tempData).map((item, idx) => {
+	// 			const tempSkillObj = tempData[item];
 
-						previousVal.push(obj);
-						return previousVal;
-					}, []),
-				};
+	// 			teamSkillCountObj[item] = {
+	// 				SKILL_NM: tempSkillObj[0].TECH_NM,
+	// 				SKILL_CNT: tempSkillObj[0].TECH_CNT,
+	// 				USER_INFO: tempSkillObj.reduce((previousVal: object[], currentVal: any) => {
+	// 					const obj = {
+	// 						USER_NM: currentVal.USER_NM,
+	// 						USER_UID: currentVal.USER_UID,
+	// 						IMG_URL: currentVal.USER_IMG_URL,
+	// 						TEAM_CD: currentVal.TEAM_CD,
+	// 						USER_TITLE: currentVal.USER_TITLE,
+	// 					};
 
-				return null;
-			});
-	}
+	// 					previousVal.push(obj);
+	// 					return previousVal;
+	// 				}, []),
+	// 			};
+
+	// 			return null;
+	// 		});
+	// }
 
 	return {
 		props: {
-			teamSkillDashboard: axiosData.teamSkillDashboard,
-			userDashboard: axiosData.userDashboard,
-			teamSkillCountObj,
-			aProp: process.env.S3_URL,
+			teamSkillDashboard: {},
 		},
 	};
 };
