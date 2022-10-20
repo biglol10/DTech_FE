@@ -421,35 +421,35 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }: any) 
 
 	console.log(`axios data is `, axiosData);
 
-	// const teamSkillCountObj: any = {};
+	const teamSkillCountObj: any = {};
 
-	// if (axiosData && !_.isEmpty(axiosData.teamSkillCountObj)) {
-	// 	const tempData: any = axiosData.teamSkillCountObj;
+	if (axiosData && !_.isEmpty(axiosData.teamSkillCountObj)) {
+		const tempData: any = axiosData.teamSkillCountObj;
 
-	// 	!_.isEmpty(tempData) &&
-	// 		Object.keys(tempData).map((item, idx) => {
-	// 			const tempSkillObj = tempData[item];
+		!_.isEmpty(tempData) &&
+			Object.keys(tempData).map((item, idx) => {
+				const tempSkillObj = tempData[item];
 
-	// 			teamSkillCountObj[item] = {
-	// 				SKILL_NM: tempSkillObj[0].TECH_NM,
-	// 				SKILL_CNT: tempSkillObj[0].TECH_CNT,
-	// 				USER_INFO: tempSkillObj.reduce((previousVal: object[], currentVal: any) => {
-	// 					const obj = {
-	// 						USER_NM: currentVal.USER_NM,
-	// 						USER_UID: currentVal.USER_UID,
-	// 						IMG_URL: currentVal.USER_IMG_URL,
-	// 						TEAM_CD: currentVal.TEAM_CD,
-	// 						USER_TITLE: currentVal.USER_TITLE,
-	// 					};
+				teamSkillCountObj[item] = {
+					SKILL_NM: tempSkillObj[0].TECH_NM,
+					SKILL_CNT: tempSkillObj[0].TECH_CNT,
+					USER_INFO: tempSkillObj.reduce((previousVal: object[], currentVal: any) => {
+						const obj = {
+							USER_NM: currentVal.USER_NM,
+							USER_UID: currentVal.USER_UID,
+							IMG_URL: currentVal.USER_IMG_URL,
+							TEAM_CD: currentVal.TEAM_CD,
+							USER_TITLE: currentVal.USER_TITLE,
+						};
 
-	// 					previousVal.push(obj);
-	// 					return previousVal;
-	// 				}, []),
-	// 			};
+						previousVal.push(obj);
+						return previousVal;
+					}, []),
+				};
 
-	// 			return null;
-	// 		});
-	// }
+				return null;
+			});
+	}
 
 	return {
 		props: {
