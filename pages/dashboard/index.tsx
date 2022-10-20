@@ -399,7 +399,7 @@ const Index = ({ aProp, userToken }: { aProp: string; userToken: string }) => {
 export const getServerSideProps: GetServerSideProps = async ({ req, res }: any) => {
 	const { token } = parseCookies(req);
 
-	console.log(`token is ${token}`);
+	res.setHeader('Cache-Control', 'public, s-maxage=10, stale-while-revalidate=59');
 
 	let axiosData: any = null;
 
@@ -418,8 +418,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }: any) 
 		},
 		tokenValue: token,
 	});
-
-	console.log(`axios data is `, axiosData);
 
 	const teamSkillCountObj: any = {};
 
@@ -453,7 +451,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }: any) 
 
 	return {
 		props: {
-			teamSkillDashboard: {},
+			teamSkillDashboard: axiosData.teamSkillDashboard,
+			userDashboard: axiosData.userDashboard,
+			teamSkillCountObj,
+			aProp: process.env.S3_URL,
 		},
 	};
 };
