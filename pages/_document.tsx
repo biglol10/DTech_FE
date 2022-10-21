@@ -24,7 +24,9 @@ export default function Document() {
 
 				{/* This is for favicon */}
 				{/* <link rel="icon" href="dtech/favicon.ico" type="image/x-icon" /> */}
-				<link rel="icon" href={`/favicon.ico`} type="image/x-icon" />
+
+				{/* vercel용 (로컬에선 redirects 때문인지 /favicon.ico로 작성) */}
+				<link rel="icon" href={`/dtech/favicon.ico`} type="image/x-icon" />
 			</Head>
 			<body>
 				<Main />
