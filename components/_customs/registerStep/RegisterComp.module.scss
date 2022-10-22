@@ -27,16 +27,18 @@
 		}
 	}
 	.successDiv{
-		margin-top:80px;
+		margin-top:40px;
 		// display: flex;
 		justify-items: center;
 		.helloUser{
 			// display: inline-block;
 			text-align: center;
 			.helloUser1{
-				font-size: 50px;
-				padding: 20px;
+				font-size: 40px;
+				line-height: 1.0;
+				padding:20px 0px;
 				animation: fadein 10s;
+				word-break:keep-all
 				// -webkit-animation: fadein 3s; 
 			}
 			.helloUser2{
@@ -59,7 +61,7 @@
 			}
 			.helloUser5{
 				font-size: 20px;
-				margin-top:160px;
+				margin-top:130px;
 				animation: fadein4 10s;
 				// -webkit-animation: fadein 3s; 
 			}
@@ -73,15 +75,19 @@
 	}
 	.emailDiv{
 		display: flex;
-		justify-content: space-between;
-		
+		// justify-content: space-between;
 		.inputIdField{
 			width:70%;
 		}
-		.idCheckBtn {
+		.idCheckBtnDiv {
+			margin-top:62px;
 			width:30%;
-			// height:40px;
-			margin: 0px ;
+			height:43px;
+			padding: 0px;
+			.idCheckBtn{
+				width:100%;
+				// padding: 0px;
+			}
 		}
 	}
 	.inputLabelHeader{

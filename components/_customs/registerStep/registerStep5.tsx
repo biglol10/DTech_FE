@@ -10,15 +10,13 @@ import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
 import { Header } from 'semantic-ui-react';
-
-import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
 import profileImg from '@public/images/profile.png';
-import { Label, Button } from '@components/index';
+import { Button } from '@components/index';
 import Style from './RegisterComp.module.scss';
 
 const RegisterStep5 = (props: any) => {
 	const dispatch = useDispatch();
-	const [registerData, setRegisterData] = useState(useSelector((state: any) => state.register));
+	const registerData = useSelector((state: any) => state.register);
 	const [image, setImage] = useState(
 		useSelector((state: any) => state.register.userProfileImage),
 	);

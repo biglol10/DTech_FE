@@ -8,11 +8,9 @@
  ********************************************************************************************/
 
 import { useRef, useState } from 'react';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, InputLayout, InputWithIcon } from '@components/index';
 import { Icon } from 'semantic-ui-react';
-import classNames from 'classnames/bind';
 import { useRouter } from 'next/router';
 
 import Style from './RegisterComp.module.scss';
@@ -24,7 +22,6 @@ const RegisterStep1 = (props: any) => {
 
 	const dispatch = useDispatch();
 	const router = useRouter();
-	const cx = classNames.bind(Style);
 
 	const [idInputValue, setIdInputValue] = useState(
 		useSelector((state: any) => state.register.idInputValue),
@@ -73,50 +70,53 @@ const RegisterStep1 = (props: any) => {
 	return (
 		<>
 			<div className={Style['stepDiv']}>
-				<InputLayout
-					error={idInputValue.idInputError}
-					errorMsg={idInputValue.idInputErrMsg}
-					stretch={true}
-					inputLabel="이메일*"
-					inputLabelSize={labelSize}
-					showInputLabel={true}
-					autoFitErrorLabel={true}
-					spacing={30}
-				>
-					<div className={Style['emailDiv']}>
-						<InputWithIcon
-							id="inputId"
-							ref={userIdRef}
-							placeholder="이메일을 입력해주세요."
-							value={idInputValue.idInputValue}
-							size="large"
-							onChange={(obj: { value: string }) => {
-								let idInputError = idInputValue.idInputError;
-								let idInputErrMsg = idInputValue.idInputErrMsg;
-								let idConfirm = idInputValue.idConfirm;
+				<div className={Style['emailDiv']}>
+					<div className={Style['inputIdField']}>
+						<InputLayout
+							error={idInputValue.idInputError}
+							errorMsg={idInputValue.idInputErrMsg}
+							stretch={true}
+							inputLabel="이메일*"
+							inputLabelSize={labelSize}
+							showInputLabel={true}
+							autoFitErrorLabel={true}
+							spacing={30}
+						>
+							<InputWithIcon
+								id="inputId"
+								ref={userIdRef}
+								placeholder="이메일을 입력해주세요."
+								value={idInputValue.idInputValue}
+								size="large"
+								onChange={(obj: { value: string }) => {
+									let idInputError = idInputValue.idInputError;
+									let idInputErrMsg = idInputValue.idInputErrMsg;
+									let idConfirm = idInputValue.idConfirm;
 
-								if (obj.value.length !== 0) {
-									idInputError = !regEmail.test(obj.value);
-									if (!regEmail.test(obj.value)) {
-										idInputErrMsg = '이메일을 정확히 입력해 주세요';
+									if (obj.value.length !== 0) {
+										idInputError = !regEmail.test(obj.value);
+										if (!regEmail.test(obj.value)) {
+											idInputErrMsg = '이메일을 정확히 입력해 주세요';
+										}
 									}
-								}
-								idConfirm = false;
+									idConfirm = false;
 
-								setIdInputValue({
-									...idInputValue,
-									idInputError,
-									idInputErrMsg,
-									idInputValue: obj.value,
-									idConfirm,
-								});
-							}}
-							className={Style['inputIdField']}
-							inputIcon={<Icon name="user" />}
-							onEnter={() => userNameRef.current && userNameRef.current.focus()}
-						/>
+									setIdInputValue({
+										...idInputValue,
+										idInputError,
+										idInputErrMsg,
+										idInputValue: obj.value,
+										idConfirm,
+									});
+								}}
+								inputIcon={<Icon name="user" />}
+								onEnter={() => userNameRef.current && userNameRef.current.focus()}
+							/>
+						</InputLayout>
+					</div>
+					<div className={Style['idCheckBtnDiv']}>
 						<Button
-							className={cx('idCheckBtn')}
+							className={Style['idCheckBtn']}
 							content={idInputValue.idConfirm ? '사용가능!' : '중복확인'}
 							size="large"
 							color={idInputValue.idConfirm ? 'blue' : 'grey'}
@@ -128,7 +128,7 @@ const RegisterStep1 = (props: any) => {
 							}}
 						/>
 					</div>
-				</InputLayout>
+				</div>
 
 				<InputLayout
 					error={nameInputValue.nameInputError}
@@ -150,7 +150,6 @@ const RegisterStep1 = (props: any) => {
 							let tempNameInputError = nameInputValue.nameInputError;
 
 							if (obj.value.length !== 0) {
-								// setNameInputError(false);
 								tempNameInputError = false;
 							}
 							setNameInputValue({

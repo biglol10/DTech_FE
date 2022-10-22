@@ -7,13 +7,9 @@
  ********************************************************************************************/
 
 import { useState } from 'react';
-// import { TextArea } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Icon } from 'semantic-ui-react';
-
-import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
 import { Button, InputLayout, TextArea, InputWithIcon } from '@components/index';
-
 import classNames from 'classnames/bind';
 import Style from './RegisterComp.module.scss';
 
@@ -74,8 +70,6 @@ const RegisterStep3 = (props: any) => {
 									userDetailValue: value,
 								});
 							}
-
-							// setDetail(value);
 						}}
 					/>
 				</InputLayout>
@@ -101,7 +95,6 @@ const RegisterStep3 = (props: any) => {
 						}}
 						className={Style['inputIdField']}
 						inputIcon={<Icon name="github" />}
-						// onEnter={() => userPwRef.current && userPwRef.current.focus()}
 					/>
 				</InputLayout>
 
@@ -116,7 +109,6 @@ const RegisterStep3 = (props: any) => {
 					<InputWithIcon
 						id="inputId"
 						placeholder="도메인"
-						// value={nameInputValue.nameInputValue}
 						size="large"
 						onChange={(obj: { value: string }) => {
 							setUserDomainValue({
@@ -129,7 +121,6 @@ const RegisterStep3 = (props: any) => {
 						onEnter={() => {
 							clickNext(true);
 						}}
-						// onEnter={() => userPwRef.current && userPwRef.current.focus()}
 					/>
 				</InputLayout>
 

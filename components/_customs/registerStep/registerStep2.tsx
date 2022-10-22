@@ -7,10 +7,7 @@
  ********************************************************************************************/
 
 import { useEffect, useState } from 'react';
-
 import { useDispatch, useSelector } from 'react-redux';
-
-import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
 import { InputLayout, Button, InputDropdown, InputPhone } from '@components/index';
 import Style from './RegisterComp.module.scss';
 
@@ -42,6 +39,7 @@ const RegisterStep2 = (props: any) => {
 			type: 'TEAM_LIST',
 			setTeamList,
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const clickNext = (prop: boolean) => {

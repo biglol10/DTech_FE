@@ -1,22 +1,16 @@
 import { ICard } from '@utils/types/componentTypes';
 import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
-import axios from 'axios';
-import { Card, Icon, Image } from 'semantic-ui-react';
+import { toast } from 'react-toastify';
+import { comAxiosRequest } from '@utils/appRelated/helperFunctions';
+import { Card, Icon } from 'semantic-ui-react';
 import SimpleImageSlider from 'react-simple-image-slider';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Style from './Card.module.scss';
-
-// const images = [
-// 	{ url: 'https://t1.daumcdn.net/cfile/tistory/24283C3858F778CA2E' },
-// 	{ url: 'http://t1.daumcdn.net/friends/prod/editor/dc8b3d02-a15a-4afa-a88b-989cf2a50476.jpg' },
-// 	{ url: '' },
-// ];
 
 const BoardCard = ({
 	className = '',
 	id = '',
-	key = '',
 	title = 'title',
 	content = 'content',
 	likeCnt = 0,
@@ -48,28 +42,20 @@ const BoardCard = ({
 	};
 
 	const deleteBrd = async () => {
-		console.log(id);
-		const axiosData = await axios
-			.post(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/board/deleteBoard`, {
-				brdId: id,
-			})
-			.then((response) => {
-				console.log(response);
+		comAxiosRequest({
+			url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/board/deleteBoard`,
+			requestType: 'post',
+			dataObj: { brdId: id },
+			successCallback: (response) => {
 				if (cb !== undefined) {
 					cb();
 				}
-				// return response.data;
-			})
-			.catch((err) => {
-				console.log(err);
-				// return {
-				// 	teamSkillDashboard: null,
-				// 	teamSkillCountObj: {},
-				// 	userDashboard: [],
-				// };
-			});
-
-		console.log(axiosData);
+				toast(<>{'게시글이 삭제되었습니다.'}</>);
+			},
+			failCallback: () => {
+				toast['error'](<>{'게시글을 삭제하지 못했습니다.'}</>);
+			},
+		});
 	};
 
 	return (

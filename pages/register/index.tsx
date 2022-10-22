@@ -86,17 +86,4 @@ const RegisterPage = (props: any) => {
 	);
 };
 
-// export const getServerSideProps = async (context: any) => {
-// 	// console.log(context);
-// 	// console.log(context.req.cookies);
-
-// 	const axiosData = await axios.get('http://localhost:3066/api/register/get').then((response) => {
-// 		if (response) {
-// 			return response.data;
-// 		}
-// 	});
-
-// 	return { props: { axiosData } };
-// };
-
 export default RegisterPage;

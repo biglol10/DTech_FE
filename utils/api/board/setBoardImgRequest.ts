@@ -4,8 +4,6 @@ const sendBoardImgRequest = async (props: any) => {
 	const sendBoardImgResult = await axios
 		.post(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/board/uploadBoard`, props)
 		.then((res: any) => {
-			// console.log('sendBoardImg');
-			// console.log(res.data);
 			if (res.data.resultData.status === 'success') {
 				return {
 					result: res.data.resultData.status,
@@ -18,8 +16,10 @@ const sendBoardImgRequest = async (props: any) => {
 			}
 		})
 		.catch((err) => {
-			console.log('실패');
-			console.log(err);
+			return {
+				result: 'error',
+				errMessage: err.message,
+			};
 		});
 
 	// console.log('sendBoardImgRequest');

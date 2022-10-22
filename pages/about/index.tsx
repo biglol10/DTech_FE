@@ -330,9 +330,9 @@ const About = () => {
 												</Header>
 											</Table.Cell>
 											<Table.Cell>
-												<b>[FE]</b> 게시판 + 회원가입 페이지 개발
+												<b>[FE]</b> 게시판 + 회원가입 + 프로필 페이지 개발
 												<br />
-												<b>[BE]</b> 백엔드 환경성정(multer S3 Upload),
+												<b>[BE]</b> 백엔드 환경설정(multer S3 Upload),
 												회원가입 + 게시판 관련 api 개발, AWS
 												구성(RDS(MYSQL), S3, IAM ), DB(MYSQL) 관리
 												<br />
