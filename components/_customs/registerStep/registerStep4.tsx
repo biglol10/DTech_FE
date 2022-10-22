@@ -8,16 +8,13 @@
 
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
-import { Button, Label, InputLayout } from '@components/index';
+import { Button } from '@components/index';
 import { Label as Label2, Header } from 'semantic-ui-react';
 
 import Style from './RegisterComp.module.scss';
 
 const RegisterStep4 = (props: any) => {
 	const dispatch = useDispatch();
-	// const [techList, setTechList] = useState([] as any);
 	const [techSelectedList, setTechSelectedList] = useState(
 		useSelector((state: any) => state.register.techSelectValue),
 	);
@@ -32,6 +29,7 @@ const RegisterStep4 = (props: any) => {
 				setTechSelectedList,
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const clickNext = (goNext: boolean) => {

@@ -1,0 +1,56 @@
+.profileCard{
+  background-color: white;
+  border-radius: 10px;
+  width:600px;
+  margin:auto;
+  margin-top: 50px;
+  .profileTitle{
+    height: 100px;
+    padding-top: 20px;
+    display: flex;
+    justify-content: center;
+    // align-items: center;
+  }
+  .profileTop{
+    display:flex;
+    width: 100%;
+    .profileTopLeft{
+      width:250px;
+      padding: 10px;
+    }
+    .profileTopRight{
+      width:350px;
+      padding-right: 15px;
+      .infoDiv{
+        display: flex;
+        border-bottom: 1px solid gray;
+        height:50px;
+        align-items: center;
+        font-size:16px;
+        
+        .infoDivText1{
+          padding-left: 20px;
+          width:140px;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+  .profileMiddle{
+    width:600px;
+      padding: 0px 15px;
+      .infoDiv{
+        display: flex;
+        border-bottom: 1px solid gray;
+        align-items: center;
+        font-size:16px;
+        padding: 10px 0px;
+        min-height: 50px;
+        .infoDivText1{
+          padding-left: 20px;
+          width:140px;
+          font-weight: bold;
+        }
+      }
+  }
+}

@@ -1,8 +1,6 @@
 import axios from 'axios';
 
 const boardLikeRequest = async (props: any) => {
-	// console.log('boardLikeRequest');
-	// console.log(props);
 	const postData = props;
 	const boardLikeResult = await axios
 		.post(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/board/setBoardLike`, postData)

@@ -2,32 +2,30 @@ import { MainLayoutTemplate } from '@components/customs';
 import { useRouter } from 'next/router';
 import { BoardCard } from '@components/index';
 import CommentCard from '@components/_customs/commentCard/CommentCard';
-
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { Button, TextArea } from 'semantic-ui-react';
-
 import Style from './board.module.scss';
 
-const Comment = ({ brd }: any) => {
+const Comment = () => {
 	const dispatch = useDispatch();
 	const router = useRouter();
 	const [commentArea, setCommentArea] = useState('');
 	const [commentList, setCommentList] = useState([]);
+	const [sendingCmnt, setSendingCmnt] = useState(false);
 	const uuid = useSelector((state: any) => state.auth.userUID);
 	const [card, setCard] = useState([]);
 
 	useEffect(() => {
 		dispatch({ type: 'BOARD_DETAIL', brdId: router.query.brd, uuid, card, setCard });
 		dispatch({ type: 'COMMENT_LIST', brdId: router.query.brd, setCommentList });
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-	// useEffect(() => {
-	//   console.log()
-	// 	dispatch({ type: 'COMMENT_LIST', brdId: router.query.brd });
-	// }, []);
 
 	const sendComment = () => {
+		if (sendingCmnt) return;
+		setSendingCmnt(true);
 		dispatch({
 			type: 'SEND_COMMENT',
 			setCommentArea,
@@ -37,6 +35,7 @@ const Comment = ({ brd }: any) => {
 			setCommentList,
 			callbackFn: () => {
 				dispatch({ type: 'BOARD_DETAIL', brdId: router.query.brd, uuid, card, setCard });
+				setSendingCmnt(false);
 			},
 		});
 	};
@@ -81,7 +80,6 @@ const Comment = ({ brd }: any) => {
 					</div>
 					<div className={Style['commentList']}>
 						{commentList.map((cmnt: any) => (
-							// <div key={cmnt.CMNT_CD}>{cmnt.BOARD_CMNT}</div>
 							<CommentCard
 								key={cmnt.CMNT_CD}
 								content={cmnt.BOARD_CMNT}
@@ -115,5 +113,6 @@ const Comment = ({ brd }: any) => {
 };
 
 Comment.PageLayout = MainLayoutTemplate;
+Comment.displayName = 'board';
 
 export default Comment;

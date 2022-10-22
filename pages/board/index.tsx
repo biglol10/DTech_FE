@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { MainLayoutTemplate } from '@components/customs';
 import Link from 'next/link';
 import { Button as BTN, Dropdown, Icon } from 'semantic-ui-react';
-import { BoardCard, Button, InputDropdown } from '@components/index';
+import { BoardCard, Button } from '@components/index';
 import Style from './board.module.scss';
 
 const Index = () => {
@@ -29,20 +29,13 @@ const Index = () => {
 			type: 'BOARD_TECH_LIST',
 			setTechList,
 		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
-		dispatch({
-			type: 'BOARD_LIST',
-			setBoardList,
-			uuid,
-			orderType: 'new',
-		});
+		deleteCb();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-	useEffect(() => {
-		console.log(boardList);
-	}, [boardList]);
 
 	const clickFilterBtn = (oType: string) => {
 		setOrderType(oType);
@@ -122,18 +115,13 @@ const Index = () => {
 						id="inputId"
 						placeholder="Filter"
 						options={techList}
-						// value={techList.teamSelectValue}
 						onChange={(event, data) => {
-							// console.log(event);
-							// console.log(data.value);
 							changeFilter(data.value);
-							// setSelectedTech(obj.value);
 						}}
 					/>
 				</div>
 				<div className={Style['boardSumbitBtn']}>
 					<Link href="/board/submit">
-						{/* <a>Submit</a> */}
 						<BTN
 							className={Style['filterBtn']}
 							content="게시글 등록"
@@ -165,6 +153,6 @@ const Index = () => {
 };
 
 Index.PageLayout = MainLayoutTemplate;
-// Index.displayName = 'root';
+Index.displayName = 'board';
 
 export default Index;

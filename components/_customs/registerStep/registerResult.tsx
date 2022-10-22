@@ -7,24 +7,11 @@
  ********************************************************************************************/
 
 import Link from 'next/link';
-
-import { useEffect, useState } from 'react';
-
-import { Header } from 'semantic-ui-react';
-import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
-import { Label, Button } from '@components/index';
-
+import { Button } from '@components/index';
 import Style from './RegisterComp.module.scss';
 
 const RegisterResult = (props: any) => {
-	const [resultInfo, setResultInfo] = useState(props.resultData.result);
-	// const [resultInfo, setResultInfo] = useState('error');
-	// const [resultInfo, setResultInfo] = useState({
-	// 	name: '장보영',
-	// 	title: '총괄',
-	// 	result: 'success',
-	// });
-	const [userNameMsg, setUserNameMsg] = useState();
+	const resultInfo = props.resultData.result;
 
 	return (
 		<>
@@ -70,7 +57,6 @@ const RegisterResult = (props: any) => {
 						<div>
 							<span>회원가입에 실패했습니다.</span>
 						</div>
-						{/* <Label content="회원가입에 실패했습니다." size="big" /> */}
 						<Link href="/login">
 							<a className={Style['loginBtn']}>
 								<div className={Style['buttonBelow2']}>
