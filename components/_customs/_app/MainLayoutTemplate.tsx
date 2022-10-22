@@ -115,7 +115,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	const getUsersStatus = useCallback(() => {
 		comAxiosRequest({
 			url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/getUsersStatus`,
-			requestType: 'get',
+			requestType: 'post',
 			dataObj: { onlineUsers: onlineUsers.length > 0 ? onlineUsers : ['none'] },
 			successCallback: (response) => {
 				const stateEqual = _.isEqual(usersStatusArrRef.current, response.data.usersStatus);
@@ -133,7 +133,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 		if (authStore.userUID) {
 			comAxiosRequest({
 				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getChatGroups`,
-				requestType: 'get',
+				requestType: 'post',
 				dataObj: { currentUser: authStore.userUID },
 				successCallback: (response) => {
 					const stateEqual = _.isEqual(
@@ -153,7 +153,10 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 
 	useEffect(() => {
 		getUsersStatus();
-		getGroupChatArr();
+
+		setTimeout(() => {
+			getGroupChatArr();
+		}, 200);
 	}, [getGroupChatArr, getUsersStatus]);
 
 	const logout = () => {

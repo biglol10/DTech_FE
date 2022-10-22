@@ -102,9 +102,17 @@ const comAxiosRequest = async (param: axiosRequestObj) => {
 		},
 		dataObj && requestType === 'post' ? { data: dataObj } : { params: dataObj },
 		cookie.get('token') && withAuth
-			? { headers: { Authorization: `Bearer ${cookie.get('token')}` } }
+			? {
+					headers: {
+						authorizations: `Bearer ${cookie.get('token')}`,
+					},
+			  }
 			: {},
-		tokenValue && { headers: { Authorization: `Bearer ${tokenValue}` } },
+		tokenValue && {
+			headers: {
+				authorizations: `Bearer ${tokenValue}`,
+			},
+		},
 	);
 
 	const { auth: userAuth }: { auth: IAuth } = store.getState();
