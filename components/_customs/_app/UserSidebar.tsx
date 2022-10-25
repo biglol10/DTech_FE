@@ -42,7 +42,7 @@ const UserSidebar = ({
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
 	const appCommon = useSelector((state: { appCommon: IAppCommon }) => state.appCommon);
 
-	const { init: initUnReadChatList, unReadArrAdd, unReadArrSlice } = useChatUtil();
+	const { init: initUnReadChatList, unReadArrAdd } = useChatUtil();
 
 	useEffect(() => {
 		if (authStore && authStore.userUID) {
