@@ -352,6 +352,7 @@ const RoomChat = ({
 																	return (
 																		<SingleChatMessage
 																			key={item3.MESSAGE_ID}
+																			msgId={item3.MESSAGE_ID}
 																			value={
 																				item3.MESSAGE_TEXT
 																			}
