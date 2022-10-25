@@ -71,29 +71,11 @@ interface IUserDashboard {
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const Index = ({
-	aProp,
-	userToken,
-	teamSkillDashboard3,
-	userDashboard3,
-	teamSkillCountObj3,
-}: {
-	aProp: string;
-	userToken: string;
-	teamSkillDashboard3: any;
-	userDashboard3: any;
-	teamSkillCountObj3: any;
-}) => {
+const Index = ({ userToken }: { userToken: string }) => {
 	const [inputLoading, setInputLoading] = useState(false);
 	const { handleModal } = useModal();
 	const [userListData, setUserListData] = useState<IUserDashboard[]>([]);
 	const tempArr = useRef<IUserDashboard[]>();
-
-	console.log('***** start *****');
-	console.log(teamSkillDashboard3);
-	console.log(userDashboard3);
-	console.log(teamSkillCountObj3);
-	console.log('***** end *****');
 
 	const [customObj, setCustomObj] = useState<{
 		teamSkillDashboard: ITeamSkillDashboard[];
