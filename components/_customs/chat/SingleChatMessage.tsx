@@ -13,6 +13,7 @@ import Style from './SingleChatMessage.module.scss';
 
 interface ChatListExtends {
 	value: string;
+	msgId: string;
 	imgList: string[];
 	linkList: IMetadata[];
 	messageOwner: 'other' | 'mine';
@@ -24,6 +25,7 @@ interface ChatListExtends {
 const SingleChatMessage = ({
 	messageOwner,
 	value,
+	msgId,
 	imgList,
 	linkList,
 	sentTime,
@@ -103,6 +105,7 @@ const SingleChatMessage = ({
 											className={cx('messageLabel', messageOwner)}
 										>
 											<span
+												id={msgId}
 												dangerouslySetInnerHTML={{
 													__html: dompurify.sanitize(
 														`${value.replaceAll('\t', ' '.repeat(3))}`,
@@ -131,6 +134,7 @@ const SingleChatMessage = ({
 											className={cx('messageLabel', messageOwner)}
 										>
 											<span
+												id={msgId}
 												dangerouslySetInnerHTML={{
 													__html: dompurify.sanitize(
 														`${value.replaceAll('\t', ' '.repeat(3))}`,
@@ -177,15 +181,23 @@ const SingleChatMessage = ({
 						buttonType="none"
 						onClick={async () => {
 							setCopyButtonClicked(true);
+							const $span = document.getElementById(msgId);
+							let textToCopy = value;
+
+							if ($span) {
+								textToCopy = $span.innerText;
+							}
+
+							// idea from https://stackoverflow.com/questions/42920985/textcontent-without-spaces-from-formatting-text
 							if ('clipboard' in navigator) {
 								await navigator.clipboard.writeText(
-									value.replace(/[^\x00-\x7F]/g, ''),
+									textToCopy.replace(/[\n]{2,}/g, '\n').trim(),
 								);
 							} else {
 								return document.execCommand(
 									'copy',
 									true,
-									value.replace(/[^\x00-\x7F]/g, ''),
+									textToCopy.replace(/[\n]{2,}/g, '\n').trim(),
 								);
 							}
 							setTimeout(() => {
