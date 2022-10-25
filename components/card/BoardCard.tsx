@@ -1,5 +1,6 @@
 import { ICard } from '@utils/types/componentTypes';
 import { useDispatch, useSelector } from 'react-redux';
+import DOMPurify from 'dompurify';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
 import { comAxiosRequest } from '@utils/appRelated/helperFunctions';
@@ -88,8 +89,15 @@ const BoardCard = ({
 								</span>
 								<span>{date.toDateString()}</span>
 							</Card.Meta>
-							<Card.Description>
-								<pre>{content}</pre>
+							<Card.Description className={Style['cardDescription']}>
+								<span
+									dangerouslySetInnerHTML={{
+										__html: DOMPurify.sanitize(
+											`${content.replaceAll('\t', ' '.repeat(3))}`,
+										),
+									}}
+								></span>
+								{/* <pre>{content}</pre> */}
 							</Card.Description>
 							{images.length > 0 && (
 								<div className={Style['imageSlider']}>
