@@ -23,25 +23,11 @@
     - [Front-end](#techs_FE)
     - [Back-end](#techs_BE)
     - [Infra](#techs_INFRA)
-3. [Composition](#composition)
-4. [Software build](#software-build)
-5. [Software integration](#software-integration)
-    - [Multicast router](#mulitcast-router)
-    - [Logging service](#logging-service)
-    - [Development](#development)
-6. [Use cases and benefits](#use-cases-and-benefits)
-    - [Distributes solutions](#distributed-solution)
-    - [Driverless devices](#driverless-devices)
-    - [Real-time solutions](#real-time-solutions)
-    - [Digital twin](#digital-twin)
-    - [Simulation and test automations](#simulation-and-test-automations)
-7. [Examples](#examples)
-8. [Licensing](#licensing)
-9. [Call for action](#call-for-action)
+3. [프로젝트 화면](#pages)
 
 ---
 
-## 제공하는 기능[![](<img alt="Source" width="20px" src="https://www.svgrepo.com/show/157475/website.svg"/>)](#features)
+## 제공하는기능[![](<img alt="Source" width="20px" src="https://www.svgrepo.com/show/157475/website.svg"/>)](#features)
 
 ##### A. 대시보드
 
@@ -80,3 +66,17 @@
 | **인프라 [📃](#techs_INFRA)**                           | Docker, AWS - EC2, S3, Cloudfront, ACM, DMS                                                                                                                                                                              |
 
 ---
+
+## 페이지 [![](<img alt="Source" width="20px" src="https://www.svgrepo.com/show/157475/website.svg"/>)](#pages)
+
+1️⃣ 대시보드
+<img width="1720" alt="image" src="https://user-images.githubusercontent.com/46738034/197947114-86c6a4a6-850e-4d4e-b45c-2da9984e942f.png">
+
+2️⃣ 채팅
+<img width="1721" alt="image" src="https://user-images.githubusercontent.com/46738034/197951505-3de34d65-0d4c-46bb-b0c4-6ab0104ef39d.png">
+
+3️⃣ 게시판
+<img width="1712" alt="image" src="https://user-images.githubusercontent.com/46738034/197962600-be2fd39b-6b7a-4c83-9ea5-8b371795588b.png">
+
+4️⃣ About
+<img width="1716" alt="image" src="https://user-images.githubusercontent.com/46738034/197962819-cf76cd71-0289-47eb-9212-db112f47497b.png">
