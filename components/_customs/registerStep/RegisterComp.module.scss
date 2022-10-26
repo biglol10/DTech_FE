@@ -1,6 +1,5 @@
 .idInputDiv {
 	display: flex;
-	// width: 100%;
 }
 
 .loginBtn {
@@ -10,17 +9,14 @@
 }
 
 .stepDiv{
-	// background-color: red;
 	height: 100%;
 	margin-bottom: 50px;
 	position: relative;
 	width:80%;
 	.failDiv{
-		// display: flex;
 		margin-top:80px;
 		text-align: center;
 		font-size:30px;
-		// justify-items:center;
 		justify-items: center;
 		.buttonBelow2{
 			width:30px;
@@ -28,42 +24,48 @@
 	}
 	.successDiv{
 		margin-top:40px;
-		// display: flex;
 		justify-items: center;
 		.helloUser{
-			// display: inline-block;
 			text-align: center;
 			.helloUser1{
 				font-size: 40px;
 				line-height: 1.0;
 				padding:20px 0px;
-				animation: fadein 10s;
+				animation: fadein 5s;
 				word-break:keep-all
-				// -webkit-animation: fadein 3s; 
 			}
 			.helloUser2{
 				font-size: 30px;
-				padding: 30px 0px;
-				animation: fadein2 10s;
-				// -webkit-animation: fadein 3s; 
+				margin-top: 10px;
+				margin-bottom:30px;
+				animation: fadein 5s;
 			}
 			.helloUser3{
 				font-size: 20px;
 				padding: 30px 0px;
-				animation: fadein3 10s;
-				// -webkit-animation: fadein 3s; 
+				animation: fadein 5s;
 			}
 			.helloUser4{
 				font-size: 80px;
 				margin-top:30px;
-				animation: fadein3 10s;
-				// -webkit-animation: fadein 3s; 
+				animation: fadein 5s;
 			}
 			.helloUser5{
 				font-size: 20px;
-				margin-top:130px;
-				animation: fadein4 10s;
-				// -webkit-animation: fadein 3s; 
+				margin-top:180px;
+				animation: fadein3 5s;
+				.loginBtn {
+					display: flex;
+					justify-content: center;
+					.buttonBelow{
+						width:100%;
+						display: flex;
+						justify-content: space-around;
+						.registerButton{
+							border-radius: 10px;
+						}
+					}
+				}
 			}
 			.buttonBelow{
 				width:30px;
@@ -75,7 +77,6 @@
 	}
 	.emailDiv{
 		display: flex;
-		// justify-content: space-between;
 		.inputIdField{
 			width:70%;
 		}
@@ -86,7 +87,6 @@
 			padding: 0px;
 			.idCheckBtn{
 				width:100%;
-				// padding: 0px;
 			}
 		}
 	}
@@ -114,8 +114,6 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		// border: 2px rgb(189, 188, 188) solid;
-		// border-radius: 15px;
 		.img-wrapper {
 			margin-bottom: 10px;
 			border-radius: 1px solid black;
@@ -132,20 +130,6 @@
 		}
 	}
 }
-// .stepDiv{
-// 	// background-color: red;
-// 	height: 100%;
-// 	margin-bottom: 50px;
-// 	position: relative;
-// 	width:80%;
-// 	.buttonBelow{
-// 		position: absolute;
-// 		bottom: 0px;
-// 		width:100%;
-// 		display: flex;
-// 		justify-content: space-around;
-// 	}
-// }
 
 @keyframes fadein {
 	0% {

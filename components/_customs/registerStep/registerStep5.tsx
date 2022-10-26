@@ -77,7 +77,6 @@ const RegisterStep5 = (props: any) => {
 					/>
 					<div className={Style['img-wrapper']}>
 						{image.imageFile !== null ? (
-							// <img src={image.previewURL} />
 							<Image src={image.previewURL} width={300} height={300} />
 						) : (
 							<Image src={profileImg} width={300} height={300} />

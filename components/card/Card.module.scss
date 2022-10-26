@@ -8,7 +8,6 @@
     width:30px;
     display: flex;
     flex-direction: column;
-    // align-content: center;
     align-items: center;
     .likeCnt{
       margin-top:10px;
@@ -18,7 +17,6 @@
   .card{
     display: flex;
     flex-direction: row;
-    // border-radius: 20px;
     
     .cardContent{
       width:570px;
@@ -47,11 +45,7 @@
         word-break: break-all;
       }
       .imageSlider{
-        // background-color: red;
-        // width:100%;
         display: flex;
-        // align-items: center;
-        // justify-items: center;
         justify-content: center;
 
         margin:auto;
