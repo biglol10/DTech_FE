@@ -33,23 +33,20 @@ const RegisterResult = (props: any) => {
 							</div>
 							<div className={Style['helloUser5']}>
 								<span>로그인하셔서 DTech를 둘러보세요!</span>
+								<Link href="/login">
+									<a className={Style['loginBtn']}>
+										<div className={Style['buttonBelow']}>
+											<Button
+												content="로그인 페이지 이동"
+												size="large"
+												color="google plus"
+												buttonType="none"
+											/>
+										</div>
+									</a>
+								</Link>
 							</div>
-							{/* <Header as="h1">{`${resultInfo.name} ${resultInfo.title}님!`}</Header>
-							<Label content="회원가입이 완료되었습니다." size="big" /> */}
 						</div>
-
-						<Link href="/login">
-							<a className={Style['loginBtn']}>
-								<div className={Style['buttonBelow']}>
-									<Button
-										content="로그인 페이지 이동"
-										size="large"
-										color="google plus"
-										buttonType="none"
-									/>
-								</div>
-							</a>
-						</Link>
 					</div>
 				)}
 				{resultInfo === 'error' && (

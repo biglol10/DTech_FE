@@ -140,7 +140,7 @@ const Index = () => {
 						likeCnt={card.LIKE_CNT}
 						commentCnt={card.CMNT_CNT}
 						images={card.IMG_LIST}
-						liked={card.LIKED}
+						liked={card.LIKED === 1}
 						date={new Date(card.BOARD_DATE)}
 						techNm={card.TECH_NM}
 						boardUid={card.USER_UID}
