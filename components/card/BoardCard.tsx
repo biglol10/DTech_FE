@@ -10,22 +10,21 @@ import { useState } from 'react';
 import Style from './Card.module.scss';
 
 const BoardCard = ({
-	className = '',
 	id = '',
-	title = 'title',
-	content = 'content',
+	title = '제목 없음',
+	content = '내용 없음',
 	likeCnt = 0,
 	commentCnt = 0,
 	date = new Date(),
-	userName = '장보영',
-	userTitle = '선임',
+	userName = '',
+	userTitle = '',
 	boardUid = '',
 	images = [],
-	liked = 0,
+	liked = true,
 	techNm = '전체',
 	cb = undefined,
 }: ICard) => {
-	const [like, setLike] = useState(liked !== 0);
+	const [like, setLike] = useState(liked);
 	const [likeCount, setLikeCount] = useState(likeCnt);
 	const userUID = useSelector((state: any) => state.auth.userUID);
 	const dispatch = useDispatch();
@@ -49,7 +48,7 @@ const BoardCard = ({
 			dataObj: { brdId: id },
 			successCallback: (response) => {
 				if (cb !== undefined) {
-					cb();
+					cb && cb();
 				}
 				toast(<>{'게시글이 삭제되었습니다.'}</>);
 			},

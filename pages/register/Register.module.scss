@@ -13,7 +13,6 @@ $sectionWidth: 500px;
 }
 .loginMain {
 	width: 80%;
-	// width:500px;
 	height: 750px;
 	display: flex;
 	align-items: center;
@@ -27,7 +26,6 @@ $sectionWidth: 500px;
 	height: 700px;
 	display: flex;
 	flex-direction: column;
-	// justify-content: center;
 	align-items: center;
 	padding: 0 20px;
 	position: relative;
@@ -46,10 +44,6 @@ $sectionWidth: 500px;
 	min-height: 250px !important;
 	width: -webkit-fill-available !important;
 }
-
-// .loginMainCenter {
-// 	padding: 0px 50px;
-// }
 
 .registerStepper {
 	width: 100%;

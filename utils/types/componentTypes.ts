@@ -205,7 +205,7 @@ export interface ICard {
 	userTitle?: string;
 	boardUid?: string;
 	images?: Array<any>;
-	liked?: number;
+	liked?: boolean;
 	techNm?: string;
 	cb?: Function;
 }

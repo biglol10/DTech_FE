@@ -29,7 +29,6 @@ const Profile = () => {
 				dataObj: { uuid },
 				successCallback: (response) => {
 					setUserInfo(response.data.resultData.queryResult[0]);
-					// console.log(response.data.resultData.queryResult[0]);
 				},
 				failCallback: () => {},
 			});
