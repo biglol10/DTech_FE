@@ -16,16 +16,16 @@
 
 ## Table of contents[![](<img alt="Source" width="20px" src="https://www.svgrepo.com/show/157475/website.svg"/>)](#table-of-contents)
 
-1. [:computer: 제공하는 기능](#:computer:-제공하는-기능)
-2. [:memo: 프로젝트 기술스택](#:memo:-프로젝트-기술스택)
-    - [Front-end](#:memo:-프로젝트-기술스택)
-    - [Back-end](#:memo:-프로젝트-기술스택)
-    - [Infra](#:memo:-프로젝트-기술스택)
-3. [:page_with_curl: 프로젝트 화면](#:page_with_curl:-프로젝트-화면)
+1. [💻 제공하는 기능](#-제공하는-기능)
+2. [📝 프로젝트 기술스택](#-프로젝트-기술스택)
+    - [Front-end](#📝-프로젝트-기술스택)
+    - [Back-end](#📝-프로젝트-기술스택)
+    - [Infra](#📝-프로젝트-기술스택)
+3. [📃 프로젝트 화면](#-프로젝트-화면)
 
 ---
 
-## :computer: 제공하는 기능
+## 제공하는 기능
 
 ##### A. 대시보드
 
@@ -55,7 +55,7 @@
 
 ---
 
-## :memo: 프로젝트 기술스택
+## 프로젝트 기술스택
 
 | 분류                                       | 내용                                                                                                                                                                                                                     |
 | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -65,7 +65,7 @@
 
 ---
 
-## :page_with_curl: 프로젝트 화면 [![](<img alt="Source" width="20px" src="https://www.svgrepo.com/show/157475/website.svg"/>)](#pages)
+## 📃 프로젝트 화면 [![](<img alt="Source" width="20px" src="https://www.svgrepo.com/show/157475/website.svg"/>)](#pages)
 
 1️⃣ 대시보드
 <img width="1720" alt="image" src="https://user-images.githubusercontent.com/46738034/197947114-86c6a4a6-850e-4d4e-b45c-2da9984e942f.png">
