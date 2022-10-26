@@ -18,16 +18,17 @@
 
 ## Table of contents[![](<img alt="Source" width="20px" src="https://www.svgrepo.com/show/157475/website.svg"/>)](#table-of-contents)
 
-1. [제공하는 기능](#features)
+1. [제공하는 기능](#-제공하는-기능)
 2. [기술스택](#techs)
     - [Front-end](#techs_FE)
     - [Back-end](#techs_BE)
     - [Infra](#techs_INFRA)
 3. [프로젝트 화면](#pages)
+4. [motivation](#motivation)
 
 ---
 
-## 제공하는기능[![](<img alt="Source" width="20px" src="https://www.svgrepo.com/show/157475/website.svg"/>)](#features)
+## 제공하는 기능[![](<img alt="Source" width="20px" src="https://www.svgrepo.com/show/157475/website.svg"/>)](#-제공하는-기능)
 
 ##### A. 대시보드
 
