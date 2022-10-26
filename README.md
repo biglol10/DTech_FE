@@ -1,3 +1,13 @@
+<a href="https://dtech-app.vercel.app/">
+    <img src="https://dcx-tech.s3.ap-northeast-2.amazonaws.com/chat/96eef3d803cc0f3318f93503b.png" alt="Aimeos logo" title="Aimeos" align="right" height="80" />
+</a>
+
+# DTech App
+
+<img width="1720" alt="image" src="https://user-images.githubusercontent.com/46738034/197947114-86c6a4a6-850e-4d4e-b45c-2da9984e942f.png">
+
+<br/>
+
 :star: 개발기간 - 2022/06/16 ~ 2022/11/01
 
 **DTech App**은 팀 스킬 현황파악 및 정보공유가 원활하게 이뤄질 수 있도록 도와주는 앱입니다. <br/> 모르는게 있어 어디에 질문할지 모르거나 팀에 새로운 인원이 많이 들어오면서 누가 어떤 스킬셋이나 도메인을 갖고 있는지 몰라 답답한 상황이 있었을 겁니다. 이를 해결하기 위해 팀 스킬 현황을 파악할 수 있는 [DTech-App](https://dtech-app.vercel.app/)을 만들었으며 Slack 앱과 비슷한 구조를 가지고 있습니다.
