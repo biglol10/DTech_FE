@@ -145,7 +145,7 @@ const About = () => {
 											</Table.Cell>
 											<Table.Cell>
 												<a
-													href="http://localhost:6006/?path=/story/example-introduction--page"
+													href="http://13.209.149.9:6006/?path=/story/example-introduction--page"
 													target="_blank"
 													rel="noreferrer"
 												>
