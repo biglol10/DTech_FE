@@ -6,9 +6,9 @@
 
 /.vscode
 
-Dockerfile
+# Dockerfile
 
-/.dockerignore
+# /.dockerignore
 
 /.vscode/settings.json
 .vscode/settings.json
