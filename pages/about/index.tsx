@@ -149,7 +149,7 @@ const About = () => {
 													target="_blank"
 													rel="noreferrer"
 												>
-													http://13.209.149.9:6006/
+													http://43.200.144.147:6006/
 												</a>
 											</Table.Cell>
 										</Table.Row>
