@@ -90,7 +90,7 @@ const MyApp = ({ Component, pageProps }: ComponentWithPageLayout) => {
 				<meta name="keywords" content="Skill Dashboard, Slack-like chatting, Team board" />
 				<meta
 					name="og:keywords"
-					content="Skill Dashboard, Slack-like chatting, Team board"
+					content="DTech App, Skill Dashboard, Slack-like chatting, Team board"
 				/>
 			</Head>
 			{Component.PageLayout ? (
