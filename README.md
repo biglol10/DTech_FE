@@ -104,7 +104,7 @@
 
 ## 🚧 아키텍쳐
 
-![image](https://user-images.githubusercontent.com/46738034/198829008-8ee61f7b-63ac-477c-9f5a-7e78f66d7430.png)
+![image](https://user-images.githubusercontent.com/46738034/198954117-67476c8b-7662-4361-ab6e-c6faa50e6950.png)
 
 <br/>
 
