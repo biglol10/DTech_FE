@@ -26,8 +26,8 @@ $backgroundUrl: url(~@public/background/AboutBackground6.png);
 	line-height: 23px;
 
 	& > svg {
-		height: 20px !important;
-		width: 20px !important;
+		height: 23px !important;
+		max-width: 15px !important;
 		margin-right: 10px;
 	}
 }

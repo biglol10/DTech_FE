@@ -240,7 +240,8 @@ const About = () => {
 												fetch기능 개발
 												<br />
 												<b>[기타]</b> 프로젝트 기획, 디자인, 개발환경 및 툴
-												수립, AWS 구성 (EC2, CloudFront, ACM, Route 53)
+												수립, AWS 구성 (EC2, CloudFront, CloudWatch, ACM,
+												Route 53)
 											</Table.Cell>
 										</Table.Row>
 										<Table.Row>
