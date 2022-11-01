@@ -27,7 +27,7 @@
 4. [🚧 아키텍쳐](#-아키텍쳐)
 5. [📃 프로젝트 화면](#-프로젝트-화면)
 
-<a href="http://43.200.144.147:6006/?path=/story/example-introduction--page" target="_blank">Storybook 링크</a>
+<a href="http://43.200.144.147:6006/?path=/story/example-introduction--page" target="_blank">Storybook 링크</a> <br/>
 <a href="https://documenter.getpostman.com/view/14863756/2s8YRjptSi" target="_blank">API문서 링크</a>
 
 <br/>
