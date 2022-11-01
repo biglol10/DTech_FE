@@ -49,6 +49,7 @@ const RegisterStep3 = (props: any) => {
 					showInputLabel={true}
 					autoFitErrorLabel={true}
 					spacing={30}
+					errorLabelPosition="right"
 				>
 					<TextArea
 						placeholder="관심 기술, 경험 프로젝트 등(1000자 이하)"

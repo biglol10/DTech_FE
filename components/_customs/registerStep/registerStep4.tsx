@@ -8,8 +8,9 @@
 
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button } from '@components/index';
+import { Button, LogoBtn } from '@components/index';
 import { Label as Label2, Header } from 'semantic-ui-react';
+import { siSimpleicons } from 'simple-icons/icons';
 
 import Style from './RegisterComp.module.scss';
 
@@ -68,13 +69,16 @@ const RegisterStep4 = (props: any) => {
 				<div className={Style['techBtnDiv']}>
 					{techSelectedList.techSelectValue.map((tech: any) => {
 						return (
-							<Button
+							<LogoBtn
 								content={tech.name}
 								key={tech.key}
 								size="mini"
 								color="grey"
 								spacing={8}
 								basic={!tech.value}
+								backColor={tech.back_color}
+								logo={tech.logo}
+								logoColor={tech.logo_color}
 								onClick={(e: any) => {
 									handleTechClick(tech.key);
 								}}

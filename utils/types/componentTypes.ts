@@ -68,6 +68,21 @@ export interface IButton {
 	spacing?: number;
 	disabled?: boolean;
 }
+export interface ILogoBtn {
+	className?: string;
+	buttonType?: 'primary' | 'secondary' | 'none';
+	content: string | JSX.Element;
+	basic?: boolean;
+	color?: ButtonProps['color'];
+	size?: IInputDefault['size'];
+	loading?: boolean;
+	onClick?: any;
+	spacing?: number;
+	disabled?: boolean;
+	backColor?: string;
+	logo?: string;
+	logoColor?: string;
+}
 
 export interface ICheckboxDefault {
 	className?: string;
