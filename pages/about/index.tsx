@@ -12,6 +12,7 @@ import PeopleSvg from '@styles/svg/people.svg';
 import UserRoleSvg from '@styles/svg/userRole.svg';
 import GithubSvg from '@styles/svg/github.svg';
 import StorybookSvg from '@styles/svg/storybook.svg';
+import PostmanSvg from '@styles/svg/postman.svg';
 
 import Style from './about.module.scss';
 
@@ -150,6 +151,31 @@ const About = () => {
 													rel="noreferrer"
 												>
 													http://43.200.144.147:6006/
+												</a>
+											</Table.Cell>
+										</Table.Row>
+										<Table.Row>
+											<Table.Cell>
+												<Header as="h4" image>
+													<Header.Content>
+														<div
+															className={Style['subTitleDivWithSVG']}
+														>
+															<PostmanSvg />
+															Postman
+														</div>
+
+														<Header.Subheader>링크</Header.Subheader>
+													</Header.Content>
+												</Header>
+											</Table.Cell>
+											<Table.Cell>
+												<a
+													href="https://documenter.getpostman.com/view/14863756/2s8YRjptSi"
+													target="_blank"
+													rel="noreferrer"
+												>
+													https://documenter.getpostman.com/view/14863756/2s8YRjptSi
 												</a>
 											</Table.Cell>
 										</Table.Row>
