@@ -91,8 +91,16 @@ const techListFunction = function* ({ techSelectedList, setTechSelectedList }: a
 
 	if (techListResult.result === 'success') {
 		const tempArr = techListResult.techList;
+
 		const newTempArr = tempArr.map((tech: any) => {
-			return { key: tech.TECH_CD, value: false, name: tech.TECH_NM };
+			return {
+				key: tech.TECH_CD,
+				value: false,
+				name: tech.TECH_NM,
+				back_color: tech.BACK_COLOR,
+				logo: tech.LOGO,
+				logo_color: tech.LOGO_COLOR,
+			};
 		});
 
 		setTechSelectedList({ ...techSelectedList, techSelectValue: newTempArr });
