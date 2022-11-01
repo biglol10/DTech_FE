@@ -16,7 +16,6 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Avatar } from '@components/index';
 import { Icon } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import { useSelector, useDispatch } from 'react-redux';
 import cookie from 'js-cookie';
 import { useSocket } from '@utils/hooks/customHooks';

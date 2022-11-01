@@ -9,7 +9,8 @@
 		"build": "env-cmd -f .env.production next build",
 		"start": "env-cmd -f .env.production next start -p 3065",
 		"storybook": "start-storybook -p 6006",
-		"build-storybook": "build-storybook"
+		"build-storybook": "build-storybook",
+		"devDocker": "env-cmd -f .envdocker.local next dev -p 3065"
 	},
 	"author": "",
 	"license": "ISC",

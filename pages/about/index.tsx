@@ -145,11 +145,11 @@ const About = () => {
 											</Table.Cell>
 											<Table.Cell>
 												<a
-													href="http://localhost:6006/?path=/story/example-introduction--page"
+													href="http://43.200.144.147:6006/?path=/story/example-introduction--page"
 													target="_blank"
 													rel="noreferrer"
 												>
-													http://localhost:6006/?path=/story/example-introduction--page
+													http://43.200.144.147:6006/
 												</a>
 											</Table.Cell>
 										</Table.Row>
@@ -240,7 +240,7 @@ const About = () => {
 												fetch기능 개발
 												<br />
 												<b>[기타]</b> 프로젝트 기획, 디자인, 개발환경 및 툴
-												수립
+												수립, AWS 구성 (EC2, CloudFront, ACM, Route 53)
 											</Table.Cell>
 										</Table.Row>
 										<Table.Row>

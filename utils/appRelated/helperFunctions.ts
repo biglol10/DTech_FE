@@ -139,7 +139,8 @@ const comAxiosRequest = async (param: axiosRequestObj) => {
 
 			const errMsg = err.response?.data?.error || '';
 
-			fireErrLog(url, requestType, stringified, errMsg, userAuth.userUID || '');
+			!url.includes('/api/auth/loginUser') &&
+				fireErrLog(url, requestType, stringified, errMsg, userAuth.userUID || '');
 			failCallback && failCallback(err);
 			return {
 				status: 'error' as SuccessOrFailType,

@@ -129,11 +129,13 @@ const CreateChatGroup = ({
 
 		const chatGroupFuncRes = chatGroupFunc.response.data;
 
-		cookie.set(
-			'currentChatRoom',
-			JSON.stringify({ chatUID: chatGroupFuncRes.chatGroupUID, chatName: chatRoomName }),
-		);
-		router.push(`/chat/room/${chatGroupFuncRes.chatGroupUID}`);
+		setTimeout(() => {
+			cookie.set(
+				'currentChatRoom',
+				JSON.stringify({ chatUID: chatGroupFuncRes.chatGroupUID, chatName: chatRoomName }),
+			);
+			router.push(`/chat/room/${chatGroupFuncRes.chatGroupUID}`);
+		}, 1000);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [chatRoomName, handleModal, userCollection, authStore, regExp]);
