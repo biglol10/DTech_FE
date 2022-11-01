@@ -10,7 +10,6 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, LogoBtn } from '@components/index';
 import { Label as Label2, Header } from 'semantic-ui-react';
-import { siSimpleicons } from 'simple-icons/icons';
 
 import Style from './RegisterComp.module.scss';
 

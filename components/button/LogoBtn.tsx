@@ -7,8 +7,7 @@
  ********************************************************************************************/
 
 import { Button as SemanticButton } from 'semantic-ui-react';
-import { IButton, ILogoBtn } from '@utils/types/componentTypes';
-import classNames from 'classnames/bind';
+import { ILogoBtn } from '@utils/types/componentTypes';
 import Style from './Button.module.scss';
 
 const LogoBtn = ({
