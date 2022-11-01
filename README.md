@@ -83,7 +83,7 @@
 | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Front-end 🏁 <br/> (기술스택 / 패키지)** | - React, Nextjs, Typescript, Redux-Toolkit, Redux-saga, Socket, Module SASS/SCSS <br/> - Redux-toolkit, Redux-Saga, Lodash, Chartjs, React-toastify, React-Quill, Axios, Classnames, Dayjs, Semantic-ui-react, Socket-IO |
 | **Back-end 🏁 <br/> (기술스택 / 패키지)**  | - Express, Typescript, Socket, AWS-S3, MYSQL <br/> - Express, Socket, Axios, BcryptJs, Multer-s3, Mysql, Tsconfig-paths                                                                                                  |
-| **인프라 🏁**                              | Docker, AWS - EC2, S3, CloudFront, CloudWatch, Route53, ACM, RDS                                                                                                                                                         |
+| **인프라 🏁**                              | Docker, AWS - EC2, S3, CloudFront, CloudWatch / Lambda, Route53, ACM, RDS                                                                                                                                                |
 
 <br/>
 
