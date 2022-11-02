@@ -27,8 +27,8 @@
 4. [🚧 아키텍쳐](#-아키텍쳐)
 5. [📃 프로젝트 화면](#-프로젝트-화면)
 
-<a href="http://43.200.144.147:6006/?path=/story/example-introduction--page" target="_blank">Storybook 링크</a> <br/>
-<a href="https://documenter.getpostman.com/view/14863756/2s8YRjptSi" target="_blank">API문서 링크</a>
+<a href="http://43.200.144.147:6006/?path=/story/example-introduction--page" target="_blank" rel="noopener noreferrer">Storybook 링크</a> <br/>
+<a href="https://documenter.getpostman.com/view/14863756/2s8YRjptSi" target="_blank" rel="noopener noreferrer">API문서 링크</a>
 
 <br/>
 
@@ -125,4 +125,4 @@
 <img width="1712" alt="image" src="https://user-images.githubusercontent.com/46738034/197962600-be2fd39b-6b7a-4c83-9ea5-8b371795588b.png">
 
 4️⃣ About
-<img width="1716" alt="image" src="https://user-images.githubusercontent.com/46738034/197962819-cf76cd71-0289-47eb-9212-db112f47497b.png">
+<img width="1719" alt="image" src="https://user-images.githubusercontent.com/46738034/199425427-cc9397f1-71fe-4364-9d12-b6ba5b83a9fe.png">
