@@ -27,6 +27,7 @@
 4. [🚧 아키텍쳐](#-아키텍쳐)
 5. [📃 프로젝트 화면](#-프로젝트-화면)
 
+<a href="https://github.com/biglol10/DTech_BE" target="_blank" rel="noopener noreferrer">Backend 링크</a> <br/>
 <a href="http://43.200.144.147:6006/?path=/story/example-introduction--page" target="_blank" rel="noopener noreferrer">Storybook 링크</a> <br/>
 <a href="https://documenter.getpostman.com/view/14863756/2s8YRjptSi" target="_blank" rel="noopener noreferrer">API문서 링크</a>
 
