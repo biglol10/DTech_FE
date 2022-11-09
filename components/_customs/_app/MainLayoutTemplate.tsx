@@ -269,7 +269,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 							<div onClick={() => router.push('/profile')}>
 								<Icon name="user circle" />내 프로필 보기
 							</div>
-							<hr className={Style['menu-separator']} />
+							{/* <hr className={Style['menu-separator']} />
 							<div>
 								<Icon name="setting" />내 설정
 							</div>
@@ -277,7 +277,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 							<div>
 								<Icon name="mail" />
 								건의사항 남기기
-							</div>
+							</div> */}
 							<hr className={Style['menu-separator']} />
 							<div onClick={() => logout()}>
 								<Icon name="user close" />
