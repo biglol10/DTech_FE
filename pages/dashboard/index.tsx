@@ -342,7 +342,7 @@ const Index = ({ userToken }: { userToken: string }) => {
 						/>
 					</InputLayout>
 					<ul>
-						{['사원', '선임', '책임', '총괄'].map((stringItem, idx) => (
+						{['사원', '선임', '책임', '총괄', '팀장'].map((stringItem, idx) => (
 							<li
 								key={`${stringItem}_${idx}`}
 								className={
