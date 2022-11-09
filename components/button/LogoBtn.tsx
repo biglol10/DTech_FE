@@ -43,7 +43,7 @@ const LogoBtn = ({
 			size={size}
 			loading={loading}
 			onClick={onClick && onClick}
-			style={{ padding: `0px`, color: 'FFFFFF' }}
+			style={{ 'margin-top': `5px`, padding: '0px', color: 'FFFFFF' }}
 			disabled={disabled}
 		/>
 	);
