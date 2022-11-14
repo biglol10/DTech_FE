@@ -9,7 +9,6 @@
  * 4      변지욱     2022-09-06   feature/JW/chatPage    누구랑 채팅하는지 세팅
  * 5      변지욱     2022-09-21   feature/JW/chatPageBug 채팅 제대로 표시 안되는 버그 픽스
  * 6      변지욱     2022-10-03   feature/JW/change      이전 채팅 사용자랑 같으면 이름 표시X
- * 7      변지욱     2022-11-14   feature/JW/refactor    일주일치만 우선 보여주고 위로 스크롤하면 이전 채팅 내용(일주일 단위)을 불러오게끔 수정
  ********************************************************************************************/
 
 import { GetServerSideProps } from 'next';
@@ -37,7 +36,6 @@ import {
 	chatToDateGroup,
 	generateAvatarImage,
 	comAxiosRequest,
-	dayjsKor,
 } from '@utils/appRelated/helperFunctions';
 import { useChatUtil } from '@utils/hooks/customHooks';
 
@@ -81,17 +79,12 @@ const UserChat = ({
 }) => {
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
 	const [chatUser, setChatUser] = useState<{ [name: string]: string }>();
-	const [chatList, setChatList] = useState<IChatList[]>([]);
-	const [chatListDateGroup, setChatListDateGroup] = useState<ChatDateReduce>({});
+	const [chatList, setChatList] = useState<ChatDateReduce>({});
 	const [textChangeNotification, setTextChangeNotification] = useState(false);
 	const [sendingUserState, setSendingUserState] = useState<string>('');
 	const conversationId = useRef<string>();
 
-	const startDateRef = useRef<dayjs.Dayjs>(dayjsKor().add(-7, 'day'));
-	const endDateRef = useRef<any>(null);
-	const lastMsgId = useRef<string>('');
 	const bottomRef = useRef<any>(null);
-	const bottomRefActiveRef = useRef<boolean>(false);
 	const firstLoadRef = useRef<boolean>(true);
 	const quillRef = useRef<any>(null);
 
@@ -131,58 +124,18 @@ const UserChat = ({
 	const getPrivateChatListCallback = useCallback(() => {
 		if (cookie.get('currentChatUser') !== userUID) return;
 		const { currentChatUser } = appCommon;
-		const dataObj = lodash.merge(
-			{
-				fromUID: authStore.userUID,
-				toUID: userUID,
-			},
-			{ startDate: startDateRef.current.format('YYYY-MM-DD') },
-		);
 
 		if (currentChatUser && authStore.userUID && authStore.userToken) {
 			comAxiosRequest({
 				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getPrivateChatList`,
 				requestType: 'post',
-				dataObj,
+				dataObj: { fromUID: authStore.userUID, toUID: userUID },
 				withAuth: true,
 				successCallback: (response) => {
 					conversationId.current = response.data.convId;
-					setChatList(response.data.chatList);
-					bottomRefActiveRef.current = true;
-				},
-				failCallback: () => toast['error'](<>{'채팅정보를 가져오지 못했습니다'}</>),
-			});
-		}
-	}, [appCommon, authStore.userToken, authStore.userUID, userUID]);
+					const chatGroupReduce = chatToDateGroup(response.data.chatList);
 
-	const getPreviousPrivateChatListCallback = useCallback(() => {
-		if (cookie.get('currentChatUser') !== userUID) return;
-		const { currentChatUser } = appCommon;
-
-		const dataObj = lodash.merge(
-			{
-				fromUID: authStore.userUID,
-				toUID: userUID,
-			},
-			{ startDate: startDateRef.current.format('YYYY-MM-DD') },
-			{ endDate: endDateRef.current.format('YYYY-MM-DD') },
-		);
-
-		if (currentChatUser && authStore.userUID && authStore.userToken) {
-			comAxiosRequest({
-				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getPreviousPrivateChatList`,
-				requestType: 'post',
-				dataObj,
-				withAuth: true,
-				successCallback: (response) => {
-					conversationId.current = response.data.convId;
-					setChatList((prev) => {
-						if (prev.length) lastMsgId.current = prev[0].MESSAGE_ID;
-						const newArr = [...response.data.chatList, ...prev];
-
-						return newArr;
-					});
-					bottomRefActiveRef.current = false;
+					setChatList(chatGroupReduce);
 				},
 				failCallback: () => toast['error'](<>{'채팅정보를 가져오지 못했습니다'}</>),
 			});
@@ -190,23 +143,12 @@ const UserChat = ({
 	}, [appCommon, authStore.userToken, authStore.userUID, userUID]);
 
 	useEffect(() => {
-		firstLoadRef.current && getPrivateChatListCallback();
+		getPrivateChatListCallback();
 	}, [getPrivateChatListCallback]);
 
 	useEffect(() => {
-		const chatGroupReduce = chatToDateGroup(chatList);
-
-		setChatListDateGroup(chatGroupReduce);
-	}, [chatList]);
-
-	useEffect(() => {
-		bottomRefActiveRef.current && bottomRef.current?.scrollIntoView({ behavior: 'auto' });
-		!bottomRefActiveRef.current &&
-			chatList.length &&
-			document
-				.getElementById(lastMsgId.current)
-				?.scrollIntoView({ behavior: 'auto', block: 'center' });
-	}, [chatList, chatListDateGroup, quillWrapperHeight]);
+		bottomRef.current?.scrollIntoView({ behavior: 'auto' });
+	}, [chatList, quillWrapperHeight]);
 
 	const notifyTextChange = useCallback(() => {
 		if (!firstLoadRef.current) {
@@ -222,7 +164,7 @@ const UserChat = ({
 
 	useEffect(() => {
 		setTimeout(() => {
-			setTextChangeNotification(false);
+			if (textChangeNotification) setTextChangeNotification(false);
 		}, 3500);
 	}, [textChangeNotification]);
 
@@ -278,31 +220,23 @@ const UserChat = ({
 	};
 
 	useEffect(() => {
-		socket?.on('messageSendSuccess', ({ newChatSocket, toUserUID }: any) => {
+		socket?.on('messageSendSuccess', ({ chatListSocket, toUserUID }: any) => {
 			if (appCommon.currentChatUser === toUserUID) {
-				setChatList((prev) => {
-					const newArr = [...prev, ...newChatSocket];
+				const cloneObjReduce = chatToDateGroup(lodash.cloneDeep(chatListSocket));
 
-					return newArr;
-				});
+				setChatList(() => cloneObjReduce);
 			}
 		});
 
-		socket?.on('newMessageReceived', ({ newChatSocket, fromUID }: any) => {
-			if (userUID === fromUID) {
-				setChatList((prev) => {
-					const newArr = [...prev, ...newChatSocket];
-
-					return newArr;
-				});
-			}
+		socket?.on('newMessageReceived', ({ fromUID }: any) => {
+			if (userUID === fromUID) getPrivateChatListCallback();
 		});
 
 		socket?.on('textChangeNotification', (sendingUser: string) => {
 			setSendingUserState(sendingUser);
 			setTextChangeNotification(true);
 		});
-	}, [appCommon.currentChatUser, socket, userUID]);
+	}, [socket, appCommon.currentChatUser, userUID, getPrivateChatListCallback]);
 
 	useEffect(() => {
 		unReadArrSlice(userUID);
@@ -342,18 +276,9 @@ const UserChat = ({
 								height: `calc(100% - ${quillWrapperHeight}px - 20px)`,
 							}}
 							className={Style['chatWrapperSegment']}
-							onScroll={(e: any) => {
-								const element = e.target;
-
-								if (element.scrollTop === 0) {
-									endDateRef.current = startDateRef.current;
-									startDateRef.current = startDateRef.current.add(-7, 'day');
-									getPreviousPrivateChatListCallback();
-								}
-							}}
 						>
-							{chatListDateGroup &&
-								Object.keys(chatListDateGroup).map((item: string) => {
+							{chatList &&
+								Object.keys(chatList).map((item: string) => {
 									return (
 										<React.Fragment
 											key={`${item}_(${
@@ -366,87 +291,72 @@ const UserChat = ({
 												})`}
 												className={Style['dateDivider']}
 											/>
-											{Object.keys(chatListDateGroup[item]).map(
-												(item2: string) => {
-													return (
-														<React.Fragment
-															key={`${item}_(${
-																dayOfWeek[
-																	dayjs(item).day().toString()
-																]
-															})_${item2}`}
-														>
-															{chatListDateGroup[item][item2].map(
-																(
-																	item3: IChatList,
-																	idx3: number,
-																) => {
-																	return (
-																		<SingleChatMessage
-																			key={item3.MESSAGE_ID}
-																			msgId={item3.MESSAGE_ID}
-																			value={
-																				item3.MESSAGE_TEXT
-																			}
-																			messageOwner={
-																				item3.USER_UID ===
-																				userUID
-																					? 'other'
-																					: 'mine'
-																			}
-																			linkList={
-																				item3.LINK_LIST
-																			}
-																			sentTime={
-																				item3.SENT_DATETIME
-																			}
-																			userName={`${item3.USER_NM} (${item3.USER_TITLE})`}
-																			imgList={
-																				typeof item3.IMG_LIST ===
-																				'string'
-																					? JSON.parse(
-																							item3.IMG_LIST,
-																					  )
-																					: item3.IMG_LIST
-																			}
-																			isSamePreviousUserChat={
-																				idx3 > 0 &&
-																				chatListDateGroup[
-																					item
-																				][item2][idx3]
-																					.USER_UID ===
-																					chatListDateGroup[
-																						item
-																					][item2][
-																						idx3 - 1
-																					].USER_UID &&
+											{Object.keys(chatList[item]).map((item2: string) => {
+												return (
+													<React.Fragment
+														key={`${item}_(${
+															dayOfWeek[dayjs(item).day().toString()]
+														})_${item2}`}
+													>
+														{chatList[item][item2].map(
+															(item3: IChatList, idx3: number) => {
+																return (
+																	<SingleChatMessage
+																		key={item3.MESSAGE_ID}
+																		msgId={item3.MESSAGE_ID}
+																		value={item3.MESSAGE_TEXT}
+																		messageOwner={
+																			item3.USER_UID ===
+																			userUID
+																				? 'other'
+																				: 'mine'
+																		}
+																		linkList={item3.LINK_LIST}
+																		sentTime={
+																			item3.SENT_DATETIME
+																		}
+																		userName={`${item3.USER_NM} (${item3.USER_TITLE})`}
+																		imgList={
+																			typeof item3.IMG_LIST ===
+																			'string'
+																				? JSON.parse(
+																						item3.IMG_LIST,
+																				  )
+																				: item3.IMG_LIST
+																		}
+																		isSamePreviousUserChat={
+																			idx3 > 0 &&
+																			chatList[item][item2][
+																				idx3
+																			].USER_UID ===
+																				chatList[item][
+																					item2
+																				][idx3 - 1]
+																					.USER_UID &&
+																			dayjs(
+																				chatList[item][
+																					item2
+																				][idx3]
+																					.SENT_DATETIME,
+																			).format(
+																				'YYYY-MM-DD',
+																			) ===
 																				dayjs(
-																					chatListDateGroup[
-																						item
-																					][item2][idx3]
+																					chatList[item][
+																						item2
+																					][idx3 - 1]
 																						.SENT_DATETIME,
 																				).format(
 																					'YYYY-MM-DD',
-																				) ===
-																					dayjs(
-																						chatListDateGroup[
-																							item
-																						][item2][
-																							idx3 - 1
-																						]
-																							.SENT_DATETIME,
-																					).format(
-																						'YYYY-MM-DD',
-																					)
-																			}
-																		/>
-																	);
-																},
-															)}
-														</React.Fragment>
-													);
-												},
-											)}
+																				)
+																		}
+																	/>
+																);
+															},
+														)}
+													</React.Fragment>
+												);
+											})}
 										</React.Fragment>
 									);
 								})}
