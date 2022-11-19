@@ -25,7 +25,8 @@
     - [Infra](#-프로젝트-기술스택)
 3. [🌱 프로젝트 개발자](#-프로젝트-개발자)
 4. [🚧 아키텍쳐](#-아키텍쳐)
-5. [📃 프로젝트 화면](#-프로젝트-화면)
+5. [🪝 ERD](#-ERD)
+6. [📃 프로젝트 화면](#-프로젝트-화면)
 
 <a href="https://github.com/biglol10/DTech_BE" target="_blank" rel="noopener noreferrer">Backend 링크</a> <br/>
 <a href="http://43.200.144.147:6006/?path=/story/example-introduction--page" target="_blank" rel="noopener noreferrer">Storybook 링크</a> <br/>
@@ -113,6 +114,18 @@
 <br/>
 
 ---
+
+<br/>
+
+## 🪝 ERD
+
+![image](https://user-images.githubusercontent.com/46738034/202847615-54621ba1-310a-4e7f-b0ae-7ba506d9dca7.png)
+
+<br/>
+
+---
+
+<br/>
 
 ## 📃 프로젝트 화면
 
