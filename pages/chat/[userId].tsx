@@ -9,6 +9,7 @@
  * 4      변지욱     2022-09-06   feature/JW/chatPage    누구랑 채팅하는지 세팅
  * 5      변지욱     2022-09-21   feature/JW/chatPageBug 채팅 제대로 표시 안되는 버그 픽스
  * 6      변지욱     2022-10-03   feature/JW/change      이전 채팅 사용자랑 같으면 이름 표시X
+ * 7      변지욱     2022-11-22   feature/JW/refactor    일주일치 채팅내역 우선 보여주고 위로 스크롤 시 이전 채팅내역 표시
  ********************************************************************************************/
 
 import { GetServerSideProps } from 'next';
@@ -79,12 +80,15 @@ const UserChat = ({
 }) => {
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
 	const [chatUser, setChatUser] = useState<{ [name: string]: string }>();
-	const [chatList, setChatList] = useState<ChatDateReduce>({});
+	const [chatList, setChatList] = useState<IChatList[]>([]);
+	// const [chatListDateGroup, setChatListDateGroup] = useState<ChatDateReduce>({});
 	const [textChangeNotification, setTextChangeNotification] = useState(false);
 	const [sendingUserState, setSendingUserState] = useState<string>('');
 	const conversationId = useRef<string>();
 
+	const lastMsgId = useRef<string>('');
 	const bottomRef = useRef<any>(null);
+	const bottomRefActiveRef = useRef<boolean>(false);
 	const firstLoadRef = useRef<boolean>(true);
 	const quillRef = useRef<any>(null);
 
@@ -121,33 +125,59 @@ const UserChat = ({
 		}
 	}, [appCommon, userUID]);
 
-	const getPrivateChatListCallback = useCallback(() => {
-		if (cookie.get('currentChatUser') !== userUID) return;
-		const { currentChatUser } = appCommon;
+	const getPrivateChatListCallback = useCallback(
+		(viewPrevious: boolean = false) => {
+			if (cookie.get('currentChatUser') !== userUID) return;
+			const { currentChatUser } = appCommon;
 
-		if (currentChatUser && authStore.userUID && authStore.userToken) {
-			comAxiosRequest({
-				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getPrivateChatList`,
-				requestType: 'post',
-				dataObj: { fromUID: authStore.userUID, toUID: userUID },
-				withAuth: true,
-				successCallback: (response) => {
-					conversationId.current = response.data.convId;
-					const chatGroupReduce = chatToDateGroup(response.data.chatList);
+			bottomRefActiveRef.current = !viewPrevious;
 
-					setChatList(chatGroupReduce);
+			const dataObj = lodash.merge(
+				{
+					fromUID: authStore.userUID,
+					toUID: userUID,
 				},
-				failCallback: () => toast['error'](<>{'채팅정보를 가져오지 못했습니다'}</>),
-			});
-		}
-	}, [appCommon, authStore.userToken, authStore.userUID, userUID]);
+				lastMsgId.current ? { lastMsgId: lastMsgId.current } : {},
+			);
+
+			if (currentChatUser && authStore.userUID && authStore.userToken) {
+				comAxiosRequest({
+					url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getPrivateChatList`,
+					requestType: 'post',
+					dataObj,
+					withAuth: true,
+					successCallback: (response) => {
+						conversationId.current = response.data.convId;
+
+						setChatList((prev) => {
+							if (prev.length) lastMsgId.current = prev[0].MESSAGE_ID;
+							return response.data.chatList;
+						});
+					},
+					failCallback: () => toast['error'](<>{'채팅정보를 가져오지 못했습니다'}</>),
+				});
+			}
+		},
+		[appCommon, authStore.userToken, authStore.userUID, userUID],
+	);
+
+	const chatListDateGroup: ChatDateReduce = useMemo(() => {
+		const chatGroupReduce = chatToDateGroup(chatList);
+
+		return chatGroupReduce;
+	}, [chatList]);
 
 	useEffect(() => {
 		getPrivateChatListCallback();
 	}, [getPrivateChatListCallback]);
 
 	useEffect(() => {
-		bottomRef.current?.scrollIntoView({ behavior: 'auto' });
+		bottomRefActiveRef.current && bottomRef.current?.scrollIntoView({ behavior: 'auto' });
+		!bottomRefActiveRef.current &&
+			chatList.length &&
+			document
+				.getElementById(lastMsgId.current)
+				?.scrollIntoView({ behavior: 'auto', block: 'center' });
 	}, [chatList, quillWrapperHeight]);
 
 	const notifyTextChange = useCallback(() => {
@@ -168,23 +198,42 @@ const UserChat = ({
 		}, 3500);
 	}, [textChangeNotification]);
 
-	const sendPrivateMessageSocket = (content: ChatList, imgArr = []) => {
-		socket?.emit('sendPrivateMessage', {
-			chatMessage: content.value,
-			userUID: authStore.userUID,
-			convId: conversationId.current,
-			imgList: JSON.stringify(
-				imgArr.length !== 0
-					? imgArr.map(
-							(urlString: string) => `${process.env.NEXT_PUBLIC_IMG_S3}${urlString}`,
-					  )
-					: [],
-			),
-			linkList: JSON.stringify(content.linkList),
-			toUserId: chatUser && chatUser.USER_ID,
-			toUserUID: appCommon.currentChatUser,
-		});
-	};
+	const sendPrivateMessageCallback = useCallback(
+		(content: ChatList, imgArr = []) => {
+			comAxiosRequest({
+				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/insertPrivateChatMessage`,
+				requestType: 'post',
+				dataObj: {
+					chatMessage: content.value,
+					userUID: authStore.userUID,
+					convId: conversationId.current,
+					imgList: JSON.stringify(
+						imgArr.length !== 0
+							? imgArr.map(
+									(urlString: string) =>
+										`${process.env.NEXT_PUBLIC_IMG_S3}${urlString}`,
+							  )
+							: [],
+					),
+					linkList: JSON.stringify(content.linkList),
+					toUserId: chatUser && chatUser.USER_ID,
+				},
+				successCallback: (response) => {
+					const newChatObj = response.data.newChat[0];
+
+					setChatList((prev) => {
+						if (prev.some((item) => item.MESSAGE_ID === newChatObj.MESSAGE_ID))
+							return prev;
+						const newArr = [...prev, ...response.data.newChat];
+
+						return newArr;
+					});
+				},
+				failCallback: () => toast['error'](<>{'채팅 메시지를 보내지 못했습니다'}</>),
+			});
+		},
+		[authStore.userUID, chatUser],
+	);
 
 	const sendMessageFunction = async (content: ChatList) => {
 		if (content.imgList.length > 0) {
@@ -208,28 +257,20 @@ const UserChat = ({
 				requestType: 'post',
 				dataObj: formData,
 				successCallback: (response) => {
-					sendPrivateMessageSocket(content, response.data.bodyObj.imgArr);
+					sendPrivateMessageCallback(content, response.data.bodyObj.imgArr);
 				},
 				failCallback: () => {
 					toast['error'](<>{'이미지를 보내지 못했습니다'}</>);
 				},
 			});
 		} else {
-			sendPrivateMessageSocket(content);
+			sendPrivateMessageCallback(content);
 		}
 	};
 
 	useEffect(() => {
-		socket?.on('messageSendSuccess', ({ chatListSocket, toUserUID }: any) => {
-			if (appCommon.currentChatUser === toUserUID) {
-				const cloneObjReduce = chatToDateGroup(lodash.cloneDeep(chatListSocket));
-
-				setChatList(() => cloneObjReduce);
-			}
-		});
-
 		socket?.on('newMessageReceived', ({ fromUID }: any) => {
-			if (userUID === fromUID) getPrivateChatListCallback();
+			if (userUID === fromUID) getPrivateChatListCallback(false);
 		});
 
 		socket?.on('textChangeNotification', (sendingUser: string) => {
@@ -276,9 +317,16 @@ const UserChat = ({
 								height: `calc(100% - ${quillWrapperHeight}px - 20px)`,
 							}}
 							className={Style['chatWrapperSegment']}
+							onScroll={(e: any) => {
+								const element = e.target;
+
+								if (element.scrollTop === 0) {
+									getPrivateChatListCallback(true);
+								}
+							}}
 						>
-							{chatList &&
-								Object.keys(chatList).map((item: string) => {
+							{chatListDateGroup &&
+								Object.keys(chatListDateGroup).map((item: string) => {
 									return (
 										<React.Fragment
 											key={`${item}_(${
@@ -291,72 +339,87 @@ const UserChat = ({
 												})`}
 												className={Style['dateDivider']}
 											/>
-											{Object.keys(chatList[item]).map((item2: string) => {
-												return (
-													<React.Fragment
-														key={`${item}_(${
-															dayOfWeek[dayjs(item).day().toString()]
-														})_${item2}`}
-													>
-														{chatList[item][item2].map(
-															(item3: IChatList, idx3: number) => {
-																return (
-																	<SingleChatMessage
-																		key={item3.MESSAGE_ID}
-																		msgId={item3.MESSAGE_ID}
-																		value={item3.MESSAGE_TEXT}
-																		messageOwner={
-																			item3.USER_UID ===
-																			userUID
-																				? 'other'
-																				: 'mine'
-																		}
-																		linkList={item3.LINK_LIST}
-																		sentTime={
-																			item3.SENT_DATETIME
-																		}
-																		userName={`${item3.USER_NM} (${item3.USER_TITLE})`}
-																		imgList={
-																			typeof item3.IMG_LIST ===
-																			'string'
-																				? JSON.parse(
-																						item3.IMG_LIST,
-																				  )
-																				: item3.IMG_LIST
-																		}
-																		isSamePreviousUserChat={
-																			idx3 > 0 &&
-																			chatList[item][item2][
-																				idx3
-																			].USER_UID ===
-																				chatList[item][
-																					item2
-																				][idx3 - 1]
-																					.USER_UID &&
-																			dayjs(
-																				chatList[item][
-																					item2
-																				][idx3]
-																					.SENT_DATETIME,
-																			).format(
-																				'YYYY-MM-DD',
-																			) ===
+											{Object.keys(chatListDateGroup[item]).map(
+												(item2: string) => {
+													return (
+														<React.Fragment
+															key={`${item}_(${
+																dayOfWeek[
+																	dayjs(item).day().toString()
+																]
+															})_${item2}`}
+														>
+															{chatListDateGroup[item][item2].map(
+																(
+																	item3: IChatList,
+																	idx3: number,
+																) => {
+																	return (
+																		<SingleChatMessage
+																			key={item3.MESSAGE_ID}
+																			msgId={item3.MESSAGE_ID}
+																			value={
+																				item3.MESSAGE_TEXT
+																			}
+																			messageOwner={
+																				item3.USER_UID ===
+																				userUID
+																					? 'other'
+																					: 'mine'
+																			}
+																			linkList={
+																				item3.LINK_LIST
+																			}
+																			sentTime={
+																				item3.SENT_DATETIME
+																			}
+																			userName={`${item3.USER_NM} (${item3.USER_TITLE})`}
+																			imgList={
+																				typeof item3.IMG_LIST ===
+																				'string'
+																					? JSON.parse(
+																							item3.IMG_LIST,
+																					  )
+																					: item3.IMG_LIST
+																			}
+																			isSamePreviousUserChat={
+																				idx3 > 0 &&
+																				chatListDateGroup[
+																					item
+																				][item2][idx3]
+																					.USER_UID ===
+																					chatListDateGroup[
+																						item
+																					][item2][
+																						idx3 - 1
+																					].USER_UID &&
 																				dayjs(
-																					chatList[item][
-																						item2
-																					][idx3 - 1]
+																					chatListDateGroup[
+																						item
+																					][item2][idx3]
 																						.SENT_DATETIME,
 																				).format(
 																					'YYYY-MM-DD',
-																				)
-																		}
-																	/>
-																);
-															},
-														)}
-													</React.Fragment>
-												);
-											})}
+																				) ===
+																					dayjs(
+																						chatListDateGroup[
+																							item
+																						][item2][
+																							idx3 - 1
+																						]
+																							.SENT_DATETIME,
+																					).format(
+																						'YYYY-MM-DD',
+																					)
+																			}
+																		/>
+																	);
+																},
+															)}
+														</React.Fragment>
+													);
+												},
+											)}
 										</React.Fragment>
 									);
 								})}
