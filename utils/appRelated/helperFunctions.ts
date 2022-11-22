@@ -5,6 +5,11 @@ import _ from 'lodash';
 import cookie from 'js-cookie';
 import { store } from '@store/rootReducer';
 import { IAuth } from '@utils/types/commAndStoreTypes';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const baseImage = {
 	AvatarBase0: 'AvatarBase_BLACK1.png',
@@ -208,6 +213,10 @@ const exampleAxios = () => {
 	return null;
 };
 
+const dayjsKor = () => {
+	return dayjs().tz('Asia/Seoul');
+};
+
 export {
 	generateUID,
 	generateImageUID,
@@ -216,4 +225,5 @@ export {
 	comAxiosRequest,
 	exampleAxios,
 	appDelay,
+	dayjsKor,
 };
