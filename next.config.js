@@ -68,6 +68,9 @@ module.exports = {
 		customKey: 'my-value',
 	},
 	images: {
-		domains: ['dcx-tech.s3.ap-northeast-2.amazonaws.com'],
+		domains: [
+			'dcx-tech.s3.ap-northeast-2.amazonaws.com',
+			'dtech-bucket.s3.ap-northeast-2.amazonaws.com',
+		],
 	},
 };
