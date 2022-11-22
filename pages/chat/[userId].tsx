@@ -195,7 +195,7 @@ const UserChat = ({
 	useEffect(() => {
 		setTimeout(() => {
 			if (textChangeNotification) setTextChangeNotification(false);
-		}, 3500);
+		}, 3000);
 	}, [textChangeNotification]);
 
 	const sendPrivateMessageCallback = useCallback(
