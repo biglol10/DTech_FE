@@ -200,6 +200,7 @@ const UserChat = ({
 
 	const sendPrivateMessageCallback = useCallback(
 		(content: ChatList, imgArr = []) => {
+			bottomRefActiveRef.current = true;
 			comAxiosRequest({
 				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/insertPrivateChatMessage`,
 				requestType: 'post',
