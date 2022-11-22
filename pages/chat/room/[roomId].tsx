@@ -5,6 +5,7 @@
  *-------------------------------------------------------------------------------------------
  * 1      변지욱     2022-09-26   feature/JW/chatRoom     최초작성
  * 2      변지욱     2022-10-06   feature/JW/groupChat    그룹챗 멤버 modal 표시
+ * 3      변지욱     2022-11-22   feature/JW/refactor     일주일치 채팅내역 우선 보여주고 위로 스크롤 시 이전 채팅내역 표시
  ********************************************************************************************/
 
 import { GetServerSideProps } from 'next';
@@ -78,12 +79,14 @@ const RoomChat = ({
 	const socket = authStore.userSocket;
 
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
-	const [chatList, setChatList] = useState<ChatDateReduce>({});
+	const [chatList, setChatList] = useState<IChatList[]>([]);
 	const [groupMembers, setGroupMembers] = useState<IUsersStatusArr[]>([]);
 	const [textChangeNotification, setTextChangeNotification] = useState(false);
 	const [sendingUserState, setSendingUserState] = useState<string>('');
 
+	const lastMsgId = useRef<string>('');
 	const bottomRef = useRef<any>(null);
+	const bottomRefActiveRef = useRef<boolean>(false);
 	const firstLoadRef = useRef<boolean>(true);
 	const quillRef = useRef<any>(null);
 
@@ -105,24 +108,44 @@ const RoomChat = ({
 		};
 	}, [dispatch, roomID]);
 
-	const getGroupChatListCallback = useCallback(() => {
-		comAxiosRequest({
-			url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getGroupChatList`,
-			requestType: 'post',
-			dataObj: {
-				chatRoomId: roomID,
-				readingUser: authStore.userUID,
-			},
-			withAuth: true,
-			successCallback: (response) => {
-				const chatGroupReduce = chatToDateGroup(response.data.chatList);
+	const getGroupChatListCallback = useCallback(
+		(viewPrevious: boolean = false) => {
+			bottomRefActiveRef.current = !viewPrevious;
+			const dataObj = lodash.merge(
+				{
+					chatRoomId: roomID,
+					readingUser: authStore.userUID,
+				},
+				lastMsgId.current ? { lastMsgId: lastMsgId.current } : {},
+			);
 
-				setGroupMembers(response.data.groupChatUsers);
-				setChatList((prev) => chatGroupReduce);
-			},
-			failCallback: () => toast['error'](<>{'채팅정보를 가져오지 못했습니다'}</>),
-		});
-	}, [authStore.userUID, roomID]);
+			comAxiosRequest({
+				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getGroupChatList`,
+				requestType: 'post',
+				dataObj,
+				withAuth: true,
+				successCallback: (response) => {
+					setGroupMembers((prev) => {
+						if (lodash.isEqual(groupMembers, response.data.groupChatUsers)) return prev;
+						return response.data.groupChatUsers;
+					});
+
+					setChatList((prev) => {
+						if (prev.length) lastMsgId.current = prev[0].MESSAGE_ID;
+						return response.data.chatList;
+					});
+				},
+				failCallback: () => toast['error'](<>{'채팅정보를 가져오지 못했습니다'}</>),
+			});
+		},
+		[authStore.userUID, groupMembers, roomID],
+	);
+
+	const chatListDateGroup: ChatDateReduce = useMemo(() => {
+		const chatGroupReduce = chatToDateGroup(chatList);
+
+		return chatGroupReduce;
+	}, [chatList]);
 
 	useEffect(() => {
 		if (roomID && authStore.userToken && authStore.userUID) {
@@ -131,7 +154,12 @@ const RoomChat = ({
 	}, [authStore.userToken, authStore.userUID, getGroupChatListCallback, roomID]);
 
 	useEffect(() => {
-		bottomRef.current?.scrollIntoView({ behavior: 'auto' });
+		bottomRefActiveRef.current && bottomRef.current?.scrollIntoView({ behavior: 'auto' });
+		!bottomRefActiveRef.current &&
+			chatList.length &&
+			document
+				.getElementById(lastMsgId.current)
+				?.scrollIntoView({ behavior: 'auto', block: 'center' });
 	}, [chatList, quillWrapperHeight]);
 
 	const notifyTextChange = useCallback(() => {
@@ -146,21 +174,45 @@ const RoomChat = ({
 		}
 	}, [authStore.userName, authStore.userTitle, socket]);
 
-	const sendPrivateMessageSocket = (content: ChatList, imgArr = []) => {
-		socket?.emit('sendGroupMessage', {
-			chatMessage: content.value,
-			userUID: authStore.userUID,
-			convId: roomID,
-			imgList: JSON.stringify(
-				imgArr.length !== 0
-					? imgArr.map(
-							(urlString: string) => `${process.env.NEXT_PUBLIC_IMG_S3}${urlString}`,
-					  )
-					: [],
-			),
-			linkList: JSON.stringify(content.linkList),
-		});
-	};
+	const sendGroupMessageCallback = useCallback(
+		(content: ChatList, imgArr = []) => {
+			bottomRefActiveRef.current = true;
+			comAxiosRequest({
+				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/insertGroupChatMessage`,
+				requestType: 'post',
+				dataObj: {
+					chatMessage: content.value,
+					userUID: authStore.userUID,
+					convId: roomID,
+					imgList: JSON.stringify(
+						imgArr.length !== 0
+							? imgArr.map(
+									(urlString: string) =>
+										`${process.env.NEXT_PUBLIC_IMG_S3}${urlString}`,
+							  )
+							: [],
+					),
+					linkList: JSON.stringify(content.linkList),
+				},
+				successCallback: (response) => {
+					const newChatObj = response.data.newChat[0];
+					const usersToNotify = response.data.usersToNotify;
+
+					setChatList((prev) => {
+						if (prev.some((item) => item.MESSAGE_ID === newChatObj.MESSAGE_ID))
+							return prev;
+						const newArr = [...prev, ...response.data.newChat];
+
+						return newArr;
+					});
+
+					socket?.emit('sendGroupMessage', { convId: roomID, usersToNotify });
+				},
+				failCallback: () => toast['error'](<>{'채팅 메시지를 보내지 못했습니다'}</>),
+			});
+		},
+		[authStore.userUID, roomID, socket],
+	);
 
 	const sendMessageFunction = async (content: ChatList) => {
 		if (content.imgList.length > 0) {
@@ -184,21 +236,21 @@ const RoomChat = ({
 				requestType: 'post',
 				dataObj: formData,
 				successCallback: (response) => {
-					sendPrivateMessageSocket(content, response.data.bodyObj.imgArr);
+					sendGroupMessageCallback(content, response.data.bodyObj.imgArr);
 				},
 				failCallback: () => {
 					toast['error'](<>{'이미지를 보내지 못했습니다'}</>);
 				},
 			});
 		} else {
-			sendPrivateMessageSocket(content);
+			sendGroupMessageCallback(content);
 		}
 	};
 
 	useEffect(() => {
 		setTimeout(() => {
 			if (textChangeNotification) setTextChangeNotification(false);
-		}, 3500);
+		}, 3000);
 	}, [textChangeNotification]);
 
 	useEffect(() => {
@@ -209,14 +261,8 @@ const RoomChat = ({
 			});
 		}
 
-		socket?.on('messageGroupSendSuccess', ({ chatListSocket }: any) => {
-			const cloneObjReduce = chatToDateGroup(lodash.cloneDeep(chatListSocket));
-
-			setChatList((prev) => cloneObjReduce);
-		});
-
-		socket?.on('newMessageGroupReceived', ({ chatListSocket, fromUID, convId }: any) => {
-			if (roomID === convId) getGroupChatListCallback();
+		socket?.on('newMessageGroupReceived', ({ convId }: any) => {
+			if (roomID === convId) getGroupChatListCallback(false);
 		});
 
 		socket?.on('textChangeNotification', (sendingUser: string) => {
@@ -319,9 +365,16 @@ const RoomChat = ({
 								height: `calc(100% - ${quillWrapperHeight}px - 20px)`,
 							}}
 							className={Style['chatWrapperSegment']}
+							onScroll={(e: any) => {
+								const element = e.target;
+
+								if (element.scrollTop === 0) {
+									getGroupChatListCallback(true);
+								}
+							}}
 						>
-							{chatList &&
-								Object.keys(chatList).map((item: string, idx: number) => {
+							{chatListDateGroup &&
+								Object.keys(chatListDateGroup).map((item: string, idx: number) => {
 									return (
 										<React.Fragment
 											key={`${item}_(${
@@ -334,7 +387,7 @@ const RoomChat = ({
 												})`}
 												className={Style['dateDivider']}
 											/>
-											{Object.keys(chatList[item]).map(
+											{Object.keys(chatListDateGroup[item]).map(
 												(item2: string, idx2: number) => {
 													return (
 														<React.Fragment
@@ -344,7 +397,7 @@ const RoomChat = ({
 																]
 															})_${item2}`}
 														>
-															{chatList[item][item2].map(
+															{chatListDateGroup[item][item2].map(
 																(
 																	item3: IChatList,
 																	idx3: number,
@@ -367,9 +420,9 @@ const RoomChat = ({
 																			}
 																			sentTime={
 																				idx3 ===
-																				chatList[item][
-																					item2
-																				].length -
+																				chatListDateGroup[
+																					item
+																				][item2].length -
 																					1
 																					? item3.SENT_DATETIME
 																					: null
@@ -385,24 +438,24 @@ const RoomChat = ({
 																			}
 																			isSamePreviousUserChat={
 																				idx3 > 0 &&
-																				chatList[item][
-																					item2
-																				][idx3 - 1]
+																				chatListDateGroup[
+																					item
+																				][item2][idx3 - 1]
 																					.USER_UID ===
-																					chatList[item][
-																						item2
-																					][idx3]
+																					chatListDateGroup[
+																						item
+																					][item2][idx3]
 																						.USER_UID &&
 																				dayjs(
-																					chatList[item][
-																						item2
-																					][idx3]
+																					chatListDateGroup[
+																						item
+																					][item2][idx3]
 																						.SENT_DATETIME,
 																				).format(
 																					'YYYY-MM-DD',
 																				) ===
 																					dayjs(
-																						chatList[
+																						chatListDateGroup[
 																							item
 																						][item2][
 																							idx3 - 1
