@@ -196,7 +196,6 @@ const RoomChat = ({
 				},
 				successCallback: (response) => {
 					const newChatObj = response.data.newChat[0];
-					const usersToNotify = response.data.usersToNotify;
 
 					setChatList((prev) => {
 						if (prev.some((item) => item.MESSAGE_ID === newChatObj.MESSAGE_ID))
@@ -205,13 +204,11 @@ const RoomChat = ({
 
 						return newArr;
 					});
-
-					socket?.emit('sendGroupMessage', { convId: roomID, usersToNotify });
 				},
 				failCallback: () => toast['error'](<>{'채팅 메시지를 보내지 못했습니다'}</>),
 			});
 		},
-		[authStore.userUID, roomID, socket],
+		[authStore.userUID, roomID],
 	);
 
 	const sendMessageFunction = async (content: ChatList) => {
@@ -261,7 +258,8 @@ const RoomChat = ({
 			});
 		}
 
-		socket?.on('newMessageGroupReceived', ({ convId }: any) => {
+		socket?.on('newMessageGroupReceived', ({ convId, userUID }: { [key: string]: string }) => {
+			if (userUID === authStore.userUID) return;
 			if (roomID === convId) getGroupChatListCallback(false);
 		});
 
@@ -278,7 +276,7 @@ const RoomChat = ({
 				});
 			}
 		};
-	}, [authStore.userId, getGroupChatListCallback, roomID, socket]);
+	}, [authStore.userId, authStore.userUID, getGroupChatListCallback, roomID, socket]);
 
 	const usersImage = useMemo(() => {
 		const avatarGroupImgList = groupMembers.map((oneUser) => {
