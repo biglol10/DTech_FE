@@ -1,3 +1,4 @@
+/* eslint-disable func-style */
 /** ****************************************************************************************
  * @설명 : 채팅 페이지
  ********************************************************************************************
@@ -11,6 +12,7 @@
  * 6      변지욱     2022-10-03   feature/JW/change      이전 채팅 사용자랑 같으면 이름 표시X
  * 7      변지욱     2022-11-22   feature/JW/refactor    일주일치 채팅내역 우선 보여주고 위로 스크롤 시 이전 채팅내역 표시
  * 8      변지욱     2022-11-23   feature/JW/refactor    메시지 보낼 때 소캣을 이용하지 않는 방식으로 변경
+ * 9      변지욱     2022-11-23   feature/JW/refactor    중복 api request 문제 해결
  ********************************************************************************************/
 
 import { GetServerSideProps } from 'next';
@@ -19,13 +21,7 @@ import { Avatar, Box, DTechQuill, SharpDivider, TextWithDotAnimation } from '@co
 import { MainLayoutTemplate, SingleChatMessage } from '@components/customs';
 import { Container, Segment } from 'semantic-ui-react';
 
-import {
-	ChatList,
-	IUsersStatusArr,
-	IAuth,
-	IAppCommon,
-	IMetadata,
-} from '@utils/types/commAndStoreTypes';
+import { ChatList, IUsersStatusArr, IAuth, IMetadata } from '@utils/types/commAndStoreTypes';
 import OnlineSvg from '@styles/svg/online.svg';
 import OfflineSvg from '@styles/svg/offline.svg';
 import { useSelector, useDispatch } from 'react-redux';
@@ -98,7 +94,6 @@ const UserChat = ({
 	}, [queryObj.userId]);
 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
-	const appCommon = useSelector((state: { appCommon: IAppCommon }) => state.appCommon);
 	const socket = authStore.userSocket;
 
 	const dispatch = useDispatch();
@@ -113,23 +108,18 @@ const UserChat = ({
 	}, [dispatch, userUID]);
 
 	useEffect(() => {
-		const { currentChatUser } = appCommon;
-
-		if (currentChatUser) {
-			comAxiosRequest({
-				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/getUsersInfo`,
-				requestType: 'get',
-				dataObj: { usersParam: [userUID] },
-				successCallback: (response) => setChatUser(response.data.usersInfo[0]),
-				failCallback: () => toast['error'](<>{'유저정보를 가져오지 못했습니다'}</>),
-			});
-		}
-	}, [appCommon, userUID]);
+		comAxiosRequest({
+			url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/auth/getUsersInfo`,
+			requestType: 'get',
+			dataObj: { usersParam: [userUID] },
+			successCallback: (response) => setChatUser(response.data.usersInfo[0]),
+			failCallback: () => toast['error'](<>{'유저정보를 가져오지 못했습니다'}</>),
+		});
+	}, [userUID]);
 
 	const getPrivateChatListCallback = useCallback(
-		(viewPrevious: boolean = false) => {
+		async (viewPrevious: boolean = false) => {
 			if (cookie.get('currentChatUser') !== userUID) return;
-			const { currentChatUser } = appCommon;
 
 			bottomRefActiveRef.current = !viewPrevious;
 
@@ -141,8 +131,8 @@ const UserChat = ({
 				lastMsgId.current ? { lastMsgId: lastMsgId.current } : {},
 			);
 
-			if (currentChatUser && authStore.userUID && authStore.userToken) {
-				comAxiosRequest({
+			if (authStore.userUID && authStore.userToken) {
+				await comAxiosRequest({
 					url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getPrivateChatList`,
 					requestType: 'post',
 					dataObj,
@@ -159,7 +149,7 @@ const UserChat = ({
 				});
 			}
 		},
-		[appCommon, authStore.userToken, authStore.userUID, userUID],
+		[authStore.userToken, authStore.userUID, userUID],
 	);
 
 	const chatListDateGroup: ChatDateReduce = useMemo(() => {
@@ -169,7 +159,10 @@ const UserChat = ({
 	}, [chatList]);
 
 	useEffect(() => {
-		getPrivateChatListCallback();
+		async function fetchChatList() {
+			await getPrivateChatListCallback();
+		}
+		fetchChatList();
 	}, [getPrivateChatListCallback]);
 
 	useEffect(() => {
@@ -200,9 +193,9 @@ const UserChat = ({
 	}, [textChangeNotification]);
 
 	const sendPrivateMessageCallback = useCallback(
-		(content: ChatList, imgArr = []) => {
+		async (content: ChatList, imgArr = []) => {
 			bottomRefActiveRef.current = true;
-			comAxiosRequest({
+			await comAxiosRequest({
 				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/insertPrivateChatMessage`,
 				requestType: 'post',
 				dataObj: {
@@ -271,20 +264,20 @@ const UserChat = ({
 				},
 			});
 		} else {
-			sendPrivateMessageCallback(content);
+			await sendPrivateMessageCallback(content);
 		}
 	};
 
 	useEffect(() => {
-		socket?.on('newMessageReceived', ({ fromUID }: any) => {
-			if (userUID === fromUID) getPrivateChatListCallback(false);
+		socket?.on('newMessageReceived', async ({ fromUID }: any) => {
+			if (userUID === fromUID) await getPrivateChatListCallback(false);
 		});
 
 		socket?.on('textChangeNotification', (sendingUser: string) => {
 			setSendingUserState(sendingUser);
 			setTextChangeNotification(true);
 		});
-	}, [socket, appCommon.currentChatUser, userUID, getPrivateChatListCallback]);
+	}, [socket, userUID, getPrivateChatListCallback]);
 
 	useEffect(() => {
 		unReadArrSlice(userUID);

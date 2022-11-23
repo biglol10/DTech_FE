@@ -1,3 +1,4 @@
+/* eslint-disable func-style */
 /** ****************************************************************************************
  * @설명 : 그룹채팅 페이지
  ********************************************************************************************
@@ -7,6 +8,7 @@
  * 2      변지욱     2022-10-06   feature/JW/groupChat    그룹챗 멤버 modal 표시
  * 3      변지욱     2022-11-22   feature/JW/refactor     일주일치 채팅내역 우선 보여주고 위로 스크롤 시 이전 채팅내역 표시
  * 4      변지욱     2022-11-23   feature/JW/refactor     메시지 보낼 때 소캣을 이용하지 않는 방식으로 변경
+ * 5      변지욱     2022-11-23   feature/JW/refactor     중복 api request 문제 해결
  ********************************************************************************************/
 
 import { GetServerSideProps } from 'next';
@@ -110,7 +112,7 @@ const RoomChat = ({
 	}, [dispatch, roomID]);
 
 	const getGroupChatListCallback = useCallback(
-		(viewPrevious: boolean = false) => {
+		async (viewPrevious: boolean = false) => {
 			bottomRefActiveRef.current = !viewPrevious;
 			const dataObj = lodash.merge(
 				{
@@ -120,7 +122,7 @@ const RoomChat = ({
 				lastMsgId.current ? { lastMsgId: lastMsgId.current } : {},
 			);
 
-			comAxiosRequest({
+			await comAxiosRequest({
 				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/getGroupChatList`,
 				requestType: 'post',
 				dataObj,
@@ -150,7 +152,11 @@ const RoomChat = ({
 
 	useEffect(() => {
 		if (roomID && authStore.userToken && authStore.userUID) {
-			getGroupChatListCallback();
+			// eslint-disable-next-line no-inner-declarations
+			async function fetchChatList() {
+				await getGroupChatListCallback();
+			}
+			fetchChatList();
 		}
 	}, [authStore.userToken, authStore.userUID, getGroupChatListCallback, roomID]);
 
@@ -176,9 +182,9 @@ const RoomChat = ({
 	}, [authStore.userName, authStore.userTitle, socket]);
 
 	const sendGroupMessageCallback = useCallback(
-		(content: ChatList, imgArr = []) => {
+		async (content: ChatList, imgArr = []) => {
 			bottomRefActiveRef.current = true;
-			comAxiosRequest({
+			await comAxiosRequest({
 				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/insertGroupChatMessage`,
 				requestType: 'post',
 				dataObj: {
@@ -239,15 +245,15 @@ const RoomChat = ({
 				url: `${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/chat/uploadChatImg`,
 				requestType: 'post',
 				dataObj: formData,
-				successCallback: (response) => {
-					sendGroupMessageCallback(content, response.data.bodyObj.imgArr);
+				successCallback: async (response) => {
+					await sendGroupMessageCallback(content, response.data.bodyObj.imgArr);
 				},
 				failCallback: () => {
 					toast['error'](<>{'이미지를 보내지 못했습니다'}</>);
 				},
 			});
 		} else {
-			sendGroupMessageCallback(content);
+			await sendGroupMessageCallback(content);
 		}
 	};
 
@@ -265,10 +271,13 @@ const RoomChat = ({
 			});
 		}
 
-		socket?.on('newMessageGroupReceived', ({ convId, userUID }: { [key: string]: string }) => {
-			if (userUID === authStore.userUID) return;
-			if (roomID === convId) getGroupChatListCallback(false);
-		});
+		socket?.on(
+			'newMessageGroupReceived',
+			async ({ convId, userUID }: { [key: string]: string }) => {
+				if (userUID === authStore.userUID) return;
+				if (roomID === convId) await getGroupChatListCallback(false);
+			},
+		);
 
 		socket?.on('textChangeNotification', (sendingUser: string) => {
 			setSendingUserState(sendingUser);
