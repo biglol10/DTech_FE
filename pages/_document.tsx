@@ -26,7 +26,15 @@ export default function Document() {
 				{/* <link rel="icon" href="dtech/favicon.ico" type="image/x-icon" /> */}
 
 				{/* vercel용 (로컬에선 redirects 때문인지 /favicon.ico로 작성) */}
-				<link rel="icon" href={`/dtech/favicon.ico`} type="image/x-icon" />
+				<link
+					rel="icon"
+					href={`${
+						process.env.NODE_ENV === 'development'
+							? '/favicon.ico'
+							: '/dtech/favicon.ico'
+					}`}
+					type="image/x-icon"
+				/>
 			</Head>
 			<body>
 				<Main />
