@@ -6,6 +6,7 @@
  * 1      변지욱     2022-09-26   feature/JW/chatRoom     최초작성
  * 2      변지욱     2022-10-06   feature/JW/groupChat    그룹챗 멤버 modal 표시
  * 3      변지욱     2022-11-22   feature/JW/refactor     일주일치 채팅내역 우선 보여주고 위로 스크롤 시 이전 채팅내역 표시
+ * 4      변지욱     2022-11-23   feature/JW/refactor     메시지 보낼 때 소캣을 이용하지 않는 방식으로 변경
  ********************************************************************************************/
 
 import { GetServerSideProps } from 'next';
@@ -196,6 +197,12 @@ const RoomChat = ({
 				},
 				successCallback: (response) => {
 					const newChatObj = response.data.newChat[0];
+					const usersToNotify = response.data.usersToNotify;
+
+					socket?.emit('groupMessageSentSuccess', {
+						convId: roomID,
+						usersToNotify,
+					});
 
 					setChatList((prev) => {
 						if (prev.some((item) => item.MESSAGE_ID === newChatObj.MESSAGE_ID))
@@ -208,7 +215,7 @@ const RoomChat = ({
 				failCallback: () => toast['error'](<>{'채팅 메시지를 보내지 못했습니다'}</>),
 			});
 		},
-		[authStore.userUID, roomID],
+		[authStore.userUID, roomID, socket],
 	);
 
 	const sendMessageFunction = async (content: ChatList) => {
