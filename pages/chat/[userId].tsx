@@ -10,6 +10,7 @@
  * 5      변지욱     2022-09-21   feature/JW/chatPageBug 채팅 제대로 표시 안되는 버그 픽스
  * 6      변지욱     2022-10-03   feature/JW/change      이전 채팅 사용자랑 같으면 이름 표시X
  * 7      변지욱     2022-11-22   feature/JW/refactor    일주일치 채팅내역 우선 보여주고 위로 스크롤 시 이전 채팅내역 표시
+ * 8      변지욱     2022-11-23   feature/JW/refactor    메시지 보낼 때 소캣을 이용하지 않는 방식으로 변경
  ********************************************************************************************/
 
 import { GetServerSideProps } from 'next';
@@ -222,6 +223,11 @@ const UserChat = ({
 				successCallback: (response) => {
 					const newChatObj = response.data.newChat[0];
 
+					socket?.emit('privateMessageSentSuccess', {
+						fromUserId: authStore.userUID,
+						toUserId: chatUser?.USER_ID,
+					});
+
 					setChatList((prev) => {
 						if (prev.some((item) => item.MESSAGE_ID === newChatObj.MESSAGE_ID))
 							return prev;
@@ -233,7 +239,7 @@ const UserChat = ({
 				failCallback: () => toast['error'](<>{'채팅 메시지를 보내지 못했습니다'}</>),
 			});
 		},
-		[authStore.userUID, chatUser],
+		[authStore.userUID, chatUser, socket],
 	);
 
 	const sendMessageFunction = async (content: ChatList) => {
