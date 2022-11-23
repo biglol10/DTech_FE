@@ -271,7 +271,6 @@ const UserChat = ({
 
 	useEffect(() => {
 		socket?.on('newMessageReceived', ({ fromUID }: any) => {
-			alert('adfadfdsaf');
 			if (userUID === fromUID) getPrivateChatListCallback(false);
 		});
 
