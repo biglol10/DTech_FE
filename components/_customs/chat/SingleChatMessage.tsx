@@ -1,5 +1,15 @@
 /* eslint-disable no-control-regex */
-import { useRef, useState } from 'react';
+
+/** ****************************************************************************************
+ * @설명 : 스킬 대시보드 페이지
+ ********************************************************************************************
+ * 번호    작업자     작업일         브랜치                       변경내용
+ *-------------------------------------------------------------------------------------------
+ * 1      변지욱     2022-08-27   feature/JW/chat            최초작성
+ * 2      변지욱     2022-12-04   feature/JW/refactor        IntersectionObserver로 보이지 않는 이미지를 로드하지 않게 수정
+ ********************************************************************************************/
+
+import { useRef, useState, useEffect } from 'react';
 import { Avatar, Button } from '@components/index';
 import { techImage } from '@utils/constants/imageConstants';
 import { Label } from 'semantic-ui-react';
@@ -60,6 +70,26 @@ const SingleChatMessage = ({
 	};
 
 	const cx = classNames.bind(Style);
+
+	useEffect(() => {
+		if (!imgList.length) return;
+		const callback = (entries: any, observer: any) => {
+			entries.forEach((entry: any) => {
+				if (entry.isIntersecting) {
+					const target = entry.target;
+
+					target.src = target.dataset.src;
+					observer.unobserve(target);
+				}
+			});
+		};
+		const options = {};
+		const observer = new IntersectionObserver(callback, options);
+
+		document.querySelectorAll(`[id^="img_${msgId}"]`).forEach((imgElement) => {
+			observer.observe(imgElement);
+		});
+	}, [imgList, msgId]);
 
 	return (
 		<>
@@ -154,9 +184,12 @@ const SingleChatMessage = ({
 								return (
 									<img
 										style={{ height: '50px', width: '50px' }}
-										key={`asdf_${idx}`}
-										src={itemUrl}
+										key={`img_${msgId}_${idx}`}
+										id={`img_${msgId}_${idx}`}
+										// src={itemUrl}
+										data-src={itemUrl}
 										onClick={() => openImageModal(itemUrl)}
+										alt=""
 									/>
 								);
 							})}
