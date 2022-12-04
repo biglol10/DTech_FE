@@ -6,29 +6,37 @@
  * 1      변지욱     2022-06-16                              최초작성
  * 2      변지욱     2022-07-13                              페이지에 따른 레이아웃 적용
  * 3      변지욱     2022-08-02   feature/JW/quill           dispatch에 쿠키 있을 경우 로직 추가
+ * 4      변지욱     2022-12-04   feature/JW/refactor        modal에 dynamic import 적용
  ********************************************************************************************/
 
 import React, { useMemo } from 'react';
 import type { AppProps } from 'next/app';
 import wrapper from '@store/rootReducer';
-import { ModalPopup } from '@components/index';
 import Head from 'next/head';
 import { useSelector, useDispatch } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import cookie from 'js-cookie';
 import { useSocket } from '@utils/hooks/customHooks';
 import { IAuth, IToastState } from '@utils/types/commAndStoreTypes';
+// import { ModalPopup } from '@components/index';
 
 import '@styles/globals.scss';
 import 'semantic-ui-css/semantic.min.css';
 import 'react-quill/dist/quill.snow.css';
 import 'react-toastify/dist/ReactToastify.css';
+import dynamic from 'next/dynamic';
 
 type ComponentWithPageLayout = AppProps & {
 	Component: AppProps['Component'] & {
 		PageLayout?: React.ElementType;
 	};
 };
+
+const ModalPopup = dynamic(() => {
+	const ModalPopupComponent = import('@components/modal/ModalPopup');
+
+	return ModalPopupComponent;
+});
 
 const MyApp = ({ Component, pageProps }: ComponentWithPageLayout) => {
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
