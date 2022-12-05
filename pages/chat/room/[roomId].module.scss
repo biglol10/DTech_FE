@@ -51,6 +51,21 @@
 			padding-bottom: 20px;
 			display: flex;
 			flex-direction: column;
+
+			.viewPrevious {
+				font-size: 15;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				width: 80%;
+				margin: 0 auto;
+				background-color: tomato;
+				border-radius: 10px;
+			}
+
+			.hideButton {
+				display: none;
+			}
 		}
 	}
 

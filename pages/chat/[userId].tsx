@@ -135,6 +135,7 @@ const UserChat = ({
 					toUID: userUID,
 				},
 				lastMsgId.current ? { lastMsgId: lastMsgId.current } : {},
+				viewPrevious ? { isPreviousGubun: true } : {},
 			);
 
 			if (authStore.userUID && authStore.userToken) {
@@ -335,18 +336,6 @@ const UserChat = ({
 							// 	}
 							// }}
 						>
-							{/* {chatList.length !== 0 ||
-								(!isEndofChat && (
-									<Button
-										loading={previousLoading}
-										fluid
-										className={Style['viewPrevious']}
-										onClick={() => getPrivateChatListCallback(true)}
-									>
-										이전 채팅 보기
-									</Button>
-								))} */}
-
 							<Button
 								loading={previousLoading}
 								fluid
