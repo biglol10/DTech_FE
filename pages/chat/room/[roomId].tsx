@@ -9,6 +9,7 @@
  * 3      변지욱     2022-11-22   feature/JW/refactor     일주일치 채팅내역 우선 보여주고 위로 스크롤 시 이전 채팅내역 표시
  * 4      변지욱     2022-11-23   feature/JW/refactor     메시지 보낼 때 소캣을 이용하지 않는 방식으로 변경
  * 5      변지욱     2022-11-23   feature/JW/refactor     중복 api request 문제 해결
+ * 6      변지욱     2022-12-05   feature/JW/refactor     이전 채팅내역을 버튼으로 컨트롤하게끔 변경
  ********************************************************************************************/
 
 import { GetServerSideProps } from 'next';
@@ -22,7 +23,7 @@ import {
 	AvatarGroup,
 } from '@components/index';
 import { MainLayoutTemplate, SingleChatMessage, ChatMembersModal } from '@components/customs';
-import { Container, Segment, Icon, Header } from 'semantic-ui-react';
+import { Container, Segment, Icon, Header, Button } from 'semantic-ui-react';
 
 import { ChatList, IUsersStatusArr, IAuth, IMetadata } from '@utils/types/commAndStoreTypes';
 import { useSelector, useDispatch } from 'react-redux';
@@ -37,6 +38,7 @@ import {
 } from '@utils/appRelated/helperFunctions';
 import * as RCONST from '@utils/constants/reducerConstants';
 import { useModal, useChatUtil } from '@utils/hooks/customHooks';
+import classNames from 'classnames/bind';
 
 import Style from './[roomId].module.scss';
 
@@ -86,6 +88,8 @@ const RoomChat = ({
 	const [groupMembers, setGroupMembers] = useState<IUsersStatusArr[]>([]);
 	const [textChangeNotification, setTextChangeNotification] = useState(false);
 	const [sendingUserState, setSendingUserState] = useState<string>('');
+	const [previousLoading, setPreviousLoading] = useState(false);
+	const [isEndofChat, setIsEndofChat] = useState(false);
 
 	const lastMsgId = useRef<string>('');
 	const bottomRef = useRef<any>(null);
@@ -103,6 +107,8 @@ const RoomChat = ({
 
 	const dispatch = useDispatch();
 
+	const cx = classNames.bind(Style);
+
 	useEffect(() => {
 		dispatch({ type: RCONST.SET_CURRENT_CHAT_GROUP, chatGroup: roomID });
 
@@ -113,6 +119,7 @@ const RoomChat = ({
 
 	const getGroupChatListCallback = useCallback(
 		async (viewPrevious: boolean = false) => {
+			setPreviousLoading(viewPrevious);
 			bottomRefActiveRef.current = !viewPrevious;
 			const dataObj = lodash.merge(
 				{
@@ -120,6 +127,7 @@ const RoomChat = ({
 					readingUser: authStore.userUID,
 				},
 				lastMsgId.current ? { lastMsgId: lastMsgId.current } : {},
+				viewPrevious ? { isPreviousGubun: true } : {},
 			);
 
 			await comAxiosRequest({
@@ -134,12 +142,16 @@ const RoomChat = ({
 					});
 
 					setChatList((prev) => {
+						lodash.isEqual(prev, response.data.chatList) && setIsEndofChat(true);
 						if (prev.length) lastMsgId.current = prev[0].MESSAGE_ID;
+						else if (response.data.chatList.length)
+							lastMsgId.current = response.data.chatList[0].MESSAGE_ID;
 						return response.data.chatList;
 					});
 				},
 				failCallback: () => toast['error'](<>{'채팅정보를 가져오지 못했습니다'}</>),
 			});
+			setPreviousLoading(false);
 		},
 		[authStore.userUID, groupMembers, roomID],
 	);
@@ -167,6 +179,7 @@ const RoomChat = ({
 			document
 				.getElementById(lastMsgId.current)
 				?.scrollIntoView({ behavior: 'auto', block: 'center' });
+		lastMsgId.current = chatList[0]?.MESSAGE_ID;
 	}, [chatList, quillWrapperHeight]);
 
 	const notifyTextChange = useCallback(() => {
@@ -366,7 +379,7 @@ const RoomChat = ({
 							totalCount={usersImage.avatarGroupImgList.length}
 							usersString={usersImage.avatarGroupUserList}
 							className={Style['groupChatAvatarGroup']}
-							onClick={(e) => {
+							onClick={() => {
 								openChatGroupModal();
 							}}
 						/>
@@ -379,14 +392,19 @@ const RoomChat = ({
 								height: `calc(100% - ${quillWrapperHeight}px - 20px)`,
 							}}
 							className={Style['chatWrapperSegment']}
-							onScroll={(e: any) => {
-								const element = e.target;
-
-								if (element.scrollTop === 0) {
-									getGroupChatListCallback(true);
-								}
-							}}
 						>
+							<Button
+								loading={previousLoading}
+								fluid
+								className={cx(
+									'viewPrevious',
+									`${chatList.length === 0 ? 'hideButton' : ''}`,
+									`${isEndofChat ? 'hideButton' : ''}`,
+								)}
+								onClick={() => getGroupChatListCallback(true)}
+							>
+								이전 채팅 보기
+							</Button>
 							{chatListDateGroup &&
 								Object.keys(chatListDateGroup).map((item: string, idx: number) => {
 									return (
