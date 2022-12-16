@@ -11,6 +11,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { createWrapper, HYDRATE } from 'next-redux-wrapper'; // nextjs friendly
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from '@saga/index';
+import _ from 'lodash';
 
 import usersSlice from './usersSlice';
 import counterReducer from './counterSlice';
@@ -25,15 +26,13 @@ export const rootReducer = (state: any, action: any) => {
 		case HYDRATE: {
 			// // Attention! This will overwrite client state! Real apps should use proper reconciliation.
 
-			const nextState = {
-				...state, // use previous state
-				...action.payload, // apply delta from hydration
-			};
+			// state = prev state / action.payload = incoming server state
+			const nextState = _.merge(state, action.payload);
 
-			// 이렇게 해야 client redux랑 머지가 가능함... 안 그러면 ssr에서 redux값을 가져올 때 hydration이 적용되어 값들이 초기화 되는 현상 발생
-			if (state.auth) nextState.auth = state.auth;
-			if (state.toastInfo) nextState.toastInfo = state.toastInfo;
-			if (state.appCommon) nextState.appCommon = state.appCommon;
+			// // 이렇게 해야 client redux랑 머지가 가능함... 안 그러면 ssr에서 redux값을 가져올 때 hydration이 적용되어 값들이 초기화 되는 현상 발생
+			// if (state.auth) nextState.auth = state.auth;
+			// if (state.toastInfo) nextState.toastInfo = state.toastInfo;
+			// if (state.appCommon) nextState.appCommon = state.appCommon;
 
 			return nextState;
 		}
