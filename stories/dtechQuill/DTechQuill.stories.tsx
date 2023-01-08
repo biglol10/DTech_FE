@@ -37,7 +37,7 @@ export const QuillSample = (args: any) => {
 			const { default: RQ } = await import('react-quill');
 
 			return function comp({ forwardedRef, ...props }: any) {
-				return <RQ ref={forwardedRef} {...props} />;
+				return <RQ id="quillEditorId" ref={forwardedRef} {...props} />;
 			};
 		},
 		{ ssr: false },

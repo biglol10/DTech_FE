@@ -42,7 +42,7 @@ const ReactQuill = dynamic(
 		const { default: RQ } = await import('react-quill');
 
 		const RQComp = React.memo(({ forwardedRef, ...props }: any) => {
-			return <RQ ref={forwardedRef} {...props} />;
+			return <RQ id="quillEditorId" ref={forwardedRef} {...props} />;
 		});
 
 		RQComp.displayName = 'CustomQuillComponent';
@@ -242,17 +242,17 @@ const DTechQuillStorybook = forwardRef<any, IDTechQuill>(
 
 		const quillTextChange = useCallback(
 			async (content: any) => {
-				if (content.indexOf('<img src="') < 0) {
+				const imgContent: HTMLImageElement | null = document.querySelector(
+					'#quillEditorId .ql-editor p img',
+				);
+
+				if (!imgContent) {
 					if (quillRef.current) {
 						quillRef.current.innerHTML = content;
 						setQuillContext(content);
 					}
 				} else {
-					const mediaPreview = content.substring(
-						content.indexOf('<img src="') + 10,
-						content.indexOf('"></p>'),
-					);
-
+					const mediaPreview = imgContent.src;
 					const filteredString = quillRef.current
 						.getEditor()
 						.getText()
@@ -295,11 +295,64 @@ const DTechQuillStorybook = forwardRef<any, IDTechQuill>(
 					}
 				}
 
-				if (notifyTextChange) {
-					const newNotifyFunction = lodash.debounce(() => notifyTextChange(), 1000);
+				// if (content.indexOf('<img src="') < 0) {
+				// 	if (quillRef.current) {
+				// 		quillRef.current.innerHTML = content;
+				// 		setQuillContext(content);
+				// 	}
+				// } else {
+				// 	const mediaPreview = content.substring(
+				// 		content.indexOf('<img src="') + 10,
+				// 		content.indexOf('"></p>'),
+				// 	);
 
-					newNotifyFunction();
-				}
+				// 	const filteredString = quillRef.current
+				// 		.getEditor()
+				// 		.getText()
+				// 		.replace(`<img src="${mediaPreview}">`, '');
+
+				// 	if (mediaPreview && filteredString) {
+				// 		setQuillContext(filteredString);
+				// 		quillRef.current.getEditor().setText(filteredString);
+				// 		if (urlPreviewList.length >= 6) {
+				// 			toast['error'](<>{'이미지는 최대 6개로 제한합니다'}</>);
+
+				// 			// 이걸 해줘야 텍스트 입력 + 이미지가 6개일 때 editor에 이미지가 추가되지 않음
+				// 			setUrlPreviewList((prev: any) => [...prev]);
+				// 		} else {
+				// 			const newName = `clipboardImage_${imageCounter}.png`;
+
+				// 			let blobObj = null;
+
+				// 			await fetch(mediaPreview)
+				// 				.then((res) => res.blob())
+				// 				.then((obj) => {
+				// 					blobObj = obj;
+				// 				});
+
+				// 			if (blobObj) {
+				// 				const imageFileObject = new File([blobObj], newName);
+
+				// 				setUrlPreviewList((prev: any) => [
+				// 					...prev,
+				// 					{
+				// 						fileName: newName,
+				// 						filePreview: mediaPreview,
+				// 						imageFile: imageFileObject,
+				// 					},
+				// 				]);
+
+				// 				setImageCounter(imageCounter + 1);
+				// 			}
+				// 		}
+				// 	}
+				// }
+
+				// if (notifyTextChange) {
+				// 	const newNotifyFunction = lodash.debounce(() => notifyTextChange(), 1000);
+
+				// 	newNotifyFunction();
+				// }
 			},
 			[notifyTextChange, urlPreviewList.length],
 		);
