@@ -14,6 +14,7 @@
  * 9      변지욱     2022-09-19   feature/JW/imageBlob        이미지 붙여먹기 시 blob객체로 변환 후 File
  * 10     변지욱     2022-09-29   feature/JW/chatRoom         enterSubmit이 있을 경우 엔터 이벤트 커스터마이징, 긔 외엔 null (게시판 때문)\
  * 11     변지욱     2022-10-12   feature/JW/quill            텍스트가 아닌 html을 다루기로 함
+ * 12     변지욱     2023-01-08   feature/JW/quill            string으로 이미지 여부 판단방법 제거
  ********************************************************************************************/
 
 import React, {
@@ -50,7 +51,7 @@ const ReactQuill = dynamic(
 		const { default: RQ } = await import('react-quill');
 
 		const RQComp = React.memo(({ forwardedRef, ...props }: any) => {
-			return <RQ ref={forwardedRef} {...props} />;
+			return <RQ id="quillEditorId" ref={forwardedRef} {...props} />;
 		});
 
 		RQComp.displayName = 'CustomQuillComponent';
@@ -276,25 +277,20 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 
 		const quillTextChange = useCallback(
 			async (content: any) => {
-				if (content.indexOf('<img src="') < 0) {
+				const imgContent: HTMLImageElement | null = document.querySelector(
+					'#quillEditorId .ql-editor p img',
+				);
+
+				if (!imgContent) {
 					if (quillRef.current) {
 						quillRef.current.innerHTML = content;
 						setQuillContext(content);
 					}
 				} else {
-					const mediaPreview = content.substring(
-						content.indexOf('<img src="') + 10,
-						content.indexOf('"></p>'),
-					);
-
+					const mediaPreview = imgContent.src;
 					const filteredString = quillRef.current
 						.getEditor()
 						.root.innerHTML.replace(`<img src="${mediaPreview}">`, '');
-
-					// const filteredString = quillRef.current
-					// 	.getEditor()
-					// 	.getText()
-					// 	.replace(`<img src="${mediaPreview}">`, '');
 
 					if (mediaPreview && filteredString) {
 						setQuillContext(filteredString);
@@ -336,6 +332,67 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 
 					newNotifyFunction();
 				}
+
+				// if (content.indexOf('<img src="') < 0) {
+				// 	if (quillRef.current) {
+				// 		quillRef.current.innerHTML = content;
+				// 		setQuillContext(content);
+				// 	}
+				// } else {
+				// 	const mediaPreview = content.substring(
+				// 		content.indexOf('<img src="') + 10,
+				// 		content.indexOf('"></p>'),
+				// 	);
+
+				// 	const filteredString = quillRef.current
+				// 		.getEditor()
+				// 		.root.innerHTML.replace(`<img src="${mediaPreview}">`, '');
+
+				// 	// const filteredString = quillRef.current
+				// 	// 	.getEditor()
+				// 	// 	.getText()
+				// 	// 	.replace(`<img src="${mediaPreview}">`, '');
+
+				// 	if (mediaPreview && filteredString) {
+				// 		setQuillContext(filteredString);
+				// 		quillRef.current.getEditor().root.innerHTML = filteredString;
+				// 		if (urlPreviewList.length >= 6) {
+				// 			toast['error'](<>{'이미지는 최대 6개로 제한합니다'}</>);
+
+				// 			// 이걸 해줘야 텍스트 입력 + 이미지가 6개일 때 editor에 이미지가 추가되지 않음
+				// 			setUrlPreviewList((prev: any) => [...prev]);
+				// 		} else {
+				// 			const newName = `${generateImageUID()}.png`;
+
+				// 			let blobObj = null;
+
+				// 			await fetch(mediaPreview)
+				// 				.then((res) => res.blob())
+				// 				.then((obj) => {
+				// 					blobObj = obj;
+				// 				});
+
+				// 			if (blobObj) {
+				// 				const imageFileObject = new File([blobObj], newName);
+
+				// 				setUrlPreviewList((prev: any) => [
+				// 					...prev,
+				// 					{
+				// 						fileName: newName,
+				// 						filePreview: mediaPreview,
+				// 						imageFile: imageFileObject,
+				// 					},
+				// 				]);
+				// 			}
+				// 		}
+				// 	}
+				// }
+
+				// if (notifyTextChange) {
+				// 	const newNotifyFunction = lodash.debounce(() => notifyTextChange(), 1000);
+
+				// 	newNotifyFunction();
+				// }
 			},
 			[notifyTextChange, urlPreviewList.length],
 		);
