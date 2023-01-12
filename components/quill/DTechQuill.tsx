@@ -416,6 +416,21 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 			);
 		}, [editorSubmitEvent, quillContext, submitButtonOutside]);
 
+		const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+			e.preventDefault();
+			const file = e.dataTransfer.files[0];
+			const mediaPreview = URL.createObjectURL(file);
+
+			setUrlPreviewList([
+				...urlPreviewList,
+				{
+					imageFile: file,
+					fileName: `${generateImageUID()}.png`,
+					filePreview: mediaPreview,
+				},
+			]);
+		};
+
 		return (
 			<>
 				<div style={{ position: 'relative' }}>
@@ -432,6 +447,7 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 							{ name: 'quillMinHeight', value: quillMinHeight },
 							{ name: 'quillMaxHeight', value: quillMaxHeight },
 						])}
+						onDrop={handleDrop}
 					>
 						<ReactQuill
 							forwardedRef={quillRef}
