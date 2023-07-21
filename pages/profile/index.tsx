@@ -75,9 +75,7 @@ const Profile = () => {
 							</div>
 							<div className={Style['infoDiv']}>
 								<div className={Style['infoDivText1']}>휴대폰 번호</div>
-								<div className={Style['infoDivText2']}>
-									{userInfo.USER_PHONENUM}
-								</div>
+								<div className={Style['infoDivText2']}>{userInfo.USER_PHONENUM}</div>
 							</div>
 						</div>
 					)}
@@ -101,9 +99,7 @@ const Profile = () => {
 						{userSkills !== undefined && (
 							<div className={Style['infoDiv']}>
 								<div className={Style['infoDivText1']}>보유 스킬</div>
-								<div className={Style['infoDivText2']}>
-									{userSkills.map((skill: any) => `${skill.TECH_NM}, `)}
-								</div>
+								<div className={Style['infoDivText2']}>{userSkills.map((skill: any) => `${skill.TECH_NM}, `)}</div>
 							</div>
 						)}
 					</div>

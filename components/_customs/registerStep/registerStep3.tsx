@@ -17,15 +17,9 @@ const RegisterStep3 = (props: any) => {
 	const labelSize = 'h4';
 	const cx = classNames.bind(Style);
 	const dispatch = useDispatch();
-	const [userDetailValue, setUserDetailValue] = useState(
-		useSelector((state: any) => state.register.userDetailValue),
-	);
-	const [userGithubValue, setUserGithubValue] = useState(
-		useSelector((state: any) => state.register.userGithubValue),
-	);
-	const [userDomainValue, setUserDomainValue] = useState(
-		useSelector((state: any) => state.register.userDomainValue),
-	);
+	const [userDetailValue, setUserDetailValue] = useState(useSelector((state: any) => state.register.userDetailValue));
+	const [userGithubValue, setUserGithubValue] = useState(useSelector((state: any) => state.register.userGithubValue));
+	const [userDomainValue, setUserDomainValue] = useState(useSelector((state: any) => state.register.userDomainValue));
 
 	const clickNext = (goNext: boolean) => {
 		dispatch({
@@ -75,14 +69,7 @@ const RegisterStep3 = (props: any) => {
 					/>
 				</InputLayout>
 
-				<InputLayout
-					stretch={true}
-					inputLabel="GitHub URL"
-					inputLabelSize={labelSize}
-					showInputLabel={true}
-					autoFitErrorLabel={true}
-					spacing={2}
-				>
+				<InputLayout stretch={true} inputLabel="GitHub URL" inputLabelSize={labelSize} showInputLabel={true} autoFitErrorLabel={true} spacing={2}>
 					<InputWithIcon
 						id="inputId"
 						placeholder="Github 주소를 입력해주세요."
@@ -99,14 +86,7 @@ const RegisterStep3 = (props: any) => {
 					/>
 				</InputLayout>
 
-				<InputLayout
-					stretch={true}
-					inputLabel="업무 도메인"
-					inputLabelSize={labelSize}
-					showInputLabel={true}
-					autoFitErrorLabel={true}
-					spacing={2}
-				>
+				<InputLayout stretch={true} inputLabel="업무 도메인" inputLabelSize={labelSize} showInputLabel={true} autoFitErrorLabel={true} spacing={2}>
 					<InputWithIcon
 						id="inputId"
 						placeholder="도메인"

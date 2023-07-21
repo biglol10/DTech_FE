@@ -122,11 +122,7 @@ const Index = () => {
 				</div>
 				<div className={Style['boardSumbitBtn']}>
 					<Link href="/board/submit">
-						<BTN
-							className={Style['filterBtn']}
-							content="게시글 등록"
-							buttonType="none"
-						/>
+						<BTN className={Style['filterBtn']} content="게시글 등록" buttonType="none" />
 					</Link>
 				</div>
 			</div>

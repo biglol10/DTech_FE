@@ -21,18 +21,12 @@ export interface ChatList {
 }
 
 export interface IToastState {
-	position:
-		| 'top-right'
-		| 'top-center'
-		| 'top-left'
-		| 'bottom-right'
-		| 'bottom-center'
-		| 'bottom-left';
+	position: 'top-right' | 'top-center' | 'top-left' | 'bottom-right' | 'bottom-center' | 'bottom-left';
 	autoClose: number;
 	hideProgressBar: boolean;
 }
 
-export interface IUsersStatusArr {
+export interface IUserStatus {
 	USER_UID: string;
 	USER_ID: string;
 	USER_NM: string;
@@ -41,6 +35,28 @@ export interface IUsersStatusArr {
 	USER_IMG_URL: string;
 	USER_ADMIN_YN: string | number;
 	ONLINE_STATUS: 'ONLINE' | 'OFFLINE';
+}
+
+export interface IMetadata {
+	status: 'success' | 'fail';
+	url?: string;
+	metadata_title: string;
+	metadata_description: string;
+	metadata_image: string;
+}
+
+export interface IConversation {
+	MESSAGE_ID: string;
+	FROM_USERNAME?: null;
+	TO_USERNAME?: null;
+	MESSAGE_TEXT: string;
+	IMG_LIST: string[];
+	LINK_LIST: IMetadata[];
+	SENT_DATETIME: string;
+	USER_UID: string;
+	USER_NM: string;
+	USER_TITLE: string;
+	CONVERSATION_ID: string;
 }
 
 // ****** Store Types
@@ -69,12 +85,4 @@ export interface IAuth {
 	userEmail: string;
 	userToken: string;
 	userSocket: null | Socket;
-}
-
-export interface IMetadata {
-	status: 'success' | 'fail';
-	url?: string;
-	metadata_title: string;
-	metadata_description: string;
-	metadata_image: string;
 }

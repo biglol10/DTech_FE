@@ -60,14 +60,7 @@ const InputSearch = forwardRef<any, IInputSearch>(
 				readOnly={readOnly}
 				disabled={disabled}
 				maxLength={maxLength}
-				icon={
-					<Icon
-						name="search"
-						circular
-						link
-						onClick={onSearchIconClick && onSearchIconClick}
-					/>
-				}
+				icon={<Icon name="search" circular link onClick={onSearchIconClick && onSearchIconClick} />}
 				style={stretch ? { width: '100%' } : {}}
 				onKeyUp={(evt: KeyboardEvent) => evt.key === 'Enter' && onEnter && onEnter()}
 			/>

@@ -17,15 +17,7 @@
  * 12     변지욱     2023-01-08   feature/JW/quill            string으로 이미지 여부 판단방법 제거
  ********************************************************************************************/
 
-import React, {
-	useCallback,
-	useEffect,
-	useMemo,
-	useRef,
-	useState,
-	forwardRef,
-	useImperativeHandle,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState, forwardRef, useImperativeHandle } from 'react';
 import dynamic from 'next/dynamic';
 import { toast } from 'react-toastify';
 import { generateImageUID } from '@utils/appRelated/helperFunctions';
@@ -90,15 +82,9 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 				}
 
 				if (inputFileRef.current.files) {
-					const fileType =
-						inputFileRef.current.files[0].type.split('/')[
-							inputFileRef.current.files[0].type.split('/').length - 1
-						];
+					const fileType = inputFileRef.current.files[0].type.split('/')[inputFileRef.current.files[0].type.split('/').length - 1];
 
-					if (
-						['png', 'jpg', 'jpeg'].includes(fileType) &&
-						inputFileRef.current.files[0].size <= 1 * 1024 * 1024
-					) {
+					if (['png', 'jpg', 'jpeg'].includes(fileType) && inputFileRef.current.files[0].size <= 1 * 1024 * 1024) {
 						const mediaPreview = URL.createObjectURL(inputFileRef.current.files[0]);
 
 						setUrlPreviewList([
@@ -119,11 +105,7 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 		}, [urlPreviewList]);
 
 		const editorSubmitEvent = useCallback(() => {
-			if (
-				quillRef.current.getEditor().getText().trim().length === 0 &&
-				urlPreviewList.length === 0
-			)
-				return null;
+			if (quillRef.current.getEditor().getText().trim().length === 0 && urlPreviewList.length === 0) return null;
 
 			handleSubmit &&
 				handleSubmit({
@@ -186,9 +168,7 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 									shiftKey: true,
 									handler: (range: any) => {
 										quillRef.current.getEditor().insertText(range.index, '\n');
-										quillRef.current
-											.getEditor()
-											.scrollIntoView({ behavior: 'auto' });
+										quillRef.current.getEditor().scrollIntoView({ behavior: 'auto' });
 									},
 								},
 								enter: {
@@ -257,9 +237,7 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 
 		const quillTextChange = useCallback(
 			async (content: any) => {
-				const imgContent: HTMLImageElement | null = document.querySelector(
-					'#quillEditorId .ql-editor p img',
-				);
+				const imgContent: HTMLImageElement | null = document.querySelector('#quillEditorId .ql-editor p img');
 
 				if (!imgContent) {
 					if (quillRef.current) {
@@ -268,9 +246,7 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 					}
 				} else {
 					const mediaPreview = imgContent.src;
-					const filteredString = quillRef.current
-						.getEditor()
-						.root.innerHTML.replace(`<img src="${mediaPreview}">`, '');
+					const filteredString = quillRef.current.getEditor().root.innerHTML.replace(`<img src="${mediaPreview}">`, '');
 
 					if (mediaPreview && filteredString) {
 						setQuillContext(filteredString);
@@ -353,12 +329,7 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 		return (
 			<>
 				<div style={{ position: 'relative' }}>
-					<input
-						ref={inputFileRef}
-						type="file"
-						accept="image/*"
-						style={{ position: 'absolute', top: '-10000px' }}
-					/>
+					<input ref={inputFileRef} type="file" accept="image/*" style={{ position: 'absolute', top: '-10000px' }} />
 					<div
 						id="quillWrapper"
 						className={Style['quillWrap']}
@@ -380,10 +351,7 @@ const DTechQuill = forwardRef<any, IDTechQuill>(
 						/>
 
 						{!!urlPreviewList.length && (
-							<div
-								className={Style['imageListArea']}
-								style={{ gridColumn: 'span 1' }}
-							>
+							<div className={Style['imageListArea']} style={{ gridColumn: 'span 1' }}>
 								{urlPreviewList.map((item: any, idx: number) => {
 									return (
 										<PrevieImageComp

@@ -15,14 +15,10 @@ import Style from './RegisterComp.module.scss';
 
 const RegisterStep4 = (props: any) => {
 	const dispatch = useDispatch();
-	const [techSelectedList, setTechSelectedList] = useState(
-		useSelector((state: any) => state.register.techSelectValue),
-	);
+	const [techSelectedList, setTechSelectedList] = useState(useSelector((state: any) => state.register.techSelectValue));
 
 	useEffect(() => {
-		if (
-			techSelectedList.techSelectValue.filter((tech: any) => tech.value === true).length === 0
-		) {
+		if (techSelectedList.techSelectValue.filter((tech: any) => tech.value === true).length === 0) {
 			dispatch({
 				type: 'TECH_LIST',
 				techSelectedList,
@@ -43,16 +39,12 @@ const RegisterStep4 = (props: any) => {
 	};
 
 	const handleTechClick = (key: any) => {
-		const findIndex = techSelectedList.techSelectValue.findIndex(
-			(element: any) => element.key === key,
-		);
+		const findIndex = techSelectedList.techSelectValue.findIndex((element: any) => element.key === key);
 
 		if (findIndex !== -1) {
 			setTechSelectedList({
 				...techSelectedList,
-				techSelectValue: techSelectedList.techSelectValue.map((tech: any) =>
-					tech.key === key ? { ...tech, value: !tech.value } : tech,
-				),
+				techSelectValue: techSelectedList.techSelectValue.map((tech: any) => (tech.key === key ? { ...tech, value: !tech.value } : tech)),
 				techSelectError: false,
 			});
 		}

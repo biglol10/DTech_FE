@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { IUsersStatusArr } from '@utils/types/commAndStoreTypes';
+import { IUserStatus } from '@utils/types/commAndStoreTypes';
 
-const initialState: { usersOverview: IUsersStatusArr[] } = {
+const initialState: { usersOverview: IUserStatus[] } = {
 	usersOverview: [],
 };
 

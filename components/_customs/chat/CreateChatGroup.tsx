@@ -1,14 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { InputLayout, InputWithIcon, InputDefault, Avatar, Button } from '@components/index';
-import {
-	Segment,
-	Label as SemanticLabel,
-	Header,
-	Icon,
-	Divider,
-	Image as SemanticImage,
-} from 'semantic-ui-react';
-import { IAuth, IUsersStatusArr } from '@utils/types/commAndStoreTypes';
+import { Segment, Label as SemanticLabel, Header, Icon, Divider, Image as SemanticImage } from 'semantic-ui-react';
+import { IAuth, IUserStatus } from '@utils/types/commAndStoreTypes';
 import { generateAvatarImage, comAxiosRequest } from '@utils/appRelated/helperFunctions';
 import { useModal } from '@utils/hooks/customHooks';
 import { toast } from 'react-toastify';
@@ -20,17 +13,9 @@ import ChatSvg from '@styles/svg/chat.svg';
 
 import Style from './CreateChatGroup.module.scss';
 
-const CreateChatGroup = ({
-	usersStatusArr,
-	authStore,
-}: {
-	usersStatusArr: IUsersStatusArr[];
-	authStore: IAuth;
-}) => {
+const CreateChatGroup = ({ usersStatusArr, authStore }: { usersStatusArr: IUserStatus[]; authStore: IAuth }) => {
 	const usersStatusArrClone = useMemo(() => {
-		const arr = lodash.cloneDeep(
-			usersStatusArr.filter((user) => user.USER_UID !== authStore.userUID),
-		);
+		const arr = lodash.cloneDeep(usersStatusArr.filter((user) => user.USER_UID !== authStore.userUID));
 
 		return arr;
 	}, [authStore.userUID, usersStatusArr]);
@@ -38,8 +23,8 @@ const CreateChatGroup = ({
 	// eslint-disable-next-line no-useless-escape
 	const regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/g;
 
-	const [allUsersArr, setAllUsersArr] = useState<IUsersStatusArr[]>(usersStatusArrClone);
-	const [userCollection, setUserCollection] = useState<IUsersStatusArr[]>([]);
+	const [allUsersArr, setAllUsersArr] = useState<IUserStatus[]>(usersStatusArrClone);
+	const [userCollection, setUserCollection] = useState<IUserStatus[]>([]);
 	const [chatRoomName, setChatRoomName] = useState('');
 	const [userSearchText, setUserSearchText] = useState('');
 	const [chatRoomError, setChatRoomError] = useState(false);
@@ -47,7 +32,7 @@ const CreateChatGroup = ({
 	const { handleModal } = useModal();
 	const router = useRouter();
 
-	const addUserCollection = (userObj: IUsersStatusArr) => {
+	const addUserCollection = (userObj: IUserStatus) => {
 		setUserSearchError(false);
 		setAllUsersArr(allUsersArr.filter((user) => user.USER_UID !== userObj.USER_UID));
 		setUserCollection((prev) => {
@@ -68,9 +53,7 @@ const CreateChatGroup = ({
 	useEffect(() => {
 		setAllUsersArr((prev) => {
 			if (userCollection.length === 0) {
-				return usersStatusArrClone.filter((user) =>
-					user.USER_NM.includes(userSearchText.length === 0 ? '' : userSearchText),
-				);
+				return usersStatusArrClone.filter((user) => user.USER_NM.includes(userSearchText.length === 0 ? '' : userSearchText));
 			}
 			const filterUserArr = usersStatusArrClone.filter(
 				(item) =>
@@ -130,10 +113,7 @@ const CreateChatGroup = ({
 		const chatGroupFuncRes = chatGroupFunc.response.data;
 
 		setTimeout(() => {
-			cookie.set(
-				'currentChatRoom',
-				JSON.stringify({ chatUID: chatGroupFuncRes.chatGroupUID, chatName: chatRoomName }),
-			);
+			cookie.set('currentChatRoom', JSON.stringify({ chatUID: chatGroupFuncRes.chatGroupUID, chatName: chatRoomName }));
 			router.push(`/chat/room/${chatGroupFuncRes.chatGroupUID}`);
 		}, 1000);
 
@@ -145,13 +125,7 @@ const CreateChatGroup = ({
 			<Header as="h2" className={Style['channelHeader']}>
 				<ChatSvg style={{ height: '30px', width: '30px', marginRight: '10px' }} />
 				<span>채널 생성</span>
-				<Button
-					content="생성"
-					color="red"
-					buttonType="none"
-					size="small"
-					onClick={createChatGroupFunc}
-				/>
+				<Button content="생성" color="red" buttonType="none" size="small" onClick={createChatGroupFunc} />
 			</Header>
 
 			<div style={{ width: '300px' }}>
@@ -209,20 +183,9 @@ const CreateChatGroup = ({
 							return (
 								<React.Fragment key={`userLi_${idx}`}>
 									<li onClick={() => addUserCollection(user)}>
-										<Avatar
-											content={user.USER_NM}
-											src={
-												user.USER_IMG_URL ||
-												generateAvatarImage(user.USER_UID)
-											}
-											imageSize={'mini'}
-										/>
+										<Avatar content={user.USER_NM} src={user.USER_IMG_URL || generateAvatarImage(user.USER_UID)} imageSize={'mini'} />
 									</li>
-									<Divider
-										key={`divider_${idx}`}
-										hidden={idx === usersStatusArrClone.length - 1}
-										className={Style['divider']}
-									/>
+									<Divider key={`divider_${idx}`} hidden={idx === usersStatusArrClone.length - 1} className={Style['divider']} />
 								</React.Fragment>
 							);
 						})}
@@ -238,18 +201,12 @@ const CreateChatGroup = ({
 							style={{ margin: '1px 2px' }}
 							data-useruidval={user.USER_UID}
 							onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-								const newDeleteUserCollection = lodash.debounce(
-									() => deleteUserCollection(e),
-									100,
-								);
+								const newDeleteUserCollection = lodash.debounce(() => deleteUserCollection(e), 100);
 
 								newDeleteUserCollection();
 							}}
 						>
-							<SemanticImage
-								src={user.USER_IMG_URL || generateAvatarImage(user.USER_UID)}
-								avatar
-							/>
+							<SemanticImage src={user.USER_IMG_URL || generateAvatarImage(user.USER_UID)} avatar />
 							{user.USER_NM}
 							<Icon name="delete" />
 						</SemanticLabel>

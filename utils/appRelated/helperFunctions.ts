@@ -4,7 +4,7 @@ import axios from 'axios';
 import _ from 'lodash';
 import cookie from 'js-cookie';
 import { store } from '@store/rootReducer';
-import { IAuth } from '@utils/types/commAndStoreTypes';
+import { IAuth, IConversation } from '@utils/types/commAndStoreTypes';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 
@@ -45,18 +45,14 @@ const generateAvatarImage = (uid: string) => {
 
 		const baseChoice = `AvatarBase${summation % 10}` as keyof typeof baseImage;
 
-		return `${process.env.NODE_ENV === 'production' ? '/dtech' : ''}/images/AvatarBaseImage/${
-			baseImage[baseChoice]
-		}`;
+		return `${process.env.NODE_ENV === 'production' ? '/dtech' : ''}/images/AvatarBaseImage/${baseImage[baseChoice]}`;
 	} catch {
-		return `${process.env.NODE_ENV === 'production' ? '/dtech' : ''}/images/AvatarBaseImage/${
-			baseImage['AvatarBaseErr']
-		}`;
+		return `${process.env.NODE_ENV === 'production' ? '/dtech' : ''}/images/AvatarBaseImage/${baseImage['AvatarBaseErr']}`;
 	}
 };
 
-const chatToDateGroup = (arr: any[]) => {
-	const groupsReduce = arr.reduce((previouseVal, currentVal) => {
+const chatToDateGroup = (arr: IConversation[]) => {
+	const groupsReduce = arr.reduce((previouseVal: { [key in string]: any }, currentVal) => {
 		const date = currentVal.SENT_DATETIME.split('T')[0];
 
 		const hourMin = dayjs(currentVal.SENT_DATETIME).format('HH:mm');
@@ -90,15 +86,7 @@ interface axiosRequestObj {
 type SuccessOrFailType = 'success' | 'error';
 
 const comAxiosRequest = async (param: axiosRequestObj) => {
-	const {
-		url,
-		requestType = 'get',
-		dataObj = null,
-		withAuth = false,
-		successCallback = null,
-		failCallback = null,
-		tokenValue = '',
-	} = param;
+	const { url, requestType = 'get', dataObj = null, withAuth = false, successCallback = null, failCallback = null, tokenValue = '' } = param;
 
 	const objectParam = _.merge(
 		{
@@ -144,8 +132,7 @@ const comAxiosRequest = async (param: axiosRequestObj) => {
 
 			const errMsg = err.response?.data?.error || '';
 
-			!url.includes('/api/auth/loginUser') &&
-				fireErrLog(url, requestType, stringified, errMsg, userAuth.userUID || '');
+			!url.includes('/api/auth/loginUser') && fireErrLog(url, requestType, stringified, errMsg, userAuth.userUID || '');
 			failCallback && failCallback(err);
 			return {
 				status: 'error' as SuccessOrFailType,
@@ -156,13 +143,7 @@ const comAxiosRequest = async (param: axiosRequestObj) => {
 	return axiosResult;
 };
 
-const fireErrLog = (
-	url: string,
-	requestType: 'get' | 'post',
-	dataObj: string = '',
-	errMsg: string = '',
-	userId: string = '',
-) => {
+const fireErrLog = (url: string, requestType: 'get' | 'post', dataObj: string = '', errMsg: string = '', userId: string = '') => {
 	axios.post(`${process.env.NEXT_PUBLIC_BE_BASE_URL}/api/utils/insertErrLog`, {
 		uri: url.replace(process.env.NEXT_PUBLIC_BE_BASE_URL!, ''),
 		requestType,
@@ -217,13 +198,4 @@ const dayjsKor = () => {
 	return dayjs().tz('Asia/Seoul');
 };
 
-export {
-	generateUID,
-	generateImageUID,
-	generateAvatarImage,
-	chatToDateGroup,
-	comAxiosRequest,
-	exampleAxios,
-	appDelay,
-	dayjsKor,
-};
+export { generateUID, generateImageUID, generateAvatarImage, chatToDateGroup, comAxiosRequest, exampleAxios, appDelay, dayjsKor };

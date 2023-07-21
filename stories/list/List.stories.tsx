@@ -43,22 +43,13 @@ const items = [
 		content: <div style={{ color: 'blue' }}>al;fdjeqruopqwru</div>,
 	},
 	{
-		content:
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget.',
+		content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget.',
 	},
 	{
-		content:
-			'222Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget.',
+		content: '222Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex, sit amet blandit leo lobortis eget.',
 	},
 ];
 
 export const ListSample = (args: IList) => {
-	return (
-		<List
-			id="sampleList1"
-			listType={args.listType}
-			verticalAlign={args.verticalAlign}
-			items={items}
-		/>
-	);
+	return <List id="sampleList1" listType={args.listType} verticalAlign={args.verticalAlign} items={items} />;
 };

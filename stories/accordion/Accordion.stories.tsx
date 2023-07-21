@@ -29,16 +29,9 @@ export const AccordionSample = () => {
 				<>
 					<Message>
 						<Message.Header>Changes in Service</Message.Header>
-						<p>
-							We updated our privacy policy here to better service our customers. We
-							recommend reviewing the changes.
-						</p>
+						<p>We updated our privacy policy here to better service our customers. We recommend reviewing the changes.</p>
 					</Message>
-					<Image
-						src="https://media.istockphoto.com/photos/porcelain-stoneware-tiles-in-store-picture-id1312700805"
-						size="small"
-						wrapped
-					/>
+					<Image src="https://media.istockphoto.com/photos/porcelain-stoneware-tiles-in-store-picture-id1312700805" size="small" wrapped />
 				</>
 			),
 		},

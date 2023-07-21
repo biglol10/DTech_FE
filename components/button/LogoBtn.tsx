@@ -30,13 +30,9 @@ const LogoBtn = ({
 			className={Style['semanticButton2']}
 			content={
 				basic ? (
-					<img
-						src={`https://img.shields.io/badge/${logo}-dcdcdc?style=for-the-badge&logo=${logo}&logoColor=black`}
-					/>
+					<img src={`https://img.shields.io/badge/${logo}-dcdcdc?style=for-the-badge&logo=${logo}&logoColor=black`} />
 				) : (
-					<img
-						src={`https://img.shields.io/badge/${logo}-${backColor}?style=for-the-badge&logo=${logo}&logoColor=${logoColor}`}
-					/>
+					<img src={`https://img.shields.io/badge/${logo}-${backColor}?style=for-the-badge&logo=${logo}&logoColor=${logoColor}`} />
 				)
 			}
 			basic={basic}

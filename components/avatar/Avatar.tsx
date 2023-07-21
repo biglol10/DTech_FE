@@ -24,16 +24,11 @@ const Avatar = ({
 	imageSize = 'mini',
 	labelSize = 'big',
 }: IAvatar) => {
-	const imageSrc: string =
-		src || `${process.env.NODE_ENV === 'production' ? '/dtech' : ''}/images/no_profile.png`;
+	const imageSrc: string = src || `${process.env.NODE_ENV === 'production' ? '/dtech' : ''}/images/no_profile.png`;
 
 	return (
 		<>
-			<div
-				id={id}
-				className={Style['avatarDiv']}
-				style={{ fontColor, ...inputElCommStyle(spacing) }}
-			>
+			<div id={id} className={Style['avatarDiv']} style={{ fontColor, ...inputElCommStyle(spacing) }}>
 				<SemanticUIImage src={imageSrc} avatar={avatar} size={imageSize} />
 				<Label content={content} color={fontColor} size={labelSize} paddingNone />
 			</div>

@@ -36,12 +36,7 @@ const RegisterResult = (props: any) => {
 								<Link href="/login">
 									<a className={Style['loginBtn']}>
 										<div className={Style['buttonBelow']}>
-											<Button
-												content="로그인 페이지 이동"
-												size="large"
-												color="google plus"
-												buttonType="none"
-											/>
+											<Button content="로그인 페이지 이동" size="large" color="google plus" buttonType="none" />
 										</div>
 									</a>
 								</Link>
@@ -57,12 +52,7 @@ const RegisterResult = (props: any) => {
 						<Link href="/login">
 							<a className={Style['loginBtn']}>
 								<div className={Style['buttonBelow2']}>
-									<Button
-										content="로그인 페이지 이동"
-										size="large"
-										color="google plus"
-										buttonType="none"
-									/>
+									<Button content="로그인 페이지 이동" size="large" color="google plus" buttonType="none" />
 								</div>
 							</a>
 						</Link>

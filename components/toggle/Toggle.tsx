@@ -19,14 +19,7 @@ const Toggle = ({ id = '', onClick = null, on = false, spacing = 0 }: IToggle) =
 
 	return (
 		<>
-			<Radio
-				className={Style['toggleStyle']}
-				toggle
-				id={id}
-				onClick={onClickFn}
-				checked={isOn}
-				style={{ '--spacing': `${spacing}px` }}
-			/>
+			<Radio className={Style['toggleStyle']} toggle id={id} onClick={onClickFn} checked={isOn} style={{ '--spacing': `${spacing}px` }} />
 		</>
 	);
 };
