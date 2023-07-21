@@ -16,27 +16,18 @@ import { useRouter } from 'next/router';
 import Style from './RegisterComp.module.scss';
 
 const RegisterStep1 = (props: any) => {
-	const regEmail =
-		/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+	const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 	const labelSize = 'h5';
 
 	const dispatch = useDispatch();
 	const router = useRouter();
 
-	const [idInputValue, setIdInputValue] = useState(
-		useSelector((state: any) => state.register.idInputValue),
-	);
+	const [idInputValue, setIdInputValue] = useState(useSelector((state: any) => state.register.idInputValue));
 
-	const [nameInputValue, setNameInputValue] = useState(
-		useSelector((state: any) => state.register.nameInputValue),
-	);
+	const [nameInputValue, setNameInputValue] = useState(useSelector((state: any) => state.register.nameInputValue));
 
-	const [pwInputValue, setPwInputValue] = useState(
-		useSelector((state: any) => state.register.pwInputValue),
-	);
-	const [pwInput2Value, setPwInput2Value] = useState(
-		useSelector((state: any) => state.register.pwInput2Value),
-	);
+	const [pwInputValue, setPwInputValue] = useState(useSelector((state: any) => state.register.pwInputValue));
+	const [pwInput2Value, setPwInput2Value] = useState(useSelector((state: any) => state.register.pwInput2Value));
 
 	const userIdRef = useRef<any>();
 	const userPwRef = useRef<any>();
@@ -184,20 +175,14 @@ const RegisterStep1 = (props: any) => {
 							let pwInputErrMsg = pwInput2Value.pwInputErrMsg;
 
 							if (obj.value.length !== 0) {
-								const pwRegex = new RegExp(
-									'^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{6,})',
-								);
+								const pwRegex = new RegExp('^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{6,})');
 
 								pwInputError = !pwRegex.test(obj.value);
 								if (!pwRegex.test(obj.value)) {
-									pwInputErrMsg =
-										'최소 6자 이상 영어 소문자, 숫자, 특수문자가 포함되어야 합니다.';
+									pwInputErrMsg = '최소 6자 이상 영어 소문자, 숫자, 특수문자가 포함되어야 합니다.';
 								}
 
-								if (
-									pwInput2Value.pwInputValue !== undefined &&
-									pwInput2Value.pwInputValue !== ''
-								) {
+								if (pwInput2Value.pwInputValue !== undefined && pwInput2Value.pwInputValue !== '') {
 									setPwInput2Value({
 										...pwInput2Value,
 										pwInputError: pwInput2Value.pwInputValue !== obj.value,
@@ -266,14 +251,7 @@ const RegisterStep1 = (props: any) => {
 						buttonType="none"
 						onClick={() => router.back()}
 					/>
-					<Button
-						className={Style['registerButton']}
-						content="다음"
-						size="large"
-						color="google plus"
-						buttonType="none"
-						onClick={clickNext}
-					/>
+					<Button className={Style['registerButton']} content="다음" size="large" color="google plus" buttonType="none" onClick={clickNext} />
 				</div>
 			</div>
 		</>

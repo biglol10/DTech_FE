@@ -16,15 +16,9 @@ const RegisterStep2 = (props: any) => {
 
 	const dispatch = useDispatch();
 
-	const [teamSelectValue, setTeamSelectValue] = useState(
-		useSelector((state: any) => state.register.teamSelectValue),
-	);
-	const [titleSelectValue, setTitleSelectValue] = useState(
-		useSelector((state: any) => state.register.titleSelectValue),
-	);
-	const [phoneNumValue, setPhoneNumValue] = useState(
-		useSelector((state: any) => state.register.phoneNumValue),
-	);
+	const [teamSelectValue, setTeamSelectValue] = useState(useSelector((state: any) => state.register.teamSelectValue));
+	const [titleSelectValue, setTitleSelectValue] = useState(useSelector((state: any) => state.register.titleSelectValue));
+	const [phoneNumValue, setPhoneNumValue] = useState(useSelector((state: any) => state.register.phoneNumValue));
 	const [teamList, setTeamList] = useState([]);
 	const titleList = [
 		{ key: '사원', value: '사원', text: '사원' },

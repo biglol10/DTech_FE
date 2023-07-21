@@ -53,12 +53,8 @@ const CheckboxListDefault = ({
 	return (
 		<>
 			<div className={Style['horizontalList']} style={inputElCommStyle(spacing)}>
-				{direction === 'horizontal' && (
-					<div className={Style['horizontalList']}>{checkboxList}</div>
-				)}
-				{direction === 'vertical' && (
-					<div className={Style['verticalList']}>{checkboxList}</div>
-				)}
+				{direction === 'horizontal' && <div className={Style['horizontalList']}>{checkboxList}</div>}
+				{direction === 'vertical' && <div className={Style['verticalList']}>{checkboxList}</div>}
 			</div>
 		</>
 	);

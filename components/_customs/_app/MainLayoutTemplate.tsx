@@ -19,7 +19,7 @@ import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import cookie from 'js-cookie';
 import { useSocket } from '@utils/hooks/customHooks';
-import { IAuth, IAppCommon, IUsersStatusArr } from '@utils/types/commAndStoreTypes';
+import { IAuth, IAppCommon, IUserStatus } from '@utils/types/commAndStoreTypes';
 import _ from 'lodash';
 import { generateAvatarImage, comAxiosRequest } from '@utils/appRelated/helperFunctions';
 import * as RCONST from '@utils/constants/reducerConstants';
@@ -43,14 +43,12 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 	const [iconLeft, setIconLeft] = useState(true);
 	const [settingOpen, setSettingOpen] = useState(false);
 	const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
-	const [usersStatusArr, setUsersStatusArr] = useState<IUsersStatusArr[]>([]);
-	const [groupChatArr, setGroupChatArr] = useState<
-		{ CONVERSATION_ID: string; CONVERSATION_NAME: string; CNT: number }[]
-	>([]);
+	const [usersStatusArr, setUsersStatusArr] = useState<IUserStatus[]>([]);
+	const [groupChatArr, setGroupChatArr] = useState<{ CONVERSATION_ID: string; CONVERSATION_NAME: string; CNT: number }[]>([]);
 
 	const wrapperRef = useRef<HTMLDivElement>(null);
-	const connectedUsersRef = useRef<any>([]);
-	const usersStatusArrRef = useRef<any>([]);
+	const connectedUsersRef = useRef<string[]>([]);
+	const usersStatusArrRef = useRef<IUserStatus[]>([]);
 	const chatGroupsArrRef = useRef<any>([]);
 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
@@ -89,17 +87,14 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 		if (!socket) {
 			initSocket(authStore.userId);
 		} else {
-			socket.on(
-				'connectedUsers',
-				({ users }: { users: { userId: string; socketId: string }[] }) => {
-					const onlineUsersArr = users.map((item2) => item2.userId);
+			socket.on('connectedUsers', ({ users }: { users: { userId: string; socketId: string }[] }) => {
+				const onlineUsersArr = users.map((item2) => item2.userId);
 
-					if (!_.isEqual(connectedUsersRef.current, onlineUsersArr)) {
-						connectedUsersRef.current = onlineUsersArr;
-						setOnlineUsers(onlineUsersArr);
-					}
-				},
-			);
+				if (!_.isEqual(connectedUsersRef.current, onlineUsersArr)) {
+					connectedUsersRef.current = onlineUsersArr;
+					setOnlineUsers(onlineUsersArr);
+				}
+			});
 
 			socket.on('newUserCreated', () => getUsersStatus());
 
@@ -135,10 +130,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 				requestType: 'post',
 				dataObj: { currentUser: authStore.userUID },
 				successCallback: (response) => {
-					const stateEqual = _.isEqual(
-						chatGroupsArrRef.current,
-						response.data.chatGroups,
-					);
+					const stateEqual = _.isEqual(chatGroupsArrRef.current, response.data.chatGroups);
 
 					if (!stateEqual) {
 						chatGroupsArrRef.current = response.data.chatGroups;
@@ -174,11 +166,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 				<div className={Style['left']}>
 					<nav className={Style['sidebar']}>
 						<div>
-							<Icon
-								name={`angle double ${iconLeft ? 'left' : 'right'}`}
-								size="big"
-								onClick={() => setIconLeft(!iconLeft)}
-							/>
+							<Icon name={`angle double ${iconLeft ? 'left' : 'right'}`} size="big" onClick={() => setIconLeft(!iconLeft)} />
 						</div>
 						<div className={Style['wrapper']}>
 							<GraphSvg onClick={() => router.push('/dashboard')} />
@@ -194,61 +182,27 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 							<img src="https://i.ibb.co/zGtDpcp/map.png" /> */}
 						</div>
 					</nav>
-					<UserSidebar
-						iconLeft={iconLeft}
-						usersStatusArr={usersStatusArr}
-						groupChatArr={groupChatArr}
-					/>
+					<UserSidebar iconLeft={iconLeft} usersStatusArr={usersStatusArr} groupChatArr={groupChatArr} />
 				</div>
 				<div className={Style['right']}>
 					<nav className={Style['navHeader']}>
 						<ul id="userSettingAreaUL">
-							<li
-								className={
-									Style[
-										`${
-											appCommon.route.currentRoute === 'dashboard' && 'active'
-										}`
-									]
-								}
-								onClick={() => router.push('/dashboard')}
-							>
+							<li className={Style[`${appCommon.route.currentRoute === 'dashboard' && 'active'}`]} onClick={() => router.push('/dashboard')}>
 								<a>대시보드</a>
 							</li>
 							<li
-								className={
-									Style[
-										`${
-											['chatPage', 'chatMainPage'].includes(
-												appCommon.route.currentRoute as string,
-											) && 'active'
-										}`
-									]
-								}
+								className={Style[`${['chatPage', 'chatMainPage'].includes(appCommon.route.currentRoute as string) && 'active'}`]}
 								onClick={() => router.push('/chat/chatArea')}
 							>
 								<a>채팅</a>
 							</li>
-							<li
-								className={
-									Style[`${appCommon.route.currentRoute === 'board' && 'active'}`]
-								}
-								onClick={() => router.push('/board')}
-							>
+							<li className={Style[`${appCommon.route.currentRoute === 'board' && 'active'}`]} onClick={() => router.push('/board')}>
 								<a>게시판</a>
 							</li>
-							<li
-								className={
-									Style[`${appCommon.route.currentRoute === 'about' && 'active'}`]
-								}
-								onClick={() => router.push('/about')}
-							>
+							<li className={Style[`${appCommon.route.currentRoute === 'about' && 'active'}`]} onClick={() => router.push('/about')}>
 								<a>About</a>
 							</li>
-							<li
-								id="li_userSettingArea"
-								onClick={() => setSettingOpen(!settingOpen)}
-							>
+							<li id="li_userSettingArea" onClick={() => setSettingOpen(!settingOpen)}>
 								<Avatar
 									id="userSettingArea"
 									fontColor="white"
@@ -256,10 +210,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 									imageSize="mini"
 									labelSize="big"
 									svgColor="white"
-									src={
-										authStore.userProfileImg ||
-										generateAvatarImage(authStore.userUID)
-									}
+									src={authStore.userProfileImg || generateAvatarImage(authStore.userUID)}
 								/>
 							</li>
 						</ul>
@@ -269,15 +220,6 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 							<div onClick={() => router.push('/profile')}>
 								<Icon name="user circle" />내 프로필 보기
 							</div>
-							{/* <hr className={Style['menu-separator']} />
-							<div>
-								<Icon name="setting" />내 설정
-							</div>
-							<hr className={Style['menu-separator']} />
-							<div>
-								<Icon name="mail" />
-								건의사항 남기기
-							</div> */}
 							<hr className={Style['menu-separator']} />
 							<div onClick={() => logout()}>
 								<Icon name="user close" />
@@ -290,9 +232,7 @@ const MainLayoutTemplate = ({ children }: LayoutProps) => {
 						{React.Children.map(children, (el: any) => {
 							if (el.type.displayName === 'chatPage') {
 								return React.cloneElement(el, {
-									usersStatusArr: usersStatusArr.filter(
-										(item) => item.ONLINE_STATUS === 'ONLINE',
-									),
+									onlineUsers: usersStatusArr.filter((item) => item.ONLINE_STATUS === 'ONLINE'),
 									userToken: authStore.userToken,
 								});
 							} else {

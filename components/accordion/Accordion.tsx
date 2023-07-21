@@ -7,12 +7,7 @@
  ********************************************************************************************/
 
 import { useState } from 'react';
-import {
-	Accordion as MUIAccordion,
-	AccordionSummary,
-	AccordionDetails,
-	Typography,
-} from '@mui/material';
+import { Accordion as MUIAccordion, AccordionSummary, AccordionDetails, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { IAccordion, IAccordionItems } from '@utils/types/componentTypes';
 import { inputElCommStyle } from '@utils/styleRelated/stylehelper';
@@ -22,14 +17,7 @@ interface IJsObj {
 	[name: string]: boolean;
 }
 
-const Accordion = ({
-	id = '',
-	items,
-	backgroundColor = 'white',
-	fontColor = 'black',
-	spacing = 0,
-	stretch = false,
-}: IAccordion) => {
+const Accordion = ({ id = '', items, backgroundColor = 'white', fontColor = 'black', spacing = 0, stretch = false }: IAccordion) => {
 	const jsObj: IJsObj = {};
 
 	items.map((item: IAccordionItems, idx: number) => {
@@ -55,22 +43,10 @@ const Accordion = ({
 						onChange={() => handleAccordionChange(`${id}_${idx}`)}
 						style={{ backgroundColor, color: fontColor }} // style={{ backgroundColor, color: fontColor, ...elCommStyle(1000, 'left') }}
 					>
-						<AccordionSummary
-							expandIcon={<ExpandMoreIcon />}
-							aria-controls={id}
-							id={id}
-						>
-							<Typography className={Style['accordionItemTitle']}>
-								{item.title}
-							</Typography>
+						<AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls={id} id={id}>
+							<Typography className={Style['accordionItemTitle']}>{item.title}</Typography>
 						</AccordionSummary>
-						<AccordionDetails>
-							{typeof item.content === 'string' ? (
-								<Typography>{item.content}</Typography>
-							) : (
-								item.content
-							)}
-						</AccordionDetails>
+						<AccordionDetails>{typeof item.content === 'string' ? <Typography>{item.content}</Typography> : item.content}</AccordionDetails>
 					</MUIAccordion>
 				);
 			})}

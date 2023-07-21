@@ -64,11 +64,7 @@ const AvatarGroup = ({
 			</div>
 
 			{showTooltip && (
-				<div
-					className={Style['peopleGroup']}
-					onMouseEnter={() => setShowTooltip(true)}
-					onMouseLeave={() => setShowTooltip(false)}
-				>
+				<div className={Style['peopleGroup']} onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)}>
 					<h6>
 						{usersString}
 						{totalCount > 3 && `,등 총 ${totalCount}명`}

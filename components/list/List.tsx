@@ -23,12 +23,7 @@ interface IList {
 
 const List = ({ id = '', items, listType = 'none', verticalAlign = 'middle' }: IList) => {
 	return (
-		<SemanticList
-			id={id}
-			bulleted={listType === 'buletted'}
-			ordered={listType === 'ordered'}
-			verticalAlign={verticalAlign}
-		>
+		<SemanticList id={id} bulleted={listType === 'buletted'} ordered={listType === 'ordered'} verticalAlign={verticalAlign}>
 			{items.map((item: { content: React.ReactElement | string }, idx: number) => {
 				return (
 					<SemanticList.Item key={`${id}_listItem_${idx}`} className={Style['listItem']}>

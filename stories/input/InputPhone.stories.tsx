@@ -30,14 +30,7 @@ export const InputPhoneSample = (args: any) => {
 				autoFitErrorLabel={args.autoFitErrorLabel}
 				errorLabelPosition={args.errorLabelPosition}
 			>
-				<InputPhone
-					id="inputPhone"
-					placeholder="전화번호를 입력하세요"
-					value={args.value}
-					size={args.size}
-					type={args.type}
-					loading={args.loading}
-				/>
+				<InputPhone id="inputPhone" placeholder="전화번호를 입력하세요" value={args.value} size={args.size} type={args.type} loading={args.loading} />
 			</InputLayout>
 		</div>
 	);

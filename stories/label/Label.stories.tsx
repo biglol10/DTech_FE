@@ -26,16 +26,5 @@ export default {
 } as ComponentMeta<typeof Label>;
 
 export const LabelSample = (args: ILabel) => {
-	return (
-		<Label
-			basic
-			content="LabelContent"
-			iconOrImage="icon"
-			icon={<Icon name="mail" />}
-			color="green"
-			borderNone
-			size="massive"
-			{...args}
-		/>
-	);
+	return <Label basic content="LabelContent" iconOrImage="icon" icon={<Icon name="mail" />} color="green" borderNone size="massive" {...args} />;
 };

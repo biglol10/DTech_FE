@@ -18,13 +18,7 @@ export const TextAreaSample = () => {
 
 	return (
 		<>
-			<TextArea
-				minHeight={300}
-				placeholder="내용을 입력하세요"
-				onChange={(obj: { value: string }) => console.log(obj.value)}
-				spacing={0}
-				ref={ref}
-			/>
+			<TextArea minHeight={300} placeholder="내용을 입력하세요" onChange={(obj: { value: string }) => console.log(obj.value)} spacing={0} ref={ref} />
 			<button
 				onClick={() => {
 					ref.current && ref.current.textArea.clear();

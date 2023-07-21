@@ -51,40 +51,28 @@ const SkillTable = ({ teamSkillData }: { teamSkillData: ITeamSkillCountObj }) =>
 							const tempSkillObj = teamSkillData[item];
 
 							// const itemSubject = item.SKILL_NM as keyof typeof techImage;
-							const avatarGroupImgList = tempSkillObj.USER_INFO.map(
-								(oneUser, idx2) => {
-									if (oneUser.IMG_URL) {
-										return oneUser.IMG_URL;
-									} else {
-										return `${generateAvatarImage(oneUser.USER_UID)}`;
-									}
-								},
-							);
+							const avatarGroupImgList = tempSkillObj.USER_INFO.map((oneUser, idx2) => {
+								if (oneUser.IMG_URL) {
+									return oneUser.IMG_URL;
+								} else {
+									return `${generateAvatarImage(oneUser.USER_UID)}`;
+								}
+							});
 
-							const avatarGroupUserList = tempSkillObj.USER_INFO.slice(0, 3).reduce(
-								(previousVal, currentVal, idx3) => {
-									if (idx3 === 0) {
-										return `${previousVal}${currentVal.USER_NM} (${currentVal.USER_TITLE})`;
-									} else {
-										return `${previousVal}, ${currentVal.USER_NM} (${currentVal.USER_TITLE})`;
-									}
-								},
-								'',
-							);
+							const avatarGroupUserList = tempSkillObj.USER_INFO.slice(0, 3).reduce((previousVal, currentVal, idx3) => {
+								if (idx3 === 0) {
+									return `${previousVal}${currentVal.USER_NM} (${currentVal.USER_TITLE})`;
+								} else {
+									return `${previousVal}, ${currentVal.USER_NM} (${currentVal.USER_TITLE})`;
+								}
+							}, '');
 
 							return (
 								<Table.Row key={`${tempSkillObj.SKILL_NM}_${idx}`}>
 									<Table.Cell>
 										<Avatar
 											labelSize="large"
-											src={
-												techImage[
-													tempSkillObj.SKILL_NM.replace(
-														'.',
-														'',
-													) as keyof typeof techImage
-												]
-											}
+											src={techImage[tempSkillObj.SKILL_NM.replace('.', '') as keyof typeof techImage]}
 											fontColor="black"
 											content={tempSkillObj.SKILL_NM}
 										/>

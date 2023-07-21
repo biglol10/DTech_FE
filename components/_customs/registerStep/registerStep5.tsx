@@ -17,9 +17,7 @@ import Style from './RegisterComp.module.scss';
 const RegisterStep5 = (props: any) => {
 	const dispatch = useDispatch();
 	const registerData = useSelector((state: any) => state.register);
-	const [image, setImage] = useState(
-		useSelector((state: any) => state.register.userProfileImage),
-	);
+	const [image, setImage] = useState(useSelector((state: any) => state.register.userProfileImage));
 
 	const imgRef = useRef<any>();
 
@@ -68,13 +66,7 @@ const RegisterStep5 = (props: any) => {
 				</div>
 
 				<div className={Style['uploader-wrapper']}>
-					<input
-						type="file"
-						accept="image/*"
-						ref={imgRef}
-						onChange={saveImage}
-						style={{ display: 'none' }}
-					/>
+					<input type="file" accept="image/*" ref={imgRef} onChange={saveImage} style={{ display: 'none' }} />
 					<div className={Style['img-wrapper']}>
 						{image.imageFile !== null ? (
 							<Image src={image.previewURL} width={300} height={300} />
@@ -92,15 +84,7 @@ const RegisterStep5 = (props: any) => {
 							basic={true}
 							onClick={() => imgRef.current.click()}
 						/>
-						<Button
-							className={Style['uploadBtn']}
-							content="삭제"
-							size="large"
-							color="blue"
-							buttonType="none"
-							basic={true}
-							onClick={deleteImage}
-						/>
+						<Button className={Style['uploadBtn']} content="삭제" size="large" color="blue" buttonType="none" basic={true} onClick={deleteImage} />
 					</div>
 				</div>
 

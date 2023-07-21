@@ -54,24 +54,12 @@ const ModalPopup = () => {
 		<div>
 			{/* {lodash merge로 생성한 modalProps로 ...modalProps하여 제어해봤지만 제대로 resize안되서 return 문에 분기 } */}
 			{fitContentWidth && modalContentWidth ? (
-				<Modal
-					open={open}
-					onClose={handleClose}
-					basic={isBasic}
-					closeIcon={showCloseIcon === 'Y'}
-					style={{ width: `${modalContentWidth}px` }}
-				>
+				<Modal open={open} onClose={handleClose} basic={isBasic} closeIcon={showCloseIcon === 'Y'} style={{ width: `${modalContentWidth}px` }}>
 					{title && <Modal.Header>{title}</Modal.Header>}
 					<Modal.Content>{content}</Modal.Content>
 				</Modal>
 			) : (
-				<Modal
-					open={open}
-					onClose={handleClose}
-					size={modalSize}
-					basic={isBasic}
-					closeIcon={showCloseIcon === 'Y'}
-				>
+				<Modal open={open} onClose={handleClose} size={modalSize} basic={isBasic} closeIcon={showCloseIcon === 'Y'}>
 					{title && <Modal.Header>{title}</Modal.Header>}
 					<Modal.Content>{content}</Modal.Content>
 				</Modal>

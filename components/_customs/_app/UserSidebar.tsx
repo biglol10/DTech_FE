@@ -6,7 +6,7 @@ import { Icon } from 'semantic-ui-react';
 import classNames from 'classnames/bind';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
-import { IAuth, IUsersStatusArr, IAppCommon } from '@utils/types/commAndStoreTypes';
+import { IAuth, IUserStatus, IAppCommon } from '@utils/types/commAndStoreTypes';
 import { toast } from 'react-toastify';
 import { useChatUtil, useModal } from '@utils/hooks/customHooks';
 import { modalUISize } from '@utils/constants/uiConstants';
@@ -28,7 +28,7 @@ const UserSidebar = ({
 	groupChatArr,
 }: {
 	iconLeft: boolean;
-	usersStatusArr: IUsersStatusArr[];
+	usersStatusArr: IUserStatus[];
 	groupChatArr: { CONVERSATION_ID: string; CONVERSATION_NAME: string; CNT: number }[];
 }) => {
 	const [isLogoBorderBottom, setIsLogoBorderBottom] = useState(false);
@@ -105,18 +105,9 @@ const UserSidebar = ({
 						<Image src={DLogo} width={48} height={48} /> Dtech App
 					</div>
 
-					<div
-						className={Style['chatArea']}
-						onScroll={(e: any) => setIsLogoBorderBottom(e.target.scrollTop > 20)}
-					>
+					<div className={Style['chatArea']} onScroll={(e: any) => setIsLogoBorderBottom(e.target.scrollTop > 20)}>
 						<div className={Style['userSearch']}>
-							<InputLayout
-								stretch={true}
-								inputLabel="사용자 검색"
-								inputLabelSize="h5"
-								showInputLabel={true}
-								spacing={32}
-							>
+							<InputLayout stretch={true} inputLabel="사용자 검색" inputLabelSize="h5" showInputLabel={true} spacing={32}>
 								<InputWithIcon
 									id="userSearchInput"
 									placeholder="사용자 검색"
@@ -160,9 +151,7 @@ const UserSidebar = ({
 											chatUID={item.CONVERSATION_ID}
 											chatName={item.CONVERSATION_NAME}
 											cnt={item.CNT}
-											newMsgNoti={appCommon.unReadMsg.includes(
-												item.CONVERSATION_ID,
-											)}
+											newMsgNoti={appCommon.unReadMsg.includes(item.CONVERSATION_ID)}
 										/>
 									);
 								})}
@@ -172,11 +161,7 @@ const UserSidebar = ({
 
 							<div className={Style['usersOnline']}>
 								{usersStatusArr
-									.filter(
-										(obj) =>
-											obj.USER_NM.includes(userSearch || '') &&
-											!Number(obj.USER_ADMIN_YN),
-									)
+									.filter((obj) => obj.USER_NM.includes(userSearch || '') && !Number(obj.USER_ADMIN_YN))
 									.map(
 										(item, idx: number) =>
 											item.USER_ID !== authStore.userId &&
@@ -189,9 +174,7 @@ const UserSidebar = ({
 													userTitle={item.USER_TITLE}
 													userImg={item.USER_IMG_URL}
 													userAdminYN={item.USER_ADMIN_YN}
-													newMsgNoti={appCommon.unReadMsg.includes(
-														item.USER_UID,
-													)}
+													newMsgNoti={appCommon.unReadMsg.includes(item.USER_UID)}
 												/>
 											),
 									)}
@@ -201,11 +184,7 @@ const UserSidebar = ({
 
 							<div className={Style['usersOffline']}>
 								{usersStatusArr
-									.filter(
-										(obj) =>
-											obj.USER_NM.includes(userSearch || '') &&
-											!Number(obj.USER_ADMIN_YN),
-									)
+									.filter((obj) => obj.USER_NM.includes(userSearch || '') && !Number(obj.USER_ADMIN_YN))
 									.map(
 										(item, idx) =>
 											item.USER_ID !== authStore.userId &&
@@ -217,9 +196,7 @@ const UserSidebar = ({
 													userName={item.USER_NM}
 													userTitle={item.USER_TITLE}
 													userImg={item.USER_IMG_URL}
-													newMsgNoti={appCommon.unReadMsg.includes(
-														item.USER_UID,
-													)}
+													newMsgNoti={appCommon.unReadMsg.includes(item.USER_UID)}
 												/>
 											),
 									)}

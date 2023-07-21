@@ -24,16 +24,7 @@ interface ICommentCard {
 	cbFunc: Function;
 }
 
-const CommentCard = ({
-	cmntCd,
-	content,
-	cmntUser,
-	cmntUserTitle,
-	cmntDate,
-	cmntUid,
-	boardCd,
-	cbFunc,
-}: ICommentCard) => {
+const CommentCard = ({ cmntCd, content, cmntUser, cmntUserTitle, cmntDate, cmntUid, boardCd, cbFunc }: ICommentCard) => {
 	const uuid = useSelector((state: any) => state.auth.userUID);
 	const [deleting, setDeleting] = useState(false);
 	const deleteCmnt = () => {
@@ -70,15 +61,7 @@ const CommentCard = ({
 					<div className={Style['cmnt_content']}>
 						<pre>{content}</pre>
 					</div>
-					<div>
-						{cmntUid === uuid && (
-							<Icon
-								name="trash alternate outline"
-								onClick={deleteCmnt}
-								color="blue"
-							/>
-						)}
-					</div>
+					<div>{cmntUid === uuid && <Icon name="trash alternate outline" onClick={deleteCmnt} color="blue" />}</div>
 				</div>
 			</div>
 		</div>

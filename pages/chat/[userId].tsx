@@ -22,7 +22,7 @@ import { Avatar, Box, DTechQuill, SharpDivider, TextWithDotAnimation } from '@co
 import { MainLayoutTemplate, SingleChatMessage } from '@components/customs';
 import { Container, Segment, Button } from 'semantic-ui-react';
 
-import { ChatList, IUsersStatusArr, IAuth, IMetadata } from '@utils/types/commAndStoreTypes';
+import { ChatList, IUserStatus, IAuth, IConversation } from '@utils/types/commAndStoreTypes';
 import OnlineSvg from '@styles/svg/online.svg';
 import OfflineSvg from '@styles/svg/offline.svg';
 import { useSelector, useDispatch } from 'react-redux';
@@ -31,32 +31,15 @@ import { toast } from 'react-toastify';
 import cookie from 'js-cookie';
 import lodash from 'lodash';
 import * as RCONST from '@utils/constants/reducerConstants';
-import {
-	chatToDateGroup,
-	generateAvatarImage,
-	comAxiosRequest,
-} from '@utils/appRelated/helperFunctions';
+import { chatToDateGroup, generateAvatarImage, comAxiosRequest } from '@utils/appRelated/helperFunctions';
 import { useChatUtil } from '@utils/hooks/customHooks';
 import classNames from 'classnames/bind';
 
 import Style from './[userId].module.scss';
 
-interface IChatList {
-	MESSAGE_ID: string;
-	TO_USERNAME: string;
-	MESSAGE_TEXT: string;
-	IMG_LIST: string[];
-	LINK_LIST: IMetadata[];
-	SENT_DATETIME: string;
-	USER_UID: string;
-	USER_NM: string;
-	USER_TITLE: string;
-	CONVERSATION_ID: string;
-}
-
 interface ChatDateReduce {
 	[val: string]: {
-		[val2: string]: IChatList[];
+		[val2: string]: IConversation[];
 	};
 }
 
@@ -70,17 +53,10 @@ const dayOfWeek: { [val: string]: string } = {
 	'6': '토요일',
 };
 
-const UserChat = ({
-	usersStatusArr,
-	queryObj,
-}: {
-	usersStatusArr: IUsersStatusArr[];
-	queryObj: any;
-}) => {
+const UserChat = ({ onlineUsers, queryObj }: { onlineUsers: IUserStatus[]; queryObj: any }) => {
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
 	const [chatUser, setChatUser] = useState<{ [name: string]: string }>();
-	const [chatList, setChatList] = useState<IChatList[]>([]);
-	// const [chatListDateGroup, setChatListDateGroup] = useState<ChatDateReduce>({});
+	const [chatList, setChatList] = useState<IConversation[]>([]);
 	const [textChangeNotification, setTextChangeNotification] = useState(false);
 	const [sendingUserState, setSendingUserState] = useState<string>('');
 	const [previousLoading, setPreviousLoading] = useState(false);
@@ -96,6 +72,8 @@ const UserChat = ({
 	const userUID = useMemo(() => {
 		return queryObj.userId;
 	}, [queryObj.userId]);
+
+	const isUserOnline = lodash.find(onlineUsers, { USER_UID: userUID });
 
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
 	const socket = authStore.userSocket;
@@ -149,8 +127,7 @@ const UserChat = ({
 						setChatList((prev) => {
 							lodash.isEqual(prev, response.data.chatList) && setIsEndofChat(true);
 							if (prev.length) lastMsgId.current = prev[0].MESSAGE_ID;
-							else if (response.data.chatList.length)
-								lastMsgId.current = response.data.chatList[0].MESSAGE_ID;
+							else if (response.data.chatList.length) lastMsgId.current = response.data.chatList[0].MESSAGE_ID;
 							return response.data.chatList;
 						});
 					},
@@ -179,9 +156,7 @@ const UserChat = ({
 		bottomRefActiveRef.current && bottomRef.current?.scrollIntoView({ behavior: 'auto' });
 		!bottomRefActiveRef.current &&
 			chatList.length &&
-			document
-				.getElementById(lastMsgId.current)
-				?.scrollIntoView({ behavior: 'auto', block: 'center' });
+			document.getElementById(lastMsgId.current)?.scrollIntoView({ behavior: 'auto', block: 'center' });
 		lastMsgId.current = chatList[0]?.MESSAGE_ID;
 	}, [chatList, quillWrapperHeight]);
 
@@ -213,14 +188,7 @@ const UserChat = ({
 					chatMessage: content.value,
 					userUID: authStore.userUID,
 					convId: conversationId.current,
-					imgList: JSON.stringify(
-						imgArr.length !== 0
-							? imgArr.map(
-									(urlString: string) =>
-										`${process.env.NEXT_PUBLIC_IMG_S3}${urlString}`,
-							  )
-							: [],
-					),
+					imgList: JSON.stringify(imgArr.length !== 0 ? imgArr.map((urlString: string) => `${process.env.NEXT_PUBLIC_IMG_S3}${urlString}`) : []),
 					linkList: JSON.stringify(content.linkList),
 					toUserId: chatUser && chatUser.USER_ID,
 				},
@@ -233,8 +201,7 @@ const UserChat = ({
 					});
 
 					setChatList((prev) => {
-						if (prev.some((item) => item.MESSAGE_ID === newChatObj.MESSAGE_ID))
-							return prev;
+						if (prev.some((item) => item.MESSAGE_ID === newChatObj.MESSAGE_ID)) return prev;
 						const newArr = [...prev, ...response.data.newChat];
 
 						return newArr;
@@ -256,11 +223,7 @@ const UserChat = ({
 			formData.append('postData', JSON.stringify(postData));
 
 			for (let i = 0; i < content.imgList.length; i++) {
-				formData.append(
-					'img',
-					content.imgList[i].imageFile,
-					`${content.imgList[i].fileName}`,
-				);
+				formData.append('img', content.imgList[i].imageFile, `${content.imgList[i].fileName}`);
 			}
 
 			await comAxiosRequest({
@@ -297,28 +260,15 @@ const UserChat = ({
 	return (
 		<>
 			<main id={Style['chatMain']}>
-				<Box
-					id={Style['chatUserBox']}
-					spacing={0}
-					boxType="basic"
-					textAlign="left"
-					className={Style['chatUserBox']}
-				>
-					{usersStatusArr.filter((item) => item.USER_UID === userUID).length > 0 ? (
-						<OnlineSvg />
-					) : (
-						<OfflineSvg />
-					)}
+				<Box id={Style['chatUserBox']} spacing={0} boxType="basic" textAlign="left" className={Style['chatUserBox']}>
+					{isUserOnline ? <OnlineSvg /> : <OfflineSvg />}
 					<Avatar
 						id="userSettingArea"
 						fontColor="white"
 						content={chatUser ? `${chatUser.USER_NM} (${chatUser.USER_TITLE})` : ''}
 						imageSize="mini"
 						labelSize="mini"
-						src={
-							chatUser &&
-							`${chatUser.USER_IMG_URL || generateAvatarImage(chatUser.USER_UID)}`
-						}
+						src={chatUser && `${chatUser.USER_IMG_URL || generateAvatarImage(chatUser.USER_UID)}`}
 					/>
 				</Box>
 				<Container>
@@ -339,111 +289,44 @@ const UserChat = ({
 							<Button
 								loading={previousLoading}
 								fluid
-								className={cx(
-									'viewPrevious',
-									`${chatList.length === 0 ? 'hideButton' : ''}`,
-									`${isEndofChat ? 'hideButton' : ''}`,
-								)}
+								className={cx('viewPrevious', `${chatList.length === 0 ? 'hideButton' : ''}`, `${isEndofChat ? 'hideButton' : ''}`)}
 								onClick={() => getPrivateChatListCallback(true)}
 							>
 								이전 채팅 보기
 							</Button>
 
 							{chatListDateGroup &&
-								Object.keys(chatListDateGroup).map((item: string) => {
+								Object.keys(chatListDateGroup).map((date: string) => {
 									return (
-										<React.Fragment
-											key={`${item}_(${
-												dayOfWeek[dayjs(item).day().toString()]
-											})`}
-										>
-											<SharpDivider
-												content={`${item} (${
-													dayOfWeek[dayjs(item).day().toString()]
-												})`}
-												className={Style['dateDivider']}
-											/>
-											{Object.keys(chatListDateGroup[item]).map(
-												(item2: string) => {
-													return (
-														<React.Fragment
-															key={`${item}_(${
-																dayOfWeek[
-																	dayjs(item).day().toString()
-																]
-															})_${item2}`}
-														>
-															{chatListDateGroup[item][item2].map(
-																(
-																	item3: IChatList,
-																	idx3: number,
-																) => {
-																	return (
-																		<SingleChatMessage
-																			key={item3.MESSAGE_ID}
-																			msgId={item3.MESSAGE_ID}
-																			value={
-																				item3.MESSAGE_TEXT
-																			}
-																			messageOwner={
-																				item3.USER_UID ===
-																				userUID
-																					? 'other'
-																					: 'mine'
-																			}
-																			linkList={
-																				item3.LINK_LIST
-																			}
-																			sentTime={
-																				item3.SENT_DATETIME
-																			}
-																			userName={`${item3.USER_NM} (${item3.USER_TITLE})`}
-																			imgList={
-																				typeof item3.IMG_LIST ===
-																				'string'
-																					? JSON.parse(
-																							item3.IMG_LIST,
-																					  )
-																					: item3.IMG_LIST
-																			}
-																			isSamePreviousUserChat={
-																				idx3 > 0 &&
-																				chatListDateGroup[
-																					item
-																				][item2][idx3]
-																					.USER_UID ===
-																					chatListDateGroup[
-																						item
-																					][item2][
-																						idx3 - 1
-																					].USER_UID &&
-																				dayjs(
-																					chatListDateGroup[
-																						item
-																					][item2][idx3]
-																						.SENT_DATETIME,
-																				).format(
-																					'YYYY-MM-DD',
-																				) ===
-																					dayjs(
-																						chatListDateGroup[
-																							item
-																						][item2][
-																							idx3 - 1
-																						]
-																							.SENT_DATETIME,
-																					).format(
-																						'YYYY-MM-DD',
-																					)
-																			}
-																		/>
-																	);
-																},
-															)}
-														</React.Fragment>
-													);
-												},
-											)}
+										<React.Fragment key={`${date}_(${dayOfWeek[dayjs(date).day().toString()]})`}>
+											<SharpDivider content={`${date} (${dayOfWeek[dayjs(date).day().toString()]})`} className={Style['dateDivider']} />
+											{Object.keys(chatListDateGroup[date]).map((time: string) => {
+												return (
+													<React.Fragment key={`${date}_(${dayOfWeek[dayjs(date).day().toString()]})_${time}`}>
+														{chatListDateGroup[date][time].map((conversation: IConversation, conversationIndex: number) => {
+															return (
+																<SingleChatMessage
+																	key={conversation.MESSAGE_ID}
+																	msgId={conversation.MESSAGE_ID}
+																	value={conversation.MESSAGE_TEXT}
+																	messageOwner={conversation.USER_UID === userUID ? 'other' : 'mine'}
+																	linkList={conversation.LINK_LIST}
+																	sentTime={conversation.SENT_DATETIME}
+																	userName={`${conversation.USER_NM} (${conversation.USER_TITLE})`}
+																	imgList={typeof conversation.IMG_LIST === 'string' ? JSON.parse(conversation.IMG_LIST) : conversation.IMG_LIST}
+																	isSamePreviousUserChat={
+																		conversationIndex > 0 &&
+																		chatListDateGroup[date][time][conversationIndex].USER_UID ===
+																			chatListDateGroup[date][time][conversationIndex - 1].USER_UID &&
+																		dayjs(chatListDateGroup[date][time][conversationIndex].SENT_DATETIME).format('YYYY-MM-DD') ===
+																			dayjs(chatListDateGroup[date][time][conversationIndex - 1].SENT_DATETIME).format('YYYY-MM-DD')
+																	}
+																/>
+															);
+														})}
+													</React.Fragment>
+												);
+											})}
 										</React.Fragment>
 									);
 								})}
@@ -464,12 +347,7 @@ const UserChat = ({
 							}}
 							notifyTextChange={notifyTextChange}
 						/>
-						<TextWithDotAnimation
-							content={`${sendingUserState}님이 입력중입니다`}
-							marginLeftValue={20}
-							dotSize={8}
-							hide={!textChangeNotification}
-						/>
+						<TextWithDotAnimation content={`${sendingUserState}님이 입력중입니다`} marginLeftValue={20} dotSize={8} hide={!textChangeNotification} />
 					</div>
 				</Container>
 			</main>

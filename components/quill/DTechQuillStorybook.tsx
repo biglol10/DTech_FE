@@ -8,16 +8,7 @@
  * 1      변지욱     2022-08-26                              최초작성
  ********************************************************************************************/
 
-import React, {
-	ComponentType,
-	useCallback,
-	useEffect,
-	useMemo,
-	useRef,
-	useState,
-	forwardRef,
-	useImperativeHandle,
-} from 'react';
+import React, { ComponentType, useCallback, useEffect, useMemo, useRef, useState, forwardRef, useImperativeHandle } from 'react';
 import dynamic from 'next/dynamic';
 import { toast } from 'react-toastify';
 import { customStyleObj } from '@utils/styleRelated/stylehelper';
@@ -84,15 +75,9 @@ const DTechQuillStorybook = forwardRef<any, IDTechQuill>(
 				}
 
 				if (inputFileRef.current.files) {
-					const fileType =
-						inputFileRef.current.files[0].type.split('/')[
-							inputFileRef.current.files[0].type.split('/').length - 1
-						];
+					const fileType = inputFileRef.current.files[0].type.split('/')[inputFileRef.current.files[0].type.split('/').length - 1];
 
-					if (
-						['png', 'jpg', 'jpeg'].includes(fileType) &&
-						inputFileRef.current.files[0].size <= 1 * 1024 * 1024
-					) {
+					if (['png', 'jpg', 'jpeg'].includes(fileType) && inputFileRef.current.files[0].size <= 1 * 1024 * 1024) {
 						const mediaPreview = URL.createObjectURL(inputFileRef.current.files[0]);
 
 						setUrlPreviewList([
@@ -115,11 +100,7 @@ const DTechQuillStorybook = forwardRef<any, IDTechQuill>(
 		}, [urlPreviewList]);
 
 		const editorSubmitEvent = useCallback(() => {
-			if (
-				quillRef.current.getEditor().getText().trim().length === 0 &&
-				urlPreviewList.length === 0
-			)
-				return null;
+			if (quillRef.current.getEditor().getText().trim().length === 0 && urlPreviewList.length === 0) return null;
 
 			handleSubmit &&
 				handleSubmit({
@@ -177,9 +158,7 @@ const DTechQuillStorybook = forwardRef<any, IDTechQuill>(
 									editorSubmitEvent();
 								} else {
 									quillRef.current.getEditor().insertText(range.index, '\n');
-									quillRef.current
-										.getEditor()
-										.scrollIntoView({ behavior: 'auto' });
+									quillRef.current.getEditor().scrollIntoView({ behavior: 'auto' });
 								}
 							},
 						},
@@ -242,9 +221,7 @@ const DTechQuillStorybook = forwardRef<any, IDTechQuill>(
 
 		const quillTextChange = useCallback(
 			async (content: any) => {
-				const imgContent: HTMLImageElement | null = document.querySelector(
-					'#quillEditorId .ql-editor p img',
-				);
+				const imgContent: HTMLImageElement | null = document.querySelector('#quillEditorId .ql-editor p img');
 
 				if (!imgContent) {
 					if (quillRef.current) {
@@ -253,10 +230,7 @@ const DTechQuillStorybook = forwardRef<any, IDTechQuill>(
 					}
 				} else {
 					const mediaPreview = imgContent.src;
-					const filteredString = quillRef.current
-						.getEditor()
-						.getText()
-						.replace(`<img src="${mediaPreview}">`, '');
+					const filteredString = quillRef.current.getEditor().getText().replace(`<img src="${mediaPreview}">`, '');
 
 					if (mediaPreview && filteredString) {
 						setQuillContext(filteredString);
@@ -378,11 +352,7 @@ const DTechQuillStorybook = forwardRef<any, IDTechQuill>(
 						viewBox="0 0 30.000000 30.000000"
 						preserveAspectRatio="xMidYMid meet"
 					>
-						<g
-							transform="translate(0.000000,30.000000) scale(0.100000,-0.100000)"
-							fill="#FBFCFC"
-							stroke="none"
-						>
+						<g transform="translate(0.000000,30.000000) scale(0.100000,-0.100000)" fill="#FBFCFC" stroke="none">
 							<path d="M138 233 c-60 -20 -108 -39 -108 -42 0 -3 16 -19 36 -34 l35 -29 62 49 62 48 -48 -62 -49 -62 29 -35 c15 -20 31 -36 34 -36 5 0 79 218 79 234 0 10 -21 5 -132 -31z" />
 						</g>
 					</svg>
@@ -393,12 +363,7 @@ const DTechQuillStorybook = forwardRef<any, IDTechQuill>(
 
 		return (
 			<>
-				<input
-					ref={inputFileRef}
-					type="file"
-					accept="image/*"
-					style={{ position: 'absolute', top: '-10000px' }}
-				/>
+				<input ref={inputFileRef} type="file" accept="image/*" style={{ position: 'absolute', top: '-10000px' }} />
 				<div
 					id="quillWrapper"
 					className={Style['quillWrap']}

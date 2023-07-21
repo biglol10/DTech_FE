@@ -14,50 +14,26 @@
 
 import { GetServerSideProps } from 'next';
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react';
-import {
-	Box,
-	DTechQuill,
-	SharpDivider,
-	TextWithDotAnimation,
-	Label,
-	AvatarGroup,
-} from '@components/index';
+import { Box, DTechQuill, SharpDivider, TextWithDotAnimation, Label, AvatarGroup } from '@components/index';
 import { MainLayoutTemplate, SingleChatMessage, ChatMembersModal } from '@components/customs';
 import { Container, Segment, Icon, Header, Button } from 'semantic-ui-react';
 
-import { ChatList, IUsersStatusArr, IAuth, IMetadata } from '@utils/types/commAndStoreTypes';
+import { ChatList, IUserStatus, IAuth, IConversation } from '@utils/types/commAndStoreTypes';
 import { useSelector, useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 import { parseCookies } from 'nookies';
 import lodash from 'lodash';
-import {
-	chatToDateGroup,
-	comAxiosRequest,
-	generateAvatarImage,
-} from '@utils/appRelated/helperFunctions';
+import { chatToDateGroup, comAxiosRequest, generateAvatarImage } from '@utils/appRelated/helperFunctions';
 import * as RCONST from '@utils/constants/reducerConstants';
 import { useModal, useChatUtil } from '@utils/hooks/customHooks';
 import classNames from 'classnames/bind';
 
 import Style from './[roomId].module.scss';
 
-interface IChatList {
-	MESSAGE_ID: string;
-	TO_USERNAME: string;
-	MESSAGE_TEXT: string;
-	IMG_LIST: string[];
-	LINK_LIST: IMetadata[];
-	SENT_DATETIME: string;
-	USER_UID: string;
-	USER_NM: string;
-	USER_TITLE: string;
-	CONVERSATION_ID: string;
-}
-
 interface ChatDateReduce {
 	[val: string]: {
-		[val2: string]: IChatList[];
+		[val2: string]: IConversation[];
 	};
 }
 
@@ -71,21 +47,13 @@ const dayOfWeek: { [val: string]: string } = {
 	'6': '토요일',
 };
 
-const RoomChat = ({
-	usersStatusArr,
-	queryObj,
-	currentChatRoomName,
-}: {
-	usersStatusArr: IUsersStatusArr[];
-	queryObj: { roomId: string };
-	currentChatRoomName: string;
-}) => {
+const RoomChat = ({ queryObj, currentChatRoomName }: { queryObj: { roomId: string }; currentChatRoomName: string }) => {
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
 	const socket = authStore.userSocket;
 
 	const [quillWrapperHeight, setQuillWrapperHeight] = useState(0);
-	const [chatList, setChatList] = useState<IChatList[]>([]);
-	const [groupMembers, setGroupMembers] = useState<IUsersStatusArr[]>([]);
+	const [chatList, setChatList] = useState<IConversation[]>([]);
+	const [groupMembers, setGroupMembers] = useState<IUserStatus[]>([]);
 	const [textChangeNotification, setTextChangeNotification] = useState(false);
 	const [sendingUserState, setSendingUserState] = useState<string>('');
 	const [previousLoading, setPreviousLoading] = useState(false);
@@ -144,8 +112,7 @@ const RoomChat = ({
 					setChatList((prev) => {
 						lodash.isEqual(prev, response.data.chatList) && setIsEndofChat(true);
 						if (prev.length) lastMsgId.current = prev[0].MESSAGE_ID;
-						else if (response.data.chatList.length)
-							lastMsgId.current = response.data.chatList[0].MESSAGE_ID;
+						else if (response.data.chatList.length) lastMsgId.current = response.data.chatList[0].MESSAGE_ID;
 						return response.data.chatList;
 					});
 				},
@@ -176,9 +143,7 @@ const RoomChat = ({
 		bottomRefActiveRef.current && bottomRef.current?.scrollIntoView({ behavior: 'auto' });
 		!bottomRefActiveRef.current &&
 			chatList.length &&
-			document
-				.getElementById(lastMsgId.current)
-				?.scrollIntoView({ behavior: 'auto', block: 'center' });
+			document.getElementById(lastMsgId.current)?.scrollIntoView({ behavior: 'auto', block: 'center' });
 		lastMsgId.current = chatList[0]?.MESSAGE_ID;
 	}, [chatList, quillWrapperHeight]);
 
@@ -204,14 +169,7 @@ const RoomChat = ({
 					chatMessage: content.value,
 					userUID: authStore.userUID,
 					convId: roomID,
-					imgList: JSON.stringify(
-						imgArr.length !== 0
-							? imgArr.map(
-									(urlString: string) =>
-										`${process.env.NEXT_PUBLIC_IMG_S3}${urlString}`,
-							  )
-							: [],
-					),
+					imgList: JSON.stringify(imgArr.length !== 0 ? imgArr.map((urlString: string) => `${process.env.NEXT_PUBLIC_IMG_S3}${urlString}`) : []),
 					linkList: JSON.stringify(content.linkList),
 				},
 				successCallback: (response) => {
@@ -224,8 +182,7 @@ const RoomChat = ({
 					});
 
 					setChatList((prev) => {
-						if (prev.some((item) => item.MESSAGE_ID === newChatObj.MESSAGE_ID))
-							return prev;
+						if (prev.some((item) => item.MESSAGE_ID === newChatObj.MESSAGE_ID)) return prev;
 						const newArr = [...prev, ...response.data.newChat];
 
 						return newArr;
@@ -247,11 +204,7 @@ const RoomChat = ({
 			formData.append('postData', JSON.stringify(postData));
 
 			for (let i = 0; i < content.imgList.length; i++) {
-				formData.append(
-					'img',
-					content.imgList[i].imageFile,
-					`${content.imgList[i].fileName}`,
-				);
+				formData.append('img', content.imgList[i].imageFile, `${content.imgList[i].fileName}`);
 			}
 
 			await comAxiosRequest({
@@ -284,13 +237,10 @@ const RoomChat = ({
 			});
 		}
 
-		socket?.on(
-			'newMessageGroupReceived',
-			async ({ convId, userUID }: { [key: string]: string }) => {
-				if (userUID === authStore.userUID) return;
-				if (roomID === convId) await getGroupChatListCallback(false);
-			},
-		);
+		socket?.on('newMessageGroupReceived', async ({ convId, userUID }: { [key: string]: string }) => {
+			if (userUID === authStore.userUID) return;
+			if (roomID === convId) await getGroupChatListCallback(false);
+		});
 
 		socket?.on('textChangeNotification', (sendingUser: string) => {
 			setSendingUserState(sendingUser);
@@ -316,15 +266,13 @@ const RoomChat = ({
 			}
 		});
 
-		const avatarGroupUserList = groupMembers
-			.slice(0, 3)
-			.reduce((previousVal, currentVal, idx3) => {
-				if (idx3 === 0) {
-					return `${previousVal}${currentVal.USER_NM} (${currentVal.USER_TITLE})`;
-				} else {
-					return `${previousVal}, ${currentVal.USER_NM} (${currentVal.USER_TITLE})`;
-				}
-			}, '');
+		const avatarGroupUserList = groupMembers.slice(0, 3).reduce((previousVal, currentVal, conversationIndex) => {
+			if (conversationIndex === 0) {
+				return `${previousVal}${currentVal.USER_NM} (${currentVal.USER_TITLE})`;
+			} else {
+				return `${previousVal}, ${currentVal.USER_NM} (${currentVal.USER_TITLE})`;
+			}
+		}, '');
 
 		return {
 			avatarGroupImgList,
@@ -335,9 +283,7 @@ const RoomChat = ({
 	const openChatGroupModal = useCallback(() => {
 		handleModal({
 			modalOpen: true,
-			modalContent: (
-				<ChatMembersModal chatGroupMembers={groupMembers} id="chatMembersModal" />
-			),
+			modalContent: <ChatMembersModal chatGroupMembers={groupMembers} id="chatMembersModal" />,
 			modalFitContentWidth: true,
 			modalContentId: 'chatMembersModal',
 			modalTitle: (
@@ -356,22 +302,8 @@ const RoomChat = ({
 	return (
 		<>
 			<main id={Style['chatMain']}>
-				<Box
-					id={Style['chatUserBox']}
-					spacing={0}
-					boxType="basic"
-					textAlign="left"
-					className={Style['chatUserBox']}
-				>
-					<Label
-						basic
-						content={currentChatRoomName}
-						iconOrImage="icon"
-						icon={<Icon name="rocketchat" />}
-						color="green"
-						borderNone
-						size="big"
-					/>
+				<Box id={Style['chatUserBox']} spacing={0} boxType="basic" textAlign="left" className={Style['chatUserBox']}>
+					<Label basic content={currentChatRoomName} iconOrImage="icon" icon={<Icon name="rocketchat" />} color="green" borderNone size="big" />
 					{usersImage && (
 						<AvatarGroup
 							imageList={usersImage.avatarGroupImgList}
@@ -396,115 +328,43 @@ const RoomChat = ({
 							<Button
 								loading={previousLoading}
 								fluid
-								className={cx(
-									'viewPrevious',
-									`${chatList.length === 0 ? 'hideButton' : ''}`,
-									`${isEndofChat ? 'hideButton' : ''}`,
-								)}
+								className={cx('viewPrevious', `${chatList.length === 0 ? 'hideButton' : ''}`, `${isEndofChat ? 'hideButton' : ''}`)}
 								onClick={() => getGroupChatListCallback(true)}
 							>
 								이전 채팅 보기
 							</Button>
 							{chatListDateGroup &&
-								Object.keys(chatListDateGroup).map((item: string, idx: number) => {
+								Object.keys(chatListDateGroup).map((date: string, idx: number) => {
 									return (
-										<React.Fragment
-											key={`${item}_(${
-												dayOfWeek[dayjs(item).day().toString()]
-											})`}
-										>
-											<SharpDivider
-												content={`${item} (${
-													dayOfWeek[dayjs(item).day().toString()]
-												})`}
-												className={Style['dateDivider']}
-											/>
-											{Object.keys(chatListDateGroup[item]).map(
-												(item2: string, idx2: number) => {
-													return (
-														<React.Fragment
-															key={`${item}_(${
-																dayOfWeek[
-																	dayjs(item).day().toString()
-																]
-															})_${item2}`}
-														>
-															{chatListDateGroup[item][item2].map(
-																(
-																	item3: IChatList,
-																	idx3: number,
-																) => {
-																	return (
-																		<SingleChatMessage
-																			key={item3.MESSAGE_ID}
-																			msgId={item3.MESSAGE_ID}
-																			value={
-																				item3.MESSAGE_TEXT
-																			}
-																			messageOwner={
-																				item3.USER_UID ===
-																				authStore.userUID
-																					? 'mine'
-																					: 'other'
-																			}
-																			linkList={
-																				item3.LINK_LIST
-																			}
-																			sentTime={
-																				idx3 ===
-																				chatListDateGroup[
-																					item
-																				][item2].length -
-																					1
-																					? item3.SENT_DATETIME
-																					: null
-																			}
-																			userName={`${item3.USER_NM} (${item3.USER_TITLE})`}
-																			imgList={
-																				typeof item3.IMG_LIST ===
-																				'string'
-																					? JSON.parse(
-																							item3.IMG_LIST,
-																					  )
-																					: item3.IMG_LIST
-																			}
-																			isSamePreviousUserChat={
-																				idx3 > 0 &&
-																				chatListDateGroup[
-																					item
-																				][item2][idx3 - 1]
-																					.USER_UID ===
-																					chatListDateGroup[
-																						item
-																					][item2][idx3]
-																						.USER_UID &&
-																				dayjs(
-																					chatListDateGroup[
-																						item
-																					][item2][idx3]
-																						.SENT_DATETIME,
-																				).format(
-																					'YYYY-MM-DD',
-																				) ===
-																					dayjs(
-																						chatListDateGroup[
-																							item
-																						][item2][
-																							idx3 - 1
-																						]
-																							.SENT_DATETIME,
-																					).format(
-																						'YYYY-MM-DD',
-																					)
-																			}
-																		/>
-																	);
-																},
-															)}
-														</React.Fragment>
-													);
-												},
-											)}
+										<React.Fragment key={`${date}_(${dayOfWeek[dayjs(date).day().toString()]})`}>
+											<SharpDivider content={`${date} (${dayOfWeek[dayjs(date).day().toString()]})`} className={Style['dateDivider']} />
+											{Object.keys(chatListDateGroup[date]).map((time: string) => {
+												return (
+													<React.Fragment key={`${date}_(${dayOfWeek[dayjs(date).day().toString()]})_${time}`}>
+														{chatListDateGroup[date][time].map((conversation: IConversation, conversationIndex: number) => {
+															return (
+																<SingleChatMessage
+																	key={conversation.MESSAGE_ID}
+																	msgId={conversation.MESSAGE_ID}
+																	value={conversation.MESSAGE_TEXT}
+																	messageOwner={conversation.USER_UID === authStore.userUID ? 'mine' : 'other'}
+																	linkList={conversation.LINK_LIST}
+																	sentTime={conversationIndex === chatListDateGroup[date][time].length - 1 ? conversation.SENT_DATETIME : null}
+																	userName={`${conversation.USER_NM} (${conversation.USER_TITLE})`}
+																	imgList={typeof conversation.IMG_LIST === 'string' ? JSON.parse(conversation.IMG_LIST) : conversation.IMG_LIST}
+																	isSamePreviousUserChat={
+																		conversationIndex > 0 &&
+																		chatListDateGroup[date][time][conversationIndex - 1].USER_UID ===
+																			chatListDateGroup[date][time][conversationIndex].USER_UID &&
+																		dayjs(chatListDateGroup[date][time][conversationIndex].SENT_DATETIME).format('YYYY-MM-DD') ===
+																			dayjs(chatListDateGroup[date][time][conversationIndex - 1].SENT_DATETIME).format('YYYY-MM-DD')
+																	}
+																/>
+															);
+														})}
+													</React.Fragment>
+												);
+											})}
 										</React.Fragment>
 									);
 								})}
@@ -525,12 +385,7 @@ const RoomChat = ({
 							}}
 							notifyTextChange={notifyTextChange}
 						/>
-						<TextWithDotAnimation
-							content={`${sendingUserState}님이 입력중입니다`}
-							marginLeftValue={20}
-							dotSize={8}
-							hide={!textChangeNotification}
-						/>
+						<TextWithDotAnimation content={`${sendingUserState}님이 입력중입니다`} marginLeftValue={20} dotSize={8} hide={!textChangeNotification} />
 					</div>
 				</Container>
 			</main>
