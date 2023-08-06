@@ -6,14 +6,7 @@
  * 1      변지욱     2022-08-16   feature/JW/textarea         최초작성
  ********************************************************************************************/
 
-import {
-	forwardRef,
-	SyntheticEvent,
-	useCallback,
-	useImperativeHandle,
-	useRef,
-	useState,
-} from 'react';
+import { forwardRef, SyntheticEvent, useCallback, useImperativeHandle, useRef, useState } from 'react';
 import { Form, TextArea as SemanticTextArea } from 'semantic-ui-react';
 
 interface ITextArea {
@@ -28,19 +21,7 @@ interface ITextArea {
 }
 
 const TextArea = forwardRef<any, ITextArea>(
-	(
-		{
-			id = '',
-			className = '',
-			placeholder = '',
-			value = '',
-			onChange = null,
-			rows = 3,
-			minHeight = null,
-			spacing = 0,
-		},
-		ref,
-	) => {
+	({ id = '', className = '', placeholder = '', value = '', onChange = null, rows = 3, minHeight = null, spacing = 0 }, ref) => {
 		const [textAreaValue, setTextAreaValue] = useState<string | number | undefined>(value);
 		const textAreaRef = useRef<any>();
 

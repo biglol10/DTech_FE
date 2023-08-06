@@ -14,12 +14,7 @@ interface IIndividualChatGroup {
 	newMsgNoti?: boolean;
 }
 
-const IndividualChatGroup = ({
-	chatUID,
-	chatName,
-	cnt,
-	newMsgNoti = false,
-}: IIndividualChatGroup) => {
+const IndividualChatGroup = ({ chatUID, chatName, cnt, newMsgNoti = false }: IIndividualChatGroup) => {
 	const cx = classNames.bind(Style);
 	const router = useRouter();
 	const { unReadArrSlice } = useChatUtil();
@@ -34,16 +29,11 @@ const IndividualChatGroup = ({
 				unReadArrSlice(chatUID);
 			}}
 		>
-			<div
-				className={Style['user-avatar']}
-				style={customStyleObj(0, [{ name: 'userCnt', value: cnt }])}
-			>
+			<div className={Style['user-avatar']} style={customStyleObj(0, [{ name: 'userCnt', value: cnt }])}>
 				<img src={generateAvatarImage(chatUID)} alt="noImg" />
 				<div>{cnt}</div>
 			</div>
-			<div className={cx('groupName', `${newMsgNoti ? 'newNoti' : 'noNoti'}`)}>
-				{chatName}
-			</div>
+			<div className={cx('groupName', `${newMsgNoti ? 'newNoti' : 'noNoti'}`)}>{chatName}</div>
 		</div>
 	);
 };

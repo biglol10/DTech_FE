@@ -49,23 +49,10 @@ const Tabs = ({
 	);
 };
 
-const TabHeader = ({
-	height,
-	tabIndex,
-	setTabIndex,
-	children,
-}: {
-	height: number;
-	tabIndex?: number;
-	setTabIndex?: any;
-	children: any;
-}) => {
+const TabHeader = ({ height, tabIndex, setTabIndex, children }: { height: number; tabIndex?: number; setTabIndex?: any; children: any }) => {
 	return (
 		<>
-			<div
-				className="tab-header"
-				style={{ height: `${height}px`, display: 'flex', alignItems: 'center' }}
-			>
+			<div className="tab-header" style={{ height: `${height}px`, display: 'flex', alignItems: 'center' }}>
 				{React.Children.map(children, (el: any, idx: number) =>
 					React.cloneElement(el, {
 						active: idx === tabIndex,
@@ -130,20 +117,9 @@ const Tab = ({
 	);
 };
 
-const TabPanels = ({
-	tabIndex,
-	opacityEffect = false,
-	children,
-}: {
-	tabIndex?: number;
-	opacityEffect?: boolean;
-	children?: any;
-}) => {
+const TabPanels = ({ tabIndex, opacityEffect = false, children }: { tabIndex?: number; opacityEffect?: boolean; children?: any }) => {
 	return (
-		<div
-			className="tab-body"
-			style={{ position: 'relative', height: `calc(100% - 60px)`, padding: '10px 5px' }}
-		>
+		<div className="tab-body" style={{ position: 'relative', height: `calc(100% - 60px)`, padding: '10px 5px' }}>
 			{React.Children.map(children, (el: any, idx: number) =>
 				React.cloneElement(el, {
 					active: idx === tabIndex,
@@ -154,15 +130,7 @@ const TabPanels = ({
 	);
 };
 
-const TabPanel = ({
-	active,
-	opacityEffect,
-	children,
-}: {
-	active?: boolean;
-	opacityEffect?: boolean;
-	children: any;
-}) => {
+const TabPanel = ({ active, opacityEffect, children }: { active?: boolean; opacityEffect?: boolean; children: any }) => {
 	return (
 		<div
 			className={`${active && 'active'}`}

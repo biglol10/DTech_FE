@@ -32,18 +32,10 @@ const InputLayout = ({
 	const labelSize = 'tiny';
 
 	return (
-		<div
-			style={inputElCommStyle(spacing, 'left', stretch)}
-			id={id}
-			className={cx(className, 'inputLayoutDiv')}
-		>
+		<div style={inputElCommStyle(spacing, 'left', stretch)} id={id} className={cx(className, 'inputLayoutDiv')}>
 			{showInputLabel && (
 				<label htmlFor={id}>
-					<Header
-						className={Style['inputLabelHeader']}
-						as={inputLabelSize}
-						style={{ position: 'relative', left: '0%' }}
-					>
+					<Header className={Style['inputLabelHeader']} as={inputLabelSize} style={{ position: 'relative', left: '0%' }}>
 						{inputLabel}
 					</Header>
 				</label>
@@ -62,12 +54,7 @@ const InputLayout = ({
 				</Label>
 			) : (
 				error && (
-					<Label
-						basic
-						color="red"
-						pointing={errorLabelPosition === 'right' ? 'left' : 'above'}
-						size={labelSize}
-					>
+					<Label basic color="red" pointing={errorLabelPosition === 'right' ? 'left' : 'above'} size={labelSize}>
 						{errorMsg}
 					</Label>
 				)

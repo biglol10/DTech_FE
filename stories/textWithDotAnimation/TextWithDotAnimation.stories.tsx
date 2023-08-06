@@ -39,13 +39,5 @@ export default {
 };
 
 export const TextWithDotSample = (args: ITextWithDotAnimation) => {
-	return (
-		<TextWithDotAnimation
-			content={args.content}
-			color={args.color}
-			uiType={args.uiType}
-			marginLeftValue={args.marginLeftValue}
-			hide={false}
-		/>
-	);
+	return <TextWithDotAnimation content={args.content} color={args.color} uiType={args.uiType} marginLeftValue={args.marginLeftValue} hide={false} />;
 };

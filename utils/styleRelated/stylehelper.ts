@@ -21,8 +21,7 @@ const customStyleObj: any = (spacing = 0, param: IParam[]) => {
 	customObj['--spacing'] = `${spacing}px`;
 
 	param.map((item) => {
-		customObj[`--${item.name}`] =
-			typeof item.value === 'number' ? `${item.value}px` : item.value;
+		customObj[`--${item.name}`] = typeof item.value === 'number' ? `${item.value}px` : item.value;
 		return null;
 	});
 

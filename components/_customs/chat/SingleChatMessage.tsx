@@ -32,16 +32,7 @@ interface ChatListExtends {
 	isSamePreviousUserChat: boolean;
 }
 
-const SingleChatMessage = ({
-	messageOwner,
-	value,
-	msgId,
-	imgList,
-	linkList,
-	sentTime,
-	userName,
-	isSamePreviousUserChat,
-}: ChatListExtends) => {
+const SingleChatMessage = ({ messageOwner, value, msgId, imgList, linkList, sentTime, userName, isSamePreviousUserChat }: ChatListExtends) => {
 	const [copyButtonClicked, setCopyButtonClicked] = useState(false);
 	const { handleModal } = useModal();
 	const sentTimeRef = useRef(sentTime ? dayjs(sentTime).format('HH:mm') : null);
@@ -98,25 +89,12 @@ const SingleChatMessage = ({
 					{!isSamePreviousUserChat ? (
 						<Label
 							attached={`top ${messageOwner === 'other' ? 'left' : 'right'}`}
-							className={cx(
-								'avatarLabel',
-								isSamePreviousUserChat && 'avatarLabelHidden',
-							)}
+							className={cx('avatarLabel', isSamePreviousUserChat && 'avatarLabelHidden')}
 						>
-							<Avatar
-								labelSize="mini"
-								src={techImage['React']}
-								fontColor="black"
-								content={userName}
-							/>
+							<Avatar labelSize="mini" src={techImage['React']} fontColor="black" content={userName} />
 						</Label>
 					) : (
-						<div
-							className={cx(
-								'avatarLabel',
-								isSamePreviousUserChat && 'avatarLabelHidden',
-							)}
-						></div>
+						<div className={cx('avatarLabel', isSamePreviousUserChat && 'avatarLabelHidden')}></div>
 					)}
 
 					{value && value !== '<p><br></p>' && (
@@ -129,46 +107,26 @@ const SingleChatMessage = ({
 							>
 								{messageOwner === 'other' ? (
 									<>
-										<Label
-											basic
-											pointing={'left'}
-											className={cx('messageLabel', messageOwner)}
-										>
+										<Label basic pointing={'left'} className={cx('messageLabel', messageOwner)}>
 											<span
 												id={msgId}
 												dangerouslySetInnerHTML={{
-													__html: dompurify.sanitize(
-														`${value.replaceAll('\t', ' '.repeat(3))}`,
-													),
+													__html: dompurify.sanitize(`${value.replaceAll('\t', ' '.repeat(3))}`),
 												}}
 											></span>
 											{/* <pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre> */}
 										</Label>
-										{!isSamePreviousUserChat && (
-											<span style={{ alignSelf: 'flex-end' }}>
-												{sentTimeRef.current}
-											</span>
-										)}
+										{!isSamePreviousUserChat && <span style={{ alignSelf: 'flex-end' }}>{sentTimeRef.current}</span>}
 									</>
 								) : (
 									<>
-										{!isSamePreviousUserChat && (
-											<span style={{ alignSelf: 'self-end' }}>
-												{sentTimeRef.current}
-											</span>
-										)}
+										{!isSamePreviousUserChat && <span style={{ alignSelf: 'self-end' }}>{sentTimeRef.current}</span>}
 
-										<Label
-											basic
-											pointing={'right'}
-											className={cx('messageLabel', messageOwner)}
-										>
+										<Label basic pointing={'right'} className={cx('messageLabel', messageOwner)}>
 											<span
 												id={msgId}
 												dangerouslySetInnerHTML={{
-													__html: dompurify.sanitize(
-														`${value.replaceAll('\t', ' '.repeat(3))}`,
-													),
+													__html: dompurify.sanitize(`${value.replaceAll('\t', ' '.repeat(3))}`),
 												}}
 											></span>
 											{/* <pre>{`${value.replaceAll('\t', ' '.repeat(3))}`}</pre> */}
@@ -223,15 +181,9 @@ const SingleChatMessage = ({
 
 							// idea from https://stackoverflow.com/questions/42920985/textcontent-without-spaces-from-formatting-text
 							if ('clipboard' in navigator) {
-								await navigator.clipboard.writeText(
-									textToCopy.replace(/[\n]{2,}/g, '\n').trim(),
-								);
+								await navigator.clipboard.writeText(textToCopy.replace(/[\n]{2,}/g, '\n').trim());
 							} else {
-								return document.execCommand(
-									'copy',
-									true,
-									textToCopy.replace(/[\n]{2,}/g, '\n').trim(),
-								);
+								return document.execCommand('copy', true, textToCopy.replace(/[\n]{2,}/g, '\n').trim());
 							}
 							setTimeout(() => {
 								setCopyButtonClicked(false);
@@ -249,24 +201,12 @@ const SingleChatMessage = ({
 									.map((item: null, idx) => <div key={`emptyA_${idx}`}></div>)}
 							{linkList.map((item, idx: number) => {
 								return (
-									<a
-										key={`ahref_${item.url}_${idx}`}
-										href={item.url}
-										target="_blank"
-										rel="noopener noreferrer"
-									>
+									<a key={`ahref_${item.url}_${idx}`} href={item.url} target="_blank" rel="noopener noreferrer">
 										<div>
 											<h4>{item.url}</h4>
-											{item.status === 'success' && item.metadata_title && (
-												<p>{item.metadata_title}</p>
-											)}
-											{item.status === 'success' &&
-												item.metadata_description && (
-													<div>{item.metadata_description}</div>
-												)}
-											{item.status === 'success' && item.metadata_image && (
-												<img src={item.metadata_image} alt="" />
-											)}
+											{item.status === 'success' && item.metadata_title && <p>{item.metadata_title}</p>}
+											{item.status === 'success' && item.metadata_description && <div>{item.metadata_description}</div>}
+											{item.status === 'success' && item.metadata_image && <img src={item.metadata_image} alt="" />}
 										</div>
 									</a>
 								);

@@ -47,13 +47,7 @@ const Radio = ({
 
 	const radioList = itemList.map((item) => (
 		<div key={item.value} className={`${Style[`label_${labelPosition}`]} ${className}`}>
-			<SemanticRadio
-				id={item.value}
-				name={name}
-				value={item.value}
-				checked={item.checked}
-				onClick={onChangeFn}
-			/>
+			<SemanticRadio id={item.value} name={name} value={item.value} checked={item.checked} onClick={onChangeFn} />
 			<Label content={item.label} />
 		</div>
 	));

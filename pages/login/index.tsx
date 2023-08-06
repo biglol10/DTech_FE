@@ -83,10 +83,7 @@ const Login = () => {
 	return (
 		<div className={cx('loginDiv')}>
 			<main className={cx('loginMain')}>
-				<div
-					className={cx('loginMainLeft')}
-					style={{ backgroundImage: `url(${leftBackground[leftBackgroundIndex].src})` }}
-				>
+				<div className={cx('loginMainLeft')} style={{ backgroundImage: `url(${leftBackground[leftBackgroundIndex].src})` }}>
 					{leftBackgroundIndex === 0 && (
 						<article className={cx('loginCenterArticle', 'article1')}>
 							<p>
@@ -149,12 +146,7 @@ const Login = () => {
 					</aside>
 				</div>
 				<div className={Style['loginMainRight']}>
-					<Label
-						content="Dtech App"
-						iconOrImage="image"
-						nextImage={<Image src={DLogo} width={48} height={48} />}
-						size="massive"
-					/>
+					<Label content="Dtech App" iconOrImage="image" nextImage={<Image src={DLogo} width={48} height={48} />} size="massive" />
 					<InputLayout
 						error={idInputError}
 						errorMsg="아이디를 올바르게 입력해주세요"
@@ -215,25 +207,13 @@ const Login = () => {
 							iconClick={() => null}
 						/>
 					</InputLayout>
-					<Button
-						className={Style['loginButton']}
-						spacing={7}
-						content="로그인"
-						size="large"
-						onClick={() => userLogin()}
-					/>
+					<Button className={Style['loginButton']} spacing={7} content="로그인" size="large" onClick={() => userLogin()} />
 
 					<SharpDivider content="No Account ?" />
 
 					<Link href="/register">
 						<a>
-							<Button
-								className={Style['registerButton']}
-								content="회원가입"
-								size="large"
-								color="google plus"
-								buttonType="none"
-							/>
+							<Button className={Style['registerButton']} content="회원가입" size="large" color="google plus" buttonType="none" />
 						</a>
 					</Link>
 				</div>

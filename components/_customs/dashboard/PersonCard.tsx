@@ -29,17 +29,7 @@ interface PersonDefail {
 	profileDetailModal: Function | null;
 }
 
-const PersonCard = ({
-	username,
-	profileUrl = null,
-	rank,
-	skills,
-	domains,
-	githubUrl,
-	detail,
-	userUID,
-	profileDetailModal = null,
-}: PersonDefail) => {
+const PersonCard = ({ username, profileUrl = null, rank, skills, domains, githubUrl, detail, userUID, profileDetailModal = null }: PersonDefail) => {
 	const router = useRouter();
 	const [popupView, setPopupView] = useState(false);
 	const authStore = useSelector((state: { auth: IAuth }) => state.auth);
@@ -47,11 +37,7 @@ const PersonCard = ({
 	return (
 		<div>
 			<div className={Style['userAvatarArea']} onClick={() => setPopupView(!popupView)}>
-				<Avatar
-					content={username}
-					src={profileUrl || generateAvatarImage(userUID)}
-					imageSize={'mini'}
-				/>
+				<Avatar content={username} src={profileUrl || generateAvatarImage(userUID)} imageSize={'mini'} />
 				{profileDetailModal && popupView && (
 					<div className={Style['userClickPopup']}>
 						<div onClick={() => profileDetailModal && profileDetailModal()}>

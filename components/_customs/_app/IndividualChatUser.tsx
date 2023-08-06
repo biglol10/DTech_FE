@@ -53,13 +53,9 @@ const IndividualChatUser = ({
 		>
 			<div className={cx('user-avatar', onlineStatus.toLowerCase())}>
 				<img src={userImg || generateAvatarImage(userUID)} />
-				{(userAdminYN === 1 || userAdminYN === '1') && (
-					<Icon name="star" color="yellow" className={Style['starIcon']} />
-				)}
+				{(userAdminYN === 1 || userAdminYN === '1') && <Icon name="star" color="yellow" className={Style['starIcon']} />}
 			</div>
-			<div
-				className={cx('username', `${newMsgNoti ? 'newNoti' : 'noNoti'}`)}
-			>{`${userName} (${userTitle})`}</div>
+			<div className={cx('username', `${newMsgNoti ? 'newNoti' : 'noNoti'}`)}>{`${userName} (${userTitle})`}</div>
 		</div>
 	);
 };

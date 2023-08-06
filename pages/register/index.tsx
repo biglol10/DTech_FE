@@ -8,14 +8,7 @@
 
 import Image from 'next/image';
 import { Label } from '@components/index';
-import {
-	RegisterStep1,
-	RegisterStep2,
-	RegisterStep3,
-	RegisterStep4,
-	RegisterStep5,
-	RegisterResult,
-} from '@components/customs';
+import { RegisterStep1, RegisterStep2, RegisterStep3, RegisterStep4, RegisterStep5, RegisterResult } from '@components/customs';
 import { Stepper, Step, StepLabel } from '@mui/material';
 import React, { useState } from 'react';
 import classNames from 'classnames/bind';
@@ -40,18 +33,9 @@ const RegisterPage = (props: any) => {
 
 	const registerStep = (
 		<div className={cx('loginMainCenter')}>
-			<Label
-				content="회원가입"
-				iconOrImage="image"
-				nextImage={<Image src={DLogo} width={48} height={48} />}
-				size="massive"
-			/>
+			<Label content="회원가입" iconOrImage="image" nextImage={<Image src={DLogo} width={48} height={48} />} size="massive" />
 			{stepNum < 6 && (
-				<Stepper
-					activeStep={stepNum - 1}
-					alternativeLabel
-					className={cx('registerStepper')}
-				>
+				<Stepper activeStep={stepNum - 1} alternativeLabel className={cx('registerStepper')}>
 					<Step key="1">
 						<StepLabel></StepLabel>
 					</Step>

@@ -62,11 +62,7 @@ const BoardCard = ({
 		<>
 			<div className={Style['cardComp']}>
 				<div className={Style['upvote']}>
-					{like ? (
-						<Icon name="thumbs up" onClick={clickLike} color="blue" />
-					) : (
-						<Icon name="thumbs up outline" onClick={clickLike} color="blue" />
-					)}
+					{like ? <Icon name="thumbs up" onClick={clickLike} color="blue" /> : <Icon name="thumbs up outline" onClick={clickLike} color="blue" />}
 					<span className={Style['likeCnt']}>{likeCount}</span>
 				</div>
 				<div className={Style['card']}>
@@ -75,11 +71,7 @@ const BoardCard = ({
 							<Card.Header>
 								<div className={Style['cardHeader']}>
 									<div>{title}</div>
-									{techNm !== null ? (
-										<div className={Style['cardTechNm']}>{techNm}</div>
-									) : (
-										<div></div>
-									)}
+									{techNm !== null ? <div className={Style['cardTechNm']}>{techNm}</div> : <div></div>}
 								</div>
 							</Card.Header>
 							<Card.Meta className={Style['cardMeta']}>
@@ -91,9 +83,7 @@ const BoardCard = ({
 							<Card.Description className={Style['cardDescription']}>
 								<span
 									dangerouslySetInnerHTML={{
-										__html: DOMPurify.sanitize(
-											`${content.replaceAll('\t', ' '.repeat(3))}`,
-										),
+										__html: DOMPurify.sanitize(`${content.replaceAll('\t', ' '.repeat(3))}`),
 									}}
 								></span>
 								{/* <pre>{content}</pre> */}
@@ -115,10 +105,7 @@ const BoardCard = ({
 							)}
 
 							<Card.Content extra className={Style['comments']}>
-								<Link
-									href={{ pathname: '/board/comment', query: { brd: id } }}
-									className={Style['boardSumbitBtn']}
-								>
+								<Link href={{ pathname: '/board/comment', query: { brd: id } }} className={Style['boardSumbitBtn']}>
 									<a>
 										<Icon name="comment alternate outline" />
 										{commentCnt} comments
@@ -126,11 +113,7 @@ const BoardCard = ({
 								</Link>
 								{boardUid === userUID ? (
 									<div>
-										<Icon
-											name="trash alternate outline"
-											onClick={deleteBrd}
-											color="blue"
-										/>
+										<Icon name="trash alternate outline" onClick={deleteBrd} color="blue" />
 									</div>
 								) : null}
 							</Card.Content>

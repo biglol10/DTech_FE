@@ -11,15 +11,7 @@ import { GetServerSideProps } from 'next';
 import { useEffect, useMemo, useState, useCallback, useRef } from 'react';
 import { parseCookies } from 'nookies';
 import { Bar } from 'react-chartjs-2';
-import {
-	Chart as ChartJS,
-	CategoryScale,
-	LinearScale,
-	BarElement,
-	Title,
-	Tooltip,
-	Legend,
-} from 'chart.js';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { Label, InputLayout, InputDropdown, InputSearch, SharpDivider } from '@components/index';
 import { techImage } from '@utils/constants/imageConstants';
 import { SkillTable, PersonCard, MainLayoutTemplate } from '@components/customs';
@@ -148,15 +140,11 @@ const Index = ({ userToken }: { userToken: string }) => {
 	}, [axiosDataCallback]);
 
 	const data = {
-		labels: !_.isEmpty(customObj.teamSkillDashboard)
-			? customObj.teamSkillDashboard.map((item) => item.TECH_NM)
-			: [''],
+		labels: !_.isEmpty(customObj.teamSkillDashboard) ? customObj.teamSkillDashboard.map((item) => item.TECH_NM) : [''],
 		datasets: [
 			{
 				label: '인원',
-				data: !_.isEmpty(customObj.teamSkillDashboard)
-					? customObj.teamSkillDashboard.map((item) => item.TECH_CNT)
-					: [''],
+				data: !_.isEmpty(customObj.teamSkillDashboard) ? customObj.teamSkillDashboard.map((item) => item.TECH_CNT) : [''],
 				backgroundColor: [
 					'rgba(255, 99, 132, 0.2)',
 					'rgba(54, 162, 235, 0.2)',
@@ -247,9 +235,7 @@ const Index = ({ userToken }: { userToken: string }) => {
 	useEffect(() => {
 		setUserListData(() => {
 			if (tempArr.current) {
-				const tempArrFiltered = tempArr?.current?.filter(
-					(item) => item.USER_TITLE === searchCondition.rank,
-				);
+				const tempArrFiltered = tempArr?.current?.filter((item) => item.USER_TITLE === searchCondition.rank);
 
 				if (searchCondition.rank) {
 					return tempArrFiltered;
@@ -292,9 +278,7 @@ const Index = ({ userToken }: { userToken: string }) => {
 				<div className={Style['skillOverview']}>
 					<Label
 						iconOrImage="image"
-						nextImage={
-							<img src="https://www.lgcns.com/wp-content/uploads/2022/03/img_dcx_introduceLogo-1.png" />
-						}
+						nextImage={<img src="https://www.lgcns.com/wp-content/uploads/2022/03/img_dcx_introduceLogo-1.png" />}
 						content="DCX 센터 스킬 현황"
 						size="large"
 					/>
@@ -302,19 +286,12 @@ const Index = ({ userToken }: { userToken: string }) => {
 					<Bar options={options} data={data} />
 				</div>
 				<div className={Style['skillOverviewTable']}>
-					{!_.isEmpty(customObj.teamSkillCountObj) && (
-						<SkillTable teamSkillData={customObj.teamSkillCountObj} />
-					)}
+					{!_.isEmpty(customObj.teamSkillCountObj) && <SkillTable teamSkillData={customObj.teamSkillCountObj} />}
 				</div>
 			</div>
 			<div className={Style['dashboardBottomMain']}>
 				<div className={Style['skillConditionWrap']}>
-					<InputLayout
-						id={Style['dropdownLayout']}
-						inputLabel="dropdown"
-						inputLabelSize="h4"
-						showInputLabel={false}
-					>
+					<InputLayout id={Style['dropdownLayout']} inputLabel="dropdown" inputLabelSize="h4" showInputLabel={false}>
 						<InputDropdown
 							id={Style['inputDropdown']}
 							placeholder="선택해주세요"
@@ -345,9 +322,7 @@ const Index = ({ userToken }: { userToken: string }) => {
 						{['사원', '선임', '책임', '총괄', '팀장'].map((stringItem, idx) => (
 							<li
 								key={`${stringItem}_${idx}`}
-								className={
-									searchCondition.rank === stringItem ? Style['active'] : ''
-								}
+								className={searchCondition.rank === stringItem ? Style['active'] : ''}
 								onClick={() =>
 									setSearchCondition((prev) => ({
 										...prev,
@@ -362,12 +337,7 @@ const Index = ({ userToken }: { userToken: string }) => {
 					</ul>
 					<div>
 						<h4>
-							<CountUp
-								end={userListData ? userListData.length : 0}
-								delay={0}
-								duration={0.2}
-							/>
-							명
+							<CountUp end={userListData ? userListData.length : 0} delay={0} duration={0.2} />명
 						</h4>
 					</div>
 				</div>
