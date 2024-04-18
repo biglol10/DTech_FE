@@ -128,3 +128,11 @@
 
 4️⃣ About
 <img width="1719" alt="image" src="https://user-images.githubusercontent.com/46738034/199425427-cc9397f1-71fe-4364-9d12-b6ba5b83a9fe.png">
+
+<br/>
+
+---
+
+## 🚧 모델링
+
+<img width="514" alt="dtechmodeling" src="https://github.com/biglol10/DTech_FE/assets/46738034/23751a60-b652-4a9c-890e-8c7e3c3a478d">
