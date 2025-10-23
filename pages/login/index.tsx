@@ -8,6 +8,7 @@
  * 3      변지욱      2022-07-09     feature/JW/divscroll        div scroll 예시적용 (필요없으면 롤백 예정)
  * 4      변지욱      2022-07-10     feature/JW/loginValidation  LoginValidation added and scroll rollback
  * 5      장보영      2022-07-20     feature/BY/register         회원가입 페이지 이동
+ * 6      Claude      2025-01-23                                 Refresh Token 인증 적용
  ********************************************************************************************/
 
 import Image from 'next/image';
@@ -16,11 +17,9 @@ import { Icon } from 'semantic-ui-react';
 import { Button, InputLayout, Label, InputWithIcon, SharpDivider } from '@components/index';
 import classNames from 'classnames/bind';
 import Link from 'next/link';
-import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
-import cookie from 'js-cookie';
 import { toast } from 'react-toastify';
-import * as RCONST from '@utils/constants/reducerConstants';
+import { useAuth } from '@utils/hooks/useAuth';
 
 import LeftBackground1 from '@public/background/loginLeft.png';
 import LeftBackground2 from '@public/background/loginLeft2.png';
@@ -30,10 +29,8 @@ import Style from './Login.module.scss';
 
 const Login = () => {
 	const labelSize = 'h4';
-
 	const router = useRouter();
-
-	const dispatch = useDispatch();
+	const { login, isAuthenticated } = useAuth();
 
 	const cx = classNames.bind(Style);
 	const leftBackground = [LeftBackground1, LeftBackground2, LeftBackground3];
@@ -54,30 +51,46 @@ const Login = () => {
 		userIdRef.current && userIdRef.current.focus();
 	}, []);
 
-	const userLogin = () => {
+	// 이미 로그인되어 있으면 대시보드로 리다이렉트
+	useEffect(() => {
+		if (isAuthenticated) {
+			router.push('/dashboard');
+		}
+	}, [isAuthenticated, router]);
+
+	const userLogin = async () => {
 		setLoading(true);
-		dispatch({
-			type: RCONST.AUTH_SETTING,
-			setIdInputError,
-			setPwInputError,
-			userSetting: {
-				userId: idInputValue,
-				password: pwInputValue,
-			},
-			callbackFn: (data: any) => {
-				setLoading(false);
-				if (data.result === 'success') {
-					cookie.set('token', data.userToken);
-					router.push('/');
-				} else {
-					dispatch({
-						type: RCONST.TOASTSETTING,
-						position: 'bottom-left',
-					});
-					toast['error'](<>{'login failed'}</>);
-				}
-			},
+
+		// Validation
+		const regEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+		const regPassword = new RegExp('^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{6,})');
+
+		const isIdValid = regEmail.test(idInputValue);
+		const isPwValid = regPassword.test(pwInputValue);
+
+		setIdInputError(!isIdValid);
+		setPwInputError(!isPwValid);
+
+		if (!isIdValid || !isPwValid) {
+			setLoading(false);
+			toast.error('아이디/비밀번호를 올바르게 입력해주세요');
+			return;
+		}
+
+		// Login with Refresh Token support
+		const result = await login({
+			userId: idInputValue,
+			password: pwInputValue,
 		});
+
+		setLoading(false);
+
+		if (result.success) {
+			toast.success('로그인 성공!');
+			router.push('/dashboard');
+		} else {
+			// Error is already handled by useAuth hook with toast
+		}
 	};
 
 	return (

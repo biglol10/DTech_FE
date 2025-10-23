@@ -7,18 +7,18 @@
  * 2      변지욱     2022-07-13                              페이지에 따른 레이아웃 적용
  * 3      변지욱     2022-08-02   feature/JW/quill           dispatch에 쿠키 있을 경우 로직 추가
  * 4      변지욱     2022-12-04   feature/JW/refactor        modal에 dynamic import 적용
+ * 5      Claude     2025-01-23                              Refresh Token 인증 적용 & Side Effect 제거
  ********************************************************************************************/
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import type { AppProps } from 'next/app';
 import wrapper from '@store/rootReducer';
 import Head from 'next/head';
 import { useSelector, useDispatch } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
-import cookie from 'js-cookie';
 import { useSocket } from '@utils/hooks/customHooks';
+import { useAuth } from '@utils/hooks/useAuth';
 import { IAuth, IToastState } from '@utils/types/commAndStoreTypes';
-// import { ModalPopup } from '@components/index';
 
 import '@styles/globals.scss';
 import 'semantic-ui-css/semantic.min.css';
@@ -43,22 +43,34 @@ const MyApp = ({ Component, pageProps }: ComponentWithPageLayout) => {
 	const toastInfo = useSelector((state: { toastInfo: IToastState }) => state.toastInfo);
 	const dispatch = useDispatch();
 	const { init: initSocket } = useSocket();
+	const { autoLogin } = useAuth();
 
-	if ((!authStore || !authStore.userName || !authStore.userToken) && cookie.get('token')) {
-		dispatch({
-			type: 'AUTH_SETTING_BY_TOKEN',
-			token: cookie.get('token'),
-			callbackFn: async (userId: string) => {
-				initSocket(userId);
-			},
-		});
-	}
+	// Auto-login on app mount (if refresh token exists)
+	useEffect(() => {
+		const attemptAutoLogin = async () => {
+			// Skip if already authenticated
+			if (authStore?.userName && authStore?.userToken) {
+				return;
+			}
 
-	if (Component.displayName) {
-		const displayName = Component.displayName;
+			// Try auto-login with refresh token
+			const success = await autoLogin();
 
-		dispatch({ type: 'SET_CURRENT_ROUTE', displayName });
-	}
+			if (success && authStore?.userId) {
+				initSocket(authStore.userId);
+			}
+		};
+
+		attemptAutoLogin();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []); // Only run once on mount
+
+	// Set current route
+	useEffect(() => {
+		if (Component.displayName) {
+			dispatch({ type: 'SET_CURRENT_ROUTE', displayName: Component.displayName });
+		}
+	}, [Component.displayName, dispatch]);
 
 	const toastMemo = useMemo(() => {
 		return (
